@@ -103,7 +103,8 @@ function filterTableFor(name) {
 }
 
 #selector-table:checked ~ #pane-table,
-#selector-deck:checked ~ #pane-deck {
+#selector-deck:checked ~ #pane-deck,
+#selector-about:checked ~ #pane-about {
   display: block;
 }
 
@@ -194,6 +195,7 @@ fieldset {
 <div class="tab">
 <input type="radio" name="selector" id="selector-table" checked /><label class="selector" for="selector-table">カードリスト</label>
 <input type="radio" name="selector" id="selector-deck" /><label class="selector" for="selector-deck">デッキ</label>
+<input type="radio" name="selector" id="selector-about" /><label class="selector" for="selector-about">このツールについて</label>
 <div id="pane-table" class="pane">
 <fieldset id="expansion">
 <legend>エキスパンション</legend>
@@ -1172,6 +1174,26 @@ fieldset {
 </div>
 </div>
 </div><!-- #pane-deck -->
+<div id="pane-about" class="pane">
+<h2>これは何？</h2>
+<p>イジンデンのデッキリストを作成するアプリです。名前に「簡易」とあるように、機能は最小限にとどめています。</p>
+<h2>特徴</h2>
+<ul>
+<li>デッキ枚数の上限なし</li>
+<li>メインデッキとサイドデッキを別個に管理可能</li>
+<li>カード枚数はカード名ごとに数字で表示</li>
+<li>並びは種類、レベル、色、エキスパンション順</li>
+</ul>
+<h2>未対応機能</h2>
+<dl>
+<dt>自前の画像保存</dt><dd>OS のスクショ機能で保存願います。</dd>
+<dt>デッキ保存</dt><dd>お手数ですが再入力をお願いします。</dd>
+<dt>高度な検索</dt><dd>お手数ですがカードリストから探してください。</dd>
+<dt>並び順の変更</dt><dd>ご面倒ですがこのまま使用ください。</dd>
+<dt>PSR カード</dt><dd>対応する SR のカードを使用ください。</dd>
+<h2>連絡先</h2>
+<p>すいーとポテト &lt;sweetpotato DOT quarter PLUS github AT gmail DOT com&gt;</p>
+</div>
 </div>
 </body>
 </html>
