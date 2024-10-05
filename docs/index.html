@@ -66,10 +66,16 @@ function raiseCardSide(cardId) {
 
 function filterTable() {
   $("#list tr").show();
+  $("#list tr").attr("class", "show")
 
   filterTableFor("expansion");
   filterTableFor("color");
   filterTableFor("type");
+
+  // Refresh odd/even
+  $('#list tr.show').each(function(index) {
+    $(this).attr("class", index % 2 === 0 ? "even" : "odd");
+  });
 }
 
 function filterTableFor(name) {
@@ -90,6 +96,7 @@ function filterTableFor(name) {
     $("#list tr").each(function() {
       if (Number($(this).data(name)) === expansionValue) {
         $(this).hide();
+        $(this).attr("class", "hide");
       }
     });
   });
