@@ -105,18 +105,6 @@ function filterTableFor(name) {
 }
 </script>
 <style>
-.pane {
-  display: none;
-  clear: both;
-  overflow: hidden;
-}
-
-#selector-table:checked ~ #pane-table,
-#selector-deck:checked ~ #pane-deck,
-#selector-about:checked ~ #pane-about {
-  display: block;
-}
-
 .deck {
   clear: both;
 }
@@ -209,11 +197,14 @@ fieldset {
 </head>
 <body>
 <h1>イジンデン 簡易デッキ作成ツール</h1>
-<div class="tab">
-<input type="radio" name="selector" id="selector-table" checked /><label class="selector" for="selector-table">カードリスト</label>
-<input type="radio" name="selector" id="selector-deck" /><label class="selector" for="selector-deck">デッキ</label>
-<input type="radio" name="selector" id="selector-about" /><label class="selector" for="selector-about">このツールについて</label>
-<div id="pane-table" class="pane">
+<nav class="nav nav-tabs">
+<!-- input type="radio" は Bootstrap が対応していないようなので使わないこと -->
+<button class="nav-link active" id="nav-cardlist-tab" data-bs-toggle="tab" data-bs-target="#cardlist-tab-pane" type="button" role="tab" aria-controls="cardlist-tab-pane" aria-selected="true">カードリスト</button>
+<button class="nav-link" id="nav-deck-tab" data-bs-toggle="tab" data-bs-target="#deck-tab-pane" type="button" role="tab" aria-controls="deck-tab-pane" aria-selected="false">デッキ</button>
+<button class="nav-link" id="nav-about-tab" data-bs-toggle="tab" data-bs-target="#about-tab-pane" type="button" role="tab" aria-controls="about-tab-pane" aria-selected="false">このツールについて</button>
+</nav>
+<div class="tab-content" id="nav-tabContent">
+<div class="tab-pane show active" id="cardlist-tab-pane" role="tabpanel" aria-labelledby="nav-cardlist-tab" tabindex="0">
 <fieldset id="expansion">
 <legend>エキスパンション</legend>
 <input type="radio" id="expansion-0" name="expansion" value="0" onclick="filterTable();" checked /><label for="expansion-0">すべて</label>
@@ -562,8 +553,8 @@ fieldset {
 <tr id="table-3-80" class="even" data-expansion="35" data-type="4" data-color="90"><td>3-80</td><td>オブシディアン</td><td><button type="button" onclick="popCardMain('3-80')">-</button></td><td id="table-main-3-80-numCopies">0</td><td><button type="button" onclick="pushCardMain('3-80')">+</button></td><td><button type="button" onclick="popCardSide('3-80')">-</button></td><td id="table-side-3-80-numCopies">0</td><td><button type="button" onclick="pushCardSide('3-80')">+</button></td></tr>
 </tbody>
 </table>
-</div><!-- #pane-table -->
-<div id="pane-deck" class="pane">
+</div><!-- #cardlist-tab-pane -->
+<div class="tab-pane" id="deck-tab-pane" role="tabpanel" aria-labelledby="nav-deck-tab" tabindex="0">
 <div class="deck">
 <h2>メインデッキ (<span id="main-numCards">0</span>枚)</h2>
 <div class="deck-content">
@@ -1190,8 +1181,8 @@ fieldset {
 <div class="card" id="side-3-80"><img width="115" height="160" src="https://one-draw.jp/ijinden/cardlist/003/card/03_080.png" /><div class="numCopies" id="side-3-80-numCopies">0</div><button type="button" class="pop" onclick="popCardSide('3-80');">-</button><button type="button" class="push" onclick="pushCardSide('3-80');">+</button><button type="button" class="raise" onclick="raiseCardSide('3-80');">↑</button></div>
 </div>
 </div>
-</div><!-- #pane-deck -->
-<div id="pane-about" class="pane">
+</div><!-- #deck-tab-pane -->
+<div class="tab-pane" id="about-tab-pane" role="tabpanel" aria-labelledby="nav-about-tab" tabindex="0">
 <h2>これは何？</h2>
 <p>イジンデンのデッキリストを作成するアプリです。名前に「簡易」とあるように、機能は最小限にとどめています。</p>
 <p>GitHub で開発しています。リポジトリは次の URL です。</p>
@@ -1212,8 +1203,8 @@ fieldset {
 <dt>PSR カード</dt><dd>対応する SR のカードを使用ください。</dd>
 <h2>連絡先</h2>
 <p>すいーとポテト &lt;sweetpotato DOT quarter PLUS github AT gmail DOT com&gt;</p>
-</div>
-</div>
+</div><!-- #about-tab-pane -->
+</div><!-- #nav-tabContent -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>
