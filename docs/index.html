@@ -1193,5 +1193,119 @@ fieldset {
 </div><!-- #about-tab-pane -->
 </div><!-- #nav-tabContent -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script>
+// On click plus/minus/drop/raise button
+function popCard(button) {
+  const deck = button.data("deck");
+  const id = button.data("id");
+  const name = "table-" + deck + "-" + id + "-numCopies";
+  const input = $("input[name='" + name + "']");
+  const currentValue = Math.floor(Number(input.val()));
+
+  // Save the current value in the textbox as the old one for delta update
+  input.data("oldValue", currentValue);
+
+  //if (currentValue > Math.floor(Number(input.attr("min")))) {
+  input.val(currentValue - 1).change();
+  //}
+}
+
+function pushCard(button) {
+  const deck = button.data("deck");
+  const id = button.data("id");
+  const name = "table-" + deck + "-" + id + "-numCopies";
+  const input = $("input[name='" + name + "']");
+  const currentValue = Math.floor(Number(input.val()));
+
+  // Save the current value in the textbox as the old one for delta update
+  input.data("oldValue", currentValue);
+
+  // Note that there is no max value
+  input.val(currentValue + 1).change();
+}
+
+function moveCard(deckFrom, deckTo, button) {
+  // Note that there is no deck data
+  const id = button.data("id");
+  const nameFrom = "table-" + deckFrom + "-" +  id + "-numCopies";
+  const nameTo = "table-" + deckTo + "-" + id + "-numCopies";
+  const inputFrom = $("input[name='" + nameFrom + "']");
+  const inputTo = $("input[name='" + nameTo + "']");
+  const currentValueFrom = Math.floor(Number(inputFrom.val()));
+  const currentValueTo = Math.floor(Number(inputTo.val()));
+
+  // Save the current value in each textbox as the old one for delta update
+  inputFrom.data("oldValue", currentValueFrom);
+  inputTo.data("oldValue", currentValueTo);
+
+  // Note that we do not need to care about min value
+  inputFrom.val(currentValueFrom - 1).change();
+  inputTo.val(currentValueTo + 1).change();
+}
+
+$(".btn-number").click(function(event) {
+  event.preventDefault();
+
+  switch ($(this).data("type")) {
+  case "minus":
+    popCard($(this));
+    break;
+  case "plus":
+    pushCard($(this));
+    break;
+  case "drop":
+    moveCard("main", "side", $(this));
+    break;
+  case "raise":
+    moveCard("side", "main", $(this));
+    break;
+  default:
+    // Never be here
+    return;
+  }
+});
+
+$(".input-number").focusin(function() {
+  $(this).data("oldValue", $(this).val());
+});
+
+$(".input-number").change(function() {
+  const minValue = Math.floor(Number($(this).attr("min")));
+  const currentValue = Math.floor(Number($(this).val()));
+  const oldValue = Math.floor(Number($(this).data("oldValue")));
+  const id = $(this).data("id");
+  const buttonMinus = $(".btn-number[data-type='minus'][data-id='" + id + "']");
+
+  if (currentValue === minValue) {
+    buttonMinus.attr("disabled", true);
+  } else if (currentValue > minValue) {
+    buttonMinus.removeAttr("disabled");
+  } else {
+    $(this).val(oldValue);
+    // Do not need to update deck; fast return
+    return;
+  }
+
+  // Set the current value as canonicalized one
+  $(this).val(currentValue);
+
+  // Update deck
+  const deck = $(this).data("deck");
+  const elementCard = $("#" + deck + "-" + id);
+
+  $("#" + deck + "-" + id + "-numCopies").text(String(currentValue));
+  if (currentValue === 0) {
+    elementCard.hide();
+  } else {
+    elementCard.show();
+  }
+
+  // Update total number of cards in main/side deck
+  const elementNumCards = $("#" + deck + "-numCards");
+  const delta = currentValue - oldValue;
+  elementNumCards.text(String(Math.floor(Number(elementNumCards.text()) + delta)));
+
+});
+</script>
 </body>
 </html>
