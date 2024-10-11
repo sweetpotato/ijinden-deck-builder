@@ -20,7 +20,7 @@ function filterTableFor(name) {
     return;
   }
 
-  $('input[name="' + name + '"]').each(function() {
+  $("input[name='" + name + "']").each(function() {
     const expansionValue = Number($(this).val());
     if (expansionValue === 0) {
       return;
