@@ -9,7 +9,6 @@
 <script>
 function filterTable() {
   $("#list tr").show();
-  $("#list tr").attr("class", "show")
 
   filterTableFor("expansion");
   filterTableFor("color");
@@ -34,7 +33,6 @@ function filterTableFor(name) {
     $("#list tr").each(function() {
       if (Number($(this).data(name)) === expansionValue) {
         $(this).hide();
-        $(this).attr("class", "hide");
       }
     });
   });
@@ -132,7 +130,7 @@ fieldset {
 <button class="nav-link" id="nav-about-tab" data-bs-toggle="tab" data-bs-target="#about-tab-pane" type="button" role="tab" aria-controls="about-tab-pane" aria-selected="false">ヘルプ</button>
 </nav>
 <div class="tab-content" id="nav-tabContent">
-<div class="tab-pane show active" id="cardlist-tab-pane" role="tabpanel" aria-labelledby="nav-cardlist-tab" tabindex="0">
+<div class="tab-pane active" id="cardlist-tab-pane" role="tabpanel" aria-labelledby="nav-cardlist-tab" tabindex="0">
 <fieldset id="expansion">
 <legend>エキスパンション</legend>
 <input type="radio" class="btn-check" id="expansion-0" name="expansion" value="0"  autocomplete="off" onclick="filterTable();" checked /><label class="btn btn-outline-primary" for="expansion-0">すべて</label>
