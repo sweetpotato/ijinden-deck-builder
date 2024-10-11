@@ -21,8 +21,8 @@ function filterTableFor(name) {
   }
 
   $("input[name='" + name + "']").each(function() {
-    const expansionValue = Number($(this).val());
-    if (expansionValue === 0) {
+    const filterValue = Number($(this).val());
+    if (filterValue === 0) {
       return;
     }
 
@@ -31,7 +31,7 @@ function filterTableFor(name) {
     }
 
     $("#list tr").each(function() {
-      if (Number($(this).data(name)) === expansionValue) {
+      if (Number($(this).data(name)) === filterValue) {
         $(this).hide();
       }
     });
