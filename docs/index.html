@@ -83,14 +83,10 @@
 .filter {
   clear: both;
 }
-
-fieldset {
-  float: left;
-}
 </style>
 </head>
 <body>
-<h1>イジンデン デッキ作成</h1>
+<h1 class="m-2">イジンデン デッキ作成</h1>
 <nav class="nav nav-tabs">
 <!-- input type="radio" は Bootstrap が対応していないようなので使わないこと -->
 <button class="nav-link active" id="nav-cardlist-tab" data-bs-toggle="tab" data-bs-target="#cardlist-tab-pane" type="button" role="tab" aria-controls="cardlist-tab-pane" aria-selected="true">カードリスト</button>
@@ -99,7 +95,8 @@ fieldset {
 </nav>
 <div class="tab-content" id="nav-tabContent">
 <div class="tab-pane active" id="cardlist-tab-pane" role="tabpanel" aria-labelledby="nav-cardlist-tab" tabindex="0">
-<fieldset id="expansion">
+<div class="m-2" id="filter">
+<fieldset class="float-start" id="expansion">
 <legend>エキスパンション</legend>
 <input type="radio" class="btn-check btn-filter" id="expansion-0" name="expansion" value="0" autocomplete="off" checked /><label class="btn btn-outline-primary" for="expansion-0">すべて</label>
 <input type="radio" class="btn-check btn-filter" id="expansion-10" name="expansion" value="10" autocomplete="off" /><label class="btn btn-outline-primary" for="expansion-10">伝説の武将</label>
@@ -111,7 +108,7 @@ fieldset {
 <input type="radio" class="btn-check btn-filter" id="expansion-30" name="expansion" value="30" autocomplete="off" /><label class="btn btn-outline-primary" for="expansion-30">発展する医療</label>
 <input type="radio" class="btn-check btn-filter" id="expansion-35" name="expansion" value="35" autocomplete="off" /><label class="btn btn-outline-primary" for="expansion-35">第３弾ブースター</label>
 </fieldset>
-<fieldset id="color">
+<fieldset class="float-start" id="color">
 <legend>色</legend>
 <input type="radio" class="btn-check btn-filter" id="color-0" name="color" value="0" autocomplete="off" checked /><label class="btn btn-outline-primary" for="color-0">すべて</label>
 <input type="radio" class="btn-check btn-filter" id="color-10" name="color" value="10" autocomplete="off" /><label class="btn btn-outline-primary" for="color-10">赤</label>
@@ -124,7 +121,7 @@ fieldset {
 <input type="radio" class="btn-check btn-filter" id="color-50" name="color" value="50" autocomplete="off" /><label class="btn btn-outline-primary" for="color-50">紫</label>
 <input type="radio" class="btn-check btn-filter" id="color-90" name="color" value="90" autocomplete="off" /><label class="btn btn-outline-primary" for="color-90">無色</label>
 </fieldset>
-<fieldset id="type">
+<fieldset class="float-start" id="type">
 <legend>種類</legend>
 <input type="radio" class="btn-check btn-filter" id="type-0" name="type" value="0" autocomplete="off" checked /><label class="btn btn-outline-primary" for="type-0">すべて</label>
 <input type="radio" class="btn-check btn-filter" id="type-1" name="type" value="1" autocomplete="off" /><label class="btn btn-outline-primary" for="type-1">イジン</label>
@@ -132,6 +129,7 @@ fieldset {
 <input type="radio" class="btn-check btn-filter" id="type-3" name="type" value="3" autocomplete="off" /><label class="btn btn-outline-primary" for="type-3">マホウ</label>
 <input type="radio" class="btn-check btn-filter" id="type-4" name="type" value="4" autocomplete="off" /><label class="btn btn-outline-primary" for="type-4">マリョク</label>
 </fieldset>
+</div><!-- #container-filter -->
 <table class="table table-hover" id="list" style="clear: both;">
 <thead class="table-light sticky-top">
 <tr><th scope="col">ID</th><th scope="col">カード名</th><th scope="col">メイン</th><th scope="col">サイド</th></tr>
@@ -448,7 +446,7 @@ fieldset {
 </tbody>
 </table>
 </div><!-- #cardlist-tab-pane -->
-<div class="tab-pane" id="deck-tab-pane" role="tabpanel" aria-labelledby="nav-deck-tab" tabindex="0">
+<div class="tab-pane m-2" id="deck-tab-pane" role="tabpanel" aria-labelledby="nav-deck-tab" tabindex="0">
 <div class="deck">
 <h2>メインデッキ (<span id="main-numCards">0</span>枚)</h2>
 <div class="deck-content">
@@ -1076,7 +1074,7 @@ fieldset {
 </div>
 </div>
 </div><!-- #deck-tab-pane -->
-<div class="tab-pane" id="about-tab-pane" role="tabpanel" aria-labelledby="nav-about-tab" tabindex="0">
+<div class="tab-pane m-2" id="about-tab-pane" role="tabpanel" aria-labelledby="nav-about-tab" tabindex="0">
 <h2>これは何？</h2>
 <p>イジンデンのデッキリストを作成するアプリです。機能は最小限にとどめています。</p>
 <p>GitHub で開発しています。リポジトリは次の URL です。</p>
