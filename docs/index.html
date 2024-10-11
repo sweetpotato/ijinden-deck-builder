@@ -1194,7 +1194,8 @@ $(".input-number").change(function() {
   const currentValue = Math.floor(Number($(this).val()));
   const oldValue = Math.floor(Number($(this).data("oldValue")));
   const id = $(this).data("id");
-  const buttonMinus = $(".btn-number[data-type='minus'][data-id='" + id + "']");
+  const deck = $(this).data("deck");
+  const buttonMinus = $(".btn-number[data-type='minus'][data-id='" + id + "'][data-deck='" + deck + "']");
 
   if (currentValue === minValue) {
     buttonMinus.attr("disabled", true);
@@ -1210,7 +1211,6 @@ $(".input-number").change(function() {
   $(this).val(currentValue);
 
   // Update deck
-  const deck = $(this).data("deck");
   const elementCard = $("#" + deck + "-" + id);
 
   $("#" + deck + "-" + id + "-num-copies").text(String(currentValue));
