@@ -107,6 +107,14 @@ h2, table {
 <input type="radio" class="btn-check btn-filter" id="type-3" name="type" value="3" autocomplete="off" /><label class="btn btn-outline-primary" for="type-3">マホウ</label>
 <input type="radio" class="btn-check btn-filter" id="type-4" name="type" value="4" autocomplete="off" /><label class="btn btn-outline-primary" for="type-4">マリョク</label>
 </fieldset>
+<fieldset class="float-start" id="term">
+<legend>能力語</legend>
+<input type="radio" class="btn-check btn-filter" id="term-0" name="term" value="0" autocomplete="off" checked /><label class="btn btn-outline-primary" for="term-0">指定なし</label>
+<input type="radio" class="btn-check btn-filter" id="term-1" name="term" value="1" autocomplete="off" /><label class="btn btn-outline-primary" for="term-1">航海</label>
+<input type="radio" class="btn-check btn-filter" id="term-2" name="term" value="2" autocomplete="off" /><label class="btn btn-outline-primary" for="term-2">執筆</label>
+<input type="radio" class="btn-check btn-filter" id="term-3" name="term" value="3" autocomplete="off" /><label class="btn btn-outline-primary" for="term-3">決起</label>
+<input type="radio" class="btn-check btn-filter" id="term-4" name="term" value="4" autocomplete="off" /><label class="btn btn-outline-primary" for="term-4">徴募</label>
+</fieldset>
 </div><!-- #container-filter -->
 <table class="table table-hover" id="list" style="clear: both;">
 <thead class="table-light sticky-top">
@@ -1106,12 +1114,35 @@ function filterTableFor(name) {
   });
 }
 
+// On click term button
+function filterTableFor2(name) {
+  if ($("#" + name + "-0").prop("checked")) {
+    return;
+  }
+
+  $("input[name='" + name + "']").each(function() {
+    const filterValue = Number($(this).val());
+
+    if ($(this).prop("checked")) {
+      return;
+    }
+
+    $("#list tr").each(function() {
+      if (Number($(this).data(name)) === filterValue) {
+        $(this).hide();
+      }
+    });
+  });
+}
+
 $(".btn-filter").click(function(event) {
   $("#list tr").show();
 
   filterTableFor("expansion");
   filterTableFor("color");
   filterTableFor("type");
+
+  filterTableFor2("term");
 });
 
 // On click plus/minus/drop/raise button
