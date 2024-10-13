@@ -1121,18 +1121,18 @@ function filterTableForColor() {
   }
 
   $("input[name='color']").each(function() {
+    if (!$(this).prop("checked")) {
+      return;
+    }
+
     const filterValue = Number($(this).val());
     if (filterValue === 0) {
       return;
     }
 
-    if ($(this).prop("checked")) {
-      return;
-    }
-
-    $("#list tr").each(function() {
+    $("#list tr[id]").each(function() {
       const flag = Number($(this).data("color"));
-      if (flag === filterValue || flag == 0) {
+      if (flag !== filterValue) {
         $(this).hide();
       }
     });
