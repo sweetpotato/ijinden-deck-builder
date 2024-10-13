@@ -1115,11 +1115,35 @@ function filterTableFor(name) {
   });
 }
 
+function filterTableForColor() {
+  if ($("#color-0").prop("checked")) {
+    return;
+  }
+
+  $("input[name='color']").each(function() {
+    const filterValue = Number($(this).val());
+    if (filterValue === 0) {
+      return;
+    }
+
+    if ($(this).prop("checked")) {
+      return;
+    }
+
+    $("#list tr").each(function() {
+      const flag = Number($(this).data("color"));
+      if (flag === filterValue || flag == 0) {
+        $(this).hide();
+      }
+    });
+  });
+}
+
 $(".btn-filter").click(function(event) {
   $("#list tr").show();
 
   filterTableFor("expansion");
-  filterTableFor("color");
+  filterTableForColor();
   filterTableFor("type");
   filterTableFor("term");
 });
