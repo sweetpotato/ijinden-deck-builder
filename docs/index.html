@@ -97,6 +97,7 @@ h2, table {
 <input type="radio" class="btn-check btn-filter" id="color-24" name="color" value="24" autocomplete="off" /><label class="btn btn-outline-primary" for="color-24">緑黄</label>
 <input type="radio" class="btn-check btn-filter" id="color-16" name="color" value="16" autocomplete="off" /><label class="btn btn-outline-primary" for="color-16">黄</label>
 <input type="radio" class="btn-check btn-filter" id="color-32" name="color" value="32" autocomplete="off" /><label class="btn btn-outline-primary" for="color-32">紫</label>
+<input type="radio" class="btn-check btn-filter" id="color-multi" name="color" value="multi" autocomplete="off" /><label class="btn btn-outline-primary" for="color-multi">多色</label>
 <input type="radio" class="btn-check btn-filter" id="color-1" name="color" value="1" autocomplete="off" /><label class="btn btn-outline-primary" for="color-1">無色</label>
 </fieldset>
 <fieldset class="float-start" id="type">
@@ -1125,17 +1126,40 @@ function filterTableForColor() {
       return;
     }
 
-    const filterValue = Number($(this).val());
+    const filterRawValue = $(this).val();
+    if (filterRawValue === "multi") {
+      filterTableForMultiColor();
+      return;
+    }
+
+    const filterValue = Number(filterRawValue);
     if (filterValue === 0) {
       return;
     }
 
     $("#list tr[id]").each(function() {
       const flag = Number($(this).data("color"));
-      if (flag !== filterValue) {
+      if (filterValue === 1 && flag !== filterValue) {
+        // Colorless is selected AND this card is not colorless;
+        // filter out
+        $(this).hide();
+      } else if (filterValue !== 1 && (flag & filterValue) !== filterValue) {
+        // Any colorset is selected AND this card does not have that color;
+        // filter out
         $(this).hide();
       }
     });
+  });
+}
+
+function filterTableForMultiColor() {
+  $("#list tr[id]").each(function() {
+    const flag = Number($(this).data("color"));
+    // Check if the flag has only one bit set
+    if ((flag & (flag - 1)) === 0) {
+      // Unicolor; filter out
+      $(this).hide();
+    }
   });
 }
 
