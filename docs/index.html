@@ -1087,10 +1087,10 @@ h2, table {
 <div class="tab-pane" id="simulator-tab-pane" role="tabpanel" aria-labelledby="nav-simulator-tab" tabindex="0">
 <h2 class="m-2">手札シミュレータβ</h2>
 <div class="container-simulator-buttons m-2">
-<button type="button" class="btn btn-outline-danger" id="btn-reset-simulation" disabled>リセット</button>
-<button type="button" class="btn btn-outline-success" id="btn-start-simulation">スタート</button>
-<button type="button" class="btn btn-outline-secondary" id="btn-mulligan-hand" disabled>マリガン</button>
-<button type="button" class="btn btn-outline-secondary" id="btn-keep-hand" disabled>キープ</button>
+<button type="button" class="btn btn-outline-danger btn-reset-simulation" disabled>リセット</button>
+<button type="button" class="btn btn-outline-success btn-start-simulation" >スタート</button>
+<button type="button" class="btn btn-outline-secondary btn-mulligan-hand" disabled>マリガン</button>
+<button type="button" class="btn btn-outline-secondary btn-keep-hand" disabled>キープ</button>
 </div>
 <div class="m-1" id="simulator">
 </div>
@@ -1264,8 +1264,8 @@ $(".btn-number").click(function(event) {
 
   // シミュレータ実行途中でデッキを変更した際に
   // 実行を継続できないようにボタンを無効化する。
-  $("#btn-mulligan-hand").attr("disabled", true);
-  $("#btn-keep-hand").attr("disabled", true);
+  $(".btn-mulligan-hand").attr("disabled", true);
+  $(".btn-keep-hand").attr("disabled", true);
 
   switch ($(this).data("type")) {
   case "minus":
@@ -1448,20 +1448,20 @@ function setupDraw(idArray, randomIndices) {
   }
 }
 
-$("#btn-reset-simulation").click(function(event) {
+$(".btn-reset-simulation").click(function(event) {
   event.preventDefault();
 
   // シミュレータをクリアする。
   $("#simulator").empty();
 
-  $("#btn-reset-simulation").attr("disabled", true);
-  $("#btn-mulligan-hand").attr("disabled", true);
-  $("#btn-keep-hand").attr("disabled", true);
+  $(".btn-reset-simulation").attr("disabled", true);
+  $(".btn-mulligan-hand").attr("disabled", true);
+  $(".btn-keep-hand").attr("disabled", true);
 
-  $("#btn-start-simulation").removeAttr("disabled");
+  $(".btn-start-simulation").removeAttr("disabled");
 });
 
-$("#btn-start-simulation").click(function(event) {
+$(".btn-start-simulation").click(function(event) {
   event.preventDefault();
 
   const numCopiesMap = collectNumCopiesInMainDeck();
@@ -1471,11 +1471,11 @@ $("#btn-start-simulation").click(function(event) {
     return;
   }
 
-  $("#btn-start-simulation").attr("disabled", true);
+  $(".btn-start-simulation").attr("disabled", true);
 
-  $("#btn-reset-simulation").removeAttr("disabled");
-  $("#btn-mulligan-hand").removeAttr("disabled");
-  $("#btn-keep-hand").removeAttr("disabled");
+  $(".btn-reset-simulation").removeAttr("disabled");
+  $(".btn-mulligan-hand").removeAttr("disabled");
+  $(".btn-keep-hand").removeAttr("disabled");
 
   const idArray = makeIdArray(numCopiesMap);
   const randomIndices = makeRandomIndices(numCards);
@@ -1484,11 +1484,11 @@ $("#btn-start-simulation").click(function(event) {
   setupHand(idArray, randomIndices);
 });
 
-$("#btn-mulligan-hand").click(function(event) {
+$(".btn-mulligan-hand").click(function(event) {
   event.preventDefault();
 
-  $("#btn-mulligan-hand").attr("disabled", true);
-  $("#btn-keep-hand").attr("disabled", true);
+  $(".btn-mulligan-hand").attr("disabled", true);
+  $(".btn-keep-hand").attr("disabled", true);
 
   // 手札をクリアする。
   $("#wrapper-hand").empty();
@@ -1504,11 +1504,11 @@ $("#btn-mulligan-hand").click(function(event) {
   setupDraw(idArray, randomIndices);
 });
 
-$("#btn-keep-hand").click(function(event) {
+$(".btn-keep-hand").click(function(event) {
   event.preventDefault();
 
-  $("#btn-mulligan-hand").attr("disabled", true);
-  $("#btn-keep-hand").attr("disabled", true);
+  $(".btn-mulligan-hand").attr("disabled", true);
+  $(".btn-keep-hand").attr("disabled", true);
 
   // ガーディアンと手札を除外した残りのカードを得る。
   const numCopiesMap = excludeHand(excludeGuardian(collectNumCopiesInMainDeck()));
