@@ -61,6 +61,35 @@ h2, table {
 .container-card:hover .btn-raise {
   display: block;
 }
+
+.container-guardian {
+  min-width: 78px;
+  min-height: 110px;
+  background-color: gray;
+}
+
+.container-guardian:hover {
+  background-color: inherit;
+}
+
+.container-guardian:hover .img-guardian {
+  visibility: visible;
+}
+.img-guardian {
+  width: 80px;
+  height: 112px;
+  visibility: hidden;
+}
+
+.img-hand {
+  width: 80px;
+  height: 112px;
+}
+
+.img-draw {
+  width: 80px;
+  height: 112px;
+}
 </style>
 </head>
 <body>
@@ -69,6 +98,7 @@ h2, table {
 <!-- input type="radio" は Bootstrap が対応していないようなので使わないこと -->
 <button class="nav-link active" id="nav-cardlist-tab" data-bs-toggle="tab" data-bs-target="#cardlist-tab-pane" type="button" role="tab" aria-controls="cardlist-tab-pane" aria-selected="true">カードリスト</button>
 <button class="nav-link" id="nav-deck-tab" data-bs-toggle="tab" data-bs-target="#deck-tab-pane" type="button" role="tab" aria-controls="deck-tab-pane" aria-selected="false">デッキ</button>
+<button class="nav-link" id="nav-simulator-tab" data-bs-toggle="tab" data-bs-target="#simulator-tab-pane" type="button" role="tab" aria-controls="simulator-tab-pane" aria-selected="false">シミュβ</button>
 <button class="nav-link" id="nav-about-tab" data-bs-toggle="tab" data-bs-target="#about-tab-pane" type="button" role="tab" aria-controls="about-tab-pane" aria-selected="false">ヘルプ</button>
 </nav>
 <div class="tab-content" id="nav-tabContent">
@@ -1054,6 +1084,17 @@ h2, table {
 <div class="container-card position-relative m-1" id="side-3-80"><img class="d-block" width="80" height="112" src="https://one-draw.jp/ijinden/cardlist/003/card/03_080.png" /><div class="container-num-copies position-absolute bottom-0 start-0 px-1" id="side-3-80-num-copies">0</div><button type="button" class="btn btn-secondary btn-number btn-sm btn-pop position-absolute top-0 start-0" data-type="minus" data-deck="side" data-id="3-80">-</button><button type="button" class="btn btn-secondary btn-number btn-sm btn-push position-absolute top-0 end-0" data-type="plus" data-deck="side" data-id="3-80">+</button><button type="button" class="btn btn-secondary btn-number btn-sm btn-raise position-absolute bottom-0 end-0" data-type="raise" data-id="3-80">^</button></div>
 </div>
 </div><!-- #deck-tab-pane -->
+<div class="tab-pane" id="simulator-tab-pane" role="tabpanel" aria-labelledby="nav-simulator-tab" tabindex="0">
+<h2 class="m-2">手札シミュレータβ</h2>
+<div class="container-simulator-buttons m-2">
+<button type="button" class="btn btn-outline-danger" id="btn-reset-simulation" disabled>リセット</button>
+<button type="button" class="btn btn-outline-success" id="btn-start-simulation">スタート</button>
+<button type="button" class="btn btn-outline-secondary" id="btn-mulligan-hand" disabled>マリガン</button>
+<button type="button" class="btn btn-outline-secondary" id="btn-keep-hand" disabled>キープ</button>
+</div>
+<div class="m-1" id="simulator">
+</div>
+</div><!-- #simulator-tab-pane -->
 <div class="tab-pane m-2" id="about-tab-pane" role="tabpanel" aria-labelledby="nav-about-tab" tabindex="0">
 <h2>これは何？</h2>
 <p>イジンデンのデッキリストを作成するアプリです。機能は最小限にとどめています。</p>
@@ -1221,6 +1262,11 @@ function moveCard(deckFrom, deckTo, button) {
 $(".btn-number").click(function(event) {
   event.preventDefault();
 
+  // シミュレータ実行途中でデッキを変更した際に
+  // 実行を継続できないようにボタンを無効化する。
+  $("#btn-mulligan-hand").attr("disabled", true);
+  $("#btn-keep-hand").attr("disabled", true);
+
   switch ($(this).data("type")) {
   case "minus":
     popCard($(this));
@@ -1280,6 +1326,201 @@ $(".input-number").change(function() {
   const delta = currentValue - oldValue;
   elementNumCards.text(String(Math.floor(Number(elementNumCards.text()) + delta)));
 
+});
+
+function collectNumCopiesInMainDeck() {
+  const result = new Map();
+
+  $(".input-number[data-deck='main']").each(function() {
+    const numCopies = Number($(this).val());
+    if (numCopies > 0) {
+      result.set($(this).data("id"), numCopies);
+    }
+  });
+
+  return result;
+}
+
+function excludeGuardian(numCopiesMap) {
+  $("#guardian img").each(function() {
+    const id = $(this).data("id");
+    const numCopies = numCopiesMap.get(id);
+    if (numCopies === 1) {
+      numCopiesMap.delete(id)
+    } else {
+      numCopiesMap.set(id, numCopies - 1);
+    }
+  });
+
+  return numCopiesMap;
+}
+
+function excludeHand(numCopiesMap) {
+  $("#hand img").each(function() {
+    const id = $(this).data("id");
+    const numCopies = numCopiesMap.get(id);
+    if (numCopies === 1) {
+      numCopiesMap.delete(id)
+    } else {
+      numCopiesMap.set(id, numCopies - 1);
+    }
+  });
+
+  return numCopiesMap;
+}
+
+function shuffleArray(arrayFrom) {
+  const result = Array.from(arrayFrom);
+
+  for (let i = result.length - 1; i >= 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+
+  return result;
+}
+
+function makeRandomIndices(maxExclusive) {
+  const indices = new Array();
+
+  for (var i = 0; i < maxExclusive; ++i) {
+    indices.push(i);
+  }
+
+  return shuffleArray(indices);
+}
+
+function makeIdArray(numCopiesMap) {
+  const result = new Array();
+
+  numCopiesMap.forEach(function(value, key, map) {
+    for (var i = 0; i < value; ++i) {
+      result.push(key);
+    }
+  });
+
+  return result;
+}
+
+function setupGuardian(idArray, randomIndices) {
+  $("#simulator").append('<h2 class="mx-1 my-2">ガーディアン</h2>');
+  $("#simulator").append('<div id="guardian" class="mx-1" style="min-height: 120px;"></div>');
+
+  // ガーディアン4枚
+  for (var i = 0; i < 4; ++i) {
+    const id = idArray.at(randomIndices.pop());
+    const src = $("#main-" + id).children("img").attr("src");
+    $("<img>", { "src": src })
+        .data("id", id)
+        .addClass("img-guardian")
+        .appendTo("#guardian");
+  }
+  $("#guardian").children().wrap('<div class="container-guardian float-start m-1"></div>');
+}
+
+function setupHand(idArray, randomIndices) {
+  $("#simulator").append('<div id="wrapper-hand"></div>');
+  $("#wrapper-hand").append('<h2 class="mx-1 my-2">手札</h2>');
+  $("#wrapper-hand").append('<div id="hand" class="mx-1 my-2" style="min-height: 120px;"></div>');
+
+  // 手札6枚
+  for (var i = 0; i < 6; ++i) {
+    const id = idArray.at(randomIndices.pop());
+    const src = $("#main-" + id).children("img").attr("src");
+    $("<img>", { "src": src })
+        .data("id", id)
+        .addClass("d-block float-start m-1 img-hand")
+        .appendTo("#hand");
+  }
+}
+
+function setupDraw(idArray, randomIndices) {
+  $("#simulator").append('<h2 class="mx-1 my-2">ドロー</h2>');
+  $("#simulator").append('<div id="draw" class="mx-1 my-2" style="min-height: 120px;"></div>');
+
+  // 残りすべてドロー
+  while (randomIndices.length > 0) {
+    const id = idArray.at(randomIndices.pop());
+    const src = $("#main-" + id).children("img").attr("src");
+    $("<img>", { "src": src })
+        .addClass("d-block float-start m-1 img-draw")
+        .appendTo("#draw");
+  }
+}
+
+$("#btn-reset-simulation").click(function(event) {
+  event.preventDefault();
+
+  // シミュレータをクリアする。
+  $("#simulator").empty();
+
+  $("#btn-reset-simulation").attr("disabled", true);
+  $("#btn-mulligan-hand").attr("disabled", true);
+  $("#btn-keep-hand").attr("disabled", true);
+
+  $("#btn-start-simulation").removeAttr("disabled");
+});
+
+$("#btn-start-simulation").click(function(event) {
+  event.preventDefault();
+
+  const numCopiesMap = collectNumCopiesInMainDeck();
+  const numCards = numCopiesMap.values().reduce((x, y) => x + y, 0);
+  if (numCards < 10) {
+    alert("メインデッキの枚数が少なすぎます。10枚以上にしてください。");
+    return;
+  }
+
+  $("#btn-start-simulation").attr("disabled", true);
+
+  $("#btn-reset-simulation").removeAttr("disabled");
+  $("#btn-mulligan-hand").removeAttr("disabled");
+  $("#btn-keep-hand").removeAttr("disabled");
+
+  const idArray = makeIdArray(numCopiesMap);
+  const randomIndices = makeRandomIndices(numCards);
+
+  setupGuardian(idArray, randomIndices);
+  setupHand(idArray, randomIndices);
+});
+
+$("#btn-mulligan-hand").click(function(event) {
+  event.preventDefault();
+
+  $("#btn-mulligan-hand").attr("disabled", true);
+  $("#btn-keep-hand").attr("disabled", true);
+
+  // 手札をクリアする。
+  $("#wrapper-hand").empty();
+
+  // ガーディアンを除外した残りのカードを得る。
+  const numCopiesMap = excludeGuardian(collectNumCopiesInMainDeck());
+  const numCards = numCopiesMap.values().reduce((x, y) => x + y, 0);
+
+  const idArray = makeIdArray(numCopiesMap);
+  const randomIndices = makeRandomIndices(numCards);
+
+  setupHand(idArray, randomIndices);
+  setupDraw(idArray, randomIndices);
+});
+
+$("#btn-keep-hand").click(function(event) {
+  event.preventDefault();
+
+  $("#btn-mulligan-hand").attr("disabled", true);
+  $("#btn-keep-hand").attr("disabled", true);
+
+  // ガーディアンと手札を除外した残りのカードを得る。
+  const numCopiesMap = excludeHand(excludeGuardian(collectNumCopiesInMainDeck()));
+  const numCards = numCopiesMap.values().reduce((x, y) => x + y, 0);
+
+  const idArray = makeIdArray(numCopiesMap);
+  const randomIndices = makeRandomIndices(numCards);
+
+  console.log(idArray);
+  console.log(randomIndices);
+
+  setupDraw(idArray, randomIndices);
 });
 </script>
 </body>
