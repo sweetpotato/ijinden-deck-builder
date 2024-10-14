@@ -69,6 +69,7 @@ h2, table {
 <!-- input type="radio" は Bootstrap が対応していないようなので使わないこと -->
 <button class="nav-link active" id="nav-cardlist-tab" data-bs-toggle="tab" data-bs-target="#cardlist-tab-pane" type="button" role="tab" aria-controls="cardlist-tab-pane" aria-selected="true">カードリスト</button>
 <button class="nav-link" id="nav-deck-tab" data-bs-toggle="tab" data-bs-target="#deck-tab-pane" type="button" role="tab" aria-controls="deck-tab-pane" aria-selected="false">デッキ</button>
+<button class="nav-link" id="nav-simulator-tab" data-bs-toggle="tab" data-bs-target="#simulator-tab-pane" type="button" role="tab" aria-controls="simulator-tab-pane" aria-selected="false">シミュβ</button>
 <button class="nav-link" id="nav-about-tab" data-bs-toggle="tab" data-bs-target="#about-tab-pane" type="button" role="tab" aria-controls="about-tab-pane" aria-selected="false">ヘルプ</button>
 </nav>
 <div class="tab-content" id="nav-tabContent">
@@ -1054,6 +1055,17 @@ h2, table {
 <div class="container-card position-relative m-1" id="side-3-80"><img class="d-block" width="80" height="112" src="https://one-draw.jp/ijinden/cardlist/003/card/03_080.png" /><div class="container-num-copies position-absolute bottom-0 start-0 px-1" id="side-3-80-num-copies">0</div><button type="button" class="btn btn-secondary btn-number btn-sm btn-pop position-absolute top-0 start-0" data-type="minus" data-deck="side" data-id="3-80">-</button><button type="button" class="btn btn-secondary btn-number btn-sm btn-push position-absolute top-0 end-0" data-type="plus" data-deck="side" data-id="3-80">+</button><button type="button" class="btn btn-secondary btn-number btn-sm btn-raise position-absolute bottom-0 end-0" data-type="raise" data-id="3-80">^</button></div>
 </div>
 </div><!-- #deck-tab-pane -->
+<div class="tab-pane" id="simulator-tab-pane" role="tabpanel" aria-labelledby="nav-simulator-tab" tabindex="0">
+<h2 class="m-2">手札シミュレータβ</h2>
+<div class="container-simulator-buttons m-2">
+<button type="button" class="btn btn-outline-danger" id="btn-reset-simulation" disabled>リセット</button>
+<button type="button" class="btn btn-outline-success" id="btn-start-simulation">スタート</button>
+<button type="button" class="btn btn-outline-secondary" id="btn-mulligan-hand" disabled>マリガン</button>
+<button type="button" class="btn btn-outline-secondary" id="btn-keep-hand" disabled>キープ</button>
+</div>
+<div class="m-1" id="simulator">
+</div>
+</div><!-- #simulator-tab-pane -->
 <div class="tab-pane m-2" id="about-tab-pane" role="tabpanel" aria-labelledby="nav-about-tab" tabindex="0">
 <h2>これは何？</h2>
 <p>イジンデンのデッキリストを作成するアプリです。機能は最小限にとどめています。</p>
@@ -1280,6 +1292,40 @@ $(".input-number").change(function() {
   const delta = currentValue - oldValue;
   elementNumCards.text(String(Math.floor(Number(elementNumCards.text()) + delta)));
 
+});
+
+$("#btn-reset-simulation").click(function(event) {
+  event.preventDefault();
+
+  $("#btn-reset-simulation").attr("disabled", true);
+  $("#btn-mulligan-hand").attr("disabled", true);
+  $("#btn-keep-hand").attr("disabled", true);
+
+  $("#btn-start-simulation").removeAttr("disabled");
+});
+
+$("#btn-start-simulation").click(function(event) {
+  event.preventDefault();
+
+  $("#btn-start-simulation").attr("disabled", true);
+
+  $("#btn-reset-simulation").removeAttr("disabled");
+  $("#btn-mulligan-hand").removeAttr("disabled");
+  $("#btn-keep-hand").removeAttr("disabled");
+});
+
+$("#btn-mulligan-hand").click(function(event) {
+  event.preventDefault();
+
+  $("#btn-mulligan-hand").attr("disabled", true);
+  $("#btn-keep-hand").attr("disabled", true);
+});
+
+$("#btn-keep-hand").click(function(event) {
+  event.preventDefault();
+
+  $("#btn-mulligan-hand").attr("disabled", true);
+  $("#btn-keep-hand").attr("disabled", true);
 });
 </script>
 </body>
