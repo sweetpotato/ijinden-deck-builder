@@ -103,9 +103,8 @@ h2, table {
 </nav>
 <div class="tab-content" id="nav-tabContent">
 <div class="tab-pane active" id="cardlist-tab-pane" role="tabpanel" aria-labelledby="nav-cardlist-tab" tabindex="0">
-<div class="m-2" id="filter">
-<fieldset class="float-start" id="expansion">
-<legend>エキスパンション</legend>
+<fieldset class="float-start m-2">
+<legend class="h3 mb-2">エキスパンション</legend>
 <input type="radio" class="btn-check btn-filter" id="expansion-0" name="expansion" value="0" autocomplete="off" checked /><label class="btn btn-outline-primary" for="expansion-0">すべて</label>
 <input type="radio" class="btn-check btn-filter" id="expansion-10" name="expansion" value="10" autocomplete="off" /><label class="btn btn-outline-primary" for="expansion-10">伝説の武将</label>
 <input type="radio" class="btn-check btn-filter" id="expansion-11" name="expansion" value="11" autocomplete="off" /><label class="btn btn-outline-primary" for="expansion-11">知と美の革命</label>
@@ -116,8 +115,8 @@ h2, table {
 <input type="radio" class="btn-check btn-filter" id="expansion-30" name="expansion" value="30" autocomplete="off" /><label class="btn btn-outline-primary" for="expansion-30">発展する医療</label>
 <input type="radio" class="btn-check btn-filter" id="expansion-35" name="expansion" value="35" autocomplete="off" /><label class="btn btn-outline-primary" for="expansion-35">第３弾ブースター</label>
 </fieldset>
-<fieldset class="float-start" id="color">
-<legend>色</legend>
+<fieldset class="float-start m-2">
+<legend class="h3 mb-2">色</legend>
 <input type="radio" class="btn-check btn-filter" id="color-0" name="color" value="0" autocomplete="off" checked /><label class="btn btn-outline-primary" for="color-0">すべて</label>
 <input type="radio" class="btn-check btn-filter" id="color-2" name="color" value="2" autocomplete="off" /><label class="btn btn-outline-primary" for="color-2">赤</label>
 <input type="radio" class="btn-check btn-filter" id="color-4" name="color" value="4" autocomplete="off" /><label class="btn btn-outline-primary" for="color-4">青</label>
@@ -127,23 +126,22 @@ h2, table {
 <input type="radio" class="btn-check btn-filter" id="color-multi" name="color" value="multi" autocomplete="off" /><label class="btn btn-outline-primary" for="color-multi">多色</label>
 <input type="radio" class="btn-check btn-filter" id="color-1" name="color" value="1" autocomplete="off" /><label class="btn btn-outline-primary" for="color-1">無色</label>
 </fieldset>
-<fieldset class="float-start" id="type">
-<legend>種類</legend>
+<fieldset class="float-start m-2">
+<legend class="h3 mb-2">種類</legend>
 <input type="radio" class="btn-check btn-filter" id="type-0" name="type" value="0" autocomplete="off" checked /><label class="btn btn-outline-primary" for="type-0">すべて</label>
 <input type="radio" class="btn-check btn-filter" id="type-1" name="type" value="1" autocomplete="off" /><label class="btn btn-outline-primary" for="type-1">イジン</label>
 <input type="radio" class="btn-check btn-filter" id="type-2" name="type" value="2" autocomplete="off" /><label class="btn btn-outline-primary" for="type-2">ハイケイ</label>
 <input type="radio" class="btn-check btn-filter" id="type-3" name="type" value="3" autocomplete="off" /><label class="btn btn-outline-primary" for="type-3">マホウ</label>
 <input type="radio" class="btn-check btn-filter" id="type-4" name="type" value="4" autocomplete="off" /><label class="btn btn-outline-primary" for="type-4">マリョク</label>
 </fieldset>
-<fieldset class="float-start" id="term">
-<legend>能力語</legend>
+<fieldset class="float-start m-2">
+<legend class="h3 mb-2">能力語</legend>
 <input type="radio" class="btn-check btn-filter" id="term-0" name="term" value="0" autocomplete="off" checked /><label class="btn btn-outline-primary" for="term-0">指定なし</label>
 <input type="radio" class="btn-check btn-filter" id="term-1" name="term" value="1" autocomplete="off" /><label class="btn btn-outline-primary" for="term-1">航海</label>
 <input type="radio" class="btn-check btn-filter" id="term-2" name="term" value="2" autocomplete="off" /><label class="btn btn-outline-primary" for="term-2">執筆</label>
 <input type="radio" class="btn-check btn-filter" id="term-3" name="term" value="3" autocomplete="off" /><label class="btn btn-outline-primary" for="term-3">決起</label>
 <input type="radio" class="btn-check btn-filter" id="term-4" name="term" value="4" autocomplete="off" /><label class="btn btn-outline-primary" for="term-4">徴募</label>
 </fieldset>
-</div><!-- #container-filter -->
 <table class="table table-hover" id="list" style="clear: both;">
 <thead class="table-light sticky-top">
 <tr><th scope="col">ID</th><th scope="col">カード名</th><th scope="col">メイン</th><th scope="col">サイド</th></tr>
@@ -461,7 +459,7 @@ h2, table {
 </table>
 </div><!-- #cardlist-tab-pane -->
 <div class="tab-pane" id="deck-tab-pane" role="tabpanel" aria-labelledby="nav-deck-tab" tabindex="0">
-<h2 class="m-2">メインデッキ (<span id="main-numCards">0</span>枚)</h2>
+<h2 class="m-2">メインデッキ (<span id="main-num-cards">0</span>枚)</h2>
 <div class="container-deck m-1">
 <div class="container-card position-relative m-1" id="main-R-2"><img class="d-block" width="80" height="112" src="https://one-draw.jp/ijinden/cardlist/R01/card/R_002.png" /><div class="container-num-copies position-absolute bottom-0 start-0 px-1" id="main-R-2-num-copies">0</div><button type="button" class="btn btn-secondary btn-number btn-sm btn-pop position-absolute top-0 start-0" data-type="minus" data-deck="main" data-id="R-2">-</button><button type="button" class="btn btn-secondary btn-number btn-sm btn-push position-absolute top-0 end-0" data-type="plus" data-deck="main" data-id="R-2">+</button><button type="button" class="btn btn-secondary btn-number btn-sm btn-drop position-absolute bottom-0 end-0" data-type="drop" data-id="R-2">v</button></div>
 <div class="container-card position-relative m-1" id="main-1-7"><img class="d-block" width="80" height="112" src="https://one-draw.jp/ijinden/cardlist/001/card/01_007.png" /><div class="container-num-copies position-absolute bottom-0 start-0 px-1" id="main-1-7-num-copies">0</div><button type="button" class="btn btn-secondary btn-number btn-sm btn-pop position-absolute top-0 start-0" data-type="minus" data-deck="main" data-id="1-7">-</button><button type="button" class="btn btn-secondary btn-number btn-sm btn-push position-absolute top-0 end-0" data-type="plus" data-deck="main" data-id="1-7">+</button><button type="button" class="btn btn-secondary btn-number btn-sm btn-drop position-absolute bottom-0 end-0" data-type="drop" data-id="1-7">v</button></div>
@@ -772,7 +770,7 @@ h2, table {
 <div class="container-card position-relative m-1" id="main-P-15"><img class="d-block" width="80" height="112" src="https://one-draw.jp/ijinden/cardlist/P01/card/03_P_015.png" /><div class="container-num-copies position-absolute bottom-0 start-0 px-1" id="main-P-15-num-copies">0</div><button type="button" class="btn btn-secondary btn-number btn-sm btn-pop position-absolute top-0 start-0" data-type="minus" data-deck="main" data-id="P-15">-</button><button type="button" class="btn btn-secondary btn-number btn-sm btn-push position-absolute top-0 end-0" data-type="plus" data-deck="main" data-id="P-15">+</button><button type="button" class="btn btn-secondary btn-number btn-sm btn-drop position-absolute bottom-0 end-0" data-type="drop" data-id="P-15">v</button></div>
 <div class="container-card position-relative m-1" id="main-3-80"><img class="d-block" width="80" height="112" src="https://one-draw.jp/ijinden/cardlist/003/card/03_080.png" /><div class="container-num-copies position-absolute bottom-0 start-0 px-1" id="main-3-80-num-copies">0</div><button type="button" class="btn btn-secondary btn-number btn-sm btn-pop position-absolute top-0 start-0" data-type="minus" data-deck="main" data-id="3-80">-</button><button type="button" class="btn btn-secondary btn-number btn-sm btn-push position-absolute top-0 end-0" data-type="plus" data-deck="main" data-id="3-80">+</button><button type="button" class="btn btn-secondary btn-number btn-sm btn-drop position-absolute bottom-0 end-0" data-type="drop" data-id="3-80">v</button></div>
 </div>
-<h2 class="m-2">サイドデッキ (<span id="side-numCards">0</span>枚)</h2>
+<h2 class="m-2">サイドデッキ (<span id="side-num-cards">0</span>枚)</h2>
 <div class="container-deck m-1">
 <div class="container-card position-relative m-1" id="side-R-2"><img class="d-block" width="80" height="112" src="https://one-draw.jp/ijinden/cardlist/R01/card/R_002.png" /><div class="container-num-copies position-absolute bottom-0 start-0 px-1" id="side-R-2-num-copies">0</div><button type="button" class="btn btn-secondary btn-number btn-sm btn-pop position-absolute top-0 start-0" data-type="minus" data-deck="side" data-id="R-2">-</button><button type="button" class="btn btn-secondary btn-number btn-sm btn-push position-absolute top-0 end-0" data-type="plus" data-deck="side" data-id="R-2">+</button><button type="button" class="btn btn-secondary btn-number btn-sm btn-raise position-absolute bottom-0 end-0" data-type="raise" data-id="R-2">^</button></div>
 <div class="container-card position-relative m-1" id="side-1-7"><img class="d-block" width="80" height="112" src="https://one-draw.jp/ijinden/cardlist/001/card/01_007.png" /><div class="container-num-copies position-absolute bottom-0 start-0 px-1" id="side-1-7-num-copies">0</div><button type="button" class="btn btn-secondary btn-number btn-sm btn-pop position-absolute top-0 start-0" data-type="minus" data-deck="side" data-id="1-7">-</button><button type="button" class="btn btn-secondary btn-number btn-sm btn-push position-absolute top-0 end-0" data-type="plus" data-deck="side" data-id="1-7">+</button><button type="button" class="btn btn-secondary btn-number btn-sm btn-raise position-absolute bottom-0 end-0" data-type="raise" data-id="1-7">^</button></div>
@@ -1086,13 +1084,13 @@ h2, table {
 </div><!-- #deck-tab-pane -->
 <div class="tab-pane" id="simulator-tab-pane" role="tabpanel" aria-labelledby="nav-simulator-tab" tabindex="0">
 <h2 class="m-2">手札シミュレータβ</h2>
-<div class="container-simulator-buttons m-2">
+<div class="m-2">
 <button type="button" class="btn btn-outline-danger" id="btn-reset-simulation" disabled>リセット</button>
 <button type="button" class="btn btn-outline-success" id="btn-start-simulation">スタート</button>
 <button type="button" class="btn btn-outline-secondary" id="btn-mulligan-hand" disabled>マリガン</button>
 <button type="button" class="btn btn-outline-secondary" id="btn-keep-hand" disabled>キープ</button>
 </div>
-<div class="m-1" id="simulator">
+<div id="simulator">
 </div>
 </div><!-- #simulator-tab-pane -->
 <div class="tab-pane m-2" id="about-tab-pane" role="tabpanel" aria-labelledby="nav-about-tab" tabindex="0">
@@ -1323,7 +1321,7 @@ $(".input-number").change(function() {
   }
 
   // Update total number of cards in main/side deck
-  const elementNumCards = $("#" + deck + "-numCards");
+  const elementNumCards = $("#" + deck + "-num-cards");
   const delta = currentValue - oldValue;
   elementNumCards.text(String(Math.floor(Number(elementNumCards.text()) + delta)));
 
@@ -1418,8 +1416,8 @@ function makeIdArray(numCopiesMap) {
 }
 
 function setupGuardian(idArray, randomIndices) {
-  $("#simulator").append('<h2 class="mx-1 my-2">ガーディアン</h2>');
-  $("#simulator").append('<div id="guardian" class="mx-1" style="min-height: 120px;"></div>');
+  $("#simulator").append('<h2 class="m-2">ガーディアン</h2>');
+  $("#simulator").append('<div id="guardian" class="m-1" style="min-height: 120px;"></div>');
 
   // ガーディアン4枚
   for (var i = 0; i < 4; ++i) {
@@ -1435,8 +1433,8 @@ function setupGuardian(idArray, randomIndices) {
 
 function setupHand(idArray, randomIndices) {
   $("#simulator").append('<div id="wrapper-hand"></div>');
-  $("#wrapper-hand").append('<h2 class="mx-1 my-2">手札</h2>');
-  $("#wrapper-hand").append('<div id="hand" class="mx-1 my-2" style="min-height: 120px;"></div>');
+  $("#wrapper-hand").append('<h2 class="m-2">手札</h2>');
+  $("#wrapper-hand").append('<div id="hand" class="m-1" style="min-height: 120px;"></div>');
 
   // 手札6枚
   for (var i = 0; i < 6; ++i) {
@@ -1450,8 +1448,8 @@ function setupHand(idArray, randomIndices) {
 }
 
 function setupDraw(idArray, randomIndices) {
-  $("#simulator").append('<h2 class="mx-1 my-2">ドロー</h2>');
-  $("#simulator").append('<div id="draw" class="mx-1 my-2" style="min-height: 120px;"></div>');
+  $("#simulator").append('<h2 class="m-2">ドロー</h2>');
+  $("#simulator").append('<div id="draw" class="m-1" style="min-height: 120px;"></div>');
 
   // 残りすべてドロー
   while (randomIndices.length > 0) {
