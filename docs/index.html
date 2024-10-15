@@ -1144,7 +1144,7 @@ function filterTableFor(name) {
       return;
     }
 
-    $("#list tr").each(function() {
+    $("#list tbody tr").each(function() {
       const flag = Number($(this).data(name));
       if (flag === filterValue || flag == 0) {
         $(this).hide();
@@ -1174,7 +1174,7 @@ function filterTableForColor() {
       return;
     }
 
-    $("#list tr[id]").each(function() {
+    $("#list tbody tr").each(function() {
       const flag = Number($(this).data("color"));
       if (filterValue === 1 && flag !== filterValue) {
         // Colorless is selected AND this card is not colorless;
@@ -1190,7 +1190,7 @@ function filterTableForColor() {
 }
 
 function filterTableForMultiColor() {
-  $("#list tr[id]").each(function() {
+  $("#list tbody tr").each(function() {
     const flag = Number($(this).data("color"));
     // Check if the flag has only one bit set
     if ((flag & (flag - 1)) === 0) {
