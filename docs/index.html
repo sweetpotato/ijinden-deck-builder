@@ -1202,7 +1202,7 @@ function filterTableForMultiColor() {
   });
 }
 
-$(".btn-filter").click(function(event) {
+$(".btn-filter").on("click", function(event) {
   $("#list tr").show();
 
   filterTableFor("expansion");
@@ -1260,7 +1260,7 @@ function moveCard(deckFrom, deckTo, button) {
   inputTo.val(currentValueTo + 1).change();
 }
 
-$(".btn-number").click(function(event) {
+$(".btn-number").on("click", function(event) {
   event.preventDefault();
 
   // シミュレータ実行途中でデッキを変更した際に
@@ -1463,7 +1463,7 @@ function setupDraw(idArray, randomIndices) {
   }
 }
 
-$("#btn-reset-simulation").click(function(event) {
+$("#btn-reset-simulation").on("click", function(event) {
   event.preventDefault();
 
   // シミュレータをクリアする。
@@ -1476,7 +1476,7 @@ $("#btn-reset-simulation").click(function(event) {
   $("#btn-start-simulation").removeAttr("disabled");
 });
 
-$("#btn-start-simulation").click(function(event) {
+$("#btn-start-simulation").on("click", function(event) {
   event.preventDefault();
 
   const numCopiesMap = collectNumCopiesInMainDeck();
@@ -1499,7 +1499,7 @@ $("#btn-start-simulation").click(function(event) {
   setupHand(idArray, randomIndices);
 });
 
-$("#btn-mulligan-hand").click(function(event) {
+$("#btn-mulligan-hand").on("click", function(event) {
   event.preventDefault();
 
   $("#btn-mulligan-hand").attr("disabled", true);
@@ -1519,7 +1519,7 @@ $("#btn-mulligan-hand").click(function(event) {
   setupDraw(idArray, randomIndices);
 });
 
-$("#btn-keep-hand").click(function(event) {
+$("#btn-keep-hand").on("click", function(event) {
   event.preventDefault();
 
   $("#btn-mulligan-hand").attr("disabled", true);
