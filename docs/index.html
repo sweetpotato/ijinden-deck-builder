@@ -1341,6 +1341,20 @@ function collectNumCopiesInMainDeck() {
   return result;
 }
 
+// Map.values() は Iterator オブジェクトを返すが、
+// Safari on iOS では Iterator.reduce() はサポートされていない[1]。
+// ワークアラウンドとして、この関数で総和を算出する。
+// [1] https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Iterator#%E3%83%96%E3%83%A9%E3%82%A6%E3%82%B6%E3%83%BC%E3%81%AE%E4%BA%92%E6%8F%9B%E6%80%A7
+function sumNumCopies(numCopiesMap) {
+  var sum = 0;
+
+  numCopiesMap.forEach(function(value, key, map) {
+    sum += value;
+  });
+
+  return sum;
+}
+
 function excludeGuardian(numCopiesMap) {
   $("#guardian img").each(function() {
     const id = $(this).data("id");
@@ -1465,7 +1479,7 @@ $("#btn-start-simulation").click(function(event) {
   event.preventDefault();
 
   const numCopiesMap = collectNumCopiesInMainDeck();
-  const numCards = numCopiesMap.values().reduce((x, y) => x + y, 0);
+  const numCards = sumNumCopies(numCopiesMap)
   if (numCards < 10) {
     alert("メインデッキの枚数が少なすぎます。10枚以上にしてください。");
     return;
@@ -1495,7 +1509,7 @@ $("#btn-mulligan-hand").click(function(event) {
 
   // ガーディアンを除外した残りのカードを得る。
   const numCopiesMap = excludeGuardian(collectNumCopiesInMainDeck());
-  const numCards = numCopiesMap.values().reduce((x, y) => x + y, 0);
+  const numCards = sumNumCopies(numCopiesMap)
 
   const idArray = makeIdArray(numCopiesMap);
   const randomIndices = makeRandomIndices(numCards);
@@ -1512,7 +1526,7 @@ $("#btn-keep-hand").click(function(event) {
 
   // ガーディアンと手札を除外した残りのカードを得る。
   const numCopiesMap = excludeHand(excludeGuardian(collectNumCopiesInMainDeck()));
-  const numCards = numCopiesMap.values().reduce((x, y) => x + y, 0);
+  const numCards = sumNumCopies(numCopiesMap)
 
   const idArray = makeIdArray(numCopiesMap);
   const randomIndices = makeRandomIndices(numCards);
