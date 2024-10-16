@@ -11,28 +11,49 @@ h2, table {
   clear: both;
 }
 
+.img-card {
+  width: 80px;
+  height: 112px;
+  display: block;
+}
+
 .container-card-line-up {
   min-height: 120px;
   overflow: auto;
 }
 
-.container-card {
-  display: none;
+.container-card-line-up > .img-card {
   float: left;
+  margin-right: .5rem;
+  margin-bottom: .5rem;
 }
 
-.container-card img {
-  width: 80px;
-  height: 112px;
+.container-card {
+  float: left;
+  margin-right: .5rem;
+  margin-bottom: .5rem;
+}
+
+.container-deck .container-card {
+  display: none;
+  position: relative;
 }
 
 .container-card .container-num-copies {
   background-color: white;
   border: 1px solid black;
+  padding-left: .25rem;
+  padding-right: .25rem;
+  position: absolute;
+  left: 0;
+  bottom: 0;
 }
 
 .container-card .btn-pop {
   display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .container-card:hover .btn-pop {
@@ -41,6 +62,9 @@ h2, table {
 
 .container-card .btn-push {
   display: none;
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 
 .container-card:hover .btn-push {
@@ -49,6 +73,9 @@ h2, table {
 
 .container-card .btn-drop {
   display: none;
+  position: absolute;
+  right: 0;
+  bottom: 0;
 }
 
 .container-card:hover .btn-drop {
@@ -57,37 +84,29 @@ h2, table {
 
 .container-card .btn-raise {
   display: none;
+  position: absolute;
+  right: 0;
+  bottom: 0;
 }
 
 .container-card:hover .btn-raise {
   display: block;
 }
 
-.container-guardian {
+.container-guardian .container-card {
   background-color: gray;
 }
 
-.container-guardian:hover {
+.container-guardian .container-card:hover {
   background-color: inherit;
 }
 
-.container-guardian:hover .img-guardian {
-  visibility: visible;
-}
-.img-guardian {
-  width: 80px;
-  height: 112px;
+.container-guardian .container-card .img-card {
   visibility: hidden;
 }
 
-.img-hand {
-  width: 80px;
-  height: 112px;
-}
-
-.img-draw {
-  width: 80px;
-  height: 112px;
+.container-guardian .container-card:hover .img-card {
+  visibility: visible;
 }
 </style>
 </head>
@@ -459,7 +478,7 @@ h2, table {
 </div><!-- #cardlist-tab-pane -->
 <div class="tab-pane" id="deck-tab-pane" role="tabpanel" aria-labelledby="nav-deck-tab" tabindex="0">
 <h2 class="m-2">メインデッキ (<span id="main-num-cards">0</span>枚)</h2>
-<div class="container-card-line-up ms-2">
+<div class="container-card-line-up container-deck ms-2">
 <div class="container-card position-relative me-2 mb-2" id="main-R-2"><img class="d-block" width="80" height="112" src="https://one-draw.jp/ijinden/cardlist/R01/card/R_002.png" /><div class="container-num-copies position-absolute bottom-0 start-0 px-1" id="main-R-2-num-copies">0</div><button type="button" class="btn btn-secondary btn-number btn-sm btn-pop position-absolute top-0 start-0" data-type="minus" data-deck="main" data-id="R-2">-</button><button type="button" class="btn btn-secondary btn-number btn-sm btn-push position-absolute top-0 end-0" data-type="plus" data-deck="main" data-id="R-2">+</button><button type="button" class="btn btn-secondary btn-number btn-sm btn-drop position-absolute bottom-0 end-0" data-type="drop" data-id="R-2">v</button></div>
 <div class="container-card position-relative me-2 mb-2" id="main-1-7"><img class="d-block" width="80" height="112" src="https://one-draw.jp/ijinden/cardlist/001/card/01_007.png" /><div class="container-num-copies position-absolute bottom-0 start-0 px-1" id="main-1-7-num-copies">0</div><button type="button" class="btn btn-secondary btn-number btn-sm btn-pop position-absolute top-0 start-0" data-type="minus" data-deck="main" data-id="1-7">-</button><button type="button" class="btn btn-secondary btn-number btn-sm btn-push position-absolute top-0 end-0" data-type="plus" data-deck="main" data-id="1-7">+</button><button type="button" class="btn btn-secondary btn-number btn-sm btn-drop position-absolute bottom-0 end-0" data-type="drop" data-id="1-7">v</button></div>
 <div class="container-card position-relative me-2 mb-2" id="main-1-71"><img class="d-block" width="80" height="112" src="https://one-draw.jp/ijinden/cardlist/001/card/01_071.png" /><div class="container-num-copies position-absolute bottom-0 start-0 px-1" id="main-1-71-num-copies">0</div><button type="button" class="btn btn-secondary btn-number btn-sm btn-pop position-absolute top-0 start-0" data-type="minus" data-deck="main" data-id="1-71">-</button><button type="button" class="btn btn-secondary btn-number btn-sm btn-push position-absolute top-0 end-0" data-type="plus" data-deck="main" data-id="1-71">+</button><button type="button" class="btn btn-secondary btn-number btn-sm btn-drop position-absolute bottom-0 end-0" data-type="drop" data-id="1-71">v</button></div>
@@ -770,7 +789,7 @@ h2, table {
 <div class="container-card position-relative me-2 mb-2" id="main-3-80"><img class="d-block" width="80" height="112" src="https://one-draw.jp/ijinden/cardlist/003/card/03_080.png" /><div class="container-num-copies position-absolute bottom-0 start-0 px-1" id="main-3-80-num-copies">0</div><button type="button" class="btn btn-secondary btn-number btn-sm btn-pop position-absolute top-0 start-0" data-type="minus" data-deck="main" data-id="3-80">-</button><button type="button" class="btn btn-secondary btn-number btn-sm btn-push position-absolute top-0 end-0" data-type="plus" data-deck="main" data-id="3-80">+</button><button type="button" class="btn btn-secondary btn-number btn-sm btn-drop position-absolute bottom-0 end-0" data-type="drop" data-id="3-80">v</button></div>
 </div>
 <h2 class="m-2">サイドデッキ (<span id="side-num-cards">0</span>枚)</h2>
-<div class="container-card-line-up ms-2">
+<div class="container-card-line-up container-deck ms-2">
 <div class="container-card position-relative me-2 mb-2" id="side-R-2"><img class="d-block" width="80" height="112" src="https://one-draw.jp/ijinden/cardlist/R01/card/R_002.png" /><div class="container-num-copies position-absolute bottom-0 start-0 px-1" id="side-R-2-num-copies">0</div><button type="button" class="btn btn-secondary btn-number btn-sm btn-pop position-absolute top-0 start-0" data-type="minus" data-deck="side" data-id="R-2">-</button><button type="button" class="btn btn-secondary btn-number btn-sm btn-push position-absolute top-0 end-0" data-type="plus" data-deck="side" data-id="R-2">+</button><button type="button" class="btn btn-secondary btn-number btn-sm btn-raise position-absolute bottom-0 end-0" data-type="raise" data-id="R-2">^</button></div>
 <div class="container-card position-relative me-2 mb-2" id="side-1-7"><img class="d-block" width="80" height="112" src="https://one-draw.jp/ijinden/cardlist/001/card/01_007.png" /><div class="container-num-copies position-absolute bottom-0 start-0 px-1" id="side-1-7-num-copies">0</div><button type="button" class="btn btn-secondary btn-number btn-sm btn-pop position-absolute top-0 start-0" data-type="minus" data-deck="side" data-id="1-7">-</button><button type="button" class="btn btn-secondary btn-number btn-sm btn-push position-absolute top-0 end-0" data-type="plus" data-deck="side" data-id="1-7">+</button><button type="button" class="btn btn-secondary btn-number btn-sm btn-raise position-absolute bottom-0 end-0" data-type="raise" data-id="1-7">^</button></div>
 <div class="container-card position-relative me-2 mb-2" id="side-1-71"><img class="d-block" width="80" height="112" src="https://one-draw.jp/ijinden/cardlist/001/card/01_071.png" /><div class="container-num-copies position-absolute bottom-0 start-0 px-1" id="side-1-71-num-copies">0</div><button type="button" class="btn btn-secondary btn-number btn-sm btn-pop position-absolute top-0 start-0" data-type="minus" data-deck="side" data-id="1-71">-</button><button type="button" class="btn btn-secondary btn-number btn-sm btn-push position-absolute top-0 end-0" data-type="plus" data-deck="side" data-id="1-71">+</button><button type="button" class="btn btn-secondary btn-number btn-sm btn-raise position-absolute bottom-0 end-0" data-type="raise" data-id="1-71">^</button></div>
@@ -1416,7 +1435,7 @@ function makeIdArray(numCopiesMap) {
 
 function setupGuardian(idArray, randomIndices) {
   $("#simulator").append('<h2 class="m-2">ガーディアン</h2>');
-  $("#simulator").append('<div id="guardian" class="container-card-line-up ms-2"></div>');
+  $("#simulator").append('<div id="guardian" class="container-card-line-up container-guardian ms-2"></div>');
 
   // ガーディアン4枚
   for (var i = 0; i < 4; ++i) {
@@ -1424,10 +1443,11 @@ function setupGuardian(idArray, randomIndices) {
     const src = $("#main-" + id).children("img").attr("src");
     $("<img>", { "src": src })
         .data("id", id)
-        .addClass("img-guardian")
+        .addClass("img-card")
         .appendTo("#guardian");
   }
-  $("#guardian").children().wrap('<div class="container-guardian float-start me-2 mb-2"></div>');
+  // 各ガーディアンの img を .container-card で包む
+  $("#guardian").children().wrap('<div class="container-card"></div>');
 }
 
 function setupHand(idArray, randomIndices) {
@@ -1441,7 +1461,7 @@ function setupHand(idArray, randomIndices) {
     const src = $("#main-" + id).children("img").attr("src");
     $("<img>", { "src": src })
         .data("id", id)
-        .addClass("d-block float-start me-2 mb-2 img-hand")
+        .addClass("img-card")
         .appendTo("#hand");
   }
 }
@@ -1455,7 +1475,7 @@ function setupDraw(idArray, randomIndices) {
     const id = idArray.at(randomIndices.pop());
     const src = $("#main-" + id).children("img").attr("src");
     $("<img>", { "src": src })
-        .addClass("d-block float-start me-2 mb-2 img-draw")
+        .addClass("img-card")
         .appendTo("#draw");
   }
 }
