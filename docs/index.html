@@ -1448,13 +1448,14 @@ function setupGuardian(idArray, randomIndices) {
   }
   // 各ガーディアンの img を .container-card で包む
   $("#guardian").children().wrap('<div class="container-card"></div>');
+
+  // スタート→ガーディアン→手札→マリガンorキープの流れしかない前提で
+  // 手札のヘッダとコンテナをここでもう作ってしまう。
+  $("#simulator").append('<h2 class="m-2">手札</h2>');
+  $("#simulator").append('<div id="hand" class="container-card-line-up ms-2"></div>');
 }
 
 function setupHand(idArray, randomIndices) {
-  $("#simulator").append('<div id="wrapper-hand"></div>');
-  $("#wrapper-hand").append('<h2 class="m-2">手札</h2>');
-  $("#wrapper-hand").append('<div id="hand" class="container-card-line-up ms-2"></div>');
-
   // 手札6枚
   for (var i = 0; i < 6; ++i) {
     const id = idArray.at(randomIndices.pop());
@@ -1523,7 +1524,7 @@ $("#btn-mulligan-hand").on("click", function(event) {
   $("#btn-keep-hand").attr("disabled", true);
 
   // 手札をクリアする。
-  $("#wrapper-hand").empty();
+  $("#hand").empty();
 
   // ガーディアンを除外した残りのカードを得る。
   const numCopiesMap = excludeGuardian(collectNumCopiesInMainDeck());
