@@ -1219,7 +1219,7 @@ function filterTableForMultiColor() {
 }
 
 $(".btn-filter").on("click", function(event) {
-  $("#list tr").show();
+  $("#list tbody tr").show();
 
   filterTableFor("expansion");
   filterTableForColor();
@@ -1238,9 +1238,8 @@ function popCard(button) {
   // Save the current value in the textbox as the old one for delta update
   input.data("oldValue", currentValue);
 
-  //if (currentValue > Math.floor(Number(input.attr("min")))) {
+  // It's okay because any plus button has been disabled if current value is 0
   input.val(currentValue - 1).change();
-  //}
 }
 
 function pushCard(button) {
@@ -1342,7 +1341,6 @@ $(".input-number").change(function() {
   const elementNumCards = $("#" + deck + "-num-cards");
   const delta = currentValue - oldValue;
   elementNumCards.text(String(Math.floor(Number(elementNumCards.text()) + delta)));
-
 });
 
 function collectNumCopiesInMainDeck() {
@@ -1377,7 +1375,7 @@ function excludeGuardian(numCopiesMap) {
     const id = $(this).data("id");
     const numCopies = numCopiesMap.get(id);
     if (numCopies === 1) {
-      numCopiesMap.delete(id)
+      numCopiesMap.delete(id);
     } else {
       numCopiesMap.set(id, numCopies - 1);
     }
@@ -1391,7 +1389,7 @@ function excludeHand(numCopiesMap) {
     const id = $(this).data("id");
     const numCopies = numCopiesMap.get(id);
     if (numCopies === 1) {
-      numCopiesMap.delete(id)
+      numCopiesMap.delete(id);
     } else {
       numCopiesMap.set(id, numCopies - 1);
     }
