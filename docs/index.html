@@ -1495,16 +1495,22 @@ $("#btn-reset-simulation").on("click", function(event) {
 $("#btn-start-simulation").on("click", function(event) {
   event.preventDefault();
 
-  const numCopiesMap = collectNumCopiesInMainDeck();
-  const numCards = sumNumCopies(numCopiesMap)
-  if (numCards < 10) {
-    alert("メインデッキの枚数が少なすぎます。10枚以上にしてください。");
-    return;
-  }
-
   $("#btn-start-simulation").attr("disabled", true);
 
   $("#btn-reset-simulation").removeAttr("disabled");
+
+  const numCopiesMap = collectNumCopiesInMainDeck();
+  const numCards = sumNumCopies(numCopiesMap)
+  if (numCards < 10) {
+    const warning = $("<div>").html("&#x26A0;&#xFE0F;").text();
+    $("<div>")
+        .addClass("alert alert-warning")
+        .attr("role", "alert")
+        .text(warning + " メインデッキの枚数が少なすぎます。10枚以上にしてください。")
+        .appendTo("#simulator")
+    return;
+  }
+
   $("#btn-mulligan-hand").removeAttr("disabled");
   $("#btn-keep-hand").removeAttr("disabled");
 
