@@ -141,7 +141,7 @@ h2, table {
 <input type="radio" class="btn-check btn-filter" id="color-4" name="color" value="4" autocomplete="off" /><label class="btn btn-outline-primary" for="color-4">緑</label>
 <input type="radio" class="btn-check btn-filter" id="color-8" name="color" value="8" autocomplete="off" /><label class="btn btn-outline-primary" for="color-8">黄</label>
 <input type="radio" class="btn-check btn-filter" id="color-16" name="color" value="16" autocomplete="off" /><label class="btn btn-outline-primary" for="color-16">紫</label>
-<input type="radio" class="btn-check btn-filter" id="color-multi" name="color" value="multi" autocomplete="off" /><label class="btn btn-outline-primary" for="color-multi">多色</label>
+<input type="radio" class="btn-check btn-filter" id="color-32" name="color" value="32" autocomplete="off" /><label class="btn btn-outline-primary" for="color-32">多色</label>
 <input type="radio" class="btn-check btn-filter" id="color-64" name="color" value="64" autocomplete="off" /><label class="btn btn-outline-primary" for="color-64">無色</label>
 </fieldset>
 <fieldset class="float-start m-2">
@@ -1181,40 +1181,20 @@ function filterTableForColor() {
       return;
     }
 
-    const filterRawValue = $(this).val();
-    if (filterRawValue === "multi") {
-      filterTableForMultiColor();
-      return;
-    }
-
-    const filterValue = Number(filterRawValue);
+    const filterValue = Number($(this).val());
     if (filterValue === 0) {
       return;
     }
 
     $("#list tbody tr").each(function() {
       const flag = Number($(this).data("color"));
-      if (filterValue === 64 && flag !== filterValue) {
-        // Colorless is selected AND this card is not colorless;
-        // filter out
-        $(this).hide();
-      } else if (filterValue !== 64 && (flag & filterValue) !== filterValue) {
-        // Any colorset is selected AND this card does not have that color;
-        // filter out
+      // 単色 (1, 2, 4, 8, 16) または無色 (64) なら、ある1ビットのみが立っている。
+      // 多色なら、その色のビットに加えて、多色フラグ (32) が立っている。
+      // したがって、どの色コードでも同様に扱える。
+      if ((flag & filterValue) !== filterValue) {
         $(this).hide();
       }
     });
-  });
-}
-
-function filterTableForMultiColor() {
-  $("#list tbody tr").each(function() {
-    const flag = Number($(this).data("color"));
-    // Check if the flag has only one bit set
-    if ((flag & (flag - 1)) === 0) {
-      // Unicolor; filter out
-      $(this).hide();
-    }
   });
 }
 
