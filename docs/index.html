@@ -1232,13 +1232,13 @@ function popCard(button) {
   const id = button.closest("*[data-id]").data("id");
   const name = deck + "-" + id + "-num-copies";
   const input = $("input[name='" + name + "']");
-  const currentValue = Math.floor(Number(input.val()));
+  const numCopiesNew = Math.floor(Number(input.val())) - 1;
 
-  // Save the current value in the textbox as the old one for delta update
-  input.data("oldValue", currentValue);
+  // この関数が呼び出されたということは、マイナスボタンは有効であり、
+  // 現在の値は1以上である。したがって、マイナス1しても0未満にはならない。
+  input.val(numCopiesNew);
 
-  // It's okay because any plus button has been disabled if current value is 0
-  input.val(currentValue - 1).change();
+  updateDeck(deck, id, numCopiesNew, -1);
 }
 
 function pushCard(button) {
@@ -1246,13 +1246,11 @@ function pushCard(button) {
   const id = button.closest("*[data-id]").data("id");
   const name = deck + "-" + id + "-num-copies";
   const input = $("input[name='" + name + "']");
-  const currentValue = Math.floor(Number(input.val()));
+  const numCopiesNew = Math.floor(Number(input.val())) + 1;
 
-  // Save the current value in the textbox as the old one for delta update
-  input.data("oldValue", currentValue);
+  input.val(numCopiesNew);
 
-  // Note that there is no max value
-  input.val(currentValue + 1).change();
+  updateDeck(deck, id, numCopiesNew, 1);
 }
 
 function moveCard(deckFrom, deckTo, button) {
@@ -1262,16 +1260,16 @@ function moveCard(deckFrom, deckTo, button) {
   const nameTo = deckTo + "-" + id + "-num-copies";
   const inputFrom = $("input[name='" + nameFrom + "']");
   const inputTo = $("input[name='" + nameTo + "']");
-  const currentValueFrom = Math.floor(Number(inputFrom.val()));
-  const currentValueTo = Math.floor(Number(inputTo.val()));
+  const numCopiesNewFrom = Math.floor(Number(inputFrom.val())) - 1;
+  const numCopiesNewTo = Math.floor(Number(inputTo.val())) + 1;
 
-  // Save the current value in each textbox as the old one for delta update
-  inputFrom.data("oldValue", currentValueFrom);
-  inputTo.data("oldValue", currentValueTo);
+  // この関数が呼び出されたということは、移動ボタンは有効であり、移動元の
+  // 現在の値は1以上である。したがって、マイナス1しても0未満にはならない。
+  inputFrom.val(numCopiesNewFrom);
+  inputTo.val(numCopiesNewTo);
 
-  // Note that we do not need to care about min value
-  inputFrom.val(currentValueFrom - 1).change();
-  inputTo.val(currentValueTo + 1).change();
+  updateDeck(deckFrom, id, numCopiesNewFrom, -1);
+  updateDeck(deckTo, id, numCopiesNewTo, 1);
 }
 
 $(".btn-pop").on("click", function(event) {
@@ -1312,48 +1310,33 @@ $(".btn-raise").on("click", function(event) {
   moveCard("side", "main", $(this));
 });
 
-$(".input-number").change(function() {
-  const input = $(this);
-  const minValue = Math.floor(Number(input.attr("min")));
-  const currentValue = Math.floor(Number(input.val()));
-  const oldValue = Math.floor(Number(input.data("oldValue")));
-  const id = input.closest("*[data-id]").data("id");
-  const deck = input.closest("*[data-deck]").data("deck");
-
+function updateDeck(deck, id, numCopiesNew, delta) {
+  // マイナスボタンの有効化・無効化
   $("*[data-id='" + id + "'] .btn-pop").each(function() {
     if ($(this).closest("*[data-deck]").data("deck") !== deck) {
       return;
     }
 
-    if (currentValue === minValue) {
-      $(this).attr("disabled", true);
-    } else if (currentValue > minValue) {
+    if (numCopiesNew > 0) {
       $(this).removeAttr("disabled");
     } else {
-      input.val(oldValue);
-      // Do not need to update deck; fast return
-      return;
+      $(this).attr("disabled", true);
     }
   });
 
-  // Set the current value as canonicalized one
-  input.val(currentValue);
-
-  // Update deck
+  // デッキの更新
   const elementCard = $("#" + deck + "-" + id);
-
-  $("#" + deck + "-" + id).find(".container-num-copies").text(String(currentValue));
-  if (currentValue === 0) {
-    elementCard.hide();
-  } else {
+  elementCard.find(".container-num-copies").text(String(numCopiesNew));
+  if (numCopiesNew > 0) {
     elementCard.show();
+  } else {
+    elementCard.hide();
   }
 
-  // Update total number of cards in main/side deck
+  // デッキ枚数の更新
   const elementNumCards = $("#" + deck + "-num-cards");
-  const delta = currentValue - oldValue;
   elementNumCards.text(String(Math.floor(Number(elementNumCards.text()) + delta)));
-});
+}
 
 function collectNumCopiesInMainDeck() {
   const result = new Map();
