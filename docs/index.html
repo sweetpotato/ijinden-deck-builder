@@ -1146,7 +1146,7 @@ h2, table {
 </div><!-- #nav-tabContent -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script>
-// On click expansion/type/color/term button
+// On click expansion/type/term button
 function filterTableFor(name) {
   if ($("#" + name + "-0").prop("checked")) {
     return;
@@ -1227,7 +1227,6 @@ $(".btn-filter").on("click", function(event) {
   filterTableFor("term");
 });
 
-// On click plus/minus/drop/raise button
 function popCard(button) {
   const deck = button.closest("*[data-deck]").data("deck");
   const id = button.closest("*[data-id]").data("id");
@@ -1311,10 +1310,6 @@ $(".btn-raise").on("click", function(event) {
   $("#btn-keep-hand").attr("disabled", true);
 
   moveCard("side", "main", $(this));
-});
-
-$(".input-number").focusin(function() {
-  $(this).data("oldValue", $(this).val());
 });
 
 $(".input-number").change(function() {
