@@ -1275,7 +1275,7 @@ function moveCard(deckFrom, deckTo, button) {
   inputTo.val(currentValueTo + 1).change();
 }
 
-$(".btn-number").on("click", function(event) {
+$(".btn-pop").on("click", function(event) {
   event.preventDefault();
 
   // シミュレータ実行途中でデッキを変更した際に
@@ -1283,23 +1283,34 @@ $(".btn-number").on("click", function(event) {
   $("#btn-mulligan-hand").attr("disabled", true);
   $("#btn-keep-hand").attr("disabled", true);
 
-  switch ($(this).data("type")) {
-  case "minus":
-    popCard($(this));
-    break;
-  case "plus":
-    pushCard($(this));
-    break;
-  case "drop":
-    moveCard("main", "side", $(this));
-    break;
-  case "raise":
-    moveCard("side", "main", $(this));
-    break;
-  default:
-    // Never be here
-    return;
-  }
+  popCard($(this));
+});
+
+$(".btn-push").on("click", function(event) {
+  event.preventDefault();
+
+  $("#btn-mulligan-hand").attr("disabled", true);
+  $("#btn-keep-hand").attr("disabled", true);
+
+  pushCard($(this));
+});
+
+$(".btn-drop").on("click", function(event) {
+  event.preventDefault();
+
+  $("#btn-mulligan-hand").attr("disabled", true);
+  $("#btn-keep-hand").attr("disabled", true);
+
+  moveCard("main", "side", $(this));
+});
+
+$(".btn-raise").on("click", function(event) {
+  event.preventDefault();
+
+  $("#btn-mulligan-hand").attr("disabled", true);
+  $("#btn-keep-hand").attr("disabled", true);
+
+  moveCard("side", "main", $(this));
 });
 
 $(".input-number").focusin(function() {
