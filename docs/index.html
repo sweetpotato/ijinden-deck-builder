@@ -1323,7 +1323,7 @@ $(".input-number").change(function() {
   const oldValue = Math.floor(Number($(this).data("oldValue")));
   const id = $(this).data("id");
   const deck = $(this).data("deck");
-  const buttonMinus = $(".btn-number[data-type='minus'][data-id='" + id + "'][data-deck='" + deck + "']");
+  const buttonMinus = $(".btn-pop[data-id='" + id + "'][data-deck='" + deck + "']");
 
   if (currentValue === minValue) {
     buttonMinus.attr("disabled", true);
