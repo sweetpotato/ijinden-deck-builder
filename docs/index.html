@@ -1229,7 +1229,7 @@ $(".btn-filter").on("click", function(event) {
 
 // On click plus/minus/drop/raise button
 function popCard(button) {
-  const deck = button.data("deck");
+  const deck = button.closest("*[data-deck]").data("deck");
   const id = button.closest("*[data-id]").data("id");
   const name = "table-" + deck + "-" + id + "-num-copies";
   const input = $("input[name='" + name + "']");
@@ -1243,7 +1243,7 @@ function popCard(button) {
 }
 
 function pushCard(button) {
-  const deck = button.data("deck");
+  const deck = button.closest("*[data-deck]").data("deck");
   const id = button.closest("*[data-id]").data("id");
   const name = "table-" + deck + "-" + id + "-num-copies";
   const input = $("input[name='" + name + "']");
@@ -1318,25 +1318,31 @@ $(".input-number").focusin(function() {
 });
 
 $(".input-number").change(function() {
-  const minValue = Math.floor(Number($(this).attr("min")));
-  const currentValue = Math.floor(Number($(this).val()));
-  const oldValue = Math.floor(Number($(this).data("oldValue")));
-  const id = $(this).closest("*[data-id]").data("id");
-  const deck = $(this).data("deck");
-  const buttonMinus = $("*[data-id='" + id + "'] .btn-pop[data-deck='" + deck + "']");
+  const input = $(this);
+  const minValue = Math.floor(Number(input.attr("min")));
+  const currentValue = Math.floor(Number(input.val()));
+  const oldValue = Math.floor(Number(input.data("oldValue")));
+  const id = input.closest("*[data-id]").data("id");
+  const deck = input.closest("*[data-deck]").data("deck");
 
-  if (currentValue === minValue) {
-    buttonMinus.attr("disabled", true);
-  } else if (currentValue > minValue) {
-    buttonMinus.removeAttr("disabled");
-  } else {
-    $(this).val(oldValue);
-    // Do not need to update deck; fast return
-    return;
-  }
+  $("*[data-id='" + id + "'] .btn-pop").each(function() {
+    if ($(this).closest("*[data-deck]").data("deck") !== deck) {
+      return;
+    }
+
+    if (currentValue === minValue) {
+      $(this).attr("disabled", true);
+    } else if (currentValue > minValue) {
+      $(this).removeAttr("disabled");
+    } else {
+      input.val(oldValue);
+      // Do not need to update deck; fast return
+      return;
+    }
+  });
 
   // Set the current value as canonicalized one
-  $(this).val(currentValue);
+  input.val(currentValue);
 
   // Update deck
   const elementCard = $("#" + deck + "-" + id);
@@ -1357,7 +1363,7 @@ $(".input-number").change(function() {
 function collectNumCopiesInMainDeck() {
   const result = new Map();
 
-  $(".input-number[data-deck='main']").each(function() {
+  $("div[data-deck='main'] .input-number").each(function() {
     const numCopies = Number($(this).val());
     if (numCopies > 0) {
       result.set($(this).closest("*[data-id]").data("id"), numCopies);
