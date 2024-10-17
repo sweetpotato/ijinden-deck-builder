@@ -1230,11 +1230,16 @@ $(".btn-filter").on("click", function(event) {
 function popCard(button) {
   const deck = button.closest("*[data-deck]").data("deck");
   const id = button.closest("*[data-id]").data("id");
+
+  popCard2(deck, id);
+}
+
+function popCard2(deck, id) {
   const name = deck + "-" + id + "-num-copies";
   const input = $("input[name='" + name + "']");
   const numCopiesNew = Math.floor(Number(input.val())) - 1;
 
-  // この関数が呼び出されたということは、マイナスボタンは有効であり、
+  // この関数が呼び出されたということは、マイナスボタンや移動ボタンは有効で、
   // 現在の値は1以上である。したがって、マイナス1しても0未満にはならない。
   input.val(numCopiesNew);
 
@@ -1244,6 +1249,11 @@ function popCard(button) {
 function pushCard(button) {
   const deck = button.closest("*[data-deck]").data("deck");
   const id = button.closest("*[data-id]").data("id");
+
+  pushCard2(deck, id);
+}
+
+function pushCard2(deck, id) {
   const name = deck + "-" + id + "-num-copies";
   const input = $("input[name='" + name + "']");
   const numCopiesNew = Math.floor(Number(input.val())) + 1;
@@ -1256,20 +1266,9 @@ function pushCard(button) {
 function moveCard(deckFrom, deckTo, button) {
   // Note that there is no deck data
   const id = button.closest("*[data-id]").data("id");
-  const nameFrom = deckFrom + "-" +  id + "-num-copies";
-  const nameTo = deckTo + "-" + id + "-num-copies";
-  const inputFrom = $("input[name='" + nameFrom + "']");
-  const inputTo = $("input[name='" + nameTo + "']");
-  const numCopiesNewFrom = Math.floor(Number(inputFrom.val())) - 1;
-  const numCopiesNewTo = Math.floor(Number(inputTo.val())) + 1;
 
-  // この関数が呼び出されたということは、移動ボタンは有効であり、移動元の
-  // 現在の値は1以上である。したがって、マイナス1しても0未満にはならない。
-  inputFrom.val(numCopiesNewFrom);
-  inputTo.val(numCopiesNewTo);
-
-  updateDeck(deckFrom, id, numCopiesNewFrom, -1);
-  updateDeck(deckTo, id, numCopiesNewTo, 1);
+  popCard2(deckFrom, id);
+  pushCard2(deckTo, id);
 }
 
 $(".btn-pop").on("click", function(event) {
