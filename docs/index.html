@@ -1230,7 +1230,7 @@ $(".btn-filter").on("click", function(event) {
 // On click plus/minus/drop/raise button
 function popCard(button) {
   const deck = button.data("deck");
-  const id = button.data("id");
+  const id = button.closest("*[data-id]").data("id");
   const name = "table-" + deck + "-" + id + "-num-copies";
   const input = $("input[name='" + name + "']");
   const currentValue = Math.floor(Number(input.val()));
@@ -1244,7 +1244,7 @@ function popCard(button) {
 
 function pushCard(button) {
   const deck = button.data("deck");
-  const id = button.data("id");
+  const id = button.closest("*[data-id]").data("id");
   const name = "table-" + deck + "-" + id + "-num-copies";
   const input = $("input[name='" + name + "']");
   const currentValue = Math.floor(Number(input.val()));
@@ -1258,7 +1258,7 @@ function pushCard(button) {
 
 function moveCard(deckFrom, deckTo, button) {
   // Note that there is no deck data
-  const id = button.data("id");
+  const id = button.closest("*[data-id]").data("id");
   const nameFrom = "table-" + deckFrom + "-" +  id + "-num-copies";
   const nameTo = "table-" + deckTo + "-" + id + "-num-copies";
   const inputFrom = $("input[name='" + nameFrom + "']");
@@ -1321,9 +1321,9 @@ $(".input-number").change(function() {
   const minValue = Math.floor(Number($(this).attr("min")));
   const currentValue = Math.floor(Number($(this).val()));
   const oldValue = Math.floor(Number($(this).data("oldValue")));
-  const id = $(this).data("id");
+  const id = $(this).closest("*[data-id]").data("id");
   const deck = $(this).data("deck");
-  const buttonMinus = $(".btn-pop[data-id='" + id + "'][data-deck='" + deck + "']");
+  const buttonMinus = $("*[data-id='" + id + "'] .btn-pop[data-deck='" + deck + "']");
 
   if (currentValue === minValue) {
     buttonMinus.attr("disabled", true);
@@ -1341,7 +1341,7 @@ $(".input-number").change(function() {
   // Update deck
   const elementCard = $("#" + deck + "-" + id);
 
-  $("#" + deck + "-" + id + "-num-copies").text(String(currentValue));
+  $("#" + deck + "-" + id).find(".container-num-copies").text(String(currentValue));
   if (currentValue === 0) {
     elementCard.hide();
   } else {
@@ -1360,7 +1360,7 @@ function collectNumCopiesInMainDeck() {
   $(".input-number[data-deck='main']").each(function() {
     const numCopies = Number($(this).val());
     if (numCopies > 0) {
-      result.set($(this).data("id"), numCopies);
+      result.set($(this).closest("*[data-id]").data("id"), numCopies);
     }
   });
 
