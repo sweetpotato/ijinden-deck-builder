@@ -1,0 +1,98 @@
+h2, table, .table-responsive {
+  clear: both;
+}
+
+fieldset {
+  float: left;
+}
+
+.container-button label,
+.container-button button[type="button"] {
+  margin-right: .25rem;
+}
+
+.container-card-line-up {
+  min-height: 120px;
+  overflow: auto;
+}
+
+.container-card {
+  float: left;
+  margin-right: .5rem;
+  margin-bottom: .5rem;
+}
+
+.container-deck .container-card {
+  position: relative;
+}
+
+.container-guardian .container-card {
+  background-color: gray;
+}
+
+.container-guardian .container-card:hover {
+  background-color: inherit;
+}
+
+.container-num-copies {
+  background-color: white;
+  border: 1px solid black;
+  padding-left: .25rem;
+  padding-right: .25rem;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+}
+
+.btn-pop {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.container-card:hover .btn-pop {
+  display: block;
+}
+
+.btn-push {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.container-card:hover .btn-push {
+  display: block;
+}
+
+.btn-move {
+  display: none;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+
+.container-card:hover .btn-move {
+  display: block;
+}
+
+.img-card {
+  width: 80px;
+  height: 112px;
+  display: block;
+}
+
+.container-card-line-up > .img-card {
+  float: left;
+  margin-right: .5rem;
+  margin-bottom: .5rem;
+}
+
+.container-guardian .container-card .img-card {
+  visibility: hidden;
+}
+
+.container-guardian .container-card:hover .img-card {
+  visibility: visible;
+}
