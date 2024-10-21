@@ -1,6 +1,8 @@
-import { Accordion, AccordionBody, AccordionHeader, AccordionItem, Button } from 'react-bootstrap';
+import { useState } from 'react';
+import { Accordion, AccordionBody, AccordionHeader, AccordionItem, Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'react-bootstrap';
 
 import { dataCardsArrayForDeck } from './dataCards';
+import enumTabPane from './enumTabPane';
 import useLocalStorage from "./useLocalStorage";
 import { enumActionSimulator } from './reducerSimulator';
 import { sum } from './utils'
@@ -15,12 +17,14 @@ const DTF = new Intl.DateTimeFormat([], {
   second: "2-digit"
 });
 
-function TabPaneSave({ deckMain, setDeckMain, deckSide, setDeckSide, dispatchSimulator }) {
+function TabPaneSave({ deckMain, setDeckMain, deckSide, setDeckSide, setActiveTab, dispatchSimulator }) {
   const [ decksSaved, setDecksSaved ] = useLocalStorage();
+  const [ showModalEmpty, setShowModalEmpty ] = useState(false);
+  const [ showModalClear, setShowModalClear ] = useState(false);
 
   function handleClickSave() {
     if (deckMain.size === 0 && deckSide.size === 0) {
-      console.log("TODO レシピが空のため保存をスキップします。");
+      setShowModalEmpty(true);
       return;
     }
 
@@ -35,9 +39,21 @@ function TabPaneSave({ deckMain, setDeckMain, deckSide, setDeckSide, dispatchSim
     setDecksSaved(newDecksSaved);
   }
 
+  function handleClickConfirmEmpty() {
+    setShowModalEmpty(false);
+  }
+
   function handleClickClear() {
-    // TODO 確認メッセージを出す。
+    setShowModalClear(true);
+  }
+
+  function handleClickCancelClear() {
+    setShowModalClear(false);
+  }
+
+  function handleClickConfirmClear() {
     setDecksSaved([]);
+    setShowModalClear(false);
   }
 
   return (
@@ -46,6 +62,14 @@ function TabPaneSave({ deckMain, setDeckMain, deckSide, setDeckSide, dispatchSim
       <div className="m-2">
         <Button variant="outline-success" onClick={handleClickSave}>現在のレシピを保存</Button>
       </div>
+      <Modal show={showModalEmpty}>
+        <ModalHeader>マイデッキ</ModalHeader>
+        <ModalBody>現在のレシピが空のため保存できません。</ModalBody>
+        <ModalFooter>
+          <Button variant="outline-secondary" onClick={handleClickConfirmEmpty}>OK</Button>
+        </ModalFooter>
+      </Modal>
+
       <h2 className="m-2">ロード</h2>
       <Accordion>
         {
@@ -60,6 +84,7 @@ function TabPaneSave({ deckMain, setDeckMain, deckSide, setDeckSide, dispatchSim
                   <ContainerDeckSaved idDeck={idDeck} aDeckSaved={aDeckSaved[1]}
                       decksSaved={decksSaved} setDecksSaved={setDecksSaved}
                       setDeckMain={setDeckMain} setDeckSide={setDeckSide}
+                      setActiveTab={setActiveTab}
                       dispatchSimulator={dispatchSimulator} />
                 </AccordionBody>
               </AccordionItem>
@@ -70,6 +95,14 @@ function TabPaneSave({ deckMain, setDeckMain, deckSide, setDeckSide, dispatchSim
         <div className="m-2">
           <Button variant="outline-danger" onClick={handleClickClear}>保存済みレシピをすべて削除</Button>
         </div>
+        <Modal show={showModalClear}>
+          <ModalHeader>マイデッキ</ModalHeader>
+          <ModalBody>保存済みレシピをすべて削除します。よろしいですか？</ModalBody>
+          <ModalFooter>
+            <Button variant="outline-secondary" onClick={handleClickCancelClear}>キャンセル</Button>
+            <Button variant="outline-danger" onClick={handleClickConfirmClear}>削除する</Button>
+          </ModalFooter>
+        </Modal>
       </Accordion>
     </>
   )
@@ -79,11 +112,13 @@ function ContainerDeckSaved({
     idDeck, aDeckSaved,
     decksSaved, setDecksSaved,
     setDeckMain, setDeckSide,
+    setActiveTab,
     dispatchSimulator }) {
   function handleClickLoad() {
     setDeckMain(new Map(aDeckSaved.main));
     setDeckSide(new Map(aDeckSaved.side));
     dispatchSimulator(enumActionSimulator.INTERRUPT);
+    setActiveTab(enumTabPane.DECK);
   }
 
   function handleClickDelete() {
