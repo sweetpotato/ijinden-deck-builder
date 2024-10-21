@@ -96,3 +96,8 @@ fieldset {
 .container-guardian .container-card:hover .img-card {
   visibility: visible;
 }
+
+/* タブリンクの横幅を狭くして画面幅に収めることを試みる */
+.nav-tabs .nav-link {
+  padding: var(--bs-nav-link-padding-y) calc(.5 * var(--bs-nav-link-padding-x))
+}
