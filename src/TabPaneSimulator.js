@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Alert, Button } from "react-bootstrap";
 
 import ImageCard from "./ImageCard";
-import enumStateSimulator from "./enumStateSimulator";
+import { enumActionSimulator, enumStateSimulator } from "./reducerSimulator";
 import { dataCardsMap as dataCards } from "./dataCards";
 import { sum } from './utils'
 
@@ -64,7 +64,7 @@ function setupDraws(idArray, randomIndices) {
   return setupCards(randomIndices.length, idArray, randomIndices);
 }
 
-function TabPaneSimulator({ deck, state, setState }) {
+function TabPaneSimulator({ deck, state, dispatch }) {
   const [ guardians, setGuardians ] = useState(null);
   const [ hands, setHands ] = useState(null);
   const [ draws, setDraws ] = useState(null);
@@ -73,14 +73,14 @@ function TabPaneSimulator({ deck, state, setState }) {
     setGuardians(null);
     setHands(null);
     setDraws(null);
-    setState(enumStateSimulator.INITIAL);
+    dispatch(enumActionSimulator.RESET);
   }
 
   function handleClickStart() {
     // Do not use reduce; it is not supported on Safari on iOS
     const numCards = sum(deck.values());
     if (numCards < 10) {
-      setState(enumStateSimulator.LESS_THAN_TEN);
+      dispatch(enumActionSimulator.CHECK_MAIN_DECK);
       return;
     }
     const idArray = makeIdArray(deck);
@@ -91,7 +91,7 @@ function TabPaneSimulator({ deck, state, setState }) {
 
     setGuardians(newGuardians);
     setHands(newHands);
-    setState(enumStateSimulator.RUNNING);
+    dispatch(enumActionSimulator.START);
   }
 
   function handleClickMulligan() {
@@ -105,7 +105,7 @@ function TabPaneSimulator({ deck, state, setState }) {
 
     setHands(newHands);
     setDraws(newDraws);
-    setState(enumStateSimulator.FINISHED);
+    dispatch(enumActionSimulator.CONTINUE);
   }
 
   function handleClickKeep() {
@@ -117,7 +117,7 @@ function TabPaneSimulator({ deck, state, setState }) {
     const newDraws = setupDraws(idArray, randomIndices);
 
     setDraws(newDraws);
-    setState(enumStateSimulator.FINISHED);
+    dispatch(enumActionSimulator.CONTINUE);
   }
 
   const enabledStart = state === enumStateSimulator.INITIAL;

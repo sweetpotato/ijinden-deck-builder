@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useReducer, useState } from "react";
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 
@@ -6,7 +6,7 @@ import TabPaneCard from './TabPaneCard';
 import TabPaneDeck from './TabPaneDeck';
 import TabPaneSave from './TabPaneSave';
 import TabPaneSimulator from './TabPaneSimulator';
-import enumStateSimulator from "./enumStateSimulator";
+import { enumStateSimulator, reducerSimulator } from "./reducerSimulator";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -15,7 +15,7 @@ import './App.css';
 function App() {
   const [ deckMain, setDeckMain ] = useState(new Map());
   const [ deckSide, setDeckSide ] = useState(new Map());
-  const [ stateSimulator, setStateSimulator ] = useState(enumStateSimulator.INITIAL);
+  const [ stateSimulator, dispatchSimulator ] = useReducer(reducerSimulator, enumStateSimulator.INITIAL);
 
   return (
     <>
@@ -25,22 +25,22 @@ function App() {
           <TabPaneCard
               deckMain={deckMain} setDeckMain={setDeckMain}
               deckSide={deckSide} setDeckSide={setDeckSide}
-              stateSimulator={stateSimulator} setStateSimulator={setStateSimulator} />
+              dispatchSimulator={dispatchSimulator} />
         </Tab>
         <Tab eventKey="deck" title="レシピ">
           <TabPaneDeck
               deckMain={deckMain} setDeckMain={setDeckMain}
               deckSide={deckSide} setDeckSide={setDeckSide}
-              stateSimulator={stateSimulator} setStateSimulator={setStateSimulator} />
+              dispatchSimulator={dispatchSimulator} />
         </Tab>
         <Tab eventKey="save" title="マイデッキβ">
           <TabPaneSave
               deckMain={deckMain} setDeckMain={setDeckMain}
               deckSide={deckSide} setDeckSide={setDeckSide}
-              stateSimulator={stateSimulator} setStateSimulator={setStateSimulator} />
+              dispatchSimulator={dispatchSimulator} />
         </Tab>
         <Tab eventKey="simulator" title="シミュβ">
-          <TabPaneSimulator deck={deckMain} state={stateSimulator} setState={setStateSimulator} />
+          <TabPaneSimulator deck={deckMain} state={stateSimulator} dispatch={dispatchSimulator} />
         </Tab>
         <Tab eventKey="help" title="ヘルプ" className="m-2">
           <h2>これは何？</h2>

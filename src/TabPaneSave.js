@@ -2,7 +2,7 @@ import { Accordion, AccordionBody, AccordionHeader, AccordionItem, Button } from
 
 import { dataCardsArrayForDeck } from './dataCards';
 import useLocalStorage from "./useLocalStorage";
-import enumStateSimulator from './enumStateSimulator';
+import { enumActionSimulator } from './reducerSimulator';
 import { sum } from './utils'
 
 // YYYY/mm/dd HH:MM:SS
@@ -15,7 +15,7 @@ const DTF = new Intl.DateTimeFormat([], {
   second: "2-digit"
 });
 
-function TabPaneSave({ deckMain, setDeckMain, deckSide, setDeckSide, stateSimulator, setStateSimulator }) {
+function TabPaneSave({ deckMain, setDeckMain, deckSide, setDeckSide, dispatchSimulator }) {
   const [ decksSaved, setDecksSaved ] = useLocalStorage();
 
   function handleClickSave() {
@@ -60,7 +60,7 @@ function TabPaneSave({ deckMain, setDeckMain, deckSide, setDeckSide, stateSimula
                   <ContainerDeckSaved idDeck={idDeck} aDeckSaved={aDeckSaved[1]}
                       decksSaved={decksSaved} setDecksSaved={setDecksSaved}
                       setDeckMain={setDeckMain} setDeckSide={setDeckSide}
-                      stateSimulator={stateSimulator} setStateSimulator={setStateSimulator} />
+                      dispatchSimulator={dispatchSimulator} />
                 </AccordionBody>
               </AccordionItem>
             )
@@ -79,14 +79,11 @@ function ContainerDeckSaved({
     idDeck, aDeckSaved,
     decksSaved, setDecksSaved,
     setDeckMain, setDeckSide,
-    stateSimulator, setStateSimulator }) {
+    dispatchSimulator }) {
   function handleClickLoad() {
     setDeckMain(new Map(aDeckSaved.main));
     setDeckSide(new Map(aDeckSaved.side));
-
-    if (stateSimulator === enumStateSimulator.RUNNING) {
-      setStateSimulator(enumStateSimulator.ABORTED);
-    }
+    dispatchSimulator(enumActionSimulator.INTERRUPT);
   }
 
   function handleClickDelete() {

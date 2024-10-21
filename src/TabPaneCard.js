@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button, FormControl, InputGroup, Table, ToggleButton } from "react-bootstrap";
 
 import { dataCardsArrayForTable as dataCards } from "./dataCards"
+import { enumActionSimulator } from "./reducerSimulator"
 import { handleClickIncrement, handleClickDecrement } from "./handleClick"
 
 const dataExpansions = [
@@ -45,7 +46,7 @@ const dataTerms = [
 
 function TabPaneCard({
       deckMain, setDeckMain, deckSide, setDeckSide,
-      stateSimulator, setStateSimulator }) {
+      dispatchSimulator }) {
   const [ expansion, setExpansion ] = useState(0);
   const [ color, setColor ] = useState(0);
   const [ type, setType ] = useState(0);
@@ -94,8 +95,7 @@ function TabPaneCard({
                   selectedType={type} selectedTerm={term}
                   deckMain={deckMain} setDeckMain={setDeckMain}
                   deckSide={deckSide} setDeckSide={setDeckSide}
-                  stateSimulator={stateSimulator}
-                  setStateSimulator={setStateSimulator} />
+                  dispatchSimulator={dispatchSimulator} />
             ))
           }
         </tbody>
@@ -130,7 +130,7 @@ function TableRowCard({
     id, name, expansion, color, type, term,
     selectedExpansion, selectedType, selectedColor, selectedTerm,
     deckMain, setDeckMain, deckSide, setDeckSide,
-    stateSimulator, setStateSimulator }) {
+    dispatchSimulator }) {
   const show =
       (selectedExpansion === 0 || expansion === selectedExpansion) &&
       (selectedColor === 0 || (color & selectedColor) === selectedColor) &&
@@ -144,33 +144,31 @@ function TableRowCard({
       <td>{name}</td>
       <td>
         <FormControlCounter id={id} deck={deckMain} setDeck={setDeckMain}
-            stateSimulator={stateSimulator} setStateSimulator={setStateSimulator} />
+            dispatchSimulator={dispatchSimulator} />
       </td>
       <td>
-        <FormControlCounter id={id} deck={deckSide} setDeck={setDeckSide} isSide={true} />
+        <FormControlCounter id={id} deck={deckSide} setDeck={setDeckSide} />
       </td>
     </tr>
   );
 }
 
-function FormControlCounter({
-    id, deck, setDeck,
-    stateSimulator=undefined,
-    setStateSimulator=undefined,
-    isSide=false }) {
+function FormControlCounter({ id, deck, setDeck, dispatchSimulator=undefined }) {
   function handleClickMinus() {
-    handleClickDecrement(id, deck, setDeck,
-        isSide ? undefined : stateSimulator,
-        isSide ? undefined : setStateSimulator);
+    handleClickDecrement(id, deck, setDeck);
+    if (dispatchSimulator !== undefined) {
+      dispatchSimulator(enumActionSimulator.INTERRUPT);
+    }
   }
 
   function handleClickPlus() {
-    handleClickIncrement(id, deck, setDeck,
-        isSide ? undefined : stateSimulator,
-        isSide ? undefined : setStateSimulator);
+    handleClickIncrement(id, deck, setDeck);
+    if (dispatchSimulator !== undefined) {
+      dispatchSimulator(enumActionSimulator.INTERRUPT);
+    }
   }
 
-  const name = (isSide ? "side-" : "main-") + id;
+  const name = (dispatchSimulator !== undefined ? "main-" : "side-") + id;
   const counter = deck.has(id) ? deck.get(id) : 0;
   return (
     <InputGroup>

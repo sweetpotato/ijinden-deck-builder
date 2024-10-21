@@ -2,12 +2,13 @@ import { Button } from "react-bootstrap";
 
 import ImageCard from "./ImageCard";
 import { dataCardsArrayForDeck as dataCards } from "./dataCards"
+import { enumActionSimulator } from "./reducerSimulator"
 import { handleClickDecrement, handleClickIncrement } from "./handleClick";
 import { sum } from './utils'
 
 function TabPaneDeck({
       deckMain, setDeckMain, deckSide, setDeckSide,
-      stateSimulator, setStateSimulator }) {
+      dispatchSimulator }) {
   // Do not use reduce; it is not supported on Safari on iOS
   const numCardsMain = sum(deckMain.values());
   const numCardsSide = sum(deckSide.values());
@@ -22,8 +23,7 @@ function TabPaneDeck({
               <ContainerDeckCard {...element} key={element.id}
                   deckThis={deckMain} setDeckThis={setDeckMain}
                   deckThat={deckSide} setDeckThat={setDeckSide}
-                  stateSimulator={stateSimulator}
-                  setStateSimulator={setStateSimulator} />
+                  dispatchSimulator={dispatchSimulator} />
             )
           })
         }
@@ -37,8 +37,7 @@ function TabPaneDeck({
                   {...element} key={element.id}
                   deckThis={deckSide} setDeckThis={setDeckSide}
                   deckThat={deckMain} setDeckThat={setDeckMain}
-                  stateSimulator={stateSimulator}
-                  setStateSimulator={setStateSimulator}
+                  dispatchSimulator={dispatchSimulator}
                   isSide={true} />
             )
           })
@@ -51,22 +50,25 @@ function TabPaneDeck({
 function ContainerDeckCard({
     id, imageUrl, name,
     deckThis, setDeckThis, deckThat, setDeckThat,
-    stateSimulator, setStateSimulator, isSide=false }) {
+    dispatchSimulator, isSide=false }) {
   function handleClickMinus() {
-    handleClickDecrement(id, deckThis, setDeckThis,
-        isSide ? undefined : stateSimulator,
-        isSide ? undefined : setStateSimulator);
+    handleClickDecrement(id, deckThis, setDeckThis);
+    if (!isSide) {
+      dispatchSimulator(enumActionSimulator.INTERRUPT);
+    }
   }
 
   function handleClickPlus() {
-    handleClickIncrement(id, deckThis, setDeckThis,
-        isSide ? undefined : stateSimulator,
-        isSide ? undefined : setStateSimulator);
+    handleClickIncrement(id, deckThis, setDeckThis);
+    if (!isSide) {
+      dispatchSimulator(enumActionSimulator.INTERRUPT);
+    }
   }
 
   function handleClickMove() {
-    handleClickDecrement(id, deckThis, setDeckThis, stateSimulator, setStateSimulator);
-    handleClickIncrement(id, deckThat, setDeckThat, stateSimulator, setStateSimulator);
+    handleClickDecrement(id, deckThis, setDeckThis);
+    handleClickIncrement(id, deckThat, setDeckThat);
+    dispatchSimulator(enumActionSimulator.INTERRUPT);
   }
 
   const numCopies = deckThis.has(id) ? deckThis.get(id) : 0;
