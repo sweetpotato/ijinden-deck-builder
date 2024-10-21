@@ -4,6 +4,7 @@ import Tabs from 'react-bootstrap/Tabs';
 
 import TabPaneCard from './TabPaneCard';
 import TabPaneDeck from './TabPaneDeck';
+import TabPaneSave from './TabPaneSave';
 import TabPaneSimulator from './TabPaneSimulator';
 import enumStateSimulator from "./enumStateSimulator";
 
@@ -26,8 +27,14 @@ function App() {
               deckSide={deckSide} setDeckSide={setDeckSide}
               stateSimulator={stateSimulator} setStateSimulator={setStateSimulator} />
         </Tab>
-        <Tab eventKey="deck" title="デッキ">
+        <Tab eventKey="deck" title="レシピ">
           <TabPaneDeck
+              deckMain={deckMain} setDeckMain={setDeckMain}
+              deckSide={deckSide} setDeckSide={setDeckSide}
+              stateSimulator={stateSimulator} setStateSimulator={setStateSimulator} />
+        </Tab>
+        <Tab eventKey="save" title="マイデッキβ">
+          <TabPaneSave
               deckMain={deckMain} setDeckMain={setDeckMain}
               deckSide={deckSide} setDeckSide={setDeckSide}
               stateSimulator={stateSimulator} setStateSimulator={setStateSimulator} />
