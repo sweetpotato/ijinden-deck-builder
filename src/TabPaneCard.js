@@ -138,32 +138,30 @@ function ContainerFilter({
   title, name, state, handleChange, data,
 }) {
   return (
-    <>
-      <fieldset className="container-button m-2">
-        <legend className="h3">
-          {title}
-        </legend>
-        {
-          data.map((element) => {
-            const id = `${name}-${element.value}`;
-            return (
-              <ToggleButton
-                key={id}
-                type="radio"
-                variant="outline-primary"
-                id={id}
-                name={name}
-                value={element.value}
-                onChange={handleChange}
-                checked={state === element.value}
-              >
-                {element.label}
-              </ToggleButton>
-            );
-          })
-        }
-      </fieldset>
-    </>
+    <fieldset className="container-button m-2">
+      <legend className="h3">
+        {title}
+      </legend>
+      {
+        data.map((element) => {
+          const id = `${name}-${element.value}`;
+          return (
+            <ToggleButton
+              key={id}
+              type="radio"
+              variant="outline-primary"
+              id={id}
+              name={name}
+              value={element.value}
+              onChange={handleChange}
+              checked={state === element.value}
+            >
+              {element.label}
+            </ToggleButton>
+          );
+        })
+      }
+    </fieldset>
   );
 }
 
