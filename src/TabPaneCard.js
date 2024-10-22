@@ -3,9 +3,9 @@ import {
  Button, FormControl, InputGroup, Table, ToggleButton,
 } from 'react-bootstrap';
 
-import { dataCardsArrayForTable as dataCards } from './dataCards'
-import { enumActionSimulator } from './reducerSimulator'
-import { handleClickIncrement, handleClickDecrement } from './handleClick'
+import { dataCardsArrayForTable as dataCards } from './dataCards';
+import { enumActionSimulator } from './reducerSimulator';
+import { handleClickIncrement, handleClickDecrement } from './handleClick';
 
 const dataExpansions = [
   { value: 0, label: 'すべて' },

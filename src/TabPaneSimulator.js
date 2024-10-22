@@ -4,7 +4,7 @@ import { Alert, Button } from 'react-bootstrap';
 import ImageCard from './ImageCard';
 import { enumActionSimulator, enumStateSimulator } from './reducerSimulator';
 import { dataCardsMap as dataCards } from './dataCards';
-import { sum } from './utils'
+import { sum } from './utils';
 
 function excludeCards(array, deck) {
   array.forEach((element) => {
@@ -193,7 +193,7 @@ function TabPaneSimulator({ deck, state, dispatch }) {
             </>
       }
     </>
-  )
+  );
 }
 
 export default TabPaneSimulator;

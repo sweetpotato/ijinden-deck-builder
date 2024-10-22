@@ -1,4 +1,4 @@
-import cards from './cards.json'
+import cards from './cards.json';
 
 export const dataCardsArrayForTable = [...cards].sort((a, b) => a.orderTable - b.orderTable);
 export const dataCardsArrayForDeck = [...cards].sort((a, b) => a.orderDeck - b.orderDeck);

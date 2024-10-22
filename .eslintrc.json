@@ -24,7 +24,6 @@
     "react/jsx-wrap-multilines": "off",
     "react/no-array-index-key": "off",
     "react/react-in-jsx-scope": "off",
-    "react/prop-types": "off",
-    "semi": "off"
+    "react/prop-types": "off"
   }
 }

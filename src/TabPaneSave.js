@@ -7,7 +7,7 @@ import { dataCardsArrayForDeck } from './dataCards';
 import enumTabPane from './enumTabPane';
 import useLocalStorage from './useLocalStorage';
 import { enumActionSimulator } from './reducerSimulator';
-import { sum } from './utils'
+import { sum } from './utils';
 
 // YYYY/mm/dd HH:MM:SS
 const DTF = new Intl.DateTimeFormat([], {
@@ -80,7 +80,7 @@ function TabPaneSave({
           [...decksSaved].reverse().map((aDeckSaved, index) => {
             const idDeck = aDeckSaved[0];
             const timestamp = DTF.format(new Date(aDeckSaved[1].timestamp));
-            const header = `#${idDeck} (${timestamp})`
+            const header = `#${idDeck} (${timestamp})`;
             return (
               <AccordionItem key={idDeck} eventKey={idDeck}>
                 <AccordionHeader>{header}</AccordionHeader>
@@ -92,7 +92,7 @@ function TabPaneSave({
                       dispatchSimulator={dispatchSimulator} />
                 </AccordionBody>
               </AccordionItem>
-            )
+            );
           })
         }
         <h2 className="m-2">クリア</h2>
@@ -109,7 +109,7 @@ function TabPaneSave({
         </Modal>
       </Accordion>
     </>
-  )
+  );
 }
 
 function ContainerDeckSaved({

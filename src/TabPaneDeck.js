@@ -1,10 +1,10 @@
 import { Button } from 'react-bootstrap';
 
 import ImageCard from './ImageCard';
-import { dataCardsArrayForDeck as dataCards } from './dataCards'
-import { enumActionSimulator } from './reducerSimulator'
+import { dataCardsArrayForDeck as dataCards } from './dataCards';
+import { enumActionSimulator } from './reducerSimulator';
 import { handleClickDecrement, handleClickIncrement } from './handleClick';
-import { sum } from './utils'
+import { sum } from './utils';
 
 function TabPaneDeck({
       deckMain, setDeckMain, deckSide, setDeckSide,
