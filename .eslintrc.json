@@ -6,7 +6,6 @@
   ],
   "rules": {
     "linebreak-style": "off",
-    "max-len": "off",
     "no-plusplus": [ "error", { "allowForLoopAfterthoughts": true }],
     "react/jsx-filename-extension": "off",
     "react/jsx-closing-bracket-location": ["error", "line-aligned"],

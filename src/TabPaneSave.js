@@ -1,6 +1,14 @@
 import { useState } from 'react';
 import {
-  Accordion, AccordionBody, AccordionHeader, AccordionItem, Button, Modal, ModalBody, ModalFooter, ModalHeader,
+  Accordion,
+  AccordionBody,
+  AccordionHeader,
+  AccordionItem,
+  Button,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
 } from 'react-bootstrap';
 
 import { dataCardsArrayForDeck } from './dataCards';

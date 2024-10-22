@@ -17,12 +17,20 @@ function App() {
   const [deckMain, setDeckMain] = useState(new Map());
   const [deckSide, setDeckSide] = useState(new Map());
   const [activeTab, setActiveTab] = useState(enumTabPane.CARD);
-  const [stateSimulator, dispatchSimulator] = useReducer(reducerSimulator, enumStateSimulator.INITIAL);
+  const [stateSimulator, dispatchSimulator] = useReducer(
+    reducerSimulator,
+    enumStateSimulator.INITIAL,
+  );
 
   return (
     <>
       <h1 className="m-2">イジンデン デッキ作成</h1>
-      <Tabs activeKey={activeTab} defaultActiveKey={enumTabPane.CARD} transition={false} onSelect={(k) => setActiveTab(k)}>
+      <Tabs
+        activeKey={activeTab}
+        defaultActiveKey={enumTabPane.CARD}
+        transition={false}
+        onSelect={(k) => setActiveTab(k)}
+      >
         <Tab eventKey={enumTabPane.CARD} title="カード">
           <TabPaneCard
             deckMain={deckMain}
@@ -70,7 +78,9 @@ function App() {
           <h3>カード</h3>
           <p>各カードのプラス・マイナスボタンで、メインデッキ・サイドデッキ別々に枚数を増減できます。エキスパンション、色、種類、能力語でカードの絞り込みができます。</p>
           <h3>デッキ</h3>
+          {/* eslint-disable max-len */}
           <p>カードの左下をタップする（パソコンではカードの上にマウスカーソルを当てる）と、そのカードに重なるボタンが現れます。各ボタンで枚数の増減やメインデッキ・サイドデッキの入換えができます。</p>
+          {/* eslint-enable max-len */}
           <h2>未対応機能</h2>
           <dl>
             <dt>自前の画像保存</dt>
