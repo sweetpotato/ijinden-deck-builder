@@ -5,18 +5,18 @@ import {
 
 import { dataCardsArrayForDeck } from './dataCards';
 import enumTabPane from './enumTabPane';
-import useLocalStorage from "./useLocalStorage";
+import useLocalStorage from './useLocalStorage';
 import { enumActionSimulator } from './reducerSimulator';
 import { sum } from './utils'
 
 // YYYY/mm/dd HH:MM:SS
 const DTF = new Intl.DateTimeFormat([], {
-  year: "numeric",
-  month: "2-digit",
-  day: "2-digit",
-  hour: "2-digit",
-  minute: "2-digit",
-  second: "2-digit",
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+  hour: '2-digit',
+  minute: '2-digit',
+  second: '2-digit',
 });
 
 function TabPaneSave({
@@ -155,7 +155,7 @@ function ContainerDeckSavedPart({ title, deckSaved }) {
                 && <div key={card.id} className="float-start position-relative me-1 mb-1">
                   <img className="d-block" width="40" height="56" src={card.imageUrl} alt={card.name} />
                   <div className="position-absolute start-0 bottom-0 px-1"
-                      style={{ backgroundColor: "white", border: "1px solid black" }}>{deckSaved.get(card.id)}</div>
+                      style={{ backgroundColor: 'white', border: '1px solid black' }}>{deckSaved.get(card.id)}</div>
                   </div>
               ))
         }

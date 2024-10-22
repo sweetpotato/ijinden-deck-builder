@@ -1,49 +1,49 @@
-import { useState } from "react";
+import { useState } from 'react';
 import {
  Button, FormControl, InputGroup, Table, ToggleButton,
-} from "react-bootstrap";
+} from 'react-bootstrap';
 
-import { dataCardsArrayForTable as dataCards } from "./dataCards"
-import { enumActionSimulator } from "./reducerSimulator"
-import { handleClickIncrement, handleClickDecrement } from "./handleClick"
+import { dataCardsArrayForTable as dataCards } from './dataCards'
+import { enumActionSimulator } from './reducerSimulator'
+import { handleClickIncrement, handleClickDecrement } from './handleClick'
 
 const dataExpansions = [
-  { value: 0, label: "すべて" },
-  { value: 10, label: "伝説の武将" },
-  { value: 11, label: "知と美の革命" },
-  { value: 12, label: "日本の大天才" },
-  { value: 15, label: "第１弾ブースター" },
-  { value: 20, label: "三国の英傑" },
-  { value: 25, label: "第２弾ブースター" },
-  { value: 30, label: "発展する医療" },
-  { value: 35, label: "第３弾ブースター" },
+  { value: 0, label: 'すべて' },
+  { value: 10, label: '伝説の武将' },
+  { value: 11, label: '知と美の革命' },
+  { value: 12, label: '日本の大天才' },
+  { value: 15, label: '第１弾ブースター' },
+  { value: 20, label: '三国の英傑' },
+  { value: 25, label: '第２弾ブースター' },
+  { value: 30, label: '発展する医療' },
+  { value: 35, label: '第３弾ブースター' },
 ];
 
 const dataColors = [
-  { value: 0, label: "すべて" },
-  { value: 1, label: "赤" },
-  { value: 2, label: "青" },
-  { value: 4, label: "緑" },
-  { value: 8, label: "黄" },
-  { value: 16, label: "紫" },
-  { value: 32, label: "多色" },
-  { value: 64, label: "無色" },
+  { value: 0, label: 'すべて' },
+  { value: 1, label: '赤' },
+  { value: 2, label: '青' },
+  { value: 4, label: '緑' },
+  { value: 8, label: '黄' },
+  { value: 16, label: '紫' },
+  { value: 32, label: '多色' },
+  { value: 64, label: '無色' },
 ];
 
 const dataTypes = [
-  { value: 0, label: "すべて" },
-  { value: 1, label: "イジン" },
-  { value: 2, label: "ハイケイ" },
-  { value: 3, label: "マホウ" },
-  { value: 4, label: "マリョク" },
+  { value: 0, label: 'すべて' },
+  { value: 1, label: 'イジン' },
+  { value: 2, label: 'ハイケイ' },
+  { value: 3, label: 'マホウ' },
+  { value: 4, label: 'マリョク' },
 ];
 
 const dataTerms = [
-  { value: 0, label: "指定なし" },
-  { value: 1, label: "航海" },
-  { value: 2, label: "執筆" },
-  { value: 3, label: "決起" },
-  { value: 4, label: "徴募" },
+  { value: 0, label: '指定なし' },
+  { value: 1, label: '航海' },
+  { value: 2, label: '執筆' },
+  { value: 3, label: '決起' },
+  { value: 4, label: '徴募' },
 ];
 
 function TabPaneCard({
@@ -177,7 +177,7 @@ function FormControlCounter({
     }
   }
 
-  const name = (dispatchSimulator !== undefined ? "main-" : "side-") + id;
+  const name = (dispatchSimulator !== undefined ? 'main-' : 'side-') + id;
   const counter = deck.has(id) ? deck.get(id) : 0;
   return (
     <InputGroup>

@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { Alert, Button } from "react-bootstrap";
+import { useState } from 'react';
+import { Alert, Button } from 'react-bootstrap';
 
-import ImageCard from "./ImageCard";
-import { enumActionSimulator, enumStateSimulator } from "./reducerSimulator";
-import { dataCardsMap as dataCards } from "./dataCards";
+import ImageCard from './ImageCard';
+import { enumActionSimulator, enumStateSimulator } from './reducerSimulator';
+import { dataCardsMap as dataCards } from './dataCards';
 import { sum } from './utils'
 
 function excludeCards(array, deck) {

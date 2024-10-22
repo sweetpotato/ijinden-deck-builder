@@ -1,9 +1,9 @@
-import { Button } from "react-bootstrap";
+import { Button } from 'react-bootstrap';
 
-import ImageCard from "./ImageCard";
-import { dataCardsArrayForDeck as dataCards } from "./dataCards"
-import { enumActionSimulator } from "./reducerSimulator"
-import { handleClickDecrement, handleClickIncrement } from "./handleClick";
+import ImageCard from './ImageCard';
+import { dataCardsArrayForDeck as dataCards } from './dataCards'
+import { enumActionSimulator } from './reducerSimulator'
+import { handleClickDecrement, handleClickIncrement } from './handleClick';
 import { sum } from './utils'
 
 function TabPaneDeck({
@@ -71,9 +71,9 @@ function ContainerDeckCard({
 
   const numCopies = deckThis.has(id) ? deckThis.get(id) : 0;
   const show = numCopies > 0;
-  const moveText = isSide ? "^" : "v";
+  const moveText = isSide ? '^' : 'v';
   return (
-    <div className="container-card" style={{ display: (show ? "block" : "none") }}>
+    <div className="container-card" style={{ display: (show ? 'block' : 'none') }}>
       <ImageCard imageUrl={imageUrl} alt={name} />
       <div className="container-num-copies">{numCopies}</div>
       <Button variant="secondary" size="sm" className="btn-pop" onClick={handleClickMinus}>-</Button>

@@ -1,4 +1,4 @@
-import { useReducer, useState } from "react";
+import { useReducer, useState } from 'react';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 
@@ -6,8 +6,8 @@ import TabPaneCard from './TabPaneCard';
 import TabPaneDeck from './TabPaneDeck';
 import TabPaneSave from './TabPaneSave';
 import TabPaneSimulator from './TabPaneSimulator';
-import enumTabPane from "./enumTabPane";
-import { enumStateSimulator, reducerSimulator } from "./reducerSimulator";
+import enumTabPane from './enumTabPane';
+import { enumStateSimulator, reducerSimulator } from './reducerSimulator';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 

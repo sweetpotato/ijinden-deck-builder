@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
-const LOCAL_STORAGE_KEY = "ijinden-deck-builder";
+const LOCAL_STORAGE_KEY = 'ijinden-deck-builder';
 
 function getStorageValue() {
-  if (typeof window === "undefined") {
+  if (typeof window === 'undefined') {
     return [];
   }
   const decksSaved = window.localStorage.getItem(LOCAL_STORAGE_KEY);
