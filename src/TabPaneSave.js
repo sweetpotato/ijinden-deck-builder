@@ -85,7 +85,8 @@ function TabPaneSave({
               <AccordionItem key={idDeck} eventKey={idDeck}>
                 <AccordionHeader>{header}</AccordionHeader>
                 <AccordionBody>
-                  <ContainerDeckSaved idDeck={idDeck} aDeckSaved={aDeckSaved[1]}
+                  <ContainerDeckSaved
+                    idDeck={idDeck} aDeckSaved={aDeckSaved[1]}
                     decksSaved={decksSaved} setDecksSaved={setDecksSaved}
                     setDeckMain={setDeckMain} setDeckSide={setDeckSide}
                     setActiveTab={setActiveTab}
@@ -155,7 +156,8 @@ function ContainerDeckSavedPart({ title, deckSaved }) {
             deckSaved.has(card.id)
                 && <div key={card.id} className="float-start position-relative me-1 mb-1">
                   <img className="d-block" width="40" height="56" src={card.imageUrl} alt={card.name} />
-                  <div className="position-absolute start-0 bottom-0 px-1"
+                  <div
+                    className="position-absolute start-0 bottom-0 px-1"
                     style={{ backgroundColor: 'white', border: '1px solid black' }}
                   >
                     {deckSaved.get(card.id)}

@@ -20,7 +20,8 @@ function TabPaneDeck({
       <div className="container-card-line-up container-deck m-2">
         {
           dataCards.map((element) => (
-            <ContainerDeckCard {...element} key={element.id}
+            <ContainerDeckCard
+              {...element} key={element.id}
               deckThis={deckMain} setDeckThis={setDeckMain}
               deckThat={deckSide} setDeckThat={setDeckSide}
               dispatchSimulator={dispatchSimulator}

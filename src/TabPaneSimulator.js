@@ -130,22 +130,26 @@ function TabPaneSimulator({ deck, state, dispatch }) {
     <>
       <h2 className="m-2">手札シミュレータβ</h2>
       <div className="container-button mx-2 mt-2 mb-3">
-        <Button variant="outline-danger" onClick={handleClickReset}
+        <Button
+          variant="outline-danger" onClick={handleClickReset}
           disabled={!enabledReset}
         >
           リセット
         </Button>
-        <Button variant="outline-success" onClick={handleClickStart}
+        <Button
+          variant="outline-success" onClick={handleClickStart}
           disabled={!enabledStart}
         >
           スタート
         </Button>
-        <Button variant="outline-secondary" onClick={handleClickMulligan}
+        <Button
+          variant="outline-secondary" onClick={handleClickMulligan}
           disabled={!enabledMulliganOrKeep}
         >
           マリガン
         </Button>
-        <Button variant="outline-secondary" onClick={handleClickKeep}
+        <Button
+          variant="outline-secondary" onClick={handleClickKeep}
           disabled={!enabledMulliganOrKeep}
         >
           キープ
