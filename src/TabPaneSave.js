@@ -18,9 +18,9 @@ const DTF = new Intl.DateTimeFormat([], {
 });
 
 function TabPaneSave({ deckMain, setDeckMain, deckSide, setDeckSide, setActiveTab, dispatchSimulator }) {
-  const [ decksSaved, setDecksSaved ] = useLocalStorage();
-  const [ showModalEmpty, setShowModalEmpty ] = useState(false);
-  const [ showModalClear, setShowModalClear ] = useState(false);
+  const [decksSaved, setDecksSaved] = useLocalStorage();
+  const [showModalEmpty, setShowModalEmpty] = useState(false);
+  const [showModalClear, setShowModalClear] = useState(false);
 
   function handleClickSave() {
     if (deckMain.size === 0 && deckSide.size === 0) {
@@ -33,7 +33,7 @@ function TabPaneSave({ deckMain, setDeckMain, deckSide, setDeckSide, setActiveTa
     const timestamp = (new Date()).toJSON();
     const objectMain = [...deckMain.entries()];
     const objectSide = [...deckSide.entries()];
-    const objectDeck = [ idDeck, { timestamp: timestamp, main: objectMain, side: objectSide } ];
+    const objectDeck = [idDeck, { timestamp: timestamp, main: objectMain, side: objectSide }];
     // 最新のデッキとして、リストの末尾に保存する。
     const newDecksSaved = [...decksSaved, objectDeck];
     setDecksSaved(newDecksSaved);

@@ -14,10 +14,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
 function App() {
-  const [ deckMain, setDeckMain ] = useState(new Map());
-  const [ deckSide, setDeckSide ] = useState(new Map());
-  const [ activeTab, setActiveTab ] = useState(enumTabPane.CARD);
-  const [ stateSimulator, dispatchSimulator ] = useReducer(reducerSimulator, enumStateSimulator.INITIAL);
+  const [deckMain, setDeckMain] = useState(new Map());
+  const [deckSide, setDeckSide] = useState(new Map());
+  const [activeTab, setActiveTab] = useState(enumTabPane.CARD);
+  const [stateSimulator, dispatchSimulator] = useReducer(reducerSimulator, enumStateSimulator.INITIAL);
 
   return (
     <>

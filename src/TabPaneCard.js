@@ -47,10 +47,10 @@ const dataTerms = [
 function TabPaneCard({
       deckMain, setDeckMain, deckSide, setDeckSide,
       dispatchSimulator }) {
-  const [ expansion, setExpansion ] = useState(0);
-  const [ color, setColor ] = useState(0);
-  const [ type, setType ] = useState(0);
-  const [ term, setTerm ] = useState(0);
+  const [expansion, setExpansion] = useState(0);
+  const [color, setColor] = useState(0);
+  const [type, setType] = useState(0);
+  const [term, setTerm] = useState(0);
 
   function handleChangeExpansion(e) {
     setExpansion(Number(e.currentTarget.value));

@@ -20,7 +20,7 @@ function excludeCards(array, deck) {
 
 function makeIdArray(deck) {
   const result = [];
-  for (const [ id, numCopies ] of deck.entries()) {
+  for (const [id, numCopies] of deck.entries()) {
     for (let i = 0; i < numCopies; ++i) {
       result.push(id);
     }
@@ -65,9 +65,9 @@ function setupDraws(idArray, randomIndices) {
 }
 
 function TabPaneSimulator({ deck, state, dispatch }) {
-  const [ guardians, setGuardians ] = useState(null);
-  const [ hands, setHands ] = useState(null);
-  const [ draws, setDraws ] = useState(null);
+  const [guardians, setGuardians] = useState(null);
+  const [hands, setHands] = useState(null);
+  const [draws, setDraws] = useState(null);
 
   function handleClickReset() {
     setGuardians(null);

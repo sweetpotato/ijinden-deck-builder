@@ -11,13 +11,13 @@ function getStorageValue() {
 }
 
 function useLocalStorage() {
-  const [ decksSaved, setDecksSaved ] = useState(() => getStorageValue());
+  const [decksSaved, setDecksSaved] = useState(() => getStorageValue());
 
   useEffect(() => {
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(decksSaved));
-  }, [ decksSaved ]);
+  }, [decksSaved]);
 
-  return [ decksSaved, setDecksSaved ];
+  return [decksSaved, setDecksSaved];
 }
 
 export default useLocalStorage;

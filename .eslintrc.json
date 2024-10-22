@@ -5,7 +5,6 @@
     "react-app/jest"
   ],
   "rules": {
-    "array-bracket-spacing": "off",
     "arrow-body-style": "off",
     "arrow-parens": "off",
     "comma-dangle": "off",
