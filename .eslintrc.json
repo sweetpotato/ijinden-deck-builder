@@ -9,7 +9,6 @@
     "linebreak-style": "off",
     "max-len": "off",
     "no-plusplus": [ "error", { "allowForLoopAfterthoughts": true }],
-    "prefer-destructuring": "off",
     "prefer-template": "off",
     "quotes": "off",
     "react/jsx-boolean-value": "off",

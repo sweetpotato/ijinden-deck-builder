@@ -2,14 +2,14 @@ import { dataCardsArrayForTable, dataCardsArrayForDeck, dataCardsMap } from "./d
 
 test("dataCardsArrayForTable は orderTable 順", () => {
   expect(Array.isArray(dataCardsArrayForTable)).toBe(true);
-  const length = dataCardsArrayForTable.length;
+  const { length } = dataCardsArrayForTable;
   expect(dataCardsArrayForTable[0].orderTable).toBe(1);
   expect(dataCardsArrayForTable[length - 1].orderTable).toBe(length);
 });
 
 test("dataCardsArrayForDeck は orderDeck 順", () => {
   expect(Array.isArray(dataCardsArrayForDeck)).toBe(true);
-  const length = dataCardsArrayForDeck.length;
+  const { length } = dataCardsArrayForDeck;
   expect(dataCardsArrayForDeck[0].orderDeck).toBe(1);
   expect(dataCardsArrayForDeck[length - 1].orderDeck).toBe(length);
 });
