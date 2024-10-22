@@ -37,7 +37,7 @@ function TabPaneSave({
     const timestamp = (new Date()).toJSON();
     const objectMain = [...deckMain.entries()];
     const objectSide = [...deckSide.entries()];
-    const objectDeck = [idDeck, { timestamp: timestamp, main: objectMain, side: objectSide }];
+    const objectDeck = [idDeck, { timestamp, main: objectMain, side: objectSide }];
     // 最新のデッキとして、リストの末尾に保存する。
     const newDecksSaved = [...decksSaved, objectDeck];
     setDecksSaved(newDecksSaved);
