@@ -147,7 +147,7 @@ function TableRowCard({
   return (
     <tr data-id={id} data-expansion={expansion}
         data-color={color} data-type={type} data-term={term}
-        style={{ display: (show ? 'table-row' : 'none')}}>
+        style={{ display: (show ? 'table-row' : 'none') }}>
       <td>{id}</td>
       <td>{name}</td>
       <td>
