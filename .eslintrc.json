@@ -8,7 +8,6 @@
     "indent": "off",
     "linebreak-style": "off",
     "max-len": "off",
-    "no-bitwise": "off",
     "no-plusplus": [ "error", { "allowForLoopAfterthoughts": true }],
     "no-trailing-spaces": "off",
     "no-var": "off",
