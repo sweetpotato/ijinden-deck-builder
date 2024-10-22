@@ -8,7 +8,8 @@ import { sum } from './utils'
 
 function TabPaneDeck({
       deckMain, setDeckMain, deckSide, setDeckSide,
-      dispatchSimulator }) {
+      dispatchSimulator,
+}) {
   // Do not use reduce; it is not supported on Safari on iOS
   const numCardsMain = sum(deckMain.values());
   const numCardsSide = sum(deckSide.values());
@@ -46,7 +47,8 @@ function TabPaneDeck({
 function ContainerDeckCard({
     id, imageUrl, name,
     deckThis, setDeckThis, deckThat, setDeckThat,
-    dispatchSimulator, isSide=false }) {
+    dispatchSimulator, isSide=false,
+}) {
   function handleClickMinus() {
     handleClickDecrement(id, deckThis, setDeckThis);
     if (!isSide) {

@@ -1,5 +1,7 @@
 import { useState } from 'react';
-import { Accordion, AccordionBody, AccordionHeader, AccordionItem, Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'react-bootstrap';
+import {
+ Accordion, AccordionBody, AccordionHeader, AccordionItem, Button, Modal, ModalBody, ModalFooter, ModalHeader,
+} from 'react-bootstrap';
 
 import { dataCardsArrayForDeck } from './dataCards';
 import enumTabPane from './enumTabPane';
@@ -17,7 +19,9 @@ const DTF = new Intl.DateTimeFormat([], {
   second: "2-digit",
 });
 
-function TabPaneSave({ deckMain, setDeckMain, deckSide, setDeckSide, setActiveTab, dispatchSimulator }) {
+function TabPaneSave({
+ deckMain, setDeckMain, deckSide, setDeckSide, setActiveTab, dispatchSimulator,
+}) {
   const [decksSaved, setDecksSaved] = useLocalStorage();
   const [showModalEmpty, setShowModalEmpty] = useState(false);
   const [showModalClear, setShowModalClear] = useState(false);
@@ -113,7 +117,8 @@ function ContainerDeckSaved({
     decksSaved, setDecksSaved,
     setDeckMain, setDeckSide,
     setActiveTab,
-    dispatchSimulator }) {
+    dispatchSimulator,
+}) {
   function handleClickLoad() {
     setDeckMain(new Map(aDeckSaved.main));
     setDeckSide(new Map(aDeckSaved.side));

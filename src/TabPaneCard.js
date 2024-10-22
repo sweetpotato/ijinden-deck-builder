@@ -1,5 +1,7 @@
 import { useState } from "react";
-import { Button, FormControl, InputGroup, Table, ToggleButton } from "react-bootstrap";
+import {
+ Button, FormControl, InputGroup, Table, ToggleButton,
+} from "react-bootstrap";
 
 import { dataCardsArrayForTable as dataCards } from "./dataCards"
 import { enumActionSimulator } from "./reducerSimulator"
@@ -46,7 +48,8 @@ const dataTerms = [
 
 function TabPaneCard({
       deckMain, setDeckMain, deckSide, setDeckSide,
-      dispatchSimulator }) {
+      dispatchSimulator,
+}) {
   const [expansion, setExpansion] = useState(0);
   const [color, setColor] = useState(0);
   const [type, setType] = useState(0);
@@ -104,7 +107,9 @@ function TabPaneCard({
   );
 }
 
-function ContainerFilter({ title, name, state, handleChange, data }) {
+function ContainerFilter({
+ title, name, state, handleChange, data,
+}) {
   return (
     <>
       <fieldset className="container-button m-2">
@@ -130,7 +135,8 @@ function TableRowCard({
     id, name, expansion, color, type, term,
     selectedExpansion, selectedType, selectedColor, selectedTerm,
     deckMain, setDeckMain, deckSide, setDeckSide,
-    dispatchSimulator }) {
+    dispatchSimulator,
+}) {
   /* eslint-disable no-bitwise */
   const show =
       (selectedExpansion === 0 || expansion === selectedExpansion) &&
@@ -155,7 +161,9 @@ function TableRowCard({
   );
 }
 
-function FormControlCounter({ id, deck, setDeck, dispatchSimulator=undefined }) {
+function FormControlCounter({
+ id, deck, setDeck, dispatchSimulator=undefined,
+}) {
   function handleClickMinus() {
     handleClickDecrement(id, deck, setDeck);
     if (dispatchSimulator !== undefined) {
