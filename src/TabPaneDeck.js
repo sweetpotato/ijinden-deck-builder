@@ -22,6 +22,7 @@ function TabPaneDeck({
       <h2 className="m-2">{titleMain}</h2>
       <div className="container-card-line-up container-deck m-2">
         {
+          /* eslint-disable react/jsx-props-no-spreading */
           dataCards.map((element) => (
             <ContainerDeckCard
               {...element}
@@ -33,11 +34,13 @@ function TabPaneDeck({
               dispatchSimulator={dispatchSimulator}
             />
           ))
+          /* eslint-enable react/jsx-props-no-spreading */
         }
       </div>
       <h2 className="mx-2">{titleSide}</h2>
       <div className="container-card-line-up container-deck m-2">
         {
+          /* eslint-disable react/jsx-props-no-spreading */
           dataCards.map((element) => (
             <ContainerDeckCard
               {...element}
@@ -50,6 +53,7 @@ function TabPaneDeck({
               isSide
             />
           ))
+          /* eslint-enable react/jsx-props-no-spreading */
         }
       </div>
     </>

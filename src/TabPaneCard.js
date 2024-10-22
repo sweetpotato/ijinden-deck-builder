@@ -112,6 +112,7 @@ function TabPaneCard({
         </thead>
         <tbody>
           {
+            /* eslint-disable react/jsx-props-no-spreading */
             dataCards.map((element) => (
               <TableRowCard
                 {...element}
@@ -127,6 +128,7 @@ function TabPaneCard({
                 dispatchSimulator={dispatchSimulator}
               />
             ))
+            /* eslint-enable react/jsx-props-no-spreading */
           }
         </tbody>
       </Table>

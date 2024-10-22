@@ -12,7 +12,6 @@
     "react/jsx-closing-bracket-location": ["error", "line-aligned"],
     "react/jsx-closing-tag-location": ["error", "line-aligned"],
     "react/jsx-no-bind": "off",
-    "react/jsx-props-no-spreading": "off",
     "react/react-in-jsx-scope": "off",
     "react/prop-types": "off"
   }
