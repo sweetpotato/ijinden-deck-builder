@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import {
- Button, FormControl, InputGroup, Table, ToggleButton,
+  Button, FormControl, InputGroup, Table, ToggleButton,
 } from 'react-bootstrap';
 
 import { dataCardsArrayForTable as dataCards } from './dataCards';
@@ -47,8 +47,8 @@ const dataTerms = [
 ];
 
 function TabPaneCard({
-      deckMain, setDeckMain, deckSide, setDeckSide,
-      dispatchSimulator,
+  deckMain, setDeckMain, deckSide, setDeckSide,
+  dispatchSimulator,
 }) {
   const [expansion, setExpansion] = useState(0);
   const [color, setColor] = useState(0);
@@ -108,7 +108,7 @@ function TabPaneCard({
 }
 
 function ContainerFilter({
- title, name, state, handleChange, data,
+  title, name, state, handleChange, data,
 }) {
   return (
     <>
@@ -132,10 +132,10 @@ function ContainerFilter({
 }
 
 function TableRowCard({
-    id, name, expansion, color, type, term,
-    selectedExpansion, selectedType, selectedColor, selectedTerm,
-    deckMain, setDeckMain, deckSide, setDeckSide,
-    dispatchSimulator,
+  id, name, expansion, color, type, term,
+  selectedExpansion, selectedType, selectedColor, selectedTerm,
+  deckMain, setDeckMain, deckSide, setDeckSide,
+  dispatchSimulator,
 }) {
   /* eslint-disable no-bitwise */
   const show = (selectedExpansion === 0 || expansion === selectedExpansion)
@@ -161,7 +161,7 @@ function TableRowCard({
 }
 
 function FormControlCounter({
- id, deck, setDeck, dispatchSimulator = undefined,
+  id, deck, setDeck, dispatchSimulator = undefined,
 }) {
   function handleClickMinus() {
     handleClickDecrement(id, deck, setDeck);

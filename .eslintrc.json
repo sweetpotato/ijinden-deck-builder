@@ -5,7 +5,6 @@
     "react-app/jest"
   ],
   "rules": {
-    "indent": "off",
     "linebreak-style": "off",
     "max-len": "off",
     "no-plusplus": [ "error", { "allowForLoopAfterthoughts": true }],

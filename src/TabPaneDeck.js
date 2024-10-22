@@ -7,8 +7,8 @@ import { handleClickDecrement, handleClickIncrement } from './handleClick';
 import { sum } from './utils';
 
 function TabPaneDeck({
-      deckMain, setDeckMain, deckSide, setDeckSide,
-      dispatchSimulator,
+  deckMain, setDeckMain, deckSide, setDeckSide,
+  dispatchSimulator,
 }) {
   // Do not use reduce; it is not supported on Safari on iOS
   const numCardsMain = sum(deckMain.values());
@@ -24,7 +24,7 @@ function TabPaneDeck({
                   deckThis={deckMain} setDeckThis={setDeckMain}
                   deckThat={deckSide} setDeckThat={setDeckSide}
                   dispatchSimulator={dispatchSimulator} />
-            ))
+          ))
         }
       </div>
       <h2 className="mx-2">サイドデッキ ({numCardsSide}枚)</h2>
@@ -37,7 +37,7 @@ function TabPaneDeck({
                   deckThat={deckMain} setDeckThat={setDeckMain}
                   dispatchSimulator={dispatchSimulator}
                   isSide={true} />
-            ))
+          ))
         }
       </div>
     </>
@@ -45,9 +45,9 @@ function TabPaneDeck({
 }
 
 function ContainerDeckCard({
-    id, imageUrl, name,
-    deckThis, setDeckThis, deckThat, setDeckThat,
-    dispatchSimulator, isSide = false,
+  id, imageUrl, name,
+  deckThis, setDeckThis, deckThat, setDeckThat,
+  dispatchSimulator, isSide = false,
 }) {
   function handleClickMinus() {
     handleClickDecrement(id, deckThis, setDeckThis);

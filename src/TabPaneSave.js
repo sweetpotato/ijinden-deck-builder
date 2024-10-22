@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import {
- Accordion, AccordionBody, AccordionHeader, AccordionItem, Button, Modal, ModalBody, ModalFooter, ModalHeader,
+  Accordion, AccordionBody, AccordionHeader, AccordionItem, Button, Modal, ModalBody, ModalFooter, ModalHeader,
 } from 'react-bootstrap';
 
 import { dataCardsArrayForDeck } from './dataCards';
@@ -20,7 +20,7 @@ const DTF = new Intl.DateTimeFormat([], {
 });
 
 function TabPaneSave({
- deckMain, setDeckMain, deckSide, setDeckSide, setActiveTab, dispatchSimulator,
+  deckMain, setDeckMain, deckSide, setDeckSide, setActiveTab, dispatchSimulator,
 }) {
   const [decksSaved, setDecksSaved] = useLocalStorage();
   const [showModalEmpty, setShowModalEmpty] = useState(false);
@@ -113,11 +113,11 @@ function TabPaneSave({
 }
 
 function ContainerDeckSaved({
-    idDeck, aDeckSaved,
-    decksSaved, setDecksSaved,
-    setDeckMain, setDeckSide,
-    setActiveTab,
-    dispatchSimulator,
+  idDeck, aDeckSaved,
+  decksSaved, setDecksSaved,
+  setDeckMain, setDeckSide,
+  setActiveTab,
+  dispatchSimulator,
 }) {
   function handleClickLoad() {
     setDeckMain(new Map(aDeckSaved.main));
@@ -157,7 +157,7 @@ function ContainerDeckSavedPart({ title, deckSaved }) {
                   <div className="position-absolute start-0 bottom-0 px-1"
                       style={{ backgroundColor: 'white', border: '1px solid black' }}>{deckSaved.get(card.id)}</div>
                   </div>
-              ))
+          ))
         }
       </div>
     </>
