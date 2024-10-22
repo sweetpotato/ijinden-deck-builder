@@ -174,9 +174,10 @@ function TabPaneSimulator({ deck, state, dispatch }) {
               <div className="container-card-line-up container-guardian ms-2">
                 {
                   guardians.map((element, index) => {
+                    const key = `${element}-${index}`;
                     const card = dataCards.get(element);
                     return (
-                      <div key={index} className="container-card">
+                      <div key={key} className="container-card">
                         <ImageCard imageUrl={card.imageUrl} alt={card.name} />
                       </div>
                     );
@@ -187,9 +188,10 @@ function TabPaneSimulator({ deck, state, dispatch }) {
               <div className="container-card-line-up ms-2">
                 {
                   hands.map((element, index) => {
+                    const key = `${element}-${index}`;
                     const card = dataCards.get(element);
                     return (
-                      <ImageCard key={index} imageUrl={card.imageUrl} alt={card.name} />
+                      <ImageCard key={key} imageUrl={card.imageUrl} alt={card.name} />
                     );
                   })
                 }
@@ -203,9 +205,10 @@ function TabPaneSimulator({ deck, state, dispatch }) {
               <div className="container-card-line-up ms-2">
                 {
                   draws.map((element, index) => {
+                    const key = `${element}-${index}`;
                     const card = dataCards.get(element);
                     return (
-                      <ImageCard key={index} imageUrl={card.imageUrl} alt={card.name} />
+                      <ImageCard key={key} imageUrl={card.imageUrl} alt={card.name} />
                     );
                   })
                 }
