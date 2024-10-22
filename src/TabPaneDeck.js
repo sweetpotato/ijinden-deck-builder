@@ -18,29 +18,25 @@ function TabPaneDeck({
       <h2 className="m-2">メインデッキ ({numCardsMain}枚)</h2>
       <div className="container-card-line-up container-deck m-2">
         {
-          dataCards.map((element) => {
-            return (
+          dataCards.map((element) => (
               <ContainerDeckCard {...element} key={element.id}
                   deckThis={deckMain} setDeckThis={setDeckMain}
                   deckThat={deckSide} setDeckThat={setDeckSide}
                   dispatchSimulator={dispatchSimulator} />
-            )
-          })
+            ))
         }
       </div>
       <h2 className="mx-2">サイドデッキ ({numCardsSide}枚)</h2>
       <div className="container-card-line-up container-deck m-2">
         {
-          dataCards.map((element) => {
-            return (
+          dataCards.map((element) => (
               <ContainerDeckCard
                   {...element} key={element.id}
                   deckThis={deckSide} setDeckThis={setDeckSide}
                   deckThat={deckMain} setDeckThat={setDeckMain}
                   dispatchSimulator={dispatchSimulator}
                   isSide={true} />
-            )
-          })
+            ))
         }
       </div>
     </>
