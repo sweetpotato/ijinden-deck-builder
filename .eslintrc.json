@@ -7,7 +7,7 @@
   "rules": {
     "linebreak-style": "off",
     "no-plusplus": [ "error", { "allowForLoopAfterthoughts": true }],
-    "react/jsx-filename-extension": "off",
+    "react/jsx-filename-extension": "warn",
     "react/jsx-closing-bracket-location": ["error", "line-aligned"],
     "react/jsx-closing-tag-location": ["error", "line-aligned"],
     "react/jsx-no-bind": "off",
