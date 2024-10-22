@@ -9,7 +9,6 @@
     "linebreak-style": "off",
     "max-len": "off",
     "no-plusplus": [ "error", { "allowForLoopAfterthoughts": true }],
-    "operator-linebreak": "off",
     "prefer-destructuring": "off",
     "prefer-template": "off",
     "quotes": "off",

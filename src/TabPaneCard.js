@@ -138,11 +138,10 @@ function TableRowCard({
     dispatchSimulator,
 }) {
   /* eslint-disable no-bitwise */
-  const show =
-      (selectedExpansion === 0 || expansion === selectedExpansion) &&
-      (selectedColor === 0 || (color & selectedColor) === selectedColor) &&
-      (selectedType === 0 || type === selectedType) &&
-      (selectedTerm === 0 || term === selectedTerm);
+  const show = (selectedExpansion === 0 || expansion === selectedExpansion)
+      && (selectedColor === 0 || (color & selectedColor) === selectedColor)
+      && (selectedType === 0 || type === selectedType)
+      && (selectedTerm === 0 || term === selectedTerm);
   /* eslint-enable no-bitwise */
   return (
     <tr data-id={id} data-expansion={expansion}

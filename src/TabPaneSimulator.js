@@ -123,10 +123,9 @@ function TabPaneSimulator({ deck, state, dispatch }) {
   const enabledStart = state === enumStateSimulator.INITIAL;
   const enabledReset = state !== enumStateSimulator.INITIAL;
   const enabledMulliganOrKeep = state === enumStateSimulator.RUNNING;
-  const showGuardiansAndHands =
-      state === enumStateSimulator.RUNNING ||
-      state === enumStateSimulator.FINISHED ||
-      state === enumStateSimulator.ABORTED;
+  const showGuardiansAndHands = state === enumStateSimulator.RUNNING
+      || state === enumStateSimulator.FINISHED
+      || state === enumStateSimulator.ABORTED;
   return (
     <>
       <h2 className="m-2">手札シミュレータβ</h2>
@@ -141,16 +140,16 @@ function TabPaneSimulator({ deck, state, dispatch }) {
             disabled={!enabledMulliganOrKeep}>キープ</Button>
       </div>
       {
-        state === enumStateSimulator.LESS_THAN_TEN &&
-            <Alert variant="warning">&#x26A0;&#xFE0F; メインデッキの枚数が少なすぎます。10枚以上にしてください。</Alert>
+        state === enumStateSimulator.LESS_THAN_TEN
+            && <Alert variant="warning">&#x26A0;&#xFE0F; メインデッキの枚数が少なすぎます。10枚以上にしてください。</Alert>
       }
       {
-        state === enumStateSimulator.ABORTED &&
-            <Alert variant="warning">&#x26A0;&#xFE0F; シミュレーション中にメインデッキが編集されました。リセットしてください。</Alert>
+        state === enumStateSimulator.ABORTED
+            && <Alert variant="warning">&#x26A0;&#xFE0F; シミュレーション中にメインデッキが編集されました。リセットしてください。</Alert>
       }
       {
-        showGuardiansAndHands &&
-            <>
+        showGuardiansAndHands
+            && <>
               <h3 className="m-2">ガーディアン</h3>
               <div className="container-card-line-up container-guardian ms-2">
                 {
@@ -178,8 +177,8 @@ function TabPaneSimulator({ deck, state, dispatch }) {
             </>
       }
       {
-        state === enumStateSimulator.FINISHED &&
-            <>
+        state === enumStateSimulator.FINISHED
+            && <>
               <h3 className="m-2">ドロー</h3>
               <div className="container-card-line-up ms-2">
                 {
