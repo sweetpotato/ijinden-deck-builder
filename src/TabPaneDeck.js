@@ -47,7 +47,7 @@ function TabPaneDeck({
 function ContainerDeckCard({
     id, imageUrl, name,
     deckThis, setDeckThis, deckThat, setDeckThat,
-    dispatchSimulator, isSide=false,
+    dispatchSimulator, isSide = false,
 }) {
   function handleClickMinus() {
     handleClickDecrement(id, deckThis, setDeckThis);

@@ -161,7 +161,7 @@ function TableRowCard({
 }
 
 function FormControlCounter({
- id, deck, setDeck, dispatchSimulator=undefined,
+ id, deck, setDeck, dispatchSimulator = undefined,
 }) {
   function handleClickMinus() {
     handleClickDecrement(id, deck, setDeck);
