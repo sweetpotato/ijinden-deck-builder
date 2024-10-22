@@ -1,6 +1,47 @@
 {
   "extends": [
+    "airbnb",
     "react-app",
     "react-app/jest"
-  ]
+  ],
+  "rules": {
+    "array-bracket-spacing": "off",
+    "arrow-body-style": "off",
+    "arrow-parens": "off",
+    "comma-dangle": "off",
+    "consistent-return": "off",
+    "import/prefer-default-export": "off",
+    "indent": "off",
+    "linebreak-style": "off",
+    "max-len": "off",
+    "no-bitwise": "off",
+    "no-plusplus": [ "error", { "allowForLoopAfterthoughts": true }],
+    "no-trailing-spaces": "off",
+    "no-var": "off",
+    "object-curly-newline": "off",
+    "object-curly-spacing": "off",
+    "object-shorthand": "off",
+    "operator-linebreak": "off",
+    "prefer-destructuring": "off",
+    "prefer-template": "off",
+    "quotes": "off",
+    "react/jsx-boolean-value": "off",
+    "react/jsx-filename-extension": "off",
+    "react/jsx-indent": "off",
+    "react/jsx-closing-bracket-location": "off",
+    "react/jsx-closing-tag-location": "off",
+    "react/jsx-first-prop-new-line": "off",
+    "react/jsx-indent-props": "off",
+    "react/jsx-max-props-per-line": "off",
+    "react/jsx-no-bind": "off",
+    "react/jsx-no-useless-fragment": "off",
+    "react/jsx-one-expression-per-line": "off",
+    "react/jsx-props-no-spreading": "off",
+    "react/jsx-wrap-multilines": "off",
+    "react/no-array-index-key": "off",
+    "react/react-in-jsx-scope": "off",
+    "react/prop-types": "off",
+    "space-infix-ops": "off",
+    "semi": "off"
+  }
 }
