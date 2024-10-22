@@ -150,9 +150,11 @@ function ContainerDeckSaved({
 }
 
 function ContainerDeckSavedPart({ title, deckSaved }) {
+  const titleFull = `${title} (${sum(deckSaved.values())}枚)`;
+
   return (
     <>
-      <h3 className="mb-1">{title} ({sum(deckSaved.values())}枚)</h3>
+      <h3 className="mb-1">{titleFull}</h3>
       <div className="overflow-auto mb-1" style={{ minHeight: 60 }}>
         {
           dataCardsArrayForDeck.map((card) => (

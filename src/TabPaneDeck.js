@@ -14,9 +14,12 @@ function TabPaneDeck({
   const numCardsMain = sum(deckMain.values());
   const numCardsSide = sum(deckSide.values());
 
+  const titleMain = `メインデッキ (${numCardsMain}枚)`;
+  const titleSide = `サイドデッキ (${numCardsSide}枚)`;
+
   return (
     <>
-      <h2 className="m-2">メインデッキ ({numCardsMain}枚)</h2>
+      <h2 className="m-2">{titleMain}</h2>
       <div className="container-card-line-up container-deck m-2">
         {
           dataCards.map((element) => (
@@ -32,7 +35,7 @@ function TabPaneDeck({
           ))
         }
       </div>
-      <h2 className="mx-2">サイドデッキ ({numCardsSide}枚)</h2>
+      <h2 className="mx-2">{titleSide}</h2>
       <div className="container-card-line-up container-deck m-2">
         {
           dataCards.map((element) => (

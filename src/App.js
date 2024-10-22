@@ -75,9 +75,25 @@ function App() {
           <dl>
             <dt>自前の画像保存</dt>
             <dd>OS のスクショ機能で保存願います。</dd>
-            <dd>Windows: <a href="https://support.microsoft.com/ja-jp/windows/snipping-tool-%E3%82%92%E4%BD%BF%E3%81%A3%E3%81%A6%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%BC%E3%83%B3-%E3%82%B7%E3%83%A7%E3%83%83%E3%83%88%E3%82%92%E3%82%AD%E3%83%A3%E3%83%97%E3%83%81%E3%83%A3%E3%81%99%E3%82%8B-00246869-1843-655f-f220-97299b865f6b">Snipping Tool を使ってスクリーン ショットをキャプチャする</a></dd>
-            <dd>Android: <a href="https://support.google.com/android/answer/9075928?hl=ja&sjid=12199801082883893448-AP">Android デバイスで画面の画像（スクリーンショット）または動画を撮影する</a> → スクロール スクリーンショットを撮る</dd>
-            <dd>iPhone: <a href="https://support.apple.com/ja-jp/guide/iphone/iphc872c0115/ios">iPhoneでスクリーンショットを撮る</a> → フルページのスクリーンショットを撮る</dd>
+            <dd>
+              Windows:
+              {' '}
+              <a href="https://support.microsoft.com/ja-jp/windows/snipping-tool-%E3%82%92%E4%BD%BF%E3%81%A3%E3%81%A6%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%BC%E3%83%B3-%E3%82%B7%E3%83%A7%E3%83%83%E3%83%88%E3%82%92%E3%82%AD%E3%83%A3%E3%83%97%E3%83%81%E3%83%A3%E3%81%99%E3%82%8B-00246869-1843-655f-f220-97299b865f6b">Snipping Tool を使ってスクリーン ショットをキャプチャする</a>
+            </dd>
+            <dd>
+              Android:
+              {' '}
+              <a href="https://support.google.com/android/answer/9075928?hl=ja&sjid=12199801082883893448-AP">Android デバイスで画面の画像（スクリーンショット）または動画を撮影する</a>
+              {' '}
+              → スクロール スクリーンショットを撮る
+            </dd>
+            <dd>
+              iPhone:
+              {' '}
+              <a href="https://support.apple.com/ja-jp/guide/iphone/iphc872c0115/ios">iPhoneでスクリーンショットを撮る</a>
+              {' '}
+              → フルページのスクリーンショットを撮る
+            </dd>
             <dt>デッキ保存</dt>
             <dd>お手数ですが再入力をお願いします。</dd>
             <dt>高度な検索</dt>
