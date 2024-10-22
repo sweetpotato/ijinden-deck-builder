@@ -74,20 +74,32 @@ function TabPaneCard({
   return (
     <>
       <ContainerFilter
-        title="エキスパンション" name="expansion" state={expansion}
-        handleChange={handleChangeExpansion} data={dataExpansions}
+        title="エキスパンション"
+        name="expansion"
+        state={expansion}
+        handleChange={handleChangeExpansion}
+        data={dataExpansions}
       />
       <ContainerFilter
-        title="色" name="color" state={color}
-        handleChange={handleChangeColor} data={dataColors}
+        title="色"
+        name="color"
+        state={color}
+        handleChange={handleChangeColor}
+        data={dataColors}
       />
       <ContainerFilter
-        title="種類" name="type" state={type}
-        handleChange={handleChangeType} data={dataTypes}
+        title="種類"
+        name="type"
+        state={type}
+        handleChange={handleChangeType}
+        data={dataTypes}
       />
       <ContainerFilter
-        title="能力語" name="term" state={term}
-        handleChange={handleChangeTerm} data={dataTerms}
+        title="能力語"
+        name="term"
+        state={term}
+        handleChange={handleChangeTerm}
+        data={dataTerms}
       />
       <Table responsive hover variant="light">
         <thead className="sticky-top">
@@ -102,11 +114,16 @@ function TabPaneCard({
           {
             dataCards.map((element) => (
               <TableRowCard
-                {...element} key={element.id}
-                selectedExpansion={expansion} selectedColor={color}
-                selectedType={type} selectedTerm={term}
-                deckMain={deckMain} setDeckMain={setDeckMain}
-                deckSide={deckSide} setDeckSide={setDeckSide}
+                {...element}
+                key={element.id}
+                selectedExpansion={expansion}
+                selectedColor={color}
+                selectedType={type}
+                selectedTerm={term}
+                deckMain={deckMain}
+                setDeckMain={setDeckMain}
+                deckSide={deckSide}
+                setDeckSide={setDeckSide}
                 dispatchSimulator={dispatchSimulator}
               />
             ))
@@ -131,8 +148,13 @@ function ContainerFilter({
             const id = `${name}-${element.value}`;
             return (
               <ToggleButton
-                key={id} type="radio" variant="outline-primary"
-                id={id} name={name} value={element.value} onChange={handleChange}
+                key={id}
+                type="radio"
+                variant="outline-primary"
+                id={id}
+                name={name}
+                value={element.value}
+                onChange={handleChange}
                 checked={state === element.value}
               >
                 {element.label}
@@ -159,15 +181,20 @@ function TableRowCard({
   /* eslint-enable no-bitwise */
   return (
     <tr
-      data-id={id} data-expansion={expansion}
-      data-color={color} data-type={type} data-term={term}
+      data-id={id}
+      data-expansion={expansion}
+      data-color={color}
+      data-type={type}
+      data-term={term}
       style={{ display: (show ? 'table-row' : 'none') }}
     >
       <td>{id}</td>
       <td>{name}</td>
       <td>
         <FormControlCounter
-          id={id} deck={deckMain} setDeck={setDeckMain}
+          id={id}
+          deck={deckMain}
+          setDeck={setDeckMain}
           dispatchSimulator={dispatchSimulator}
         />
       </td>
@@ -200,7 +227,8 @@ function FormControlCounter({
   return (
     <InputGroup>
       <Button
-        variant="outline-secondary" onClick={handleClickMinus}
+        variant="outline-secondary"
+        onClick={handleClickMinus}
         disabled={counter <= 0}
       >
         -

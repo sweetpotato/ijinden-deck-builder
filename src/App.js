@@ -25,22 +25,28 @@ function App() {
       <Tabs activeKey={activeTab} defaultActiveKey={enumTabPane.CARD} transition={false} onSelect={(k) => setActiveTab(k)}>
         <Tab eventKey={enumTabPane.CARD} title="カード">
           <TabPaneCard
-            deckMain={deckMain} setDeckMain={setDeckMain}
-            deckSide={deckSide} setDeckSide={setDeckSide}
+            deckMain={deckMain}
+            setDeckMain={setDeckMain}
+            deckSide={deckSide}
+            setDeckSide={setDeckSide}
             dispatchSimulator={dispatchSimulator}
           />
         </Tab>
         <Tab eventKey={enumTabPane.DECK} title="レシピ">
           <TabPaneDeck
-            deckMain={deckMain} setDeckMain={setDeckMain}
-            deckSide={deckSide} setDeckSide={setDeckSide}
+            deckMain={deckMain}
+            setDeckMain={setDeckMain}
+            deckSide={deckSide}
+            setDeckSide={setDeckSide}
             dispatchSimulator={dispatchSimulator}
           />
         </Tab>
         <Tab eventKey={enumTabPane.SAVE_AND_LOAD} title="マイデッキβ">
           <TabPaneSave
-            deckMain={deckMain} setDeckMain={setDeckMain}
-            deckSide={deckSide} setDeckSide={setDeckSide}
+            deckMain={deckMain}
+            setDeckMain={setDeckMain}
+            deckSide={deckSide}
+            setDeckSide={setDeckSide}
             setActiveTab={setActiveTab}
             dispatchSimulator={dispatchSimulator}
           />

@@ -86,9 +86,12 @@ function TabPaneSave({
                 <AccordionHeader>{header}</AccordionHeader>
                 <AccordionBody>
                   <ContainerDeckSaved
-                    idDeck={idDeck} aDeckSaved={aDeckSaved[1]}
-                    decksSaved={decksSaved} setDecksSaved={setDecksSaved}
-                    setDeckMain={setDeckMain} setDeckSide={setDeckSide}
+                    idDeck={idDeck}
+                    aDeckSaved={aDeckSaved[1]}
+                    decksSaved={decksSaved}
+                    setDecksSaved={setDecksSaved}
+                    setDeckMain={setDeckMain}
+                    setDeckSide={setDeckSide}
                     setActiveTab={setActiveTab}
                     dispatchSimulator={dispatchSimulator}
                   />

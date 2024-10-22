@@ -21,9 +21,12 @@ function TabPaneDeck({
         {
           dataCards.map((element) => (
             <ContainerDeckCard
-              {...element} key={element.id}
-              deckThis={deckMain} setDeckThis={setDeckMain}
-              deckThat={deckSide} setDeckThat={setDeckSide}
+              {...element}
+              key={element.id}
+              deckThis={deckMain}
+              setDeckThis={setDeckMain}
+              deckThat={deckSide}
+              setDeckThat={setDeckSide}
               dispatchSimulator={dispatchSimulator}
             />
           ))
@@ -34,9 +37,12 @@ function TabPaneDeck({
         {
           dataCards.map((element) => (
             <ContainerDeckCard
-              {...element} key={element.id}
-              deckThis={deckSide} setDeckThis={setDeckSide}
-              deckThat={deckMain} setDeckThat={setDeckMain}
+              {...element}
+              key={element.id}
+              deckThis={deckSide}
+              setDeckThis={setDeckSide}
+              deckThat={deckMain}
+              setDeckThat={setDeckMain}
               dispatchSimulator={dispatchSimulator}
               isSide
             />
