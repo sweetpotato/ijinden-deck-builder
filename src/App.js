@@ -27,20 +27,23 @@ function App() {
           <TabPaneCard
             deckMain={deckMain} setDeckMain={setDeckMain}
             deckSide={deckSide} setDeckSide={setDeckSide}
-            dispatchSimulator={dispatchSimulator} />
+            dispatchSimulator={dispatchSimulator}
+          />
         </Tab>
         <Tab eventKey={enumTabPane.DECK} title="レシピ">
           <TabPaneDeck
             deckMain={deckMain} setDeckMain={setDeckMain}
             deckSide={deckSide} setDeckSide={setDeckSide}
-            dispatchSimulator={dispatchSimulator} />
+            dispatchSimulator={dispatchSimulator}
+          />
         </Tab>
         <Tab eventKey={enumTabPane.SAVE_AND_LOAD} title="マイデッキβ">
           <TabPaneSave
             deckMain={deckMain} setDeckMain={setDeckMain}
             deckSide={deckSide} setDeckSide={setDeckSide}
             setActiveTab={setActiveTab}
-            dispatchSimulator={dispatchSimulator} />
+            dispatchSimulator={dispatchSimulator}
+          />
         </Tab>
         <Tab eventKey={enumTabPane.SIMULATOR} title="シミュβ">
           <TabPaneSimulator deck={deckMain} state={stateSimulator} dispatch={dispatchSimulator} />

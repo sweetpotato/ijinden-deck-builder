@@ -23,7 +23,8 @@ function TabPaneDeck({
             <ContainerDeckCard {...element} key={element.id}
               deckThis={deckMain} setDeckThis={setDeckMain}
               deckThat={deckSide} setDeckThat={setDeckSide}
-              dispatchSimulator={dispatchSimulator} />
+              dispatchSimulator={dispatchSimulator}
+            />
           ))
         }
       </div>
@@ -36,7 +37,8 @@ function TabPaneDeck({
               deckThis={deckSide} setDeckThis={setDeckSide}
               deckThat={deckMain} setDeckThat={setDeckMain}
               dispatchSimulator={dispatchSimulator}
-              isSide />
+              isSide
+            />
           ))
         }
       </div>
