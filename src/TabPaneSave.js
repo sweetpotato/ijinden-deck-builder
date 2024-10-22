@@ -80,7 +80,7 @@ function TabPaneSave({
           [...decksSaved].reverse().map((aDeckSaved, index) => {
             const idDeck = aDeckSaved[0];
             const timestamp = DTF.format(new Date(aDeckSaved[1].timestamp));
-            const header = "#" + idDeck + " (" + timestamp +")"
+            const header = `#${idDeck} (${timestamp})`
             return (
               <AccordionItem key={idDeck} eventKey={idDeck}>
                 <AccordionHeader>{header}</AccordionHeader>

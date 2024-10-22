@@ -118,7 +118,7 @@ function ContainerFilter({
         </legend>
         {
           data.map((element) => {
-            const id = name + "-" + element.value;
+            const id = `${name}-${element.value}`;
             return (
               <ToggleButton key={id} type="radio" variant="outline-primary"
                   id={id} name={name} value={element.value} onChange={handleChange}
