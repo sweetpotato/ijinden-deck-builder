@@ -14,7 +14,7 @@ const DTF = new Intl.DateTimeFormat([], {
   day: "2-digit",
   hour: "2-digit",
   minute: "2-digit",
-  second: "2-digit"
+  second: "2-digit",
 });
 
 function TabPaneSave({ deckMain, setDeckMain, deckSide, setDeckSide, setActiveTab, dispatchSimulator }) {

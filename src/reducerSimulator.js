@@ -3,7 +3,7 @@ export const enumStateSimulator = {
   RUNNING: 1,
   FINISHED: 2,
   ABORTED: 3,
-  LESS_THAN_TEN: 4
+  LESS_THAN_TEN: 4,
 };
 
 export const enumActionSimulator = {
@@ -11,7 +11,7 @@ export const enumActionSimulator = {
   START: 1,
   CONTINUE: 2,
   INTERRUPT: 3,
-  CHECK_MAIN_DECK: 4
+  CHECK_MAIN_DECK: 4,
 };
 
 export function reducerSimulator(state, action) {

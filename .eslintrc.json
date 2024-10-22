@@ -5,7 +5,6 @@
     "react-app/jest"
   ],
   "rules": {
-    "comma-dangle": "off",
     "consistent-return": "off",
     "import/prefer-default-export": "off",
     "indent": "off",
