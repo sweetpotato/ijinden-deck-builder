@@ -9,7 +9,6 @@
     "linebreak-style": "off",
     "max-len": "off",
     "no-plusplus": [ "error", { "allowForLoopAfterthoughts": true }],
-    "no-trailing-spaces": "off",
     "no-var": "off",
     "object-curly-newline": "off",
     "object-curly-spacing": "off",
