@@ -6,12 +6,12 @@
   ],
   "rules": {
     "linebreak-style": "off",
-    "no-plusplus": [ "error", { "allowForLoopAfterthoughts": true }],
+    "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
     "react/jsx-filename-extension": "warn",
     "react/jsx-closing-bracket-location": ["error", "line-aligned"],
     "react/jsx-closing-tag-location": ["error", "line-aligned"],
     "react/jsx-no-bind": "off",
-    "react/react-in-jsx-scope": "off",
-    "react/prop-types": "off"
+    "react/prop-types": "off",
+    "react/react-in-jsx-scope": "off"
   }
 }
