@@ -8,7 +8,6 @@
     "linebreak-style": "off",
     "max-len": "off",
     "no-plusplus": [ "error", { "allowForLoopAfterthoughts": true }],
-    "react/jsx-boolean-value": "off",
     "react/jsx-filename-extension": "off",
     "react/jsx-closing-bracket-location": "off",
     "react/jsx-closing-tag-location": "off",

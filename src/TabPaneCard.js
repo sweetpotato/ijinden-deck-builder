@@ -81,7 +81,7 @@ function TabPaneCard({
           handleChange={handleChangeType} data={dataTypes} />
       <ContainerFilter title="能力語" name="term" state={term}
           handleChange={handleChangeTerm} data={dataTerms} />
-      <Table responsive={true} hover={true} variant="light">
+      <Table responsive hover variant="light">
         <thead className="sticky-top">
           <tr>
             <th scope="col">ID</th>
@@ -183,7 +183,7 @@ function FormControlCounter({
     <InputGroup>
       <Button variant="outline-secondary" onClick={handleClickMinus}
           disabled={counter <= 0}>-</Button>
-      <FormControl type="number" readOnly={true} name={name} value={counter} />
+      <FormControl type="number" readOnly name={name} value={counter} />
       <Button variant="outline-secondary" onClick={handleClickPlus}>+</Button>
     </InputGroup>
   );

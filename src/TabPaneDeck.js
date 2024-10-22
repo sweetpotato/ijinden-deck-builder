@@ -36,7 +36,7 @@ function TabPaneDeck({
                   deckThis={deckSide} setDeckThis={setDeckSide}
                   deckThat={deckMain} setDeckThat={setDeckMain}
                   dispatchSimulator={dispatchSimulator}
-                  isSide={true} />
+                  isSide />
           ))
         }
       </div>
