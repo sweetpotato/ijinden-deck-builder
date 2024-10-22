@@ -10,7 +10,6 @@
     "no-plusplus": [ "error", { "allowForLoopAfterthoughts": true }],
     "react/jsx-boolean-value": "off",
     "react/jsx-filename-extension": "off",
-    "react/jsx-indent": "off",
     "react/jsx-closing-bracket-location": "off",
     "react/jsx-closing-tag-location": "off",
     "react/jsx-first-prop-new-line": "off",
