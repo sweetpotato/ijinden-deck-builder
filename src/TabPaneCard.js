@@ -74,13 +74,13 @@ function TabPaneCard({
   return (
     <>
       <ContainerFilter title="エキスパンション" name="expansion" state={expansion}
-          handleChange={handleChangeExpansion} data={dataExpansions} />
+        handleChange={handleChangeExpansion} data={dataExpansions} />
       <ContainerFilter title="色" name="color" state={color}
-          handleChange={handleChangeColor} data={dataColors} />
+        handleChange={handleChangeColor} data={dataColors} />
       <ContainerFilter title="種類" name="type" state={type}
-          handleChange={handleChangeType} data={dataTypes} />
+        handleChange={handleChangeType} data={dataTypes} />
       <ContainerFilter title="能力語" name="term" state={term}
-          handleChange={handleChangeTerm} data={dataTerms} />
+        handleChange={handleChangeTerm} data={dataTerms} />
       <Table responsive hover variant="light">
         <thead className="sticky-top">
           <tr>
@@ -94,11 +94,11 @@ function TabPaneCard({
           {
             dataCards.map((element) => (
               <TableRowCard {...element} key={element.id}
-                  selectedExpansion={expansion} selectedColor={color}
-                  selectedType={type} selectedTerm={term}
-                  deckMain={deckMain} setDeckMain={setDeckMain}
-                  deckSide={deckSide} setDeckSide={setDeckSide}
-                  dispatchSimulator={dispatchSimulator} />
+                selectedExpansion={expansion} selectedColor={color}
+                selectedType={type} selectedTerm={term}
+                deckMain={deckMain} setDeckMain={setDeckMain}
+                deckSide={deckSide} setDeckSide={setDeckSide}
+                dispatchSimulator={dispatchSimulator} />
             ))
           }
         </tbody>
@@ -121,8 +121,8 @@ function ContainerFilter({
             const id = `${name}-${element.value}`;
             return (
               <ToggleButton key={id} type="radio" variant="outline-primary"
-                  id={id} name={name} value={element.value} onChange={handleChange}
-                  checked={state === element.value}>{element.label}</ToggleButton>
+                id={id} name={name} value={element.value} onChange={handleChange}
+                checked={state === element.value}>{element.label}</ToggleButton>
             );
           })
         }
@@ -145,13 +145,13 @@ function TableRowCard({
   /* eslint-enable no-bitwise */
   return (
     <tr data-id={id} data-expansion={expansion}
-        data-color={color} data-type={type} data-term={term}
-        style={{ display: (show ? 'table-row' : 'none') }}>
+      data-color={color} data-type={type} data-term={term}
+      style={{ display: (show ? 'table-row' : 'none') }}>
       <td>{id}</td>
       <td>{name}</td>
       <td>
         <FormControlCounter id={id} deck={deckMain} setDeck={setDeckMain}
-            dispatchSimulator={dispatchSimulator} />
+          dispatchSimulator={dispatchSimulator} />
       </td>
       <td>
         <FormControlCounter id={id} deck={deckSide} setDeck={setDeckSide} />
@@ -182,7 +182,7 @@ function FormControlCounter({
   return (
     <InputGroup>
       <Button variant="outline-secondary" onClick={handleClickMinus}
-          disabled={counter <= 0}>-</Button>
+        disabled={counter <= 0}>-</Button>
       <FormControl type="number" readOnly name={name} value={counter} />
       <Button variant="outline-secondary" onClick={handleClickPlus}>+</Button>
     </InputGroup>
