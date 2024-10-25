@@ -443,3 +443,482 @@ test('保存したデッキを読み込んでレシピペインに表示する',
   expect(containerNumCopiesAlphaMain.textContent).toBe('3');
   expect(containerNumCopiesBravoSide.textContent).toBe('4');
 });
+
+test('シミュレータがカードペインの操作でアボートする', async () => {
+  const user = userEvent.setup();
+
+  // 次の2行がないとなぜか動かない
+  jest.spyOn(Storage.prototype, 'setItem').mockImplementation(jest.fn());
+  jest.spyOn(Storage.prototype, 'getItem').mockImplementation(jest.fn(() => '[]'));
+
+  render(<App />);
+
+  const tabCard = screen.getAllByRole('tab')[0];
+  const tabSimulator = screen.getAllByRole('tab')[3];
+  const tabPaneCard = screen.getAllByRole('tabpanel')[0];
+  const tabPaneSimulator = screen.getAllByRole('tabpanel')[3];
+
+  expect(tabPaneCard).toHaveClass('active');
+  expect(tabPaneCard).toBeVisible();
+
+  const cardInTable = tabPaneCard.querySelector('table tr[data-id="R-1"]');
+  let buttonMinusMain = cardInTable.querySelector('td:nth-child(3) button:nth-child(1)');
+  let buttonPlusMain = cardInTable.querySelector('td:nth-child(3) button:nth-child(3)');
+  let buttonMinusSide = cardInTable.querySelector('td:nth-child(4) button:nth-child(1)');
+  let buttonPlusSide = cardInTable.querySelector('td:nth-child(4) button:nth-child(3)');
+  expect(buttonMinusMain.textContent).toBe('-');
+  expect(buttonPlusMain.textContent).toBe('+');
+  expect(buttonMinusSide.textContent).toBe('-');
+  expect(buttonPlusSide.textContent).toBe('+');
+
+  await user.click(tabSimulator);
+  expect(tabPaneSimulator).toHaveClass('active');
+  expect(tabPaneSimulator).toBeVisible();
+
+  const buttonReset = tabPaneSimulator.querySelector('.container-button button:nth-child(1)');
+  const buttonStart = tabPaneSimulator.querySelector('.container-button button:nth-child(2)');
+  const buttonMulligan = tabPaneSimulator.querySelector('.container-button button:nth-child(3)');
+  const buttonKeep = tabPaneSimulator.querySelector('.container-button button:nth-child(4)');
+
+  expect(buttonReset).toBeDisabled();
+  expect(buttonStart).toBeEnabled();
+  expect(buttonMulligan).toBeDisabled();
+  expect(buttonKeep).toBeDisabled();
+  expect(screen.queryByRole('alert')).toBeNull();
+
+  // メインデッキにカードを10枚適当に加える
+  await user.click(tabCard);
+  expect(tabPaneCard).toHaveClass('active');
+  expect(tabPaneCard).toBeVisible();
+  await user.click(buttonPlusMain);
+  await user.click(buttonPlusMain);
+  await user.click(buttonPlusMain);
+  await user.click(buttonPlusMain);
+  await user.click(buttonPlusMain);
+  await user.click(buttonPlusMain);
+  await user.click(buttonPlusMain);
+  await user.click(buttonPlusMain);
+  await user.click(buttonPlusMain);
+  await user.click(buttonPlusMain);
+
+  await user.click(tabSimulator);
+  expect(tabPaneSimulator).toHaveClass('active');
+  expect(tabPaneSimulator).toBeVisible();
+  expect(buttonReset).toBeDisabled();
+  expect(buttonStart).toBeEnabled();
+  expect(buttonMulligan).toBeDisabled();
+  expect(buttonKeep).toBeDisabled();
+  expect(screen.queryByRole('alert')).toBeNull();
+
+  // 既にシミュタブにいる
+  // 手札シミュレータをスタートさせる
+  await user.click(buttonStart);
+  expect(buttonReset).toBeEnabled();
+  expect(buttonStart).toBeDisabled();
+  expect(buttonMulligan).toBeEnabled();
+  expect(buttonKeep).toBeEnabled();
+  expect(screen.queryByRole('alert')).toBeNull();
+
+  // カードペインでメインデッキのプラスボタンを押す
+  await user.click(tabCard);
+  expect(tabPaneCard).toHaveClass('active');
+  expect(tabPaneCard).toBeVisible();
+  await user.click(buttonPlusMain);
+
+  // 手札シミュレータがアボートする
+  await user.click(tabSimulator);
+  expect(tabPaneSimulator).toHaveClass('active');
+  expect(tabPaneSimulator).toBeVisible();
+  expect(buttonReset).toBeEnabled();
+  expect(buttonStart).toBeDisabled();
+  expect(buttonMulligan).toBeDisabled();
+  expect(buttonKeep).toBeDisabled();
+  let alert = screen.getByRole('alert');
+  expect(alert).toBeVisible();
+  expect(alert.textContent).toBe('⚠️ シミュレーション中にメインデッキが編集されました。リセットしてください。');
+
+  // シミュレータを再スタートさせる
+  await user.click(buttonReset);
+  await user.click(buttonStart);
+  expect(buttonReset).toBeEnabled();
+  expect(buttonStart).toBeDisabled();
+  expect(buttonMulligan).toBeEnabled();
+  expect(buttonKeep).toBeEnabled();
+  expect(screen.queryByRole('alert')).toBeNull();
+
+  // カードペインでメインデッキのマイナスボタンを押す
+  await user.click(tabCard);
+  expect(tabPaneCard).toHaveClass('active');
+  expect(tabPaneCard).toBeVisible();
+  await user.click(buttonMinusMain);
+
+  // シミュレータがアボートする
+  await user.click(tabSimulator);
+  expect(tabPaneSimulator).toHaveClass('active');
+  expect(tabPaneSimulator).toBeVisible();
+  expect(buttonReset).toBeEnabled();
+  expect(buttonStart).toBeDisabled();
+  expect(buttonMulligan).toBeDisabled();
+  expect(buttonKeep).toBeDisabled();
+  alert = screen.getByRole('alert');
+  expect(alert).toBeVisible();
+  expect(alert.textContent).toBe('⚠️ シミュレーション中にメインデッキが編集されました。リセットしてください。');
+
+  // シミュレータを再スタートさせる
+  await user.click(buttonReset);
+  await user.click(buttonStart);
+  expect(buttonReset).toBeEnabled();
+  expect(buttonStart).toBeDisabled();
+  expect(buttonMulligan).toBeEnabled();
+  expect(buttonKeep).toBeEnabled();
+  expect(screen.queryByRole('alert')).toBeNull();
+
+  // カードペインでサイドデッキのプラスボタンを押す
+  await user.click(tabCard);
+  expect(tabCard).toHaveClass('active');
+  expect(tabCard).toBeVisible();
+  await user.click(buttonPlusSide);
+
+  // シミュレータはアボートしない
+  await user.click(tabSimulator);
+  expect(tabPaneSimulator).toHaveClass('active');
+  expect(tabPaneSimulator).toBeVisible();
+  expect(buttonReset).toBeEnabled();
+  expect(buttonStart).toBeDisabled();
+  expect(buttonMulligan).toBeEnabled();
+  expect(buttonKeep).toBeEnabled();
+  expect(screen.queryByRole('alert')).toBeNull();
+  
+  // カードペインでサイドデッキのマイナスボタンを押す
+  await user.click(tabCard);
+  expect(tabCard).toHaveClass('active');
+  expect(tabCard).toBeVisible();
+  await user.click(buttonMinusSide);
+
+  // やはりシミュレータはアボートしない
+  await user.click(tabSimulator);
+  expect(tabPaneSimulator).toHaveClass('active');
+  expect(tabPaneSimulator).toBeVisible();
+  expect(buttonReset).toBeEnabled();
+  expect(buttonStart).toBeDisabled();
+  expect(buttonMulligan).toBeEnabled();
+  expect(buttonKeep).toBeEnabled();
+  expect(screen.queryByRole('alert')).toBeNull();
+}, 15000); // 15s
+
+test('シミュレータがレシピペインの操作でアボートする', async () => {
+  const user = userEvent.setup();
+
+  // 次の2行がないとなぜか動かない
+  jest.spyOn(Storage.prototype, 'setItem').mockImplementation(jest.fn());
+  jest.spyOn(Storage.prototype, 'getItem').mockImplementation(jest.fn(() => '[]'));
+
+  render(<App />);
+
+  const tabCard = screen.getAllByRole('tab')[0];
+  const tabDeck = screen.getAllByRole('tab')[1];
+  const tabSimulator = screen.getAllByRole('tab')[3];
+  const tabPaneCard = screen.getAllByRole('tabpanel')[0];
+  const tabPaneDeck = screen.getAllByRole('tabpanel')[1];
+  const tabPaneSimulator = screen.getAllByRole('tabpanel')[3];
+
+  expect(tabPaneCard).toHaveClass('active');
+  expect(tabPaneCard).toBeVisible();
+
+  let buttonPlusMain = tabPaneCard.querySelector('table tr[data-id="R-1"] td:nth-child(3) button:nth-child(3)');
+  let buttonPlusSide = tabPaneCard.querySelector('table tr[data-id="R-1"] td:nth-child(4) button:nth-child(3)');
+  expect(buttonPlusMain.textContent).toBe('+');
+  expect(buttonPlusSide.textContent).toBe('+');
+
+  await user.click(tabSimulator);
+  expect(tabPaneSimulator).toHaveClass('active');
+  expect(tabPaneSimulator).toBeVisible();
+
+  const buttonReset = tabPaneSimulator.querySelector('.container-button button:nth-child(1)');
+  const buttonStart = tabPaneSimulator.querySelector('.container-button button:nth-child(2)');
+  const buttonMulligan = tabPaneSimulator.querySelector('.container-button button:nth-child(3)');
+  const buttonKeep = tabPaneSimulator.querySelector('.container-button button:nth-child(4)');
+
+  expect(buttonReset).toBeDisabled();
+  expect(buttonStart).toBeEnabled();
+  expect(buttonMulligan).toBeDisabled();
+  expect(buttonKeep).toBeDisabled();
+  expect(screen.queryByRole('alert')).toBeNull();
+
+  // メインデッキにカードを10枚適当に加える
+  await user.click(tabCard);
+  expect(tabPaneCard).toHaveClass('active');
+  expect(tabPaneCard).toBeVisible();
+  await user.click(buttonPlusMain);
+  await user.click(buttonPlusMain);
+  await user.click(buttonPlusMain);
+  await user.click(buttonPlusMain);
+  await user.click(buttonPlusMain);
+  await user.click(buttonPlusMain);
+  await user.click(buttonPlusMain);
+  await user.click(buttonPlusMain);
+  await user.click(buttonPlusMain);
+  await user.click(buttonPlusMain);
+  // サイドデッキにもカードを1枚適当に加える
+  await user.click(buttonPlusSide);
+
+  await user.click(tabSimulator);
+  expect(tabPaneSimulator).toHaveClass('active');
+  expect(tabPaneSimulator).toBeVisible();
+  expect(buttonReset).toBeDisabled();
+  expect(buttonStart).toBeEnabled();
+  expect(buttonMulligan).toBeDisabled();
+  expect(buttonKeep).toBeDisabled();
+  expect(screen.queryByRole('alert')).toBeNull();
+
+  await user.click(tabDeck);
+  expect(tabPaneDeck).toHaveClass('active');
+  expect(tabPaneDeck).toBeVisible();
+  const imageMain = tabPaneDeck.querySelectorAll(`img[src="${dataCardsMap.get('R-1').imageUrl}"]`)[0];
+  const imageSide = tabPaneDeck.querySelectorAll(`img[src="${dataCardsMap.get('R-1').imageUrl}"]`)[1];
+  buttonPlusMain = imageMain.parentElement.querySelector('.btn-push');
+  buttonPlusSide = imageSide.parentElement.querySelector('.btn-push');
+  const buttonMinusMain = imageMain.parentElement.querySelector('.btn-pop');
+  const buttonMinusSide = imageSide.parentElement.querySelector('.btn-pop');
+  const buttonDrop = imageMain.parentElement.querySelector('.btn-move');
+  const buttonRaise = imageSide.parentElement.querySelector('.btn-move');
+  expect(buttonPlusMain.textContent).toBe('+');
+  expect(buttonPlusSide.textContent).toBe('+');
+  expect(buttonMinusMain.textContent).toBe('-');
+  expect(buttonMinusSide.textContent).toBe('-');
+  expect(buttonDrop.textContent).toBe('v');
+  expect(buttonRaise.textContent).toBe('^');
+
+  // 手札シミュレータをスタートさせる
+  await user.click(tabSimulator);
+  expect(tabPaneSimulator).toHaveClass('active');
+  expect(tabPaneSimulator).toBeVisible();
+  await user.click(buttonStart);
+  expect(buttonReset).toBeEnabled();
+  expect(buttonStart).toBeDisabled();
+  expect(buttonMulligan).toBeEnabled();
+  expect(buttonKeep).toBeEnabled();
+  expect(screen.queryByRole('alert')).toBeNull();
+
+  // レシピペインでメインデッキのプラスボタンを押す
+  await user.click(tabDeck);
+  expect(tabPaneDeck).toHaveClass('active');
+  expect(tabPaneDeck).toBeVisible();
+  await user.click(buttonPlusMain);
+
+  // 手札シミュレータがアボートする
+  await user.click(tabSimulator);
+  expect(tabPaneSimulator).toHaveClass('active');
+  expect(tabPaneSimulator).toBeVisible();
+  expect(buttonReset).toBeEnabled();
+  expect(buttonStart).toBeDisabled();
+  expect(buttonMulligan).toBeDisabled();
+  expect(buttonKeep).toBeDisabled();
+  let alert = screen.getByRole('alert');
+  expect(alert).toBeVisible();
+  expect(alert.textContent).toBe('⚠️ シミュレーション中にメインデッキが編集されました。リセットしてください。');
+
+  // シミュレータを再スタートさせる
+  await user.click(buttonReset);
+  await user.click(buttonStart);
+  expect(buttonReset).toBeEnabled();
+  expect(buttonStart).toBeDisabled();
+  expect(buttonMulligan).toBeEnabled();
+  expect(buttonKeep).toBeEnabled();
+  expect(screen.queryByRole('alert')).toBeNull();
+
+  // レシピペインでメインデッキの「v」ボタンを押す
+  await user.click(tabDeck);
+  expect(tabPaneDeck).toHaveClass('active');
+  expect(tabPaneDeck).toBeVisible();
+  await user.click(buttonDrop);
+
+  // シミュレータがアボートする
+  await user.click(tabSimulator);
+  expect(tabPaneSimulator).toHaveClass('active');
+  expect(tabPaneSimulator).toBeVisible();
+  expect(buttonReset).toBeEnabled();
+  expect(buttonStart).toBeDisabled();
+  expect(buttonMulligan).toBeDisabled();
+  expect(buttonKeep).toBeDisabled();
+  alert = screen.getByRole('alert');
+  expect(alert).toBeVisible();
+  expect(alert.textContent).toBe('⚠️ シミュレーション中にメインデッキが編集されました。リセットしてください。');
+
+  // シミュレータを再スタートさせる
+  await user.click(buttonReset);
+  await user.click(buttonStart);
+  expect(buttonReset).toBeEnabled();
+  expect(buttonStart).toBeDisabled();
+  expect(buttonMulligan).toBeEnabled();
+  expect(buttonKeep).toBeEnabled();
+  expect(screen.queryByRole('alert')).toBeNull();
+
+  // レシピペインでサイドデッキの「^」ボタンを押す
+  await user.click(tabDeck);
+  expect(tabPaneDeck).toHaveClass('active');
+  expect(tabPaneDeck).toBeVisible();
+  await user.click(buttonRaise);
+
+  // シミュレータがアボートする
+  await user.click(tabSimulator);
+  expect(tabPaneSimulator).toHaveClass('active');
+  expect(tabPaneSimulator).toBeVisible();
+  expect(buttonReset).toBeEnabled();
+  expect(buttonStart).toBeDisabled();
+  expect(buttonMulligan).toBeDisabled();
+  expect(buttonKeep).toBeDisabled();
+  alert = screen.getByRole('alert');
+  expect(alert).toBeVisible();
+  expect(alert.textContent).toBe('⚠️ シミュレーション中にメインデッキが編集されました。リセットしてください。');
+
+  // シミュレータを再スタートさせる
+  await user.click(buttonReset);
+  await user.click(buttonStart);
+  expect(buttonReset).toBeEnabled();
+  expect(buttonStart).toBeDisabled();
+  expect(buttonMulligan).toBeEnabled();
+  expect(buttonKeep).toBeEnabled();
+  expect(screen.queryByRole('alert')).toBeNull();
+
+  // レシピペインでメインデッキのマイナスボタンを押す
+  await user.click(tabDeck);
+  expect(tabPaneDeck).toHaveClass('active');
+  expect(tabPaneDeck).toBeVisible();
+  await user.click(buttonMinusMain);
+
+  // シミュレータがアボートする
+  await user.click(tabSimulator);
+  expect(tabPaneSimulator).toHaveClass('active');
+  expect(tabPaneSimulator).toBeVisible();
+  expect(buttonReset).toBeEnabled();
+  expect(buttonStart).toBeDisabled();
+  expect(buttonMulligan).toBeDisabled();
+  expect(buttonKeep).toBeDisabled();
+  alert = screen.getByRole('alert');
+  expect(alert).toBeVisible();
+  expect(alert.textContent).toBe('⚠️ シミュレーション中にメインデッキが編集されました。リセットしてください。');
+
+  // シミュレータがアボートする
+  await user.click(tabSimulator);
+  expect(tabPaneSimulator).toHaveClass('active');
+  expect(tabPaneSimulator).toBeVisible();
+  expect(buttonReset).toBeEnabled();
+  expect(buttonStart).toBeDisabled();
+  expect(buttonMulligan).toBeDisabled();
+  expect(buttonKeep).toBeDisabled();
+  alert = screen.getByRole('alert');
+  expect(alert).toBeVisible();
+  expect(alert.textContent).toBe('⚠️ シミュレーション中にメインデッキが編集されました。リセットしてください。');
+
+  // シミュレータを再スタートさせる
+  await user.click(buttonReset);
+  await user.click(buttonStart);
+  expect(buttonReset).toBeEnabled();
+  expect(buttonStart).toBeDisabled();
+  expect(buttonMulligan).toBeEnabled();
+  expect(buttonKeep).toBeEnabled();
+  expect(screen.queryByRole('alert')).toBeNull();
+  
+  // レシピペインでサイドデッキのプラスボタンを押す
+  await user.click(tabDeck);
+  expect(tabPaneDeck).toHaveClass('active');
+  expect(tabPaneDeck).toBeVisible();
+  await user.click(buttonPlusSide);
+
+  // シミュレータはアボートしない
+  await user.click(tabSimulator);
+  expect(tabPaneSimulator).toHaveClass('active');
+  expect(tabPaneSimulator).toBeVisible();
+  expect(buttonReset).toBeEnabled();
+  expect(buttonStart).toBeDisabled();
+  expect(buttonMulligan).toBeEnabled();
+  expect(buttonKeep).toBeEnabled();
+  expect(screen.queryByRole('alert')).toBeNull();
+    
+  // レシピペインでサイドデッキのマイナスボタンを押す
+  await user.click(tabDeck);
+  expect(tabPaneDeck).toHaveClass('active');
+  expect(tabPaneDeck).toBeVisible();
+  await user.click(buttonMinusSide);
+  
+  // やはりシミュレータはアボートしない
+  await user.click(tabSimulator);
+  expect(tabPaneSimulator).toHaveClass('active');
+  expect(tabPaneSimulator).toBeVisible();
+  expect(buttonReset).toBeEnabled();
+  expect(buttonStart).toBeDisabled();
+  expect(buttonMulligan).toBeEnabled();
+  expect(buttonKeep).toBeEnabled();
+  expect(screen.queryByRole('alert')).toBeNull();
+}, 15000); // 15s
+
+test('シミュレータがマイデッキペインの操作でアボートする', async () => {
+  const user = userEvent.setup();
+
+  const stringifiedDecksSaved = JSON.stringify(
+    [[1, { timestamp: new Date(), main: [['R-1', 10]], side: [] }]]
+  );
+
+  jest.spyOn(Storage.prototype, 'setItem').mockImplementation(jest.fn());
+  jest.spyOn(Storage.prototype, 'getItem').mockImplementation(jest.fn(() => stringifiedDecksSaved));
+
+  render(<App />);
+
+  const tabSave = screen.getAllByRole('tab')[2];
+  const tabSimulator = screen.getAllByRole('tab')[3];
+  const tabPaneSave = screen.getAllByRole('tabpanel')[2];
+  const tabPaneSimulator = screen.getAllByRole('tabpanel')[3];
+
+  await user.click(tabSimulator);
+  expect(tabPaneSimulator).toHaveClass('active');
+  expect(tabPaneSimulator).toBeVisible();
+
+  const buttonReset = tabPaneSimulator.querySelector('.container-button button:nth-child(1)');
+  const buttonStart = tabPaneSimulator.querySelector('.container-button button:nth-child(2)');
+  const buttonMulligan = tabPaneSimulator.querySelector('.container-button button:nth-child(3)');
+  const buttonKeep = tabPaneSimulator.querySelector('.container-button button:nth-child(4)');
+
+  expect(buttonReset).toBeDisabled();
+  expect(buttonStart).toBeEnabled();
+  expect(buttonMulligan).toBeDisabled();
+  expect(buttonKeep).toBeDisabled();
+  expect(screen.queryByRole('alert')).toBeNull();
+
+  // メインデッキにカードが10枚入った保存済みデッキを読み込む
+  await user.click(tabSave);
+  expect(tabPaneSave).toHaveClass('active');
+  expect(tabPaneSave).toBeVisible();
+  const buttonLoad = tabPaneSave.querySelector('.accordion-item .container-button button:nth-child(1)');
+  expect(buttonLoad.textContent).toBe('現在のレシピを破棄して読込み');
+  await user.click(buttonLoad);
+
+  // シミュレータをスタートさせる
+  await user.click(tabSimulator);
+  expect(tabPaneSimulator).toHaveClass('active');
+  expect(tabPaneSimulator).toBeVisible();
+  await user.click(buttonStart);
+  expect(buttonReset).toBeEnabled();
+  expect(buttonStart).toBeDisabled();
+  expect(buttonMulligan).toBeEnabled();
+  expect(buttonKeep).toBeEnabled();
+  expect(screen.queryByRole('alert')).toBeNull();
+
+  // 保存済みデッキを読み込む
+  await user.click(tabSave);
+  expect(tabPaneSave).toHaveClass('active');
+  expect(tabPaneSave).toBeVisible();
+  await user.click(buttonLoad);
+
+  // シミュレータがアボートする
+  await user.click(tabSimulator);
+  expect(tabPaneSimulator).toHaveClass('active');
+  expect(tabPaneSimulator).toBeVisible();
+  expect(buttonReset).toBeEnabled();
+  expect(buttonStart).toBeDisabled();
+  expect(buttonMulligan).toBeDisabled();
+  expect(buttonKeep).toBeDisabled();
+  alert = screen.getByRole('alert');
+  expect(alert).toBeVisible();
+  expect(alert.textContent).toBe('⚠️ シミュレーション中にメインデッキが編集されました。リセットしてください。');
+});
