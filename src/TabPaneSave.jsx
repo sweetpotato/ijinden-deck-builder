@@ -148,7 +148,7 @@ function ContainerDeckSaved({
   return (
     <>
       <div className="container-button mb-2">
-        <Button variant="outline-success" onClick={handleClickLoad}>現在のレシピを破棄して読込み</Button>
+        <Button variant="outline-success" onClick={handleClickLoad}>読込み</Button>
         <Button variant="outline-danger" onClick={handleClickDelete}>削除</Button>
       </div>
       <ContainerDeckSavedPart title="メインデッキ" deckSaved={new Map(aDeckSaved.main)} />
