@@ -59,7 +59,7 @@ function App() {
             dispatchSimulator={dispatchSimulator}
           />
         </Tab>
-        <Tab eventKey={enumTabPane.SIMULATOR} title="シミュβ">
+        <Tab eventKey={enumTabPane.SIMULATOR} title="シミュ">
           <TabPaneSimulator deck={deckMain} state={stateSimulator} dispatch={dispatchSimulator} />
         </Tab>
         <Tab eventKey={enumTabPane.HELP} title="ヘルプ" className="m-2">
@@ -77,9 +77,13 @@ function App() {
           <h2>操作方法</h2>
           <h3>カード</h3>
           <p>各カードのプラス・マイナスボタンで、メインデッキ・サイドデッキ別々に枚数を増減できます。エキスパンション、色、種類、能力語でカードの絞り込みができます。</p>
-          <h3>デッキ</h3>
+          <h3>レシピ</h3>
           {/* eslint-disable max-len */}
           <p>カードの左下をタップする（パソコンではカードの上にマウスカーソルを当てる）と、そのカードに重なるボタンが現れます。各ボタンで枚数の増減やメインデッキ・サイドデッキの入換えができます。</p>
+          {/* eslint-enable max-len */}
+          <h3>シミュ（手札シミュレータ）</h3>
+          {/* eslint-disable max-len */}
+          <p>初期のガーディアンと手札、およびその後のドローをランダムに表示します。スタートボタンを押した直後は対戦開始前の状態であり、マリガン（引き直す）ボタンかキープ（引き直さない）ボタンを押すと手札とドローが確定します。灰色のガーディアンはタップする（パソコンではカードの上にマウスカーソルを当てる）とオモテ面のカード画像が表示されます。リセットボタンでやり直します。</p>
           {/* eslint-enable max-len */}
           <h2>未対応機能</h2>
           <dl>

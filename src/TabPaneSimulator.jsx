@@ -128,7 +128,7 @@ function TabPaneSimulator({ deck, state, dispatch }) {
       || state === enumStateSimulator.ABORTED;
   return (
     <>
-      <h2 className="m-2">手札シミュレータβ</h2>
+      <h2 className="m-2">手札シミュレータ</h2>
       <div className="container-button mx-2 mt-2 mb-3">
         <Button
           variant="outline-danger"
