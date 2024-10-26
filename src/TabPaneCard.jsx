@@ -4,8 +4,8 @@ import {
 } from 'react-bootstrap';
 
 import { dataCardsArrayForTable as dataCards } from './dataCards';
+import { handleClickDecrement, handleClickIncrement } from './handleClick';
 import { enumActionSimulator } from './reducerSimulator';
-import { handleClickIncrement, handleClickDecrement } from './handleClick';
 
 const dataExpansions = [
   { value: 0, label: 'すべて' },
@@ -47,7 +47,7 @@ const dataTerms = [
 ];
 
 function TabPaneCard({
-  deckMain, setDeckMain, deckSide, setDeckSide,
+  deckMain, handleSetDeckMain, deckSide, handleSetDeckSide,
   dispatchSimulator,
 }) {
   const [expansion, setExpansion] = useState(0);
@@ -122,9 +122,9 @@ function TabPaneCard({
                 selectedType={type}
                 selectedTerm={term}
                 deckMain={deckMain}
-                setDeckMain={setDeckMain}
+                handleSetDeckMain={handleSetDeckMain}
                 deckSide={deckSide}
-                setDeckSide={setDeckSide}
+                handleSetDeckSide={handleSetDeckSide}
                 dispatchSimulator={dispatchSimulator}
               />
             ))
@@ -170,7 +170,7 @@ function ContainerFilter({
 function TableRowCard({
   id, name, expansion, color, type, term,
   selectedExpansion, selectedType, selectedColor, selectedTerm,
-  deckMain, setDeckMain, deckSide, setDeckSide,
+  deckMain, handleSetDeckMain, deckSide, handleSetDeckSide,
   dispatchSimulator,
 }) {
   /* eslint-disable no-bitwise */
@@ -194,29 +194,29 @@ function TableRowCard({
         <FormControlCounter
           id={id}
           deck={deckMain}
-          setDeck={setDeckMain}
+          handleSetDeck={handleSetDeckMain}
           dispatchSimulator={dispatchSimulator}
         />
       </td>
       <td>
-        <FormControlCounter id={id} deck={deckSide} setDeck={setDeckSide} />
+        <FormControlCounter id={id} deck={deckSide} handleSetDeck={handleSetDeckSide} />
       </td>
     </tr>
   );
 }
 
 function FormControlCounter({
-  id, deck, setDeck, dispatchSimulator = undefined,
+  id, deck, handleSetDeck, dispatchSimulator = undefined,
 }) {
   function handleClickMinus() {
-    handleClickDecrement(id, deck, setDeck);
+    handleClickDecrement(id, deck, handleSetDeck);
     if (dispatchSimulator !== undefined) {
       dispatchSimulator(enumActionSimulator.INTERRUPT);
     }
   }
 
   function handleClickPlus() {
-    handleClickIncrement(id, deck, setDeck);
+    handleClickIncrement(id, deck, handleSetDeck);
     if (dispatchSimulator !== undefined) {
       dispatchSimulator(enumActionSimulator.INTERRUPT);
     }
