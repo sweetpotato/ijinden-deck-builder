@@ -1,11 +1,11 @@
-export function handleClickIncrement(id, deck, setDeck) {
+export function handleClickIncrement(id, deck, handleSetDeck) {
   const deckNew = new Map(deck.entries());
   const counter = deckNew.has(id) ? deckNew.get(id) : 0;
   deckNew.set(id, counter + 1);
-  setDeck(deckNew);
+  handleSetDeck(deckNew);
 }
 
-export function handleClickDecrement(id, deck, setDeck) {
+export function handleClickDecrement(id, deck, handleSetDeck) {
   const deckNew = new Map(deck.entries());
   if (deckNew.has(id)) {
     const counter = deckNew.get(id);
@@ -15,5 +15,5 @@ export function handleClickDecrement(id, deck, setDeck) {
       deckNew.delete(id);
     }
   }
-  setDeck(deckNew);
+  handleSetDeck(deckNew);
 }

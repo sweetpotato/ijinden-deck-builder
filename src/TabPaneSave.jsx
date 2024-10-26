@@ -13,8 +13,8 @@ import {
 
 import { dataCardsArrayForDeck } from './dataCards';
 import enumTabPane from './enumTabPane';
-import useLocalStorage from './useLocalStorage';
 import { enumActionSimulator } from './reducerSimulator';
+import useLocalStorage from './useLocalStorage';
 import { sum } from './utils';
 
 // YYYY/mm/dd HH:MM:SS
@@ -28,11 +28,15 @@ const DTF = new Intl.DateTimeFormat([], {
 });
 
 function TabPaneSave({
-  deckMain, setDeckMain, deckSide, setDeckSide, setActiveTab, dispatchSimulator,
+  deckMain, handleSetDeckMain, deckSide, handleSetDeckSide, handleSetActiveTab, dispatchSimulator,
 }) {
   const [decksSaved, setDecksSaved] = useLocalStorage();
   const [showModalEmpty, setShowModalEmpty] = useState(false);
   const [showModalClear, setShowModalClear] = useState(false);
+
+  function handleSetDecksSaved(newDecksSaved) {
+    setDecksSaved(newDecksSaved);
+  }
 
   function handleClickSave() {
     if (deckMain.size === 0 && deckSide.size === 0) {
@@ -48,7 +52,7 @@ function TabPaneSave({
     const objectDeck = [idDeck, { timestamp, main: objectMain, side: objectSide }];
     // 最新のデッキとして、リストの末尾に保存する。
     const newDecksSaved = [...decksSaved, objectDeck];
-    setDecksSaved(newDecksSaved);
+    handleSetDecksSaved(newDecksSaved);
   }
 
   function handleClickConfirmEmpty() {
@@ -64,7 +68,7 @@ function TabPaneSave({
   }
 
   function handleClickConfirmClear() {
-    setDecksSaved([]);
+    handleSetDecksSaved([]);
     setShowModalClear(false);
   }
 
@@ -97,10 +101,10 @@ function TabPaneSave({
                     idDeck={idDeck}
                     aDeckSaved={aDeckSaved[1]}
                     decksSaved={decksSaved}
-                    setDecksSaved={setDecksSaved}
-                    setDeckMain={setDeckMain}
-                    setDeckSide={setDeckSide}
-                    setActiveTab={setActiveTab}
+                    handleSetDecksSaved={handleSetDecksSaved}
+                    handleSetDeckMain={handleSetDeckMain}
+                    handleSetDeckSide={handleSetDeckSide}
+                    handleSetActiveTab={handleSetActiveTab}
                     dispatchSimulator={dispatchSimulator}
                   />
                 </AccordionBody>
@@ -127,22 +131,22 @@ function TabPaneSave({
 
 function ContainerDeckSaved({
   idDeck, aDeckSaved,
-  decksSaved, setDecksSaved,
-  setDeckMain, setDeckSide,
-  setActiveTab,
+  decksSaved, handleSetDecksSaved,
+  handleSetDeckMain, handleSetDeckSide,
+  handleSetActiveTab,
   dispatchSimulator,
 }) {
   function handleClickLoad() {
-    setDeckMain(new Map(aDeckSaved.main));
-    setDeckSide(new Map(aDeckSaved.side));
+    handleSetDeckMain(new Map(aDeckSaved.main));
+    handleSetDeckSide(new Map(aDeckSaved.side));
     dispatchSimulator(enumActionSimulator.INTERRUPT);
-    setActiveTab(enumTabPane.DECK);
+    handleSetActiveTab(enumTabPane.DECK);
   }
 
   function handleClickDelete() {
     const newDecksSaved = new Map(decksSaved);
     newDecksSaved.delete(idDeck);
-    setDecksSaved([...newDecksSaved.entries()]);
+    handleSetDecksSaved([...newDecksSaved.entries()]);
   }
 
   return (

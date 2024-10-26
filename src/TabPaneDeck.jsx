@@ -7,7 +7,7 @@ import { handleClickDecrement, handleClickIncrement } from './handleClick';
 import { sum } from './utils';
 
 function TabPaneDeck({
-  deckMain, setDeckMain, deckSide, setDeckSide,
+  deckMain, handleSetDeckMain, deckSide, handleSetDeckSide,
   dispatchSimulator,
 }) {
   // Do not use reduce; it is not supported on Safari on iOS
@@ -28,9 +28,9 @@ function TabPaneDeck({
               {...element}
               key={element.id}
               deckThis={deckMain}
-              setDeckThis={setDeckMain}
+              handleSetDeckThis={handleSetDeckMain}
               deckThat={deckSide}
-              setDeckThat={setDeckSide}
+              handleSetDeckThat={handleSetDeckSide}
               dispatchSimulator={dispatchSimulator}
             />
           ))
@@ -46,9 +46,9 @@ function TabPaneDeck({
               {...element}
               key={element.id}
               deckThis={deckSide}
-              setDeckThis={setDeckSide}
+              handleSetDeckThis={handleSetDeckSide}
               deckThat={deckMain}
-              setDeckThat={setDeckMain}
+              handleSetDeckThat={handleSetDeckMain}
               dispatchSimulator={dispatchSimulator}
               isSide
             />
@@ -62,26 +62,26 @@ function TabPaneDeck({
 
 function ContainerDeckCard({
   id, imageUrl, name,
-  deckThis, setDeckThis, deckThat, setDeckThat,
+  deckThis, handleSetDeckThis, deckThat, handleSetDeckThat,
   dispatchSimulator, isSide = false,
 }) {
   function handleClickMinus() {
-    handleClickDecrement(id, deckThis, setDeckThis);
+    handleClickDecrement(id, deckThis, handleSetDeckThis);
     if (!isSide) {
       dispatchSimulator(enumActionSimulator.INTERRUPT);
     }
   }
 
   function handleClickPlus() {
-    handleClickIncrement(id, deckThis, setDeckThis);
+    handleClickIncrement(id, deckThis, handleSetDeckThis);
     if (!isSide) {
       dispatchSimulator(enumActionSimulator.INTERRUPT);
     }
   }
 
   function handleClickMove() {
-    handleClickDecrement(id, deckThis, setDeckThis);
-    handleClickIncrement(id, deckThat, setDeckThat);
+    handleClickDecrement(id, deckThis, handleSetDeckThis);
+    handleClickIncrement(id, deckThat, handleSetDeckThat);
     dispatchSimulator(enumActionSimulator.INTERRUPT);
   }
 

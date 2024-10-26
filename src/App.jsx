@@ -22,6 +22,18 @@ function App() {
     enumStateSimulator.INITIAL,
   );
 
+  function handleSetDeckMain(newDeckMain) {
+    setDeckMain(newDeckMain);
+  }
+
+  function handleSetDeckSide(newDeckSide) {
+    setDeckSide(newDeckSide);
+  }
+
+  function handleSetActiveTab(newActiveTab) {
+    setActiveTab(newActiveTab);
+  }
+
   return (
     <>
       <h1 className="m-2">イジンデン デッキ作成</h1>
@@ -34,28 +46,28 @@ function App() {
         <Tab eventKey={enumTabPane.CARD} title="カード">
           <TabPaneCard
             deckMain={deckMain}
-            setDeckMain={setDeckMain}
+            handleSetDeckMain={handleSetDeckMain}
             deckSide={deckSide}
-            setDeckSide={setDeckSide}
+            handleSetDeckSide={handleSetDeckSide}
             dispatchSimulator={dispatchSimulator}
           />
         </Tab>
         <Tab eventKey={enumTabPane.DECK} title="レシピ">
           <TabPaneDeck
             deckMain={deckMain}
-            setDeckMain={setDeckMain}
+            handleSetDeckMain={handleSetDeckMain}
             deckSide={deckSide}
-            setDeckSide={setDeckSide}
+            handleSetDeckSide={handleSetDeckSide}
             dispatchSimulator={dispatchSimulator}
           />
         </Tab>
         <Tab eventKey={enumTabPane.SAVE_AND_LOAD} title="マイデッキβ">
           <TabPaneSave
             deckMain={deckMain}
-            setDeckMain={setDeckMain}
+            handleSetDeckMain={handleSetDeckMain}
             deckSide={deckSide}
-            setDeckSide={setDeckSide}
-            setActiveTab={setActiveTab}
+            handleSetDeckSide={handleSetDeckSide}
+            handleSetActiveTab={handleSetActiveTab}
             dispatchSimulator={dispatchSimulator}
           />
         </Tab>
