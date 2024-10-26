@@ -1,45 +1,45 @@
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 
 import App from "./App";
 import { dataCardsArrayForTable } from "./dataCards";
-import userEvent from "@testing-library/user-event";
 
-test('カード枚数の初期値はすべて0', () => {
-  const { container } = render(<App />);
+test('カードペインの初期値はカード枚数がすべて0でマイナスボタンは無効', () => {
+  render(<App />);
 
-  // カード枚数のテキストボックスを得る。
-  const inputListNumber = container.querySelectorAll('table input[type="number"]');
-  // メインとサイドをあわせて2倍のテキストボックスがある。
-  expect(inputListNumber.length).toBe(dataCardsArrayForTable.length * 2);
-  // 初期値が0であることのアサーション。
-  inputListNumber.forEach((e) => {
-    // DOM から得られる値は文字列であることに注意せよ。
+  const paneCard = screen.getAllByRole('tabpanel')[0];
+
+  // メインとサイドをあわせて2倍のテキストボックスがある
+  const listInputNumber = paneCard.querySelectorAll('table input[type="number"]');
+  expect(listInputNumber.length).toBe(dataCardsArrayForTable.length * 2);
+
+  listInputNumber.forEach((e) => {
     expect(e.value).toBe('0');
   });
 
-  // マイナスボタンを得る。
-  const buttonListMinus = container.querySelectorAll('table .input-group button:nth-child(1)');
-  // メインとサイドをあわせて2倍のマイナスボタンがある。
-  expect(buttonListMinus.length).toBe(dataCardsArrayForTable.length * 2);
-  // マイナスボタンが無効であることのアサーション。
-  buttonListMinus.forEach((e) => {
+  // メインとサイドをあわせて2倍のマイナスボタンがある
+  const listButtonMinus = paneCard.querySelectorAll('table .input-group button:nth-child(1)');
+  expect(listButtonMinus.length).toBe(dataCardsArrayForTable.length * 2);
+
+  listButtonMinus.forEach((e) => {
     expect(e.textContent).toBe('-');
     expect(e).toBeDisabled();
   });
 });
 
-test('カード枚数の増減', async () => {
+test('カードペイン内でのカード枚数の増減', async () => {
+  render(<App />);
+
   const user = userEvent.setup();
 
-  const { container } = render(<App />);
+  const paneCard = screen.getAllByRole('tabpanel')[0];
 
-  const cardAlpha = container.querySelector('table tr[data-id="R-1"]');
-  const buttonMinusMainAlpha = cardAlpha.querySelector('td:nth-child(3) button:nth-child(1)');
-  const inputMainAlpha = cardAlpha.querySelector('td:nth-child(3) input');
-  const buttonPlusMainAlpha = cardAlpha.querySelector('td:nth-child(3) button:nth-child(3)');
-  const buttonMinusSideAlpha = cardAlpha.querySelector('td:nth-child(4) button:nth-child(1)');
-  const inputSideAlpha = cardAlpha.querySelector('td:nth-child(4) input');
-  const buttonPlusSideAlpha = cardAlpha.querySelector('td:nth-child(4) button:nth-child(3)');
+  const buttonMinusMainAlpha = paneCard.querySelector('tr[data-id="R-1"] td:nth-child(3) button:nth-child(1)');
+  const inputMainAlpha = paneCard.querySelector('tr[data-id="R-1"] td:nth-child(3) input');
+  const buttonPlusMainAlpha = paneCard.querySelector('tr[data-id="R-1"] td:nth-child(3) button:nth-child(3)');
+  const buttonMinusSideAlpha = paneCard.querySelector('tr[data-id="R-1"] td:nth-child(4) button:nth-child(1)');
+  const inputSideAlpha = paneCard.querySelector('tr[data-id="R-1"] td:nth-child(4) input');
+  const buttonPlusSideAlpha = paneCard.querySelector('tr[data-id="R-1"] td:nth-child(4) button:nth-child(3)');
 
   expect(buttonMinusMainAlpha).toBeDisabled();
   expect(buttonMinusSideAlpha).toBeDisabled();
