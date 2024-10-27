@@ -74,7 +74,7 @@ function TabPaneDeck({
     <>
       <h2 className="m-2">デッキレシピ</h2>
       <div className="container-button mx-2 mt-2 mb-3">
-        <Button variant="outline-success" onClick={handleClickSave}>レシピをマイデッキに保存β</Button>
+        <Button variant="outline-success" onClick={handleClickSave}>マイデッキβに保存</Button>
         <Button variant="outline-danger" onClick={handleClickClear}>レシピをクリア</Button>
       </div>
       <Modal show={showModalEmpty}>
