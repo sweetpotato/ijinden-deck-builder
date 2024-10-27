@@ -110,7 +110,7 @@ test('レシピペイン内でのカード枚数の増減', async () => {
   expect(numCopiesMain.textContent).toBe('1');
   expect(numCopiesSide.textContent).toBe('1');
 
-  const buttonClear = paneDeck.querySelector('.container-button button:nth-child(1)');
+  const buttonClear = paneDeck.querySelector('.container-button button:nth-child(2)');
   expect(buttonClear.textContent).toBe('レシピをクリア');
   await user.click(buttonClear);
 

@@ -367,7 +367,7 @@ test('レシピペインからカードペインへの作用', async () => {
   await user.click(tabDeck);
   expect(paneDeck).toHaveClass('active');
   expect(paneDeck).toBeVisible();
-  const buttonClear = paneDeck.querySelector('.container-button button:nth-child(1)');
+  const buttonClear = paneDeck.querySelector('.container-button button:nth-child(2)');
   expect(buttonClear.textContent).toBe('レシピをクリア');
   await user.click(buttonClear);
   
@@ -825,7 +825,7 @@ test('シミュレータがレシピペインの操作でアボートする', as
   await user.click(tabDeck);
   expect(paneDeck).toHaveClass('active');
   expect(paneDeck).toBeVisible();
-  const buttonClear = paneDeck.querySelector('.container-button button:nth-child(1)');
+  const buttonClear = paneDeck.querySelector('.container-button button:nth-child(2)');
   expect(buttonClear.textContent).toBe('レシピをクリア');
   await user.click(buttonClear);
 

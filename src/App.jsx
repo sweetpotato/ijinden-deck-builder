@@ -12,11 +12,14 @@ import { enumStateSimulator, reducerSimulator } from './reducerSimulator';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import './App.css';
+import useLocalStorage from './useLocalStorage';
 
 function App() {
   const [deckMain, setDeckMain] = useState(new Map());
   const [deckSide, setDeckSide] = useState(new Map());
+  const [decksSaved, setDecksSaved] = useLocalStorage();
   const [activeTab, setActiveTab] = useState(enumTabPane.CARD);
+  const [activeDeckSaved, setActiveDeckSaved] = useState([]);
   const [stateSimulator, dispatchSimulator] = useReducer(
     reducerSimulator,
     enumStateSimulator.INITIAL,
@@ -30,8 +33,16 @@ function App() {
     setDeckSide(newDeckSide);
   }
 
+  function handleSetDecksSaved(newDecksSaved) {
+    setDecksSaved(newDecksSaved);
+  }
+
   function handleSetActiveTab(newActiveTab) {
     setActiveTab(newActiveTab);
+  }
+
+  function handleSetActiveDeckSaved(newActiveDeckSaved) {
+    setActiveDeckSaved(newActiveDeckSaved);
   }
 
   return (
@@ -58,15 +69,21 @@ function App() {
             handleSetDeckMain={handleSetDeckMain}
             deckSide={deckSide}
             handleSetDeckSide={handleSetDeckSide}
+            decksSaved={decksSaved}
+            handleSetDecksSaved={handleSetDecksSaved}
+            handleSetActiveDeckSaved={handleSetActiveDeckSaved}
+            handleSetActiveTab={handleSetActiveTab}
             dispatchSimulator={dispatchSimulator}
           />
         </Tab>
         <Tab eventKey={enumTabPane.SAVE_AND_LOAD} title="マイデッキβ">
           <TabPaneSave
-            deckMain={deckMain}
             handleSetDeckMain={handleSetDeckMain}
-            deckSide={deckSide}
             handleSetDeckSide={handleSetDeckSide}
+            decksSaved={decksSaved}
+            handleSetDecksSaved={handleSetDecksSaved}
+            activeDeckSaved={activeDeckSaved}
+            handleSetActiveDeckSaved={handleSetActiveDeckSaved}
             handleSetActiveTab={handleSetActiveTab}
             dispatchSimulator={dispatchSimulator}
           />

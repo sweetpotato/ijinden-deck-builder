@@ -19,15 +19,15 @@ test('レシピが空だと保存できない', async () => {
   // モーダルはまだない
   expect(screen.queryByRole('dialog')).toBeNull();
 
-  const tabSave = screen.getAllByRole('tab')[2];
-  const paneSave = screen.getAllByRole('tabpanel')[2];
+  const tabDeck = screen.getAllByRole('tab')[1];
+  const paneDeck = screen.getAllByRole('tabpanel')[1];
 
   // 保存ボタンをクリック
-  await user.click(tabSave);
-  expect(paneSave).toHaveClass('active');
-  expect(paneSave).toBeVisible();
-  const buttonSave = paneSave.querySelector('div:nth-child(2) button');
-  expect(buttonSave.textContent).toBe('現在のレシピを保存');
+  await user.click(tabDeck);
+  expect(paneDeck).toHaveClass('active');
+  expect(paneDeck).toBeVisible();
+  const buttonSave = paneDeck.querySelector('div:nth-child(2) button');
+  expect(buttonSave.textContent).toBe('レシピをマイデッキに保存β');
   await user.click(buttonSave);
 
   // 現在のレシピが空のため保存されない (呼出し回数が増えない)
@@ -59,8 +59,10 @@ test('レシピに1枚でもあるなら保存できる', async () => {
   const user = userEvent.setup();
 
   const tabCard = screen.getAllByRole('tab')[0];
+  const tabDeck = screen.getAllByRole('tab')[1];
   const tabSave = screen.getAllByRole('tab')[2];
   const paneCard = screen.getAllByRole('tabpanel')[0];
+  const paneDeck = screen.getAllByRole('tabpanel')[1];
   const paneSave = screen.getAllByRole('tabpanel')[2];
 
   // カードペインの適当なカードのメインプラスボタンを押す
@@ -74,16 +76,19 @@ test('レシピに1枚でもあるなら保存できる', async () => {
   expect(inputMain.value).toBe('1');
 
   // 保存ボタンを押す
-  await user.click(tabSave);
-  expect(paneSave).toHaveClass('active');
-  expect(paneSave).toBeVisible();
-  const buttonSave = paneSave.querySelector('div:nth-child(2) button');
-  expect(buttonSave.textContent).toBe('現在のレシピを保存');
+  await user.click(tabDeck);
+  expect(paneDeck).toHaveClass('active');
+  expect(paneDeck).toBeVisible();
+  const buttonSave = paneDeck.querySelector('div:nth-child(2) button');
+  expect(buttonSave.textContent).toBe('レシピをマイデッキに保存β');
   await user.click(buttonSave);
 
   // 保存される (呼出し回数が1増える)
   expect(window.localStorage.setItem).toHaveBeenCalledTimes(2);
+  // マイデッキペインに移動した
   // 保存されたデッキの表示の確認
+  expect(paneSave).toHaveClass('active');
+  expect(paneSave).toBeVisible();
   expect(paneSave.querySelectorAll('.accordion-item').length).toBe(1);
 
   // 保存されたデータの検証
@@ -115,11 +120,17 @@ test('レシピに1枚でもあるなら保存できる', async () => {
   expect(inputSide.value).toBe('1');
 
   // 保存ボタンを押す
+  await user.click(tabDeck);
+  expect(paneDeck).toHaveClass('active');
+  expect(paneDeck).toBeVisible();
   await user.click(buttonSave);
 
   // 保存される (呼出し回数がさらに1増える)
   expect(window.localStorage.setItem).toHaveBeenCalledTimes(3);
+  // マイデッキペインに移動した
   // 保存されたデッキの表示の確認
+  expect(paneSave).toHaveClass('active');
+  expect(paneSave).toBeVisible();
   expect(paneSave.querySelectorAll('.accordion-item').length).toBe(2);
   // 新しく保存されたデッキはリストの末尾に追加される
   stiringifiedDecksSaved = storage.get('ijinden-deck-builder');
