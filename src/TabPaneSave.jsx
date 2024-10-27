@@ -9,6 +9,7 @@ import {
   ModalBody,
   ModalFooter,
   ModalHeader,
+  ModalTitle,
 } from 'react-bootstrap';
 
 import { dataCardsArrayForDeck } from './dataCards';
@@ -79,7 +80,9 @@ function TabPaneSave({
         <Button variant="outline-success" onClick={handleClickSave}>現在のレシピを保存</Button>
       </div>
       <Modal show={showModalEmpty}>
-        <ModalHeader>マイデッキ</ModalHeader>
+        <ModalHeader>
+          <ModalTitle>マイデッキ</ModalTitle>
+        </ModalHeader>
         <ModalBody>現在のレシピが空のため保存できません。</ModalBody>
         <ModalFooter>
           <Button variant="outline-secondary" onClick={handleClickConfirmEmpty}>OK</Button>
@@ -117,7 +120,9 @@ function TabPaneSave({
           <Button variant="outline-danger" onClick={handleClickClear}>保存済みレシピをすべて削除</Button>
         </div>
         <Modal show={showModalClear}>
-          <ModalHeader>マイデッキ</ModalHeader>
+          <ModalHeader>
+            <ModalTitle>マイデッキ</ModalTitle>
+          </ModalHeader>
           <ModalBody>保存済みレシピをすべて削除します。よろしいですか？</ModalBody>
           <ModalFooter>
             <Button variant="outline-secondary" onClick={handleClickCancelClear}>キャンセル</Button>
