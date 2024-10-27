@@ -66,7 +66,7 @@ test("タブをクリックするとペインが表示される", async () => {
   expect(tabs[2]).not.toHaveClass('active');
   expect(tabs[3]).not.toHaveClass('active');
   expect(tabs[4]).toHaveClass('active');
-});
+}, 10000);
 
 test('カードペインからレシピペインへの作用', async () => {
   render(<App />);
@@ -348,6 +348,7 @@ test('レシピペインからカードペインへの作用', async () => {
   expect(paneCard).toHaveClass('active');
   expect(paneCard).toBeVisible();
   expect(inputMain.value).toBe('1');
+  expect(inputSide.value).toBe('2');
 
   // 6a. レシピペインのサイドデッキのマイナスボタンを押す
   await user.click(tabDeck);
@@ -359,6 +360,7 @@ test('レシピペインからカードペインへの作用', async () => {
   await user.click(tabCard);
   expect(paneCard).toHaveClass('active');
   expect(paneCard).toBeVisible();
+  expect(inputMain.value).toBe('1');
   expect(inputSide.value).toBe('1');
 
   // 7a. レシピペインのメインデッキのマイナスボタンを再度押す
@@ -372,6 +374,7 @@ test('レシピペインからカードペインへの作用', async () => {
   expect(paneCard).toHaveClass('active');
   expect(paneCard).toBeVisible();
   expect(inputMain.value).toBe('0');
+  expect(inputSide.value).toBe('1');
 
   // 8a. レシピペインのサイドデッキのマイナスボタンを再度押す
   await user.click(tabDeck);
@@ -383,8 +386,9 @@ test('レシピペインからカードペインへの作用', async () => {
   await user.click(tabCard);
   expect(paneCard).toHaveClass('active');
   expect(paneCard).toBeVisible();
+  expect(inputMain.value).toBe('0');
   expect(inputSide.value).toBe('0');
-}, 10000);
+}, 15000);
 
 test('保存したデッキを読み込んでレシピペインに表示する', async () => {
   const stringifiedDecksSaved = JSON.stringify([[

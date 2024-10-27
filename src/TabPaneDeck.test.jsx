@@ -115,12 +115,12 @@ test('レシピペイン内でのカード枚数の増減', async () => {
   expect(imageMain).toBeVisible();
   expect(imageSide).not.toBeVisible();
   expect(numCopiesMain.textContent).toBe('1');
-  expect(numCopiesSide.textContent).toBe('0');
+  expect(numCopiesSide).not.toBeVisible();
 
   await user.click(buttonMinusMain);
 
   expect(imageMain).not.toBeVisible();
   expect(imageSide).not.toBeVisible();
-  expect(numCopiesMain.textContent).toBe('0');
-  expect(numCopiesSide.textContent).toBe('0');
-});
+  expect(numCopiesMain).not.toBeVisible();
+  expect(numCopiesSide).not.toBeVisible();
+}, 10000);

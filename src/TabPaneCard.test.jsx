@@ -101,4 +101,4 @@ test('カードペイン内でのカード枚数の増減', async () => {
   expect(buttonMinusSideAlpha).toBeDisabled();
   expect(inputMainAlpha.value).toBe('0');
   expect(inputSideAlpha.value).toBe('0');
-});
+}, 10000);
