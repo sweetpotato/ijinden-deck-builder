@@ -101,3 +101,12 @@ fieldset {
 .nav-tabs .nav-link {
   padding: var(--bs-nav-link-padding-y) calc(.5 * var(--bs-nav-link-padding-x))
 }
+
+/*
+ * ツールチップ (本来は1080) をモーダルのバックドロップ (1050) のウラに隠す。
+ * これにより、レシピペインで拡大画像のオモテに虫メガネが来ることがなくなる。
+ * See: https://getbootstrap.jp/docs/5.3/layout/z-index/
+ */
+.tooltip {
+  z-index: 1049;
+}
