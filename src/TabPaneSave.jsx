@@ -9,12 +9,12 @@ import {
   ModalBody,
   ModalFooter,
   ModalHeader,
+  ModalTitle,
 } from 'react-bootstrap';
 
 import { dataCardsArrayForDeck } from './dataCards';
 import enumTabPane from './enumTabPane';
 import { enumActionSimulator } from './reducerSimulator';
-import useLocalStorage from './useLocalStorage';
 import { sum } from './utils';
 
 // YYYY/mm/dd HH:MM:SS
@@ -28,35 +28,14 @@ const DTF = new Intl.DateTimeFormat([], {
 });
 
 function TabPaneSave({
-  deckMain, handleSetDeckMain, deckSide, handleSetDeckSide, handleSetActiveTab, dispatchSimulator,
+  handleSetDeckMain, handleSetDeckSide,
+  decksSaved, handleSetDecksSaved, activeDeckSaved, handleSetActiveDeckSaved,
+  handleSetActiveTab, dispatchSimulator,
 }) {
-  const [decksSaved, setDecksSaved] = useLocalStorage();
-  const [showModalEmpty, setShowModalEmpty] = useState(false);
   const [showModalClear, setShowModalClear] = useState(false);
 
-  function handleSetDecksSaved(newDecksSaved) {
-    setDecksSaved(newDecksSaved);
-  }
-
-  function handleClickSave() {
-    if (deckMain.size === 0 && deckSide.size === 0) {
-      setShowModalEmpty(true);
-      return;
-    }
-
-    // 現在のデッキをオブジェクト化する。
-    const idDeck = decksSaved.length > 0 ? decksSaved[decksSaved.length - 1][0] + 1 : 1;
-    const timestamp = (new Date()).toJSON();
-    const objectMain = [...deckMain.entries()];
-    const objectSide = [...deckSide.entries()];
-    const objectDeck = [idDeck, { timestamp, main: objectMain, side: objectSide }];
-    // 最新のデッキとして、リストの末尾に保存する。
-    const newDecksSaved = [...decksSaved, objectDeck];
-    handleSetDecksSaved(newDecksSaved);
-  }
-
-  function handleClickConfirmEmpty() {
-    setShowModalEmpty(false);
+  function handleSelectAccordion(eventKey, _event) {
+    handleSetActiveDeckSaved(eventKey);
   }
 
   function handleClickClear() {
@@ -74,22 +53,10 @@ function TabPaneSave({
 
   return (
     <>
-      <h2 className="m-2">セーブ</h2>
-      <div className="m-2">
-        <Button variant="outline-success" onClick={handleClickSave}>現在のレシピを保存</Button>
-      </div>
-      <Modal show={showModalEmpty}>
-        <ModalHeader>マイデッキ</ModalHeader>
-        <ModalBody>現在のレシピが空のため保存できません。</ModalBody>
-        <ModalFooter>
-          <Button variant="outline-secondary" onClick={handleClickConfirmEmpty}>OK</Button>
-        </ModalFooter>
-      </Modal>
-
       <h2 className="m-2">ロード</h2>
-      <Accordion>
+      <Accordion activeKey={activeDeckSaved} onSelect={handleSelectAccordion}>
         {
-          [...decksSaved].reverse().map((aDeckSaved, index) => {
+          [...decksSaved].reverse().map((aDeckSaved) => {
             const idDeck = aDeckSaved[0];
             const timestamp = DTF.format(new Date(aDeckSaved[1].timestamp));
             const header = `#${idDeck} (${timestamp})`;
@@ -117,7 +84,9 @@ function TabPaneSave({
           <Button variant="outline-danger" onClick={handleClickClear}>保存済みレシピをすべて削除</Button>
         </div>
         <Modal show={showModalClear}>
-          <ModalHeader>マイデッキ</ModalHeader>
+          <ModalHeader>
+            <ModalTitle>マイデッキ</ModalTitle>
+          </ModalHeader>
           <ModalBody>保存済みレシピをすべて削除します。よろしいですか？</ModalBody>
           <ModalFooter>
             <Button variant="outline-secondary" onClick={handleClickCancelClear}>キャンセル</Button>

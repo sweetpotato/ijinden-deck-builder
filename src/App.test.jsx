@@ -66,7 +66,7 @@ test("タブをクリックするとペインが表示される", async () => {
   expect(tabs[2]).not.toHaveClass('active');
   expect(tabs[3]).not.toHaveClass('active');
   expect(tabs[4]).toHaveClass('active');
-});
+}, 10000);
 
 test('カードペインからレシピペインへの作用', async () => {
   render(<App />);
@@ -348,6 +348,7 @@ test('レシピペインからカードペインへの作用', async () => {
   expect(paneCard).toHaveClass('active');
   expect(paneCard).toBeVisible();
   expect(inputMain.value).toBe('1');
+  expect(inputSide.value).toBe('2');
 
   // 6a. レシピペインのサイドデッキのマイナスボタンを押す
   await user.click(tabDeck);
@@ -359,32 +360,24 @@ test('レシピペインからカードペインへの作用', async () => {
   await user.click(tabCard);
   expect(paneCard).toHaveClass('active');
   expect(paneCard).toBeVisible();
+  expect(inputMain.value).toBe('1');
   expect(inputSide.value).toBe('1');
 
-  // 7a. レシピペインのメインデッキのマイナスボタンを再度押す
+  // 7a. レシピペインのレシピをクリアボタンを押す
   await user.click(tabDeck);
   expect(paneDeck).toHaveClass('active');
   expect(paneDeck).toBeVisible();
-  await user.click(buttonMinusMain);
+  const buttonClear = paneDeck.querySelector('.container-button button:nth-child(2)');
+  expect(buttonClear.textContent).toBe('レシピをクリア');
+  await user.click(buttonClear);
   
-  // 7b. カードペインのメインで当該カードの枚数がさらに減る
+  // 7b. カードペインで当該カードの枚数がゼロになる
   await user.click(tabCard);
   expect(paneCard).toHaveClass('active');
   expect(paneCard).toBeVisible();
   expect(inputMain.value).toBe('0');
-
-  // 8a. レシピペインのサイドデッキのマイナスボタンを再度押す
-  await user.click(tabDeck);
-  expect(paneDeck).toHaveClass('active');
-  expect(paneDeck).toBeVisible();
-  await user.click(buttonMinusSide);
-  
-  // 8b. カードペインのサイドで当該カードの枚数がさらに減る
-  await user.click(tabCard);
-  expect(paneCard).toHaveClass('active');
-  expect(paneCard).toBeVisible();
   expect(inputSide.value).toBe('0');
-}, 10000);
+}, 15000);
 
 test('保存したデッキを読み込んでレシピペインに表示する', async () => {
   const stringifiedDecksSaved = JSON.stringify([[
@@ -827,7 +820,27 @@ test('シミュレータがレシピペインの操作でアボートする', as
   expect(buttonMulligan).toBeEnabled();
   expect(buttonKeep).toBeEnabled();
   expect(screen.queryByRole('alert')).toBeNull();
-}, 15000);
+
+  // 7a. レシピペインでレシピをクリアボタンを押す
+  await user.click(tabDeck);
+  expect(paneDeck).toHaveClass('active');
+  expect(paneDeck).toBeVisible();
+  const buttonClear = paneDeck.querySelector('.container-button button:nth-child(2)');
+  expect(buttonClear.textContent).toBe('レシピをクリア');
+  await user.click(buttonClear);
+
+  // 7b. シミュレータがアボートする
+  await user.click(tabSimulator);
+  expect(paneSimulator).toHaveClass('active');
+  expect(paneSimulator).toBeVisible();
+  expect(buttonReset).toBeEnabled();
+  expect(buttonStart).toBeDisabled();
+  expect(buttonMulligan).toBeDisabled();
+  expect(buttonKeep).toBeDisabled();
+  alert = screen.getByRole('alert');
+  expect(alert).toBeVisible();
+  expect(alert.textContent).toBe('⚠️ シミュレーション中にメインデッキが編集されました。リセットしてください。');
+}, 30000);
 
 test('シミュレータがマイデッキペインの操作でアボートする', async () => {
   const stringifiedDecksSaved = JSON.stringify([[

@@ -12,11 +12,14 @@ import { enumStateSimulator, reducerSimulator } from './reducerSimulator';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import './App.css';
+import useLocalStorage from './useLocalStorage';
 
 function App() {
   const [deckMain, setDeckMain] = useState(new Map());
   const [deckSide, setDeckSide] = useState(new Map());
+  const [decksSaved, setDecksSaved] = useLocalStorage();
   const [activeTab, setActiveTab] = useState(enumTabPane.CARD);
+  const [activeDeckSaved, setActiveDeckSaved] = useState([]);
   const [stateSimulator, dispatchSimulator] = useReducer(
     reducerSimulator,
     enumStateSimulator.INITIAL,
@@ -30,8 +33,16 @@ function App() {
     setDeckSide(newDeckSide);
   }
 
+  function handleSetDecksSaved(newDecksSaved) {
+    setDecksSaved(newDecksSaved);
+  }
+
   function handleSetActiveTab(newActiveTab) {
     setActiveTab(newActiveTab);
+  }
+
+  function handleSetActiveDeckSaved(newActiveDeckSaved) {
+    setActiveDeckSaved(newActiveDeckSaved);
   }
 
   return (
@@ -58,15 +69,21 @@ function App() {
             handleSetDeckMain={handleSetDeckMain}
             deckSide={deckSide}
             handleSetDeckSide={handleSetDeckSide}
+            decksSaved={decksSaved}
+            handleSetDecksSaved={handleSetDecksSaved}
+            handleSetActiveDeckSaved={handleSetActiveDeckSaved}
+            handleSetActiveTab={handleSetActiveTab}
             dispatchSimulator={dispatchSimulator}
           />
         </Tab>
         <Tab eventKey={enumTabPane.SAVE_AND_LOAD} title="マイデッキβ">
           <TabPaneSave
-            deckMain={deckMain}
             handleSetDeckMain={handleSetDeckMain}
-            deckSide={deckSide}
             handleSetDeckSide={handleSetDeckSide}
+            decksSaved={decksSaved}
+            handleSetDecksSaved={handleSetDecksSaved}
+            activeDeckSaved={activeDeckSaved}
+            handleSetActiveDeckSaved={handleSetActiveDeckSaved}
             handleSetActiveTab={handleSetActiveTab}
             dispatchSimulator={dispatchSimulator}
           />
@@ -75,14 +92,41 @@ function App() {
           <TabPaneSimulator deck={deckMain} state={stateSimulator} dispatch={dispatchSimulator} />
         </Tab>
         <Tab eventKey={enumTabPane.HELP} title="ヘルプ" className="m-2">
+          <h2>マイデッキ (ベータ版) 使用時の注意</h2>
+          <p>マイデッキは端末のブラウザの localStorage に保存しています。そのため、次にご注意ください。</p>
+          <ul>
+            <li>端末やブラウザをまたいでは、同じマイデッキは利用できないこと。</li>
+            <li>複数のタブで同時にレシピの保存を試みたり、レシピの保存中にタブを閉じたりブラウザを停止させたりすると、マイデッキのデータが破損する可能性があること。</li>
+            <li>
+              <b>
+                iOS/iPadOS/macOS の Safari
+              </b>
+              {' '}
+              ではインテリジェントトラッキング防止機能 (
+              <a href="https://webkit.org/blog/9521/intelligent-tracking-prevention-2-3/">
+                ITP 2.3
+              </a>
+              {' '}
+              (英語サイト)) により、
+              <b>
+                アプリの最後のご利用から7日間が経過するとマイデッキのデータが削除される
+              </b>
+              こと。
+            </li>
+          </ul>
           <h2>これは何？</h2>
-          <p>イジンデンのデッキリストを作成するアプリです。機能は最小限にとどめています。</p>
-          <p>GitHub で開発しています。リポジトリは次の URL です。</p>
-          <p><a href="https://github.com/sweetpotato/ijinden-deck-builder/">https://github.com/sweetpotato/ijinden-deck-builder/</a></p>
+          <p>イジンデンのデッキレシピを作成するアプリです。</p>
+          <h2>快適にご利用いただくために</h2>
+          <p>
+            あらかじめ通信環境の良いところで、イジンデン公式サイトの「
+            <a href="https://one-draw.jp/ijinden/cardlist.html">カードリスト</a>
+            」以下にある各エキスパンションのページを開いて、カード画像を読み込んでおいてください。
+          </p>
           <h2>特徴</h2>
           <ul>
             <li>デッキ枚数の上限なし</li>
             <li>メインデッキとサイドデッキを別個に管理可能</li>
+            <li>レシピを「マイデッキ」としてブラウザに保存可能 (ベータ版)</li>
             <li>デッキのカード枚数はカード名ごとに数字で表示</li>
             <li>デッキのカードの並びは種類、レベル、色、魔力コスト、エキスパンション順</li>
           </ul>
@@ -91,11 +135,14 @@ function App() {
           <p>各カードのプラス・マイナスボタンで、メインデッキ・サイドデッキ別々に枚数を増減できます。エキスパンション、色、種類、能力語でカードの絞り込みができます。</p>
           <h3>レシピ</h3>
           {/* eslint-disable max-len */}
-          <p>カードの左下をタップする（パソコンではカードの上にマウスカーソルを当てる）と、そのカードに重なるボタンが現れます。各ボタンで枚数の増減やメインデッキ・サイドデッキの入換えができます。</p>
+          <p>カードの左下をタップする (パソコンではカードの上にマウスカーソルを当てる) と、そのカードに重なるボタンが現れます。各ボタンで枚数の増減やメインデッキ・サイドデッキの入換え、カード画像のズームができます。</p>
+          <p>保存ボタンで、作成したレシピをマイデッキ (ベータ版) に保存できます。また、クリアボタンで、レシピを最初から編集し直すことができます。</p>
           {/* eslint-enable max-len */}
-          <h3>シミュ（手札シミュレータ）</h3>
+          <h3>マイデッキ (ベータ版)</h3>
+          <p>保存した各レシピのボタンで読込みや削除ができます。保存済みレシピを全て削除することもできます。</p>
+          <h3>シミュ (手札シミュレータ)</h3>
           {/* eslint-disable max-len */}
-          <p>初期のガーディアンと手札、およびその後のドローをランダムに表示します。スタートボタンを押した直後は対戦開始前の状態であり、マリガン（引き直す）ボタンかキープ（引き直さない）ボタンを押すと手札とドローが確定します。灰色のガーディアンはタップする（パソコンではカードの上にマウスカーソルを当てる）とオモテ面のカード画像が表示されます。リセットボタンでやり直します。</p>
+          <p>初期のガーディアンと手札、およびその後のドローをランダムに表示します。スタートボタンを押した直後は対戦開始前の状態であり、マリガン (引き直す) ボタンかキープ (引き直さない) ボタンを押すと手札とドローが確定します。灰色のガーディアンはタップする (パソコンではカードの上にマウスカーソルを当てる) とオモテ面のカード画像が表示されます。リセットボタンでやり直します。</p>
           {/* eslint-enable max-len */}
           <h2>未対応機能</h2>
           <dl>
@@ -120,8 +167,6 @@ function App() {
               {' '}
               → フルページのスクリーンショットを撮る
             </dd>
-            <dt>デッキ保存</dt>
-            <dd>お手数ですが再入力をお願いします。</dd>
             <dt>高度な検索</dt>
             <dd>お手数ですがカードリストから探してください。</dd>
             <dt>並び順の変更</dt>
@@ -130,6 +175,9 @@ function App() {
             <dd>対応する SR のカードを使用ください。</dd>
           </dl>
           <h2>連絡先</h2>
+          <h3>リポジトリ</h3>
+          <p><a href="https://github.com/sweetpotato/ijinden-deck-builder/">https://github.com/sweetpotato/ijinden-deck-builder/</a></p>
+          <h3>メールアドレス</h3>
           <p>すいーとポテト &lt;sweetpotato DOT quarter PLUS github AT gmail DOT com&gt;</p>
         </Tab>
       </Tabs>

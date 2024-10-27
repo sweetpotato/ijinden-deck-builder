@@ -3,6 +3,7 @@ import {
   Button,
   Modal,
   ModalBody,
+  ModalFooter,
   ModalHeader,
   ModalTitle,
   OverlayTrigger,
@@ -11,15 +12,18 @@ import {
 
 import ImageCard from './ImageCard';
 import { dataCardsArrayForDeck as dataCardsArray, dataCardsMap } from './dataCards';
-import { enumActionSimulator } from './reducerSimulator';
+import enumTabPane from './enumTabPane';
 import { handleClickDecrement, handleClickIncrement } from './handleClick';
+import { enumActionSimulator } from './reducerSimulator';
 import { sum } from './utils';
 
 function TabPaneDeck({
   deckMain, handleSetDeckMain, deckSide, handleSetDeckSide,
-  dispatchSimulator,
+  decksSaved, handleSetDecksSaved,
+  handleSetActiveDeckSaved, handleSetActiveTab, dispatchSimulator,
 }) {
   const [idZoom, setIdZoom] = useState(null);
+  const [showModalEmpty, setShowModalEmpty] = useState(false);
 
   function handleSetIdZoom(newIdZoom) {
     setIdZoom(newIdZoom);
@@ -27,6 +31,36 @@ function TabPaneDeck({
 
   function handleClearIdZoom() {
     setIdZoom(null);
+  }
+
+  function handleClickSave() {
+    if (deckMain.size === 0 && deckSide.size === 0) {
+      setShowModalEmpty(true);
+      return;
+    }
+
+    // 現在のデッキをオブジェクト化する
+    const idDeck = decksSaved.length > 0 ? decksSaved[decksSaved.length - 1][0] + 1 : 1;
+    const timestamp = (new Date()).toJSON();
+    const objectMain = [...deckMain.entries()];
+    const objectSide = [...deckSide.entries()];
+    const objectDeck = [idDeck, { timestamp, main: objectMain, side: objectSide }];
+    // 最新のデッキとして、リストの末尾に保存する
+    const newDecksSaved = [...decksSaved, objectDeck];
+    handleSetDecksSaved(newDecksSaved);
+    // マイデッキペインに移動する
+    handleSetActiveDeckSaved(idDeck);
+    handleSetActiveTab(enumTabPane.SAVE_AND_LOAD);
+  }
+
+  function handleClickClear() {
+    handleSetDeckMain(new Map());
+    handleSetDeckSide(new Map());
+    dispatchSimulator(enumActionSimulator.INTERRUPT);
+  }
+
+  function handleClickConfirmEmpty() {
+    setShowModalEmpty(false);
   }
 
   // Do not use reduce; it is not supported on Safari on iOS
@@ -38,7 +72,21 @@ function TabPaneDeck({
 
   return (
     <>
-      <h2 className="m-2">{titleMain}</h2>
+      <h2 className="m-2">デッキレシピ</h2>
+      <div className="container-button mx-2 mt-2 mb-3">
+        <Button variant="outline-success" onClick={handleClickSave}>レシピをマイデッキに保存β</Button>
+        <Button variant="outline-danger" onClick={handleClickClear}>レシピをクリア</Button>
+      </div>
+      <Modal show={showModalEmpty}>
+        <ModalHeader>
+          <ModalTitle>マイデッキ</ModalTitle>
+        </ModalHeader>
+        <ModalBody>現在のレシピが空のため保存できません。</ModalBody>
+        <ModalFooter>
+          <Button variant="outline-secondary" onClick={handleClickConfirmEmpty}>OK</Button>
+        </ModalFooter>
+      </Modal>
+      <h3 className="m-2">{titleMain}</h3>
       <div className="container-card-line-up container-deck ms-2">
         {
           /* eslint-disable react/jsx-props-no-spreading */
@@ -57,7 +105,7 @@ function TabPaneDeck({
           /* eslint-enable react/jsx-props-no-spreading */
         }
       </div>
-      <h2 className="m-2">{titleSide}</h2>
+      <h3 className="m-2">{titleSide}</h3>
       <div className="container-card-line-up container-deck ms-2">
         {
           /* eslint-disable react/jsx-props-no-spreading */

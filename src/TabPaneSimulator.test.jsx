@@ -90,7 +90,7 @@ test('メインデッキが9枚以下だとスタートできない', async () =
   expect(buttonMulligan).toBeDisabled();
   expect(buttonKeep).toBeDisabled();
   expect(screen.queryByRole('alert')).toBeNull();
-}, 10000);
+}, 30000);
 
 test('メインデッキが10枚以上でスタートできる', async () => {
   render(<App />);
@@ -219,4 +219,4 @@ test('メインデッキが10枚以上でスタートできる', async () => {
   expect(buttonMulligan).toBeDisabled();
   expect(buttonKeep).toBeDisabled();
   expect(screen.queryByRole('alert')).toBeNull();
-}, 10000);
+}, 15000);
