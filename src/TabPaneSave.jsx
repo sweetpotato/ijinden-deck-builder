@@ -32,11 +32,20 @@ function TabPaneSave({
   deckMain, handleSetDeckMain, deckSide, handleSetDeckSide, handleSetActiveTab, dispatchSimulator,
 }) {
   const [decksSaved, setDecksSaved] = useLocalStorage();
+  const [activeDeckSaved, setActiveDeckSaved] = useState([]);
   const [showModalEmpty, setShowModalEmpty] = useState(false);
   const [showModalClear, setShowModalClear] = useState(false);
 
   function handleSetDecksSaved(newDecksSaved) {
     setDecksSaved(newDecksSaved);
+  }
+
+  function handleSetActiveDeckSaved(newActiveDeckSaved) {
+    setActiveDeckSaved(newActiveDeckSaved);
+  }
+
+  function handleSelectAccordion(eventKey, _event) {
+    handleSetActiveDeckSaved(eventKey);
   }
 
   function handleClickSave() {
@@ -90,9 +99,9 @@ function TabPaneSave({
       </Modal>
 
       <h2 className="m-2">ロード</h2>
-      <Accordion>
+      <Accordion activeKey={activeDeckSaved} onSelect={handleSelectAccordion}>
         {
-          [...decksSaved].reverse().map((aDeckSaved, index) => {
+          [...decksSaved].reverse().map((aDeckSaved) => {
             const idDeck = aDeckSaved[0];
             const timestamp = DTF.format(new Date(aDeckSaved[1].timestamp));
             const header = `#${idDeck} (${timestamp})`;
