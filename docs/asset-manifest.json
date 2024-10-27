@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/ijinden-deck-builder/static/css/main.c26b1306.css",
-    "main.js": "/ijinden-deck-builder/static/js/main.2ff674f9.js",
+    "main.js": "/ijinden-deck-builder/static/js/main.d6fa3fc2.js",
     "static/js/453.69f3745b.chunk.js": "/ijinden-deck-builder/static/js/453.69f3745b.chunk.js",
     "index.html": "/ijinden-deck-builder/index.html",
     "main.c26b1306.css.map": "/ijinden-deck-builder/static/css/main.c26b1306.css.map",
-    "main.2ff674f9.js.map": "/ijinden-deck-builder/static/js/main.2ff674f9.js.map",
+    "main.d6fa3fc2.js.map": "/ijinden-deck-builder/static/js/main.d6fa3fc2.js.map",
     "453.69f3745b.chunk.js.map": "/ijinden-deck-builder/static/js/453.69f3745b.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.c26b1306.css",
-    "static/js/main.2ff674f9.js"
+    "static/js/main.d6fa3fc2.js"
   ]
 }
