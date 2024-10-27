@@ -29,6 +29,12 @@ function TabPaneDeck({
     setIdZoom(null);
   }
 
+  function handleClickClear() {
+    handleSetDeckMain(new Map());
+    handleSetDeckSide(new Map());
+    dispatchSimulator(enumActionSimulator.INTERRUPT);
+  }
+
   // Do not use reduce; it is not supported on Safari on iOS
   const numCardsMain = sum(deckMain.values());
   const numCardsSide = sum(deckSide.values());
@@ -38,7 +44,11 @@ function TabPaneDeck({
 
   return (
     <>
-      <h2 className="m-2">{titleMain}</h2>
+      <h2 className="m-2">デッキレシピ</h2>
+      <div className="container-button mx-2 mt-2 mb-3">
+        <Button variant="outline-danger" onClick={handleClickClear}>レシピをクリア</Button>
+      </div>
+      <h3 className="m-2">{titleMain}</h3>
       <div className="container-card-line-up container-deck ms-2">
         {
           /* eslint-disable react/jsx-props-no-spreading */
@@ -57,7 +67,7 @@ function TabPaneDeck({
           /* eslint-enable react/jsx-props-no-spreading */
         }
       </div>
-      <h2 className="m-2">{titleSide}</h2>
+      <h3 className="m-2">{titleSide}</h3>
       <div className="container-card-line-up container-deck ms-2">
         {
           /* eslint-disable react/jsx-props-no-spreading */
