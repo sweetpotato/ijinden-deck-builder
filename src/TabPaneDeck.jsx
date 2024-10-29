@@ -12,6 +12,7 @@ import {
 
 import ImageCard from './ImageCard';
 import { dataCardsArrayForDeck as dataCardsArray, dataCardsMap } from './dataCards';
+import db from './db';
 import enumTabPane from './enumTabPane';
 import { handleClickDecrement, handleClickIncrement } from './handleClick';
 import { enumActionSimulator } from './reducerSimulator';
@@ -19,7 +20,6 @@ import { sum } from './utils';
 
 function TabPaneDeck({
   deckMain, handleSetDeckMain, deckSide, handleSetDeckSide,
-  decksSaved, handleSetDecksSaved,
   handleSetActiveDeckSaved, handleSetActiveTab, dispatchSimulator,
 }) {
   const [idZoom, setIdZoom] = useState(null);
@@ -33,21 +33,19 @@ function TabPaneDeck({
     setIdZoom(null);
   }
 
-  function handleClickSave() {
+  async function handleClickSave() {
     if (deckMain.size === 0 && deckSide.size === 0) {
       setShowModalEmpty(true);
       return;
     }
 
     // 現在のデッキをオブジェクト化する
-    const idDeck = decksSaved.length > 0 ? decksSaved[decksSaved.length - 1][0] + 1 : 1;
-    const timestamp = (new Date()).toJSON();
+    const timestamp = new Date();
     const objectMain = [...deckMain.entries()];
     const objectSide = [...deckSide.entries()];
-    const objectDeck = [idDeck, { timestamp, main: objectMain, side: objectSide }];
-    // 最新のデッキとして、リストの末尾に保存する
-    const newDecksSaved = [...decksSaved, objectDeck];
-    handleSetDecksSaved(newDecksSaved);
+    const objectDeck = { timestamp, main: objectMain, side: objectSide };
+    // IndexedDB に保存する
+    const idDeck = await db.decks.add(objectDeck);
     // マイデッキペインに移動する
     handleSetActiveDeckSaved(idDeck);
     handleSetActiveTab(enumTabPane.SAVE_AND_LOAD);

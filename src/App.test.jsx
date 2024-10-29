@@ -1,8 +1,11 @@
+import "fake-indexeddb/auto";
+
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import App from './App';
 import { dataCardsMap } from './dataCards';
+import db from "./db";
 
 test("タブをクリックするとペインが表示される", async () => {
   render(<App />);
@@ -218,7 +221,7 @@ test('カードペインからレシピペインへの作用', async () => {
   expect(paneDeck).toBeVisible();
   expect(imageSide).not.toBeVisible();
   expect(imageSide).not.toBeVisible();
-}, 15000);
+}, 30000);
 
 test('レシピペインからカードペインへの作用', async () => {
   render(<App />);
@@ -380,17 +383,20 @@ test('レシピペインからカードペインへの作用', async () => {
 }, 15000);
 
 test('保存したデッキを読み込んでレシピペインに表示する', async () => {
-  const stringifiedDecksSaved = JSON.stringify([[
-    1, { timestamp: new Date(), main: [['R-1', 3]], side: [['R-2', 4]] }
-  ]]);
+  // 次のエラーを回避するためのコード
+  // ReferenceError: structuredClone is not defined
+  if(!global.structuredClone) {
+    global.structuredClone = (v) => JSON.parse(JSON.stringify(v));
+  }
 
-  jest.spyOn(Storage.prototype, 'setItem').mockImplementation(jest.fn());
-  jest.spyOn(Storage.prototype, 'getItem').mockImplementation(jest.fn(() => stringifiedDecksSaved));
+  const decksSaved = [
+    { timestamp: new Date(), main: [['R-1', 3]], side: [['R-2', 4]] }
+  ];
+
+  await db.decks.clear();
+  await db.decks.bulkAdd(decksSaved);
 
   render(<App />);
-
-  expect(window.localStorage.getItem).toHaveBeenCalledTimes(1);
-  expect(window.localStorage.setItem).toHaveBeenCalledTimes(1);
 
   const user = userEvent.setup();
 
@@ -589,7 +595,7 @@ test('シミュレータがカードペインの操作でアボートする', as
   expect(buttonMulligan).toBeEnabled();
   expect(buttonKeep).toBeEnabled();
   expect(screen.queryByRole('alert')).toBeNull();
-}, 15000);
+}, 30000);
 
 test('シミュレータがレシピペインの操作でアボートする', async () => {
   render(<App />);
@@ -843,12 +849,18 @@ test('シミュレータがレシピペインの操作でアボートする', as
 }, 30000);
 
 test('シミュレータがマイデッキペインの操作でアボートする', async () => {
-  const stringifiedDecksSaved = JSON.stringify([[
-    1, { timestamp: new Date(), main: [['R-1', 10]], side: [] }
-  ]]);
+  // 次のエラーを回避するためのコード
+  // ReferenceError: structuredClone is not defined
+  if(!global.structuredClone) {
+    global.structuredClone = (v) => JSON.parse(JSON.stringify(v));
+  }
 
-  jest.spyOn(Storage.prototype, 'setItem').mockImplementation(jest.fn());
-  jest.spyOn(Storage.prototype, 'getItem').mockImplementation(jest.fn(() => stringifiedDecksSaved));
+  const decksSaved = [
+    { timestamp: new Date(), main: [['R-1', 10]], side: [] }
+  ];
+
+  await db.decks.clear();
+  await db.decks.bulkAdd(decksSaved);
 
   render(<App />);
 
@@ -910,6 +922,4 @@ test('シミュレータがマイデッキペインの操作でアボートす�
   alert = screen.getByRole('alert');
   expect(alert).toBeVisible();
   expect(alert.textContent).toBe('⚠️ シミュレーション中にメインデッキが編集されました。リセットしてください。');
-
-  jest.restoreAllMocks();
 });

@@ -1,4 +1,4 @@
-import { useReducer, useState } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 
@@ -12,12 +12,54 @@ import { enumStateSimulator, reducerSimulator } from './reducerSimulator';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import './App.css';
-import useLocalStorage from './useLocalStorage';
+import db from './db';
 
 function App() {
+  // localStorage のマイデッキを IndexedDB へ移行する。
+  //
+  // フェッチのキャンセルのパターンにあわせてコードを書いたつもりだが、
+  // Strict Mode の開発環境ではどうしても2回実行されてしまい、
+  // 移行元のデッキが移行先でダブる事象を確認した。それとあわせて、
+  // Strict Mode を外す (本番環境を模倣する) とダブらないことも確認した。
+  //
+  // Strict Mode を外した本番環境では意図どおりに動くはずであること、
+  // またこのコードが必要な期間が1週間程度と長くないことから、
+  // このコードで妥協して本番環境にデプロイすることにする。
+  //
+  // このコードが不要になったらマイデッキのベータを外すこと。
+  //
+  useEffect(() => {
+    let active = true;
+
+    const moveDecks = async () => {
+      if (typeof window === 'undefined') {
+        return;
+      }
+      // localStorage からデッキを読み込む
+      const stringifiedDecks = window.localStorage.getItem('ijinden-deck-builder');
+      if (stringifiedDecks === null) {
+        return;
+      }
+      const decksToBeMoved = JSON.parse(stringifiedDecks).map((e) => ({
+        // IDとタイムスタンプは新しくする
+        ...e[1], timestamp: new Date(),
+      }));
+      if (active) {
+        // IndexedDB へデッキを保存する
+        await db.decks.bulkAdd(decksToBeMoved);
+        // localStorage のデータを削除する
+        window.localStorage.setItem('ijinden-deck-builder', '[]');
+      }
+    };
+    moveDecks();
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
   const [deckMain, setDeckMain] = useState(new Map());
   const [deckSide, setDeckSide] = useState(new Map());
-  const [decksSaved, setDecksSaved] = useLocalStorage();
   const [activeTab, setActiveTab] = useState(enumTabPane.CARD);
   const [activeDeckSaved, setActiveDeckSaved] = useState([]);
   const [stateSimulator, dispatchSimulator] = useReducer(
@@ -31,10 +73,6 @@ function App() {
 
   function handleSetDeckSide(newDeckSide) {
     setDeckSide(newDeckSide);
-  }
-
-  function handleSetDecksSaved(newDecksSaved) {
-    setDecksSaved(newDecksSaved);
   }
 
   function handleSetActiveTab(newActiveTab) {
@@ -69,8 +107,6 @@ function App() {
             handleSetDeckMain={handleSetDeckMain}
             deckSide={deckSide}
             handleSetDeckSide={handleSetDeckSide}
-            decksSaved={decksSaved}
-            handleSetDecksSaved={handleSetDecksSaved}
             handleSetActiveDeckSaved={handleSetActiveDeckSaved}
             handleSetActiveTab={handleSetActiveTab}
             dispatchSimulator={dispatchSimulator}
@@ -80,8 +116,6 @@ function App() {
           <TabPaneSave
             handleSetDeckMain={handleSetDeckMain}
             handleSetDeckSide={handleSetDeckSide}
-            decksSaved={decksSaved}
-            handleSetDecksSaved={handleSetDecksSaved}
             activeDeckSaved={activeDeckSaved}
             handleSetActiveDeckSaved={handleSetActiveDeckSaved}
             handleSetActiveTab={handleSetActiveTab}

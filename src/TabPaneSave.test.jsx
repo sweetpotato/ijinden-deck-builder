@@ -1,21 +1,18 @@
-import { render, screen } from "@testing-library/react";
+import "fake-indexeddb/auto";
+
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import App from "./App";
+import db from "./db";
 
 test('レシピが空だと保存できない', async () => {
-  // localStorage を模倣
-  jest.spyOn(Storage.prototype, 'setItem').mockImplementation(jest.fn());
-  jest.spyOn(Storage.prototype, 'getItem').mockImplementation(jest.fn(() => "[]"));
+  await db.decks.clear();
 
   render(<App />);
 
   const user = userEvent.setup();
 
-  // useState の初期値をセットするコールバックから1回呼ばれる
-  expect(window.localStorage.getItem).toHaveBeenCalledTimes(1);
-  // useEffect のセットアップコードから1回呼ばれる
-  expect(window.localStorage.setItem).toHaveBeenCalledTimes(1);
   // モーダルはまだない
   expect(screen.queryByRole('dialog')).toBeNull();
 
@@ -30,8 +27,9 @@ test('レシピが空だと保存できない', async () => {
   expect(buttonSave.textContent).toBe('マイデッキβに保存');
   await user.click(buttonSave);
 
-  // 現在のレシピが空のため保存されない (呼出し回数が増えない)
-  expect(window.localStorage.setItem).toHaveBeenCalledTimes(1);
+  // 現在のレシピが空のため保存されない
+  await waitFor(async () => expect(await db.decks.toArray()).toStrictEqual([]));
+
   // モーダルが表示される
   const modal = screen.getByRole('dialog');
   expect(modal.querySelector('.modal-body').textContent).toBe('現在のレシピが空のため保存できません。');
@@ -42,25 +40,23 @@ test('レシピが空だと保存できない', async () => {
   await user.click(buttonOk);
   // モーダルがひっこむ
   expect(screen.queryByRole('dialog')).toBeNull();
-
-  jest.restoreAllMocks();
 });
 
 test('レシピに1枚でもあるなら保存できる', async () => {
-  const storage = new Map();
-  jest.spyOn(Storage.prototype, 'setItem').mockImplementation(jest.fn((k, v) => storage.set(k, v)));
-  jest.spyOn(Storage.prototype, 'getItem').mockImplementation(jest.fn(() => "[]"));
+  // 次のエラーを回避するためのコード
+  // ReferenceError: structuredClone is not defined
+  if(!global.structuredClone) {
+    global.structuredClone = (v) => JSON.parse(JSON.stringify(v));
+  }
+
+  await db.decks.clear();
 
   render(<App />);
-
-  expect(window.localStorage.getItem).toHaveBeenCalledTimes(1);
-  expect(window.localStorage.setItem).toHaveBeenCalledTimes(1);
 
   const user = userEvent.setup();
 
   const tabCard = screen.getAllByRole('tab')[0];
   const tabDeck = screen.getAllByRole('tab')[1];
-  const tabSave = screen.getAllByRole('tab')[2];
   const paneCard = screen.getAllByRole('tabpanel')[0];
   const paneDeck = screen.getAllByRole('tabpanel')[1];
   const paneSave = screen.getAllByRole('tabpanel')[2];
@@ -83,24 +79,19 @@ test('レシピに1枚でもあるなら保存できる', async () => {
   expect(buttonSave.textContent).toBe('マイデッキβに保存');
   await user.click(buttonSave);
 
-  // 保存される (呼出し回数が1増える)
-  expect(window.localStorage.setItem).toHaveBeenCalledTimes(2);
   // マイデッキペインに移動した
   // 保存されたデッキの表示の確認
-  expect(paneSave).toHaveClass('active');
+  await waitFor(() => expect(paneSave).toHaveClass('active')); // waitFor で包まないと不安定
   expect(paneSave).toBeVisible();
-  expect(paneSave.querySelectorAll('.accordion-item').length).toBe(1);
+  await waitFor(() => expect(paneSave.querySelectorAll('.accordion-item').length).toBe(1));
 
   // 保存されたデータの検証
-  let stiringifiedDecksSaved = storage.get('ijinden-deck-builder');
-  expect(typeof stiringifiedDecksSaved).toBe('string');
-  let decksSaved = JSON.parse(stiringifiedDecksSaved);
+  let decksSaved = await db.decks.orderBy(':id').toArray();
   expect(decksSaved.length).toBe(1);
-  expect(decksSaved[0][0]).toBe(1);
-  expect(decksSaved[0][1].main.length).toBe(1);
-  expect(decksSaved[0][1].main[0][0]).toBe('R-1');
-  expect(decksSaved[0][1].main[0][1]).toBe(1);
-  expect(decksSaved[0][1].side.length).toBe(0);
+  expect(decksSaved[0].main.length).toBe(1);
+  expect(decksSaved[0].main[0][0]).toBe('R-1');
+  expect(decksSaved[0].main[0][1]).toBe(1);
+  expect(decksSaved[0].side.length).toBe(0);
 
   // メインデッキに増やしたカードを元に戻して0枚にする
   await user.click(tabCard);
@@ -125,47 +116,41 @@ test('レシピに1枚でもあるなら保存できる', async () => {
   expect(paneDeck).toBeVisible();
   await user.click(buttonSave);
 
-  // 保存される (呼出し回数がさらに1増える)
-  expect(window.localStorage.setItem).toHaveBeenCalledTimes(3);
   // マイデッキペインに移動した
   // 保存されたデッキの表示の確認
-  expect(paneSave).toHaveClass('active');
+  await waitFor(() => expect(paneSave).toHaveClass('active')); // waitFor で包まないと不安定
   expect(paneSave).toBeVisible();
-  expect(paneSave.querySelectorAll('.accordion-item').length).toBe(2);
+  await waitFor(() => expect(paneSave.querySelectorAll('.accordion-item').length).toBe(2));
   // 新しく保存されたデッキはリストの末尾に追加される
-  stiringifiedDecksSaved = storage.get('ijinden-deck-builder');
-  expect(typeof stiringifiedDecksSaved).toBe('string');
-  decksSaved = JSON.parse(stiringifiedDecksSaved);
+  decksSaved = await db.decks.orderBy(':id').toArray();
   expect(decksSaved.length).toBe(2);
-  expect(decksSaved[0][0]).toBe(1);
-  expect(decksSaved[0][1].main.length).toBe(1);
-  expect(decksSaved[0][1].main[0][0]).toBe('R-1');
-  expect(decksSaved[0][1].main[0][1]).toBe(1);
-  expect(decksSaved[0][1].side.length).toBe(0);
-  expect(decksSaved[1][0]).toBe(2);
-  expect(decksSaved[1][1].main.length).toBe(0);
-  expect(decksSaved[1][1].side.length).toBe(1);
-  expect(decksSaved[1][1].side[0][0]).toBe('R-2');
-  expect(decksSaved[1][1].side[0][1]).toBe(1);
-
-  jest.restoreAllMocks();
-});
+  expect(decksSaved[0].main.length).toBe(1);
+  expect(decksSaved[0].main[0][0]).toBe('R-1');
+  expect(decksSaved[0].main[0][1]).toBe(1);
+  expect(decksSaved[0].side.length).toBe(0);
+  expect(decksSaved[1].main.length).toBe(0);
+  expect(decksSaved[1].side.length).toBe(1);
+  expect(decksSaved[1].side[0][0]).toBe('R-2');
+  expect(decksSaved[1].side[0][1]).toBe(1);
+}, 10000);
 
 test('保存済みデッキの表示と削除', async () => {
-  const stringifiedDecksSaved = JSON.stringify([
-    [1, { timestamp: new Date(), main: [['R-1', 1]], side: [] }],
-    [2, { timestamp: new Date(), main: [['R-2', 2]], side: [['R-3', 3]] }],
-    [3, { timestamp: new Date(), main: [], side: [['R-4', 4]] }],
-  ]);
+  // 次のエラーを回避するためのコード
+  // ReferenceError: structuredClone is not defined
+  if(!global.structuredClone) {
+    global.structuredClone = (v) => JSON.parse(JSON.stringify(v));
+  }
 
-  const storage = new Map();
-  jest.spyOn(Storage.prototype, 'setItem').mockImplementation(jest.fn((k, v) => storage.set(k, v)));
-  jest.spyOn(Storage.prototype, 'getItem').mockImplementation(jest.fn(() => stringifiedDecksSaved));
+  let decksSaved = [
+    { timestamp: new Date(), main: [['R-1', 1]], side: [] },
+    { timestamp: new Date(), main: [['R-2', 2]], side: [['R-3', 3]] },
+    { timestamp: new Date(), main: [], side: [['R-4', 4]] },
+  ];
+
+  await db.decks.clear();
+  await db.decks.bulkAdd(decksSaved);
 
   render(<App />);
-
-  expect(window.localStorage.getItem).toHaveBeenCalledTimes(1);
-  expect(window.localStorage.setItem).toHaveBeenCalledTimes(1);
 
   const user = userEvent.setup();
 
@@ -176,32 +161,26 @@ test('保存済みデッキの表示と削除', async () => {
   await user.click(tabSave);
   expect(paneSave).toHaveClass('active');
   expect(paneSave).toBeVisible();
-  let accordionItems = paneSave.querySelectorAll('.accordion-item');
-  expect(accordionItems.length).toBe(3);
+  await waitFor(() => expect(paneSave.querySelectorAll('.accordion-item').length).toBe(3));
 
   // 3つあるデッキのうち2つ目を削除する
-  const buttonDelete = accordionItems[1].querySelector('.container-button button:nth-child(2)');
+  const buttonDelete = paneSave.querySelector('.accordion-item:nth-child(2) .container-button button:nth-child(2)');
   expect(buttonDelete.textContent).toBe('削除');
   await user.click(buttonDelete);
 
   // 保存済みデッキの表示が減る
-  accordionItems = paneSave.querySelectorAll('.accordion-item');
-  expect(accordionItems.length).toBe(2);
+  await waitFor(() => expect(paneSave.querySelectorAll('.accordion-item').length).toBe(2));
   // 保存されたデータの検証
-  let stiringifiedDecksSaved = storage.get('ijinden-deck-builder');
-  expect(typeof stiringifiedDecksSaved).toBe('string');
-  let decksSaved = JSON.parse(stiringifiedDecksSaved);
+  decksSaved = await db.decks.orderBy(':id').toArray();
   expect(decksSaved.length).toBe(2);
-  expect(decksSaved[0][0]).toBe(1);
-  expect(decksSaved[0][1].main.length).toBe(1);
-  expect(decksSaved[0][1].main[0][0]).toBe('R-1');
-  expect(decksSaved[0][1].main[0][1]).toBe(1);
-  expect(decksSaved[0][1].side.length).toBe(0);
-  expect(decksSaved[1][0]).toBe(3);
-  expect(decksSaved[1][1].main.length).toBe(0);
-  expect(decksSaved[1][1].side.length).toBe(1);
-  expect(decksSaved[1][1].side[0][0]).toBe('R-4');
-  expect(decksSaved[1][1].side[0][1]).toBe(4);
+  expect(decksSaved[0].main.length).toBe(1);
+  expect(decksSaved[0].main[0][0]).toBe('R-1');
+  expect(decksSaved[0].main[0][1]).toBe(1);
+  expect(decksSaved[0].side.length).toBe(0);
+  expect(decksSaved[1].main.length).toBe(0);
+  expect(decksSaved[1].side.length).toBe(1);
+  expect(decksSaved[1].side[0][0]).toBe('R-4');
+  expect(decksSaved[1].side[0][1]).toBe(4);
 
   // 保存済みレシピをすべて削除ボタンを押す
   const buttonClear = paneSave.querySelector('.accordion div:nth-child(4) button');
@@ -221,20 +200,16 @@ test('保存済みデッキの表示と削除', async () => {
   expect(screen.queryByRole('dialog')).toBeNull();
 
   // デッキはクリアされていない
-  stiringifiedDecksSaved = storage.get('ijinden-deck-builder');
-  expect(typeof stiringifiedDecksSaved).toBe('string');
-  decksSaved = JSON.parse(stiringifiedDecksSaved);
+  decksSaved = await db.decks.orderBy(':id').toArray();
   expect(decksSaved.length).toBe(2);
-  expect(decksSaved[0][0]).toBe(1);
-  expect(decksSaved[0][1].main.length).toBe(1);
-  expect(decksSaved[0][1].main[0][0]).toBe('R-1');
-  expect(decksSaved[0][1].main[0][1]).toBe(1);
-  expect(decksSaved[0][1].side.length).toBe(0);
-  expect(decksSaved[1][0]).toBe(3);
-  expect(decksSaved[1][1].main.length).toBe(0);
-  expect(decksSaved[1][1].side.length).toBe(1);
-  expect(decksSaved[1][1].side[0][0]).toBe('R-4');
-  expect(decksSaved[1][1].side[0][1]).toBe(4);
+  expect(decksSaved[0].main.length).toBe(1);
+  expect(decksSaved[0].main[0][0]).toBe('R-1');
+  expect(decksSaved[0].main[0][1]).toBe(1);
+  expect(decksSaved[0].side.length).toBe(0);
+  expect(decksSaved[1].main.length).toBe(0);
+  expect(decksSaved[1].side.length).toBe(1);
+  expect(decksSaved[1].side[0][0]).toBe('R-4');
+  expect(decksSaved[1].side[0][1]).toBe(4);
 
   // 保存済みレシピをすべて削除ボタンを再度押す
   await user.click(buttonClear);
@@ -249,15 +224,79 @@ test('保存済みデッキの表示と削除', async () => {
   await user.click(buttonConfirmDelete);
 
   // モーダルがひっこむ
-  expect(screen.queryByRole('dialog')).toBeNull();
+  await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull()); // waitFor で包まないと不安定
 
   // 保存済みデッキの表示がなくなる
-  expect(paneSave.querySelectorAll('.accordion-item').length).toBe(0);
+  await waitFor(() => expect(paneSave.querySelectorAll('.accordion-item').length).toBe(0));
   // 保存されたデータの検証
-  stiringifiedDecksSaved = storage.get('ijinden-deck-builder');
-  expect(typeof stiringifiedDecksSaved).toBe('string');
-  decksSaved = JSON.parse(stiringifiedDecksSaved);
+  decksSaved = await db.decks.orderBy(':id').toArray();
   expect(decksSaved.length).toBe(0);
+});
 
-  jest.restoreAllMocks();
+test('localStorage に保存されているデータの移行', async () => {
+  // 次のエラーを回避するためのコード
+  // ReferenceError: structuredClone is not defined
+  if(!global.structuredClone) {
+    global.structuredClone = (v) => JSON.parse(JSON.stringify(v));
+  }
+
+  let stringidiedDecksSaved = JSON.stringify([
+    [1, { timestamp: new Date(), main: [['R-1', 1]], side: [] }],
+    [2, { timestamp: new Date(), main: [['R-2', 2]], side: [['R-3', 3]] }],
+    [3, { timestamp: new Date(), main: [], side: [['R-4', 4]] }],
+  ]);
+
+  const storage = new Map();
+  storage.set('ijinden-deck-builder', stringidiedDecksSaved);
+  jest.spyOn(Storage.prototype, 'setItem').mockImplementation(jest.fn((k, v) => storage.set(k, v)));
+  jest.spyOn(Storage.prototype, 'getItem').mockImplementation(jest.fn((k) => storage.has(k) ? storage.get(k) : null));
+
+  await db.decks.clear();
+
+  render(<App />);
+
+  await waitFor(() => expect(window.localStorage.getItem).toHaveBeenCalledTimes(1), {
+    timeout: 2000,
+  });
+  await waitFor(() => expect(window.localStorage.setItem).toHaveBeenCalledTimes(1), {
+    timeout: 2000,
+  });
+  await waitFor(() => expect(storage.size).toBe(1), {
+    timeout: 2000,
+  });
+  await waitFor(() => expect(storage.has('ijinden-deck-builder')).toBe(true), {
+    timeout: 2000,
+  });
+  await waitFor(() => expect(storage.get('ijinden-deck-builder')).toBe('[]'), {
+    timeout: 2000,
+  });
+
+  const user = userEvent.setup();
+
+  const tabSave = screen.getAllByRole('tab')[2];
+  const paneSave = screen.getAllByRole('tabpanel')[2];
+
+  // 初期状態では保存済みデッキが表示される
+  await user.click(tabSave);
+  await waitFor(() => expect(paneSave).toHaveClass('active'));
+  expect(paneSave).toBeVisible();
+  await waitFor(() => expect(paneSave.querySelectorAll('.accordion-item').length).toBe(3));
+
+  // 保存されたデータの検証
+  const decksSaved = await db.decks.orderBy(':id').toArray();
+  expect(decksSaved.length).toBe(3);
+  expect(decksSaved[0].main.length).toBe(1);
+  expect(decksSaved[0].main[0][0]).toBe('R-1');
+  expect(decksSaved[0].main[0][1]).toBe(1);
+  expect(decksSaved[0].side.length).toBe(0);
+  expect(decksSaved[1].main.length).toBe(1);
+  expect(decksSaved[1].main[0][0]).toBe('R-2');
+  expect(decksSaved[1].main[0][1]).toBe(2);
+  expect(decksSaved[1].side.length).toBe(1);
+  expect(decksSaved[1].side[0][0]).toBe('R-3');
+  expect(decksSaved[1].side[0][1]).toBe(3);
+  expect(decksSaved[2].main.length).toBe(0);
+  expect(decksSaved[2].side.length).toBe(1);
+  expect(decksSaved[2].side[0][0]).toBe('R-4');
+  expect(decksSaved[2].side[0][1]).toBe(4);
 });

@@ -1,3 +1,4 @@
+import { useLiveQuery } from 'dexie-react-hooks';
 import { useState } from 'react';
 import {
   Accordion,
@@ -13,6 +14,7 @@ import {
 } from 'react-bootstrap';
 
 import { dataCardsArrayForDeck } from './dataCards';
+import db from './db';
 import enumTabPane from './enumTabPane';
 import { enumActionSimulator } from './reducerSimulator';
 import { sum } from './utils';
@@ -29,10 +31,14 @@ const DTF = new Intl.DateTimeFormat([], {
 
 function TabPaneSave({
   handleSetDeckMain, handleSetDeckSide,
-  decksSaved, handleSetDecksSaved, activeDeckSaved, handleSetActiveDeckSaved,
+  activeDeckSaved, handleSetActiveDeckSaved,
   handleSetActiveTab, dispatchSimulator,
 }) {
   const [showModalClear, setShowModalClear] = useState(false);
+  const decksSaved = useLiveQuery(async () => {
+    const results = await db.decks.orderBy(':id').reverse().toArray();
+    return results;
+  });
 
   function handleSelectAccordion(eventKey, _event) {
     handleSetActiveDeckSaved(eventKey);
@@ -46,8 +52,8 @@ function TabPaneSave({
     setShowModalClear(false);
   }
 
-  function handleClickConfirmClear() {
-    handleSetDecksSaved([]);
+  async function handleClickConfirmClear() {
+    await db.decks.clear();
     setShowModalClear(false);
   }
 
@@ -56,19 +62,15 @@ function TabPaneSave({
       <h2 className="m-2">ロード</h2>
       <Accordion activeKey={activeDeckSaved} onSelect={handleSelectAccordion}>
         {
-          [...decksSaved].reverse().map((aDeckSaved) => {
-            const idDeck = aDeckSaved[0];
-            const timestamp = DTF.format(new Date(aDeckSaved[1].timestamp));
-            const header = `#${idDeck} (${timestamp})`;
+          decksSaved?.map((aDeckSaved) => {
+            const timestamp = DTF.format(new Date(aDeckSaved.timestamp));
+            const header = `#${aDeckSaved.id} (${timestamp})`;
             return (
-              <AccordionItem key={idDeck} eventKey={idDeck}>
+              <AccordionItem key={aDeckSaved.id} eventKey={aDeckSaved.id}>
                 <AccordionHeader>{header}</AccordionHeader>
                 <AccordionBody>
                   <ContainerDeckSaved
-                    idDeck={idDeck}
-                    aDeckSaved={aDeckSaved[1]}
-                    decksSaved={decksSaved}
-                    handleSetDecksSaved={handleSetDecksSaved}
+                    aDeckSaved={aDeckSaved}
                     handleSetDeckMain={handleSetDeckMain}
                     handleSetDeckSide={handleSetDeckSide}
                     handleSetActiveTab={handleSetActiveTab}
@@ -99,8 +101,7 @@ function TabPaneSave({
 }
 
 function ContainerDeckSaved({
-  idDeck, aDeckSaved,
-  decksSaved, handleSetDecksSaved,
+  aDeckSaved,
   handleSetDeckMain, handleSetDeckSide,
   handleSetActiveTab,
   dispatchSimulator,
@@ -112,10 +113,8 @@ function ContainerDeckSaved({
     handleSetActiveTab(enumTabPane.DECK);
   }
 
-  function handleClickDelete() {
-    const newDecksSaved = new Map(decksSaved);
-    newDecksSaved.delete(idDeck);
-    handleSetDecksSaved([...newDecksSaved.entries()]);
+  async function handleClickDelete() {
+    await db.decks.delete(aDeckSaved.id);
   }
 
   return (
