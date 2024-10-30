@@ -24,7 +24,7 @@ test('レシピが空だと保存できない', async () => {
   expect(paneDeck).toHaveClass('active');
   expect(paneDeck).toBeVisible();
   const buttonSave = paneDeck.querySelector('div:nth-child(2) button');
-  expect(buttonSave.textContent).toBe('マイデッキβに保存');
+  expect(buttonSave.textContent).toBe('マイデッキに保存');
   await user.click(buttonSave);
 
   // 現在のレシピが空のため保存されない
@@ -76,7 +76,7 @@ test('レシピに1枚でもあるなら保存できる', async () => {
   expect(paneDeck).toHaveClass('active');
   expect(paneDeck).toBeVisible();
   const buttonSave = paneDeck.querySelector('div:nth-child(2) button');
-  expect(buttonSave.textContent).toBe('マイデッキβに保存');
+  expect(buttonSave.textContent).toBe('マイデッキに保存');
   await user.click(buttonSave);
 
   // マイデッキペインに移動した
