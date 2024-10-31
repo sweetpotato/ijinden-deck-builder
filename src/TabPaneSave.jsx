@@ -11,6 +11,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalTitle,
+  Spinner,
 } from 'react-bootstrap';
 
 import { dataCardsArrayForDeck } from './dataCards';
@@ -35,10 +36,7 @@ function TabPaneSave({
   handleSetActiveTab, dispatchSimulator,
 }) {
   const [showModalClear, setShowModalClear] = useState(false);
-  const decksSaved = useLiveQuery(async () => {
-    const results = await db.decks.orderBy(':id').reverse().toArray();
-    return results;
-  });
+  const decksSaved = useLiveQuery(async () => db.decks.orderBy(':id').reverse().toArray());
 
   function handleSelectAccordion(eventKey, _event) {
     handleSetActiveDeckSaved(eventKey);
@@ -60,42 +58,50 @@ function TabPaneSave({
   return (
     <>
       <h2 className="m-2">ロード</h2>
-      <Accordion activeKey={activeDeckSaved} onSelect={handleSelectAccordion}>
-        {
-          decksSaved?.map((aDeckSaved) => {
-            const timestamp = DTF.format(new Date(aDeckSaved.timestamp));
-            const header = `#${aDeckSaved.id} (${timestamp})`;
-            return (
-              <AccordionItem key={aDeckSaved.id} eventKey={aDeckSaved.id}>
-                <AccordionHeader>{header}</AccordionHeader>
-                <AccordionBody>
-                  <ContainerDeckSaved
-                    aDeckSaved={aDeckSaved}
-                    handleSetDeckMain={handleSetDeckMain}
-                    handleSetDeckSide={handleSetDeckSide}
-                    handleSetActiveTab={handleSetActiveTab}
-                    dispatchSimulator={dispatchSimulator}
-                  />
-                </AccordionBody>
-              </AccordionItem>
-            );
-          })
-        }
-        <h2 className="m-2">クリア</h2>
-        <div className="m-2">
-          <Button variant="outline-danger" onClick={handleClickClear}>保存済みレシピをすべて削除</Button>
-        </div>
-        <Modal show={showModalClear}>
-          <ModalHeader>
-            <ModalTitle>マイデッキ</ModalTitle>
-          </ModalHeader>
-          <ModalBody>保存済みレシピをすべて削除します。よろしいですか？</ModalBody>
-          <ModalFooter>
-            <Button variant="outline-secondary" onClick={handleClickCancelClear}>キャンセル</Button>
-            <Button variant="outline-danger" onClick={handleClickConfirmClear}>削除する</Button>
-          </ModalFooter>
-        </Modal>
-      </Accordion>
+      {
+        decksSaved ? (
+          <Accordion activeKey={activeDeckSaved} onSelect={handleSelectAccordion}>
+            {
+              decksSaved.map((aDeckSaved) => {
+                const timestamp = DTF.format(new Date(aDeckSaved.timestamp));
+                const header = `#${aDeckSaved.id} (${timestamp})`;
+                return (
+                  <AccordionItem key={aDeckSaved.id} eventKey={aDeckSaved.id}>
+                    <AccordionHeader>{header}</AccordionHeader>
+                    <AccordionBody>
+                      <ContainerDeckSaved
+                        aDeckSaved={aDeckSaved}
+                        handleSetDeckMain={handleSetDeckMain}
+                        handleSetDeckSide={handleSetDeckSide}
+                        handleSetActiveTab={handleSetActiveTab}
+                        dispatchSimulator={dispatchSimulator}
+                      />
+                    </AccordionBody>
+                  </AccordionItem>
+                );
+              })
+            }
+          </Accordion>
+        ) : (
+          <Spinner animation="border" role="status">
+            <span className="visually-hidden">読み込み中...</span>
+          </Spinner>
+        )
+      }
+      <h2 className="m-2">クリア</h2>
+      <div className="m-2">
+        <Button variant="outline-danger" onClick={handleClickClear}>保存済みレシピをすべて削除</Button>
+      </div>
+      <Modal show={showModalClear}>
+        <ModalHeader>
+          <ModalTitle>マイデッキ</ModalTitle>
+        </ModalHeader>
+        <ModalBody>保存済みレシピをすべて削除します。よろしいですか？</ModalBody>
+        <ModalFooter>
+          <Button variant="outline-secondary" onClick={handleClickCancelClear}>キャンセル</Button>
+          <Button variant="outline-danger" onClick={handleClickConfirmClear}>削除する</Button>
+        </ModalFooter>
+      </Modal>
     </>
   );
 }

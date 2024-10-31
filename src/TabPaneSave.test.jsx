@@ -183,7 +183,7 @@ test('保存済みデッキの表示と削除', async () => {
   expect(decksSaved[1].side[0][1]).toBe(4);
 
   // 保存済みレシピをすべて削除ボタンを押す
-  const buttonClear = paneSave.querySelector('.accordion div:nth-child(4) button');
+  const buttonClear = paneSave.querySelector('div:nth-child(4) button');
   expect(buttonClear.textContent).toBe('保存済みレシピをすべて削除');
   await user.click(buttonClear);
 
