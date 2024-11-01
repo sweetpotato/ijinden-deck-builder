@@ -178,6 +178,26 @@ function TableRowCard({
       && (selectedColor === 0 || (color & selectedColor) === selectedColor)
       && (selectedType === 0 || type === selectedType)
       && (selectedTerm === 0 || term === selectedTerm);
+  let colorClass;
+  if (color === 41) {
+    colorClass = 'bg-ijinden-red-yellow';
+  } else if (color === 42) {
+    colorClass = 'bg-ijinden-blue-yellow';
+  } else if (color === 44) {
+    colorClass = 'bg-ijinden-green-yellow';
+  } else if (color === 1) {
+    colorClass = 'bg-ijinden-red';
+  } else if (color === 2) {
+    colorClass = 'bg-ijinden-blue';
+  } else if (color === 4) {
+    colorClass = 'bg-ijinden-green';
+  } else if (color === 8) {
+    colorClass = 'bg-ijinden-yellow';
+  } else if (color === 16) {
+    colorClass = 'bg-ijinden-purple';
+  } else {
+    colorClass = 'bg-ijinden-colorless';
+  }
   /* eslint-enable no-bitwise */
   return (
     <tr
@@ -188,7 +208,7 @@ function TableRowCard({
       data-term={term}
       style={{ display: (show ? 'table-row' : 'none') }}
     >
-      <td>{id}</td>
+      <td className={colorClass}>{id}</td>
       <td>{name}</td>
       <td>
         <FormControlCounter
