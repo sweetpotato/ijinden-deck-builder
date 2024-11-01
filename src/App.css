@@ -110,3 +110,47 @@ fieldset {
 .tooltip {
   z-index: 1049;
 }
+
+/* カードリストの背景色付け */
+.table > :not(caption) > * > .bg-ijinden-red { --bs-table-bg-state: #f1aeb5; } /* red-200 */
+.table-hover > tbody > tr:hover > .bg-ijinden-red { --bs-table-bg-state: #e35d6a; } /* red-400 */
+.table > :not(caption) > * > .bg-ijinden-blue { --bs-table-bg-state: #9ec5fe; } /* blue-200 */
+.table-hover > tbody > tr:hover > .bg-ijinden-blue { --bs-table-bg-state: #3d8bfd; } /* blue-400 */
+.table > :not(caption) > * > .bg-ijinden-green { --bs-table-bg-state: #a3cfbb; } /* green-200 */
+.table-hover > tbody > tr:hover > .bg-ijinden-green { --bs-table-bg-state: #479f76; } /* green-400 */
+.table > :not(caption) > * > .bg-ijinden-yellow { --bs-table-bg-state: #ffe69c; } /* yellow-200 */
+.table-hover > tbody > tr:hover > .bg-ijinden-yellow { --bs-table-bg-state: #ffcd39; } /* yellow-400 */
+.table > :not(caption) > * > .bg-ijinden-purple { --bs-table-bg-state: #c5b3e6; } /* purple-200 */
+.table-hover > tbody > tr:hover > .bg-ijinden-purple { --bs-table-bg-state: #8c68cd; } /* purple-400 */
+.table > :not(caption) > * > .bg-ijinden-multicolor { --bs-table-bg-state: #fecba1; } /* orange-200 */
+.table-hover > tbody > tr:hover > .bg-ijinden-multicolor { --bs-table-bg-state: #fd9843; } /* orange-400 */
+.table > :not(caption) > * > .bg-ijinden-red-yellow {
+  --bs-table-color-state: initial;
+  --bs-table-bg-state: initial;
+  background: linear-gradient(to bottom right, #f1aeb5 50%, #ffe69c 50%);
+}
+.table-hover > tbody > tr:hover > .bg-ijinden-red-yellow {
+  --bs-table-color-state: initial;
+  --bs-table-bg-state: initial;
+  background: linear-gradient(to bottom right, #e35d6a 50%, #ffcd39 50%);
+}
+.table > :not(caption) > * > .bg-ijinden-blue-yellow {
+  --bs-table-color-state: initial;
+  --bs-table-bg-state: initial;
+  background: linear-gradient(to bottom right, #9ec5fe 50%, #ffe69c 50%);
+}
+.table-hover > tbody > tr:hover > .bg-ijinden-blue-yellow {
+  --bs-table-color-state: initial;
+  --bs-table-bg-state: initial;
+  background: linear-gradient(to bottom right, #3d8bfd 50%, #ffcd39 50%);
+}
+.table > :not(caption) > * > .bg-ijinden-green-yellow {
+  --bs-table-color-state: initial;
+  --bs-table-bg-state: initial;
+  background: linear-gradient(to bottom right, #a3cfbb 50%, #ffe69c 50%);
+}
+.table-hover > tbody > tr:hover > .bg-ijinden-green-yellow {
+  --bs-table-color-state: initial;
+  --bs-table-bg-state: initial;
+  background: linear-gradient(to bottom right, #479f76 50%, #ffcd39 50%);
+}
