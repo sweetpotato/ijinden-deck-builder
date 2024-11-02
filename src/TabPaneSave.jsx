@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useState } from 'react';
 import {

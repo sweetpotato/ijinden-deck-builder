@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 export const enumStateSimulator = {
   INITIAL: 0,
   RUNNING: 1,

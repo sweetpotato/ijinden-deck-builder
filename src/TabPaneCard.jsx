@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import { useState } from 'react';
 import {
   Button, FormControl, InputGroup, Table, ToggleButton,

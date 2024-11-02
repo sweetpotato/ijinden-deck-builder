@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import Dexie from 'dexie';
 
 const DATABASE_NAME = 'ijinden-deck-builder';

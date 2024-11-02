@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import cards from './cards.json';
 
 export const dataCardsArrayForTable = [...cards].sort((a, b) => a.orderTable - b.orderTable);
