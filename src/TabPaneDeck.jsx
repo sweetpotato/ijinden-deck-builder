@@ -173,10 +173,10 @@ function ContainerDeckCard({
   }
 
   const numCopies = deckThis.has(id) ? deckThis.get(id) : 0;
-  const show = numCopies > 0;
+  const hide = numCopies <= 0;
   const moveText = isSide ? '^' : 'v';
   return (
-    <div className="container-card" style={{ display: (show ? 'block' : 'none') }}>
+    <div className="container-card" style={{ display: (hide ? 'none' : 'block') }}>
       <ImageCard imageUrl={imageUrl} alt={name} />
       <span className="container-num-copies">{numCopies}</span>
       <Button variant="primary" size="sm" className="btn-pop" onClick={handleClickMinus}>-</Button>
