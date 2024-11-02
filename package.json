@@ -27,6 +27,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "cross-env PUBLIC_URL=https://sweetpotato.github.io/ijinden-deck-builder react-scripts build",
+    "redocs": "git rm -r docs && move build docs && git add docs && git commit -m \"Build and deploy\"",
+    "eslint": "eslint src",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
