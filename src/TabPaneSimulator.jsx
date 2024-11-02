@@ -77,7 +77,6 @@ function TabPaneSimulator({ deck, state, dispatch }) {
   }
 
   function handleClickStart() {
-    // Do not use reduce; it is not supported on Safari on iOS
     const numCards = sum(deck.values());
     if (numCards < 10) {
       dispatch(enumActionSimulator.CHECK_MAIN_DECK);
