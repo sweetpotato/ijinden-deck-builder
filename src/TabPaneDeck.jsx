@@ -61,7 +61,6 @@ function TabPaneDeck({
     setShowModalEmpty(false);
   }
 
-  // Do not use reduce; it is not supported on Safari on iOS
   const numCardsMain = sum(deckMain.values());
   const numCardsSide = sum(deckSide.values());
 
