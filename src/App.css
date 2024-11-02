@@ -85,12 +85,6 @@ fieldset {
   display: block;
 }
 
-.container-card-line-up > .img-card {
-  float: left;
-  margin-right: .5rem;
-  margin-bottom: .5rem;
-}
-
 .container-guardian .container-card .img-card {
   visibility: hidden;
 }

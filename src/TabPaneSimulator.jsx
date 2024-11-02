@@ -193,7 +193,9 @@ function TabPaneSimulator({ deck, state, dispatch }) {
                       const key = `${element}-${index}`;
                       const card = dataCards.get(element);
                       return (
-                        <ImageCard key={key} imageUrl={card.imageUrl} alt={card.name} />
+                        <div key={key} className="container-card">
+                          <ImageCard imageUrl={card.imageUrl} alt={card.name} />
+                        </div>
                       );
                     })
                   }
@@ -212,7 +214,9 @@ function TabPaneSimulator({ deck, state, dispatch }) {
                       const key = `${element}-${index}`;
                       const card = dataCards.get(element);
                       return (
-                        <ImageCard key={key} imageUrl={card.imageUrl} alt={card.name} />
+                        <div key={key} className="container-card">
+                          <ImageCard imageUrl={card.imageUrl} alt={card.name} />
+                        </div>
                       );
                     })
                   }
