@@ -125,8 +125,8 @@ function TabPaneSimulator({ deck, state, dispatch }) {
   const enabledReset = state !== enumStateSimulator.INITIAL;
   const enabledMulliganOrKeep = state === enumStateSimulator.RUNNING;
   const showGuardiansAndHands = state === enumStateSimulator.RUNNING
-      || state === enumStateSimulator.FINISHED
-      || state === enumStateSimulator.ABORTED;
+    || state === enumStateSimulator.FINISHED
+    || state === enumStateSimulator.ABORTED;
   return (
     <>
       <h2 className="m-2">手札シミュレータ</h2>
@@ -162,24 +162,24 @@ function TabPaneSimulator({ deck, state, dispatch }) {
       </div>
       {
         state === enumStateSimulator.LESS_THAN_TEN
-            && <Alert variant="warning">&#x26A0;&#xFE0F; メインデッキの枚数が少なすぎます。10枚以上にしてください。</Alert>
+          && <Alert variant="warning">⚠️ メインデッキの枚数が少なすぎます。10枚以上にしてください。</Alert>
       }
       {
         state === enumStateSimulator.ABORTED
-            && <Alert variant="warning">&#x26A0;&#xFE0F; シミュレーション中にメインデッキが編集されました。リセットしてください。</Alert>
+          && <Alert variant="warning">⚠️ シミュレーション中にメインデッキが編集されました。リセットしてください。</Alert>
       }
       {
         showGuardiansAndHands
-            && (
-              <>
-                <ContainerSection title="ガーディアン" cards={guardians} guardian />
-                <ContainerSection title="手札" cards={hands} />
-              </>
-            )
+          && (
+            <>
+              <ContainerSection title="ガーディアン" cards={guardians} guardian />
+              <ContainerSection title="手札" cards={hands} />
+            </>
+          )
       }
       {
         state === enumStateSimulator.FINISHED
-            && <ContainerSection title="ドロー" cards={draws} />
+          && <ContainerSection title="ドロー" cards={draws} />
       }
     </>
   );
