@@ -173,17 +173,15 @@ function ContainerDeckCard({
   }
 
   const numCopies = deckThis.has(id) ? deckThis.get(id) : 0;
-  const hide = numCopies <= 0;
   const moveText = isSide ? '^' : 'v';
   return (
-    <div className="container-card" style={{ display: (hide ? 'none' : 'block') }}>
-      <ImageCard imageUrl={imageUrl} alt={name} />
+    <ImageCard imageUrl={imageUrl} alt={name} hide={numCopies <= 0}>
       <span className="container-num-copies">{numCopies}</span>
       <Button variant="primary" size="sm" className="btn-pop" onClick={handleClickMinus}>-</Button>
       <Button variant="primary" size="sm" className="btn-push" onClick={handleClickPlus}>+</Button>
       <Button variant="primary" size="sm" className="btn-move" onClick={handleClickMove}>{moveText}</Button>
       <Button variant="primary" size="sm" className="btn-zoom" onClick={handleClickZoom}>🔍</Button>
-    </div>
+    </ImageCard>
   );
 }
 
