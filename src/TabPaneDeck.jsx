@@ -199,9 +199,9 @@ function ContainerDeckCard({
       <div className="container-card" style={{ display: (show ? 'block' : 'none') }}>
         <ImageCard imageUrl={imageUrl} alt={name} />
         <span className="container-num-copies">{numCopies}</span>
-        <Button variant="secondary" size="sm" className="btn-pop" onClick={handleClickMinus}>-</Button>
-        <Button variant="secondary" size="sm" className="btn-push" onClick={handleClickPlus}>+</Button>
-        <Button variant="secondary" size="sm" className="btn-move" onClick={handleClickMove}>{moveText}</Button>
+        <Button variant="primary" size="sm" className="btn-pop" onClick={handleClickMinus}>-</Button>
+        <Button variant="primary" size="sm" className="btn-push" onClick={handleClickPlus}>+</Button>
+        <Button variant="primary" size="sm" className="btn-move" onClick={handleClickMove}>{moveText}</Button>
       </div>
     </OverlayTrigger>
   );
