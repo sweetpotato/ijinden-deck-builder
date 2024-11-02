@@ -198,7 +198,7 @@ function ContainerDeckCard({
     <OverlayTrigger placement="bottom" delay={{ show: 0, hide: 500 }} overlay={renderZoom}>
       <div className="container-card" style={{ display: (show ? 'block' : 'none') }}>
         <ImageCard imageUrl={imageUrl} alt={name} />
-        <div className="container-num-copies">{numCopies}</div>
+        <span className="container-num-copies">{numCopies}</span>
         <Button variant="secondary" size="sm" className="btn-pop" onClick={handleClickMinus}>-</Button>
         <Button variant="secondary" size="sm" className="btn-push" onClick={handleClickPlus}>+</Button>
         <Button variant="secondary" size="sm" className="btn-move" onClick={handleClickMove}>{moveText}</Button>

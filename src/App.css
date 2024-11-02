@@ -54,7 +54,7 @@ fieldset {
 }
 
 .container-card:hover .btn-pop {
-  display: block;
+  display: initial;
 }
 
 .btn-push {
@@ -65,7 +65,7 @@ fieldset {
 }
 
 .container-card:hover .btn-push {
-  display: block;
+  display: initial;
 }
 
 .btn-move {
@@ -76,13 +76,12 @@ fieldset {
 }
 
 .container-card:hover .btn-move {
-  display: block;
+  display: initial;
 }
 
 .img-card {
   width: 80px;
   height: 112px;
-  display: block;
 }
 
 .container-guardian .container-card .img-card {
