@@ -54,7 +54,7 @@ fieldset {
 }
 
 .container-card:hover .btn-pop {
-  display: block;
+  display: initial;
 }
 
 .btn-push {
@@ -65,7 +65,7 @@ fieldset {
 }
 
 .container-card:hover .btn-push {
-  display: block;
+  display: initial;
 }
 
 .btn-move {
@@ -76,19 +76,28 @@ fieldset {
 }
 
 .container-card:hover .btn-move {
-  display: block;
+  display: initial;
+}
+
+.btn-zoom {
+  display: none;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: min-content;
+  height: min-content;
+  margin: auto;
+}
+
+.container-card:hover .btn-zoom {
+  display: initial;
 }
 
 .img-card {
   width: 80px;
   height: 112px;
-  display: block;
-}
-
-.container-card-line-up > .img-card {
-  float: left;
-  margin-right: .5rem;
-  margin-bottom: .5rem;
 }
 
 .container-guardian .container-card .img-card {
@@ -102,15 +111,6 @@ fieldset {
 /* タブリンクの横幅を狭くして画面幅に収めることを試みる */
 .nav-tabs .nav-link {
   padding: var(--bs-nav-link-padding-y) calc(.5 * var(--bs-nav-link-padding-x))
-}
-
-/*
- * ツールチップ (本来は1080) をモーダルのバックドロップ (1050) のウラに隠す。
- * これにより、レシピペインで拡大画像のオモテに虫メガネが来ることがなくなる。
- * See: https://getbootstrap.jp/docs/5.3/layout/z-index/
- */
-.tooltip {
-  z-index: 1049;
 }
 
 /* カードリストの背景色付け */

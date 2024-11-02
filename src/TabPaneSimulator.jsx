@@ -125,8 +125,8 @@ function TabPaneSimulator({ deck, state, dispatch }) {
   const enabledReset = state !== enumStateSimulator.INITIAL;
   const enabledMulliganOrKeep = state === enumStateSimulator.RUNNING;
   const showGuardiansAndHands = state === enumStateSimulator.RUNNING
-      || state === enumStateSimulator.FINISHED
-      || state === enumStateSimulator.ABORTED;
+    || state === enumStateSimulator.FINISHED
+    || state === enumStateSimulator.ABORTED;
   return (
     <>
       <h2 className="m-2">手札シミュレータ</h2>
@@ -162,64 +162,47 @@ function TabPaneSimulator({ deck, state, dispatch }) {
       </div>
       {
         state === enumStateSimulator.LESS_THAN_TEN
-            && <Alert variant="warning">&#x26A0;&#xFE0F; メインデッキの枚数が少なすぎます。10枚以上にしてください。</Alert>
+          && <Alert variant="warning">⚠️ メインデッキの枚数が少なすぎます。10枚以上にしてください。</Alert>
       }
       {
         state === enumStateSimulator.ABORTED
-            && <Alert variant="warning">&#x26A0;&#xFE0F; シミュレーション中にメインデッキが編集されました。リセットしてください。</Alert>
+          && <Alert variant="warning">⚠️ シミュレーション中にメインデッキが編集されました。リセットしてください。</Alert>
       }
       {
         showGuardiansAndHands
-            && (
-              <>
-                <h3 className="m-2">ガーディアン</h3>
-                <div className="container-card-line-up container-guardian ms-2">
-                  {
-                    guardians.map((element, index) => {
-                      const key = `${element}-${index}`;
-                      const card = dataCards.get(element);
-                      return (
-                        <div key={key} className="container-card">
-                          <ImageCard imageUrl={card.imageUrl} alt={card.name} />
-                        </div>
-                      );
-                    })
-                  }
-                </div>
-                <h3 className="m-2">手札</h3>
-                <div className="container-card-line-up ms-2">
-                  {
-                    hands.map((element, index) => {
-                      const key = `${element}-${index}`;
-                      const card = dataCards.get(element);
-                      return (
-                        <ImageCard key={key} imageUrl={card.imageUrl} alt={card.name} />
-                      );
-                    })
-                  }
-                </div>
-              </>
-            )
+          && (
+            <>
+              <ContainerSection title="ガーディアン" cards={guardians} guardian />
+              <ContainerSection title="手札" cards={hands} />
+            </>
+          )
       }
       {
         state === enumStateSimulator.FINISHED
-            && (
-              <>
-                <h3 className="m-2">ドロー</h3>
-                <div className="container-card-line-up ms-2">
-                  {
-                    draws.map((element, index) => {
-                      const key = `${element}-${index}`;
-                      const card = dataCards.get(element);
-                      return (
-                        <ImageCard key={key} imageUrl={card.imageUrl} alt={card.name} />
-                      );
-                    })
-                  }
-                </div>
-              </>
-            )
+          && <ContainerSection title="ドロー" cards={draws} />
       }
+    </>
+  );
+}
+
+function ContainerSection({ title, cards, guardian = false }) {
+  const containerClass = guardian
+    ? 'container-card-line-up container-guardian ms-2'
+    : 'container-card-line-up ms-2';
+  return (
+    <>
+      <h3 className="m-2">{title}</h3>
+      <div className={containerClass}>
+        {
+          cards.map((element, index) => {
+            const key = `${element}-${index}`;
+            const card = dataCards.get(element);
+            return (
+              <ImageCard key={key} imageUrl={card.imageUrl} alt={card.name} />
+            );
+          })
+        }
+      </div>
     </>
   );
 }

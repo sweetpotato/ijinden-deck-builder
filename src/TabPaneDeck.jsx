@@ -8,8 +8,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalTitle,
-  OverlayTrigger,
-  Tooltip,
 } from 'react-bootstrap';
 
 import ImageCard from './ImageCard';
@@ -174,36 +172,16 @@ function ContainerDeckCard({
     handleSetIdZoom(id);
   }
 
-  function renderZoom(props) {
-    /* eslint-disable react/jsx-props-no-spreading */
-    return (
-      <Tooltip {...props}>
-        <Button
-          variant="outline-secondary"
-          size="sm"
-          style={{ border: 'none', background: 'transparent' }}
-          onClick={handleClickZoom}
-        >
-          🔍
-        </Button>
-      </Tooltip>
-    );
-    /* eslint-enable react/jsx-props-no-spreading */
-  }
-
   const numCopies = deckThis.has(id) ? deckThis.get(id) : 0;
-  const show = numCopies > 0;
   const moveText = isSide ? '^' : 'v';
   return (
-    <OverlayTrigger placement="bottom" delay={{ show: 0, hide: 500 }} overlay={renderZoom}>
-      <div className="container-card" style={{ display: (show ? 'block' : 'none') }}>
-        <ImageCard imageUrl={imageUrl} alt={name} />
-        <div className="container-num-copies">{numCopies}</div>
-        <Button variant="secondary" size="sm" className="btn-pop" onClick={handleClickMinus}>-</Button>
-        <Button variant="secondary" size="sm" className="btn-push" onClick={handleClickPlus}>+</Button>
-        <Button variant="secondary" size="sm" className="btn-move" onClick={handleClickMove}>{moveText}</Button>
-      </div>
-    </OverlayTrigger>
+    <ImageCard imageUrl={imageUrl} alt={name} hide={numCopies <= 0}>
+      <span className="container-num-copies">{numCopies}</span>
+      <Button variant="primary" size="sm" className="btn-pop" onClick={handleClickMinus}>-</Button>
+      <Button variant="primary" size="sm" className="btn-push" onClick={handleClickPlus}>+</Button>
+      <Button variant="primary" size="sm" className="btn-move" onClick={handleClickMove}>{moveText}</Button>
+      <Button variant="primary" size="sm" className="btn-zoom" onClick={handleClickZoom}>🔍</Button>
+    </ImageCard>
   );
 }
 
