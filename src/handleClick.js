@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 export function handleClickIncrement(id, deck, handleSetDeck) {
   const deckNew = new Map(deck.entries());
   const counter = deckNew.has(id) ? deckNew.get(id) : 0;

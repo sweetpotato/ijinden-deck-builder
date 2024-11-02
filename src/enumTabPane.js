@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 const enumTabPane = {
   CARD: 1,
   DECK: 2,

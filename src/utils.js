@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 /* eslint-disable import/prefer-default-export */
 
 // Iterator.prototype.reduce() を使わない総和。

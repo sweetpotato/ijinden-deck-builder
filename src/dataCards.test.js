@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import { dataCardsArrayForTable, dataCardsArrayForDeck, dataCardsMap } from './dataCards';
 
 test('dataCardsArrayForTable は orderTable 順', () => {
