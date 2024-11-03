@@ -154,6 +154,7 @@ function ContainerDeckSavedPart({ title, deckSaved }) {
                   imageUrl={card.imageUrl}
                   alt={card.name}
                   numCopies={deckSaved.get(card.id)}
+                  loading="lazy"
                   small
                 />
               )
