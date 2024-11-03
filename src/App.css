@@ -22,9 +22,6 @@ fieldset {
   float: left;
   margin-right: .5rem;
   margin-bottom: .5rem;
-}
-
-.container-deck .container-card {
   position: relative;
 }
 

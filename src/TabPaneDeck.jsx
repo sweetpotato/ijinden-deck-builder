@@ -84,7 +84,7 @@ function TabPaneDeck({
         </ModalFooter>
       </Modal>
       <h3 className="m-2">{titleMain}</h3>
-      <div className="container-card-line-up container-deck ms-2">
+      <div className="container-card-line-up ms-2">
         {
           /* eslint-disable react/jsx-props-no-spreading */
           dataCardsArray.map((element) => (
@@ -103,7 +103,7 @@ function TabPaneDeck({
         }
       </div>
       <h3 className="m-2">{titleSide}</h3>
-      <div className="container-card-line-up container-deck ms-2">
+      <div className="container-card-line-up ms-2">
         {
           /* eslint-disable react/jsx-props-no-spreading */
           dataCardsArray.map((element) => (
