@@ -80,7 +80,7 @@ test('メインデッキが9枚以下だとスタートできない', async () =
   expect(buttonMulligan).toBeDisabled();
   expect(buttonKeep).toBeDisabled();
   let alert = screen.queryByRole('alert');
-  expect(alert.textContent).toBe('⚠️ メインデッキの枚数が少なすぎます。10枚以上にしてください。');
+  expect(alert.textContent).toBe('メインデッキの枚数が少なすぎます。10枚以上にしてください。');
   expect(alert).toBeVisible();
 
   // リセットボタンを押す

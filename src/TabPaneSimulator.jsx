@@ -162,11 +162,11 @@ function TabPaneSimulator({ deck, state, dispatch }) {
       </div>
       {
         state === enumStateSimulator.LESS_THAN_TEN
-          && <Alert variant="warning">⚠️ メインデッキの枚数が少なすぎます。10枚以上にしてください。</Alert>
+          && <Alert variant="warning">メインデッキの枚数が少なすぎます。10枚以上にしてください。</Alert>
       }
       {
         state === enumStateSimulator.ABORTED
-          && <Alert variant="warning">⚠️ シミュレーション中にメインデッキが編集されました。リセットしてください。</Alert>
+          && <Alert variant="warning">シミュレーション中にメインデッキが編集されました。リセットしてください。</Alert>
       }
       {
         showGuardiansAndHands

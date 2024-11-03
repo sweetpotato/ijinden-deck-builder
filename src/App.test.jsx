@@ -518,7 +518,7 @@ test('シミュレータがカードペインの操作でアボートする', as
   expect(buttonKeep).toBeDisabled();
   let alert = screen.getByRole('alert');
   expect(alert).toBeVisible();
-  expect(alert.textContent).toBe('⚠️ シミュレーション中にメインデッキが編集されました。リセットしてください。');
+  expect(alert.textContent).toBe('シミュレーション中にメインデッキが編集されました。リセットしてください。');
 
   // 2a. リセットボタン、スタートボタンと押す
   await user.click(buttonReset);
@@ -545,7 +545,7 @@ test('シミュレータがカードペインの操作でアボートする', as
   expect(buttonKeep).toBeDisabled();
   alert = screen.getByRole('alert');
   expect(alert).toBeVisible();
-  expect(alert.textContent).toBe('⚠️ シミュレーション中にメインデッキが編集されました。リセットしてください。');
+  expect(alert.textContent).toBe('シミュレーション中にメインデッキが編集されました。リセットしてください。');
 
   // 3a. リセットボタン、スタートボタンと押す
   await user.click(buttonReset);
@@ -695,7 +695,7 @@ test('シミュレータがレシピペインの操作でアボートする', as
   expect(buttonKeep).toBeDisabled();
   let alert = screen.getByRole('alert');
   expect(alert).toBeVisible();
-  expect(alert.textContent).toBe('⚠️ シミュレーション中にメインデッキが編集されました。リセットしてください。');
+  expect(alert.textContent).toBe('シミュレーション中にメインデッキが編集されました。リセットしてください。');
 
   // 2a. リセットボタン、スタートボタンと押す
   await user.click(buttonReset);
@@ -722,7 +722,7 @@ test('シミュレータがレシピペインの操作でアボートする', as
   expect(buttonKeep).toBeDisabled();
   alert = screen.getByRole('alert');
   expect(alert).toBeVisible();
-  expect(alert.textContent).toBe('⚠️ シミュレーション中にメインデッキが編集されました。リセットしてください。');
+  expect(alert.textContent).toBe('シミュレーション中にメインデッキが編集されました。リセットしてください。');
 
   // 3a. リセットボタン、スタートボタンと押す
   await user.click(buttonReset);
@@ -749,7 +749,7 @@ test('シミュレータがレシピペインの操作でアボートする', as
   expect(buttonKeep).toBeDisabled();
   alert = screen.getByRole('alert');
   expect(alert).toBeVisible();
-  expect(alert.textContent).toBe('⚠️ シミュレーション中にメインデッキが編集されました。リセットしてください。');
+  expect(alert.textContent).toBe('シミュレーション中にメインデッキが編集されました。リセットしてください。');
 
   // 4a. リセットボタン、スタートボタンと押す
   await user.click(buttonReset);
@@ -776,7 +776,7 @@ test('シミュレータがレシピペインの操作でアボートする', as
   expect(buttonKeep).toBeDisabled();
   alert = screen.getByRole('alert');
   expect(alert).toBeVisible();
-  expect(alert.textContent).toBe('⚠️ シミュレーション中にメインデッキが編集されました。リセットしてください。');
+  expect(alert.textContent).toBe('シミュレーション中にメインデッキが編集されました。リセットしてください。');
 
   // 5a. リセットボタン、スタートボタンと押す
   await user.click(buttonReset);
@@ -837,7 +837,7 @@ test('シミュレータがレシピペインの操作でアボートする', as
   expect(buttonKeep).toBeDisabled();
   alert = screen.getByRole('alert');
   expect(alert).toBeVisible();
-  expect(alert.textContent).toBe('⚠️ シミュレーション中にメインデッキが編集されました。リセットしてください。');
+  expect(alert.textContent).toBe('シミュレーション中にメインデッキが編集されました。リセットしてください。');
 }, 30000);
 
 test('シミュレータがマイデッキペインの操作でアボートする', async () => {
@@ -913,5 +913,5 @@ test('シミュレータがマイデッキペインの操作でアボートす�
   expect(buttonKeep).toBeDisabled();
   alert = screen.getByRole('alert');
   expect(alert).toBeVisible();
-  expect(alert.textContent).toBe('⚠️ シミュレーション中にメインデッキが編集されました。リセットしてください。');
+  expect(alert.textContent).toBe('シミュレーション中にメインデッキが編集されました。リセットしてください。');
 });
