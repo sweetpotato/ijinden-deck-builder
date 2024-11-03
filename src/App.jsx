@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 
 import { useEffect, useReducer, useState } from 'react';
+import { Alert } from 'react-bootstrap';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 
@@ -132,15 +133,15 @@ function App() {
           <p>イジンデンのデッキレシピを作成するアプリです。</p>
           <h2>マイデッキ利用時のご注意</h2>
           {/* eslint-disable max-len */}
-          <p>マイデッキは「サイトデータ」として端末のブラウザに保存しているため、Safari では「履歴と Web サイトデータを消去」、Chrome では「クッキーと他のサイトデータ」を削除するとクリアされてしまうことにご注意ください。他のブラウザでも同様です。</p>
+          <Alert variant="warning">マイデッキは「サイトデータ」として端末のブラウザに保存しているため、Safari では「履歴と Web サイトデータを消去」、Chrome では「クッキーと他のサイトデータ」を削除するとクリアされてしまうことにご注意ください。他のブラウザでも同様です。</Alert>
           {/* eslint-enable max-len */}
-          <p>また、端末やブラウザをまたいでは同じマイデッキを利用できませんので、ご承知ください。</p>
+          <Alert variant="info">端末やブラウザをまたいでは同じマイデッキを利用できませんのでご承知ください。</Alert>
           <h2>快適にご利用いただくために</h2>
-          <p>
+          <Alert variant="success">
             あらかじめ通信環境の良いところで、イジンデン公式サイトの「
             <a href="https://one-draw.jp/ijinden/cardlist.html">カードリスト</a>
             」以下にある各エキスパンションのページを開いて、すべてのカード画像を読み込んでおいてください。これはカード画像のキャッシュを有効にするためです。
-          </p>
+          </Alert>
           <h2>特徴</h2>
           <ul>
             <li>デッキ枚数の上限なし</li>
@@ -159,7 +160,7 @@ function App() {
           <p>保存ボタンで作成したレシピをマイデッキに保存できます。また、クリアボタンでレシピを最初から編集し直すことができます。</p>
           <h3>マイデッキ</h3>
           <p>保存した各レシピのボタンで読込みや削除ができます。保存済みレシピをすべて削除することもできます。</p>
-          <p>レシピの番号は飛び飛びになることがありますのでご承知ください。これは削除したレシピの番号を再利用していないためです。</p>
+          <Alert variant="info">レシピの番号は飛び飛びになることがありますのでご承知ください。これは削除したレシピの番号を再利用していないためです。</Alert>
           <h3>シミュ (手札シミュレータ)</h3>
           {/* eslint-disable max-len */}
           <p>対戦開始時のガーディアンと手札、およびその後のドローをランダムに表示します。</p>

@@ -37,7 +37,7 @@ test('メインデッキが9枚以下だとスタートできない', async () =
   expect(buttonStart).toBeEnabled();
   expect(buttonMulligan).toBeDisabled();
   expect(buttonKeep).toBeDisabled();
-  expect(screen.queryByRole('alert')).toBeNull();
+  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0);
 
   // メインのプラスボタンを9回押す
   await user.click(tabCard);
@@ -69,7 +69,7 @@ test('メインデッキが9枚以下だとスタートできない', async () =
   expect(buttonStart).toBeEnabled();
   expect(buttonMulligan).toBeDisabled();
   expect(buttonKeep).toBeDisabled();
-  expect(screen.queryByRole('alert')).toBeNull();
+  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0);
 
   // スタートボタンを押す
   await user.click(buttonStart);
@@ -79,7 +79,7 @@ test('メインデッキが9枚以下だとスタートできない', async () =
   expect(buttonStart).toBeDisabled();
   expect(buttonMulligan).toBeDisabled();
   expect(buttonKeep).toBeDisabled();
-  let alert = screen.queryByRole('alert');
+  let alert = paneSimulator.querySelector('.alert-warning');
   expect(alert.textContent).toBe('メインデッキの枚数が少なすぎます。10枚以上にしてください。');
   expect(alert).toBeVisible();
 
@@ -91,7 +91,7 @@ test('メインデッキが9枚以下だとスタートできない', async () =
   expect(buttonStart).toBeEnabled();
   expect(buttonMulligan).toBeDisabled();
   expect(buttonKeep).toBeDisabled();
-  expect(screen.queryByRole('alert')).toBeNull();
+  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0);
 }, 30000);
 
 test('メインデッキが10枚以上でスタートできる', async () => {
@@ -125,7 +125,7 @@ test('メインデッキが10枚以上でスタートできる', async () => {
   expect(buttonStart).toBeEnabled();
   expect(buttonMulligan).toBeDisabled();
   expect(buttonKeep).toBeDisabled();
-  expect(screen.queryByRole('alert')).toBeNull();
+  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0);
 
   // メインのプラスボタンを10回押す
   await user.click(tabCard);
@@ -150,7 +150,7 @@ test('メインデッキが10枚以上でスタートできる', async () => {
   expect(buttonStart).toBeDisabled();
   expect(buttonMulligan).toBeEnabled();
   expect(buttonKeep).toBeEnabled();
-  expect(screen.queryByRole('alert')).toBeNull();
+  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0);
 
   // 1c. リセットボタンを押す
   await user.click(buttonReset);
@@ -160,7 +160,7 @@ test('メインデッキが10枚以上でスタートできる', async () => {
   expect(buttonStart).toBeEnabled();
   expect(buttonMulligan).toBeDisabled();
   expect(buttonKeep).toBeDisabled();
-  expect(screen.queryByRole('alert')).toBeNull();
+  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0);
 
   // 2a. スタートボタンを押す
   await user.click(buttonStart);
@@ -170,7 +170,7 @@ test('メインデッキが10枚以上でスタートできる', async () => {
   expect(buttonStart).toBeDisabled();
   expect(buttonMulligan).toBeEnabled();
   expect(buttonKeep).toBeEnabled();
-  expect(screen.queryByRole('alert')).toBeNull();
+  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0);
 
   // 2c. マリガンボタンを押す
   await user.click(buttonMulligan);
@@ -180,7 +180,7 @@ test('メインデッキが10枚以上でスタートできる', async () => {
   expect(buttonStart).toBeDisabled();
   expect(buttonMulligan).toBeDisabled();
   expect(buttonKeep).toBeDisabled();
-  expect(screen.queryByRole('alert')).toBeNull();
+  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0);
 
   // 2e. リセットボタンを押す
   await user.click(buttonReset);
@@ -190,7 +190,7 @@ test('メインデッキが10枚以上でスタートできる', async () => {
   expect(buttonStart).toBeEnabled();
   expect(buttonMulligan).toBeDisabled();
   expect(buttonKeep).toBeDisabled();
-  expect(screen.queryByRole('alert')).toBeNull();
+  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0);
 
   // 3a. スタートボタンを押す
   await user.click(buttonStart);
@@ -200,7 +200,7 @@ test('メインデッキが10枚以上でスタートできる', async () => {
   expect(buttonStart).toBeDisabled();
   expect(buttonMulligan).toBeEnabled();
   expect(buttonKeep).toBeEnabled();
-  expect(screen.queryByRole('alert')).toBeNull();
+  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0);
 
   // 3c. キープボタンを押す
   await user.click(buttonKeep);
@@ -210,7 +210,7 @@ test('メインデッキが10枚以上でスタートできる', async () => {
   expect(buttonStart).toBeDisabled();
   expect(buttonMulligan).toBeDisabled();
   expect(buttonKeep).toBeDisabled();
-  expect(screen.queryByRole('alert')).toBeNull();
+  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0);
 
   // 3e. リセットボタンを押す
   await user.click(buttonReset);
@@ -220,5 +220,5 @@ test('メインデッキが10枚以上でスタートできる', async () => {
   expect(buttonStart).toBeEnabled();
   expect(buttonMulligan).toBeDisabled();
   expect(buttonKeep).toBeDisabled();
-  expect(screen.queryByRole('alert')).toBeNull();
+  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0);
 }, 15000);
