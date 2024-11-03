@@ -467,7 +467,7 @@ test('シミュレータがカードペインの操作でアボートする', as
   expect(buttonStart).toBeEnabled();
   expect(buttonMulligan).toBeDisabled();
   expect(buttonKeep).toBeDisabled();
-  expect(screen.queryByRole('alert')).toBeNull();
+  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0);
 
   // 初期状態として、メインデッキにカードを10枚適当に加える
   await user.click(tabCard);
@@ -491,7 +491,7 @@ test('シミュレータがカードペインの操作でアボートする', as
   expect(buttonStart).toBeEnabled();
   expect(buttonMulligan).toBeDisabled();
   expect(buttonKeep).toBeDisabled();
-  expect(screen.queryByRole('alert')).toBeNull();
+  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0);
 
   // 既にシミュタブにいる
   // 1a. スタートボタンを押す
@@ -500,7 +500,7 @@ test('シミュレータがカードペインの操作でアボートする', as
   expect(buttonStart).toBeDisabled();
   expect(buttonMulligan).toBeEnabled();
   expect(buttonKeep).toBeEnabled();
-  expect(screen.queryByRole('alert')).toBeNull();
+  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0);
 
   // 1b. カードペインでメインデッキのプラスボタンを押す
   await user.click(tabCard);
@@ -516,9 +516,9 @@ test('シミュレータがカードペインの操作でアボートする', as
   expect(buttonStart).toBeDisabled();
   expect(buttonMulligan).toBeDisabled();
   expect(buttonKeep).toBeDisabled();
-  let alert = screen.getByRole('alert');
+  let alert = paneSimulator.querySelector('.alert-warning');
   expect(alert).toBeVisible();
-  expect(alert.textContent).toBe('⚠️ シミュレーション中にメインデッキが編集されました。リセットしてください。');
+  expect(alert.textContent).toBe('シミュレーション中にメインデッキが編集されました。リセットしてください。');
 
   // 2a. リセットボタン、スタートボタンと押す
   await user.click(buttonReset);
@@ -527,7 +527,7 @@ test('シミュレータがカードペインの操作でアボートする', as
   expect(buttonStart).toBeDisabled();
   expect(buttonMulligan).toBeEnabled();
   expect(buttonKeep).toBeEnabled();
-  expect(screen.queryByRole('alert')).toBeNull();
+  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0);
 
   // 2b. カードペインでメインデッキのマイナスボタンを押す
   await user.click(tabCard);
@@ -543,9 +543,9 @@ test('シミュレータがカードペインの操作でアボートする', as
   expect(buttonStart).toBeDisabled();
   expect(buttonMulligan).toBeDisabled();
   expect(buttonKeep).toBeDisabled();
-  alert = screen.getByRole('alert');
+  alert = paneSimulator.querySelector('.alert-warning');
   expect(alert).toBeVisible();
-  expect(alert.textContent).toBe('⚠️ シミュレーション中にメインデッキが編集されました。リセットしてください。');
+  expect(alert.textContent).toBe('シミュレーション中にメインデッキが編集されました。リセットしてください。');
 
   // 3a. リセットボタン、スタートボタンと押す
   await user.click(buttonReset);
@@ -554,7 +554,7 @@ test('シミュレータがカードペインの操作でアボートする', as
   expect(buttonStart).toBeDisabled();
   expect(buttonMulligan).toBeEnabled();
   expect(buttonKeep).toBeEnabled();
-  expect(screen.queryByRole('alert')).toBeNull();
+  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0);
 
   // 3b. カードペインでサイドデッキのプラスボタンを押す
   await user.click(tabCard);
@@ -570,7 +570,7 @@ test('シミュレータがカードペインの操作でアボートする', as
   expect(buttonStart).toBeDisabled();
   expect(buttonMulligan).toBeEnabled();
   expect(buttonKeep).toBeEnabled();
-  expect(screen.queryByRole('alert')).toBeNull();
+  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0);
   
   // 4a. カードペインでサイドデッキのマイナスボタンを押す
   await user.click(tabCard);
@@ -586,7 +586,7 @@ test('シミュレータがカードペインの操作でアボートする', as
   expect(buttonStart).toBeDisabled();
   expect(buttonMulligan).toBeEnabled();
   expect(buttonKeep).toBeEnabled();
-  expect(screen.queryByRole('alert')).toBeNull();
+  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0);
 }, 30000);
 
 test('シミュレータがレシピペインの操作でアボートする', async () => {
@@ -622,7 +622,7 @@ test('シミュレータがレシピペインの操作でアボートする', as
   expect(buttonStart).toBeEnabled();
   expect(buttonMulligan).toBeDisabled();
   expect(buttonKeep).toBeDisabled();
-  expect(screen.queryByRole('alert')).toBeNull();
+  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0);
 
   // 初期状態として、メインデッキにカードを10枚適当に加える
   await user.click(tabCard);
@@ -648,7 +648,7 @@ test('シミュレータがレシピペインの操作でアボートする', as
   expect(buttonStart).toBeEnabled();
   expect(buttonMulligan).toBeDisabled();
   expect(buttonKeep).toBeDisabled();
-  expect(screen.queryByRole('alert')).toBeNull();
+  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0);
 
   await user.click(tabDeck);
   expect(paneDeck).toHaveClass('active');
@@ -677,7 +677,7 @@ test('シミュレータがレシピペインの操作でアボートする', as
   expect(buttonStart).toBeDisabled();
   expect(buttonMulligan).toBeEnabled();
   expect(buttonKeep).toBeEnabled();
-  expect(screen.queryByRole('alert')).toBeNull();
+  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0);
 
   // 1b. レシピペインでメインデッキのプラスボタンを押す
   await user.click(tabDeck);
@@ -693,9 +693,9 @@ test('シミュレータがレシピペインの操作でアボートする', as
   expect(buttonStart).toBeDisabled();
   expect(buttonMulligan).toBeDisabled();
   expect(buttonKeep).toBeDisabled();
-  let alert = screen.getByRole('alert');
+  let alert = paneSimulator.querySelector('.alert-warning');
   expect(alert).toBeVisible();
-  expect(alert.textContent).toBe('⚠️ シミュレーション中にメインデッキが編集されました。リセットしてください。');
+  expect(alert.textContent).toBe('シミュレーション中にメインデッキが編集されました。リセットしてください。');
 
   // 2a. リセットボタン、スタートボタンと押す
   await user.click(buttonReset);
@@ -704,7 +704,7 @@ test('シミュレータがレシピペインの操作でアボートする', as
   expect(buttonStart).toBeDisabled();
   expect(buttonMulligan).toBeEnabled();
   expect(buttonKeep).toBeEnabled();
-  expect(screen.queryByRole('alert')).toBeNull();
+  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0);
 
   // 2b. レシピペインでメインデッキの「v」ボタンを押す
   await user.click(tabDeck);
@@ -720,9 +720,9 @@ test('シミュレータがレシピペインの操作でアボートする', as
   expect(buttonStart).toBeDisabled();
   expect(buttonMulligan).toBeDisabled();
   expect(buttonKeep).toBeDisabled();
-  alert = screen.getByRole('alert');
+  alert = paneSimulator.querySelector('.alert-warning');
   expect(alert).toBeVisible();
-  expect(alert.textContent).toBe('⚠️ シミュレーション中にメインデッキが編集されました。リセットしてください。');
+  expect(alert.textContent).toBe('シミュレーション中にメインデッキが編集されました。リセットしてください。');
 
   // 3a. リセットボタン、スタートボタンと押す
   await user.click(buttonReset);
@@ -731,7 +731,7 @@ test('シミュレータがレシピペインの操作でアボートする', as
   expect(buttonStart).toBeDisabled();
   expect(buttonMulligan).toBeEnabled();
   expect(buttonKeep).toBeEnabled();
-  expect(screen.queryByRole('alert')).toBeNull();
+  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0);
 
   // 3b. レシピペインでサイドデッキの「^」ボタンを押す
   await user.click(tabDeck);
@@ -747,9 +747,9 @@ test('シミュレータがレシピペインの操作でアボートする', as
   expect(buttonStart).toBeDisabled();
   expect(buttonMulligan).toBeDisabled();
   expect(buttonKeep).toBeDisabled();
-  alert = screen.getByRole('alert');
+  alert = paneSimulator.querySelector('.alert-warning');
   expect(alert).toBeVisible();
-  expect(alert.textContent).toBe('⚠️ シミュレーション中にメインデッキが編集されました。リセットしてください。');
+  expect(alert.textContent).toBe('シミュレーション中にメインデッキが編集されました。リセットしてください。');
 
   // 4a. リセットボタン、スタートボタンと押す
   await user.click(buttonReset);
@@ -758,7 +758,7 @@ test('シミュレータがレシピペインの操作でアボートする', as
   expect(buttonStart).toBeDisabled();
   expect(buttonMulligan).toBeEnabled();
   expect(buttonKeep).toBeEnabled();
-  expect(screen.queryByRole('alert')).toBeNull();
+  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0);
 
   // 4b. レシピペインでメインデッキのマイナスボタンを押す
   await user.click(tabDeck);
@@ -774,9 +774,9 @@ test('シミュレータがレシピペインの操作でアボートする', as
   expect(buttonStart).toBeDisabled();
   expect(buttonMulligan).toBeDisabled();
   expect(buttonKeep).toBeDisabled();
-  alert = screen.getByRole('alert');
+  alert = paneSimulator.querySelector('.alert-warning');
   expect(alert).toBeVisible();
-  expect(alert.textContent).toBe('⚠️ シミュレーション中にメインデッキが編集されました。リセットしてください。');
+  expect(alert.textContent).toBe('シミュレーション中にメインデッキが編集されました。リセットしてください。');
 
   // 5a. リセットボタン、スタートボタンと押す
   await user.click(buttonReset);
@@ -785,7 +785,7 @@ test('シミュレータがレシピペインの操作でアボートする', as
   expect(buttonStart).toBeDisabled();
   expect(buttonMulligan).toBeEnabled();
   expect(buttonKeep).toBeEnabled();
-  expect(screen.queryByRole('alert')).toBeNull();
+  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0);
   
   // 5b. レシピペインでサイドデッキのプラスボタンを押す
   await user.click(tabDeck);
@@ -801,7 +801,7 @@ test('シミュレータがレシピペインの操作でアボートする', as
   expect(buttonStart).toBeDisabled();
   expect(buttonMulligan).toBeEnabled();
   expect(buttonKeep).toBeEnabled();
-  expect(screen.queryByRole('alert')).toBeNull();
+  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0);
     
   // 6a. レシピペインでサイドデッキのマイナスボタンを押す
   await user.click(tabDeck);
@@ -817,7 +817,7 @@ test('シミュレータがレシピペインの操作でアボートする', as
   expect(buttonStart).toBeDisabled();
   expect(buttonMulligan).toBeEnabled();
   expect(buttonKeep).toBeEnabled();
-  expect(screen.queryByRole('alert')).toBeNull();
+  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0);
 
   // 7a. レシピペインでレシピをクリアボタンを押す
   await user.click(tabDeck);
@@ -835,9 +835,9 @@ test('シミュレータがレシピペインの操作でアボートする', as
   expect(buttonStart).toBeDisabled();
   expect(buttonMulligan).toBeDisabled();
   expect(buttonKeep).toBeDisabled();
-  alert = screen.getByRole('alert');
+  alert = paneSimulator.querySelector('.alert-warning');
   expect(alert).toBeVisible();
-  expect(alert.textContent).toBe('⚠️ シミュレーション中にメインデッキが編集されました。リセットしてください。');
+  expect(alert.textContent).toBe('シミュレーション中にメインデッキが編集されました。リセットしてください。');
 }, 30000);
 
 test('シミュレータがマイデッキペインの操作でアボートする', async () => {
@@ -876,7 +876,7 @@ test('シミュレータがマイデッキペインの操作でアボートす�
   expect(buttonStart).toBeEnabled();
   expect(buttonMulligan).toBeDisabled();
   expect(buttonKeep).toBeDisabled();
-  expect(screen.queryByRole('alert')).toBeNull();
+  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0);
 
   // 1. メインデッキにカードが10枚入った保存済みデッキを読み込む
   await user.click(tabSave);
@@ -895,7 +895,7 @@ test('シミュレータがマイデッキペインの操作でアボートす�
   expect(buttonStart).toBeDisabled();
   expect(buttonMulligan).toBeEnabled();
   expect(buttonKeep).toBeEnabled();
-  expect(screen.queryByRole('alert')).toBeNull();
+  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0);
 
   // 2b. マイデッキペインで読込みボタンを押す
   await user.click(tabSave);
@@ -911,7 +911,7 @@ test('シミュレータがマイデッキペインの操作でアボートす�
   expect(buttonStart).toBeDisabled();
   expect(buttonMulligan).toBeDisabled();
   expect(buttonKeep).toBeDisabled();
-  alert = screen.getByRole('alert');
+  const alert = paneSimulator.querySelector('.alert-warning');
   expect(alert).toBeVisible();
-  expect(alert.textContent).toBe('⚠️ シミュレーション中にメインデッキが編集されました。リセットしてください。');
+  expect(alert.textContent).toBe('シミュレーション中にメインデッキが編集されました。リセットしてください。');
 });
