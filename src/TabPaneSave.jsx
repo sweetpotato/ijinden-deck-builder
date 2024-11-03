@@ -19,6 +19,7 @@ import {
 import { dataCardsArrayForDeck } from './dataCards';
 import db from './db';
 import enumTabPane from './enumTabPane';
+import ImageCard from './ImageCard';
 import { enumActionSimulator } from './reducerSimulator';
 import { sum } from './utils';
 
@@ -147,17 +148,15 @@ function ContainerDeckSavedPart({ title, deckSaved }) {
         {
           dataCardsArrayForDeck.map((card) => (
             deckSaved.has(card.id)
-                && (
-                  <div key={card.id} className="float-start position-relative me-1 mb-1">
-                    <img width="40" height="56" src={card.imageUrl} alt={card.name} />
-                    <span
-                      className="position-absolute start-0 bottom-0 px-1"
-                      style={{ backgroundColor: 'white', border: '1px solid black' }}
-                    >
-                      {deckSaved.get(card.id)}
-                    </span>
-                  </div>
-                )
+              && (
+                <ImageCard
+                  key={card.id}
+                  imageUrl={card.imageUrl}
+                  alt={card.name}
+                  numCopies={deckSaved.get(card.id)}
+                  small
+                />
+              )
           ))
         }
       </div>
