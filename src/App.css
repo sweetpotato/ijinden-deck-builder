@@ -20,11 +20,6 @@ fieldset {
 
 .container-card {
   float: left;
-  margin-right: .5rem;
-  margin-bottom: .5rem;
-}
-
-.container-deck .container-card {
   position: relative;
 }
 
@@ -34,6 +29,16 @@ fieldset {
 
 .container-guardian .container-card:hover {
   background-color: inherit;
+}
+
+.card-medium {
+  margin-right: .5rem;
+  margin-bottom: .5rem;
+}
+
+.card-small {
+  margin-right: .25rem;
+  margin-bottom: .25rem;
 }
 
 .container-num-copies {
@@ -95,9 +100,14 @@ fieldset {
   display: initial;
 }
 
-.img-card {
+.card-medium .img-card {
   width: 80px;
   height: 112px;
+}
+
+.card-small .img-card {
+  width: 40px;
+  height: 56px;
 }
 
 .container-guardian .container-card .img-card {

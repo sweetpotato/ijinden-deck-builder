@@ -84,7 +84,7 @@ function TabPaneDeck({
         </ModalFooter>
       </Modal>
       <h3 className="m-2">{titleMain}</h3>
-      <div className="container-card-line-up container-deck ms-2">
+      <div className="container-card-line-up ms-2">
         {
           /* eslint-disable react/jsx-props-no-spreading */
           dataCardsArray.map((element) => (
@@ -103,7 +103,7 @@ function TabPaneDeck({
         }
       </div>
       <h3 className="m-2">{titleSide}</h3>
-      <div className="container-card-line-up container-deck ms-2">
+      <div className="container-card-line-up ms-2">
         {
           /* eslint-disable react/jsx-props-no-spreading */
           dataCardsArray.map((element) => (
@@ -174,15 +174,15 @@ function ContainerDeckCard({
 
   const numCopies = deckThis.has(id) ? deckThis.get(id) : 0;
   const moveText = isSide ? '^' : 'v';
-  return (
-    <ImageCard imageUrl={imageUrl} alt={name} hide={numCopies <= 0}>
-      <span className="container-num-copies">{numCopies}</span>
-      <Button variant="primary" size="sm" className="btn-pop" onClick={handleClickMinus}>-</Button>
-      <Button variant="primary" size="sm" className="btn-push" onClick={handleClickPlus}>+</Button>
-      <Button variant="primary" size="sm" className="btn-move" onClick={handleClickMove}>{moveText}</Button>
-      <Button variant="primary" size="sm" className="btn-zoom" onClick={handleClickZoom}>🔍</Button>
-    </ImageCard>
-  );
+  return numCopies > 0
+    && (
+      <ImageCard imageUrl={imageUrl} alt={name} numCopies={numCopies}>
+        <Button variant="primary" size="sm" className="btn-pop" onClick={handleClickMinus}>-</Button>
+        <Button variant="primary" size="sm" className="btn-push" onClick={handleClickPlus}>+</Button>
+        <Button variant="primary" size="sm" className="btn-move" onClick={handleClickMove}>{moveText}</Button>
+        <Button variant="primary" size="sm" className="btn-zoom" onClick={handleClickZoom}>🔍</Button>
+      </ImageCard>
+    );
 }
 
 export default TabPaneDeck;

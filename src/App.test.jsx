@@ -104,15 +104,7 @@ test('カードペインからレシピペインへの作用', async () => {
   expect(paneDeck).toHaveClass('active');
   expect(paneDeck).toBeVisible();
 
-  const imageMain = paneDeck.querySelectorAll(`img[src="${dataCardsMap.get('R-1').imageUrl}"]`)[0];
-  const imageSide = paneDeck.querySelectorAll(`img[src="${dataCardsMap.get('R-1').imageUrl}"]`)[1];
-  const numCopiesMain = imageMain.parentElement.querySelector('.container-num-copies');
-  const numCopiesSide = imageSide.parentElement.querySelector('.container-num-copies');
-
-  expect(imageMain).not.toBeVisible();
-  expect(imageSide).not.toBeVisible();
-  expect(numCopiesMain).not.toBeVisible();
-  expect(numCopiesSide).not.toBeVisible();
+  expect(paneDeck.querySelectorAll(`img[src="${dataCardsMap.get('R-1').imageUrl}"]`).length).toBe(0);
 
   // 1a. カードペインでメインのプラスボタンを押す
   await user.click(tabCard);
@@ -124,7 +116,9 @@ test('カードペインからレシピペインへの作用', async () => {
   await user.click(tabDeck);
   expect(paneDeck).toHaveClass('active');
   expect(paneDeck).toBeVisible();
+  const imageMain = paneDeck.querySelectorAll(`img[src="${dataCardsMap.get('R-1').imageUrl}"]`)[0];
   expect(imageMain).toBeVisible();
+  const numCopiesMain = imageMain.parentElement.querySelector('.container-num-copies');
   expect(numCopiesMain).toBeVisible();
   expect(numCopiesMain.textContent).toBe('1');
 
@@ -138,7 +132,9 @@ test('カードペインからレシピペインへの作用', async () => {
   await user.click(tabDeck);
   expect(paneDeck).toHaveClass('active');
   expect(paneDeck).toBeVisible();
+  const imageSide = paneDeck.querySelectorAll(`img[src="${dataCardsMap.get('R-1').imageUrl}"]`)[1];
   expect(imageSide).toBeVisible();
+  const numCopiesSide = imageMain.parentElement.querySelector('.container-num-copies');
   expect(numCopiesSide).toBeVisible();
   expect(numCopiesSide.textContent).toBe('1');
 
@@ -252,15 +248,7 @@ test('レシピペインからカードペインへの作用', async () => {
   expect(paneDeck).toHaveClass('active');
   expect(paneDeck).toBeVisible();
 
-  const imageMain = paneDeck.querySelectorAll(`img[src="${dataCardsMap.get('R-1').imageUrl}"]`)[0];
-  const imageSide = paneDeck.querySelectorAll(`img[src="${dataCardsMap.get('R-1').imageUrl}"]`)[1];
-  const numCopiesMain = imageMain.parentElement.querySelector('.container-num-copies');
-  const numCopiesSide = imageSide.parentElement.querySelector('.container-num-copies');
-
-  expect(imageMain).not.toBeVisible();
-  expect(imageSide).not.toBeVisible();
-  expect(numCopiesMain).not.toBeVisible();
-  expect(numCopiesSide).not.toBeVisible();
+  expect(paneDeck.querySelectorAll(`img[src="${dataCardsMap.get('R-1').imageUrl}"]`).length).toBe(0);
 
   // 初期状態として、カードペインでメインとサイドのプラスボタンを押す
   await user.click(tabCard);
@@ -273,10 +261,14 @@ test('レシピペインからカードペインへの作用', async () => {
   await user.click(tabDeck);
   expect(paneDeck).toHaveClass('active');
   expect(paneDeck).toBeVisible();
+  const imageMain = paneDeck.querySelectorAll(`img[src="${dataCardsMap.get('R-1').imageUrl}"]`)[0];
   expect(imageMain).toBeVisible();
+  const numCopiesMain = imageMain.parentElement.querySelector('.container-num-copies');
   expect(numCopiesMain).toBeVisible();
   expect(numCopiesMain.textContent).toBe('1');
+  const imageSide = paneDeck.querySelectorAll(`img[src="${dataCardsMap.get('R-1').imageUrl}"]`)[1];
   expect(imageSide).toBeVisible();
+  const numCopiesSide = imageSide.parentElement.querySelector('.container-num-copies');
   expect(numCopiesSide).toBeVisible();
   expect(numCopiesSide.textContent).toBe('1');
 
@@ -413,14 +405,8 @@ test('保存したデッキを読み込んでレシピペインに表示する',
   expect(paneDeck).toBeVisible();
 
   // 初期状態でカードは非表示
-  const imageAlphaMain = paneDeck.querySelectorAll(`img[src="${dataCardsMap.get('R-1').imageUrl}"]`)[0];
-  const imageBravoSide = paneDeck.querySelectorAll(`img[src="${dataCardsMap.get('R-2').imageUrl}"]`)[1];
-  const numCopiesAlphaMain = imageAlphaMain.parentElement.querySelector('.container-num-copies');
-  const numCopiesBravoSide = imageBravoSide.parentElement.querySelector('.container-num-copies');
-  expect(imageAlphaMain).not.toBeVisible();
-  expect(imageBravoSide).not.toBeVisible();
-  expect(numCopiesAlphaMain).not.toBeVisible();
-  expect(numCopiesBravoSide).not.toBeVisible();
+  expect(paneDeck.querySelectorAll(`img[src="${dataCardsMap.get('R-1').imageUrl}"]`).length).toBe(0);
+  expect(paneDeck.querySelectorAll(`img[src="${dataCardsMap.get('R-2').imageUrl}"]`).length).toBe(0);
 
   // マイデッキタブをクリックしてアコーディオンを開き、読込みボタンを押す
   await user.click(tabSave);
@@ -434,9 +420,13 @@ test('保存したデッキを読み込んでレシピペインに表示する',
   // レシピタブに遷移し、読み込まれたデッキのカードが表示された
   expect(paneDeck).toHaveClass('active');
   expect(paneDeck).toBeVisible();
+  const imageAlphaMain = paneDeck.querySelectorAll(`img[src="${dataCardsMap.get('R-1').imageUrl}"]`)[0];
   expect(imageAlphaMain).toBeVisible();
+  const imageBravoSide = paneDeck.querySelectorAll(`img[src="${dataCardsMap.get('R-2').imageUrl}"]`)[0];
   expect(imageBravoSide).toBeVisible();
+  const numCopiesAlphaMain = imageAlphaMain.parentElement.querySelector('.container-num-copies');
   expect(numCopiesAlphaMain.textContent).toBe('3');
+  const numCopiesBravoSide = imageBravoSide.parentElement.querySelector('.container-num-copies');
   expect(numCopiesBravoSide.textContent).toBe('4');
 
   jest.restoreAllMocks();

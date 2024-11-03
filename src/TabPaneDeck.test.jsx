@@ -18,13 +18,7 @@ test('レシピペインの初期状態はすべて非表示', async () => {
   expect(paneDeck).toHaveClass('active');
   expect(paneDeck).toBeVisible();
 
-  // メインとサイドをあわせて2倍の img タグがある。
-  const listImage = paneDeck.querySelectorAll('img');
-  expect(listImage.length).toBe(dataCardsArrayForDeck.length * 2);
-
-  listImage.forEach((e) => {
-    expect(e).not.toBeVisible();
-  });
+  expect(paneDeck.querySelectorAll('img').length).toBe(0);
 });
 
 test('レシピペイン内でのカード枚数の増減', async () => {
@@ -36,6 +30,15 @@ test('レシピペイン内でのカード枚数の増減', async () => {
   const paneCard = screen.getAllByRole('tabpanel')[0];
   const paneDeck = screen.getAllByRole('tabpanel')[1];
 
+  // 初期状態を与えるために、カードペインのメインとサイドのプラスボタンを1回ずつ押す
+  expect(paneCard).toHaveClass('active');
+  expect(paneCard).toBeVisible();
+  await user.click(paneCard.querySelector('tr[data-id="R-1"] td:nth-child(3) button:nth-child(3)'));
+  await user.click(paneCard.querySelector('tr[data-id="R-1"] td:nth-child(4) button:nth-child(3)'));
+
+  await user.click(tabDeck);
+  expect(paneDeck).toHaveClass('active');
+  expect(paneDeck).toBeVisible();
   const imageMain = paneDeck.querySelectorAll(`img[src="${dataCardsMap.get('R-1').imageUrl}"]`)[0];
   const imageSide = paneDeck.querySelectorAll(`img[src="${dataCardsMap.get('R-1').imageUrl}"]`)[1];
   const numCopiesMain = imageMain.parentElement.querySelector('.container-num-copies');
@@ -47,28 +50,16 @@ test('レシピペイン内でのカード枚数の増減', async () => {
   const buttonPlusSide = imageSide.parentElement.querySelector('.btn-push');
   const buttonRaise = imageSide.parentElement.querySelector('.btn-move');
 
-  expect(imageMain).not.toBeVisible();
-  expect(imageSide).not.toBeVisible();
-  expect(numCopiesMain).not.toBeVisible();
-  expect(numCopiesSide).not.toBeVisible();
+  expect(imageMain).toBeVisible();
+  expect(imageSide).toBeVisible();
+  expect(numCopiesMain.textContent).toBe('1');
+  expect(numCopiesSide.textContent).toBe('1');
   expect(buttonMinusMain.textContent).toBe('-');
   expect(buttonPlusMain.textContent).toBe('+');
   expect(buttonDrop.textContent).toBe('v');
   expect(buttonMinusSide.textContent).toBe('-');
   expect(buttonPlusSide.textContent).toBe('+');
   expect(buttonRaise.textContent).toBe('^');
-
-  // 初期状態を与えるために、カードペインのメインとサイドのプラスボタンを1回ずつ押す
-  expect(paneCard).toHaveClass('active');
-  expect(paneCard).toBeVisible();
-  await user.click(paneCard.querySelector('tr[data-id="R-1"] td:nth-child(3) button:nth-child(3)'));
-  await user.click(paneCard.querySelector('tr[data-id="R-1"] td:nth-child(4) button:nth-child(3)'));
-
-  await user.click(tabDeck);
-  expect(imageMain).toBeVisible();
-  expect(imageSide).toBeVisible();
-  expect(numCopiesMain.textContent).toBe('1');
-  expect(numCopiesSide.textContent).toBe('1');
 
   await user.click(buttonPlusMain);
 
