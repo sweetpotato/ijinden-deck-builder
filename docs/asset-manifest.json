@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "https://sweetpotato.github.io/ijinden-deck-builder/static/css/main.fc17cab5.css",
-    "main.js": "https://sweetpotato.github.io/ijinden-deck-builder/static/js/main.fab91b6b.js",
+    "main.css": "https://sweetpotato.github.io/ijinden-deck-builder/static/css/main.bdf50083.css",
+    "main.js": "https://sweetpotato.github.io/ijinden-deck-builder/static/js/main.24255dcf.js",
     "static/js/453.69f3745b.chunk.js": "https://sweetpotato.github.io/ijinden-deck-builder/static/js/453.69f3745b.chunk.js",
     "index.html": "https://sweetpotato.github.io/ijinden-deck-builder/index.html",
-    "main.fc17cab5.css.map": "https://sweetpotato.github.io/ijinden-deck-builder/static/css/main.fc17cab5.css.map",
-    "main.fab91b6b.js.map": "https://sweetpotato.github.io/ijinden-deck-builder/static/js/main.fab91b6b.js.map",
+    "main.bdf50083.css.map": "https://sweetpotato.github.io/ijinden-deck-builder/static/css/main.bdf50083.css.map",
+    "main.24255dcf.js.map": "https://sweetpotato.github.io/ijinden-deck-builder/static/js/main.24255dcf.js.map",
     "453.69f3745b.chunk.js.map": "https://sweetpotato.github.io/ijinden-deck-builder/static/js/453.69f3745b.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.fc17cab5.css",
-    "static/js/main.fab91b6b.js"
+    "static/css/main.bdf50083.css",
+    "static/js/main.24255dcf.js"
   ]
 }
