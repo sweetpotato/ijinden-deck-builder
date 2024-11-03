@@ -113,6 +113,11 @@ fieldset {
   padding: var(--bs-nav-link-padding-y) calc(.5 * var(--bs-nav-link-padding-x))
 }
 
+/* 画面下端に空間を作る */
+.tab-pane {
+  margin-bottom: 6rem;
+}
+
 /* カードリストの背景色付け */
 .table > :not(caption) > * > .bg-ijinden-red { --bs-table-bg-state: #f1aeb5; } /* red-200 */
 .table-hover > tbody > tr:hover > .bg-ijinden-red { --bs-table-bg-state: #e35d6a; } /* red-400 */
