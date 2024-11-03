@@ -103,7 +103,7 @@ function TabPaneCard({
         handleChange={handleChangeTerm}
         data={dataTerms}
       />
-      <Table responsive hover variant="light">
+      <Table hover variant="light">
         <thead className="sticky-top">
           <tr>
             <th scope="col">ID</th>
