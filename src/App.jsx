@@ -127,7 +127,7 @@ function App() {
         <Tab eventKey={enumTabPane.SIMULATOR} title="シミュ">
           <TabPaneSimulator deck={deckMain} state={stateSimulator} dispatch={dispatchSimulator} />
         </Tab>
-        <Tab eventKey={enumTabPane.HELP} title="ヘルプ" className="m-2">
+        <Tab eventKey={enumTabPane.HELP} title="ヘルプ" className="mx-2 mt-2">
           <h2>これは何？</h2>
           <p>イジンデンのデッキレシピを作成するアプリです。</p>
           <h2>マイデッキ利用時のご注意</h2>
