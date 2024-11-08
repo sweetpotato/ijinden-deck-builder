@@ -1,5 +1,9 @@
 // SPDX-License-Identifier: MIT
 
+require('dotenv').config({
+  path: `.env.${process.env.NODE_ENV}.local`,
+});
+
 /**
  * @type {import('gatsby').GatsbyConfig}
  */

@@ -28,7 +28,7 @@ function useSiteMetadata() {
 
 export function Head() {
   const siteMetadata = useSiteMetadata();
-  const siteUrl = process.env.PUBLIC_URL || 'http://localhost:8000';
+  const siteUrl = process.env.GATSBY_PUBLIC_URL || 'http://localhost:8000';
   return (
     <>
       <link rel="icon" href={`${siteUrl}/favicon.ico`} sizes="32x32" />
