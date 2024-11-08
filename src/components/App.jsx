@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-import { useEffect, useReducer, useState } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import { Alert } from 'react-bootstrap';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
@@ -9,13 +9,10 @@ import TabPaneCard from './TabPaneCard';
 import TabPaneDeck from './TabPaneDeck';
 import TabPaneSave from './TabPaneSave';
 import TabPaneSimulator from './TabPaneSimulator';
-import enumTabPane from './enumTabPane';
-import { enumStateSimulator, reducerSimulator } from './reducerSimulator';
+import enumTabPane from '../commons/enumTabPane';
+import { enumStateSimulator, reducerSimulator } from '../hooks/reducerSimulator';
 
-import 'bootstrap/dist/css/bootstrap.min.css';
-
-import './App.css';
-import db from './db';
+import db from '../commons/db';
 
 function App() {
   // localStorage のマイデッキを IndexedDB へ移行する。

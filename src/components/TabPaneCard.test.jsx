@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: MIT
 
+import React from 'react';
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import App from "./App";
-import { dataCardsArrayForTable } from "./dataCards";
+import { dataCardsArrayForTable } from "../commons/dataCards";
 
 test('カードペインの初期値はカード枚数がすべて0でマイナスボタンは無効', () => {
   render(<App />);

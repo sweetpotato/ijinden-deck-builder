@@ -1,12 +1,13 @@
 {
   "homepage": "https://sweetpotato.github.io/ijinden-deck-builder/",
   "dependencies": {
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^15.0.6",
     "@testing-library/user-event": "^14.5.2",
     "bootstrap": "^5.3.3",
     "dexie": "^4.0.9",
     "dexie-react-hooks": "^1.1.7",
+    "gatsby": "^5.14.0",
+    "gatsby-plugin-manifest": "^5.14.0",
+    "prop-types": "^15.8.1",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.5",
     "react-dom": "^18.3.1",
@@ -15,6 +16,10 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.0.1",
+    "babel-jest": "^27.5.1",
+    "babel-preset-gatsby": "^3.14.0",
     "cross-env": "^7.0.3",
     "eslint": "^8.57.1",
     "eslint-config-airbnb": "^19.0.4",
@@ -22,14 +27,18 @@
     "eslint-plugin-jsx-a11y": "^6.10.1",
     "eslint-plugin-react": "^7.37.1",
     "eslint-plugin-react-hooks": "^4.6.2",
-    "fake-indexeddb": "^6.0.0"
+    "fake-indexeddb": "^6.0.0",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^27.5.1",
+    "jest-environment-jsdom": "^27.5.1",
+    "react-test-renderer": "^18.3.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "cross-env PUBLIC_URL=https://sweetpotato.github.io/ijinden-deck-builder react-scripts build",
-    "redocs": "git rm -r docs && move build docs && git add docs && git commit -m \"Build and deploy\"",
+    "start": "gatsby develop",
+    "build": "cross-env PUBLIC_URL=https://sweetpotato.github.io/ijinden-deck-builder gatsby build",
+    "redocs": "git rm -r docs && move public docs && git add docs && git commit -m \"Build and deploy\"",
     "eslint": "eslint src",
-    "test": "react-scripts test",
+    "test": "jest",
     "eject": "react-scripts eject"
   },
   "browserslist": {
