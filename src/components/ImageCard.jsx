@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: MIT
 
+import React from 'react';
+
 function ImageCard({
   imageUrl, alt, numCopies, loading = 'auto', small = false, children,
 }) {

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import {
   Button,
   Modal,
@@ -11,12 +11,12 @@ import {
 } from 'react-bootstrap';
 
 import ImageCard from './ImageCard';
-import { dataCardsArrayForDeck as dataCardsArray, dataCardsMap } from './dataCards';
-import db from './db';
-import enumTabPane from './enumTabPane';
-import { handleClickDecrement, handleClickIncrement } from './handleClick';
-import { enumActionSimulator } from './reducerSimulator';
-import { sum } from './utils';
+import { dataCardsArrayForDeck as dataCardsArray, dataCardsMap } from '../commons/dataCards';
+import db from '../commons/db';
+import enumTabPane from '../commons/enumTabPane';
+import { handleClickDecrement, handleClickIncrement } from '../commons/handleClick';
+import { enumActionSimulator } from '../hooks/reducerSimulator';
+import { sum } from '../commons/utils';
 
 function TabPaneDeck({
   deckMain, handleSetDeckMain, deckSide, handleSetDeckSide,

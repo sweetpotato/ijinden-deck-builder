@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 
 import { useLiveQuery } from 'dexie-react-hooks';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import {
   Accordion,
   AccordionBody,
@@ -16,12 +16,12 @@ import {
   Spinner,
 } from 'react-bootstrap';
 
-import { dataCardsArrayForDeck } from './dataCards';
-import db from './db';
-import enumTabPane from './enumTabPane';
+import { dataCardsArrayForDeck } from '../commons/dataCards';
+import db from '../commons/db';
+import enumTabPane from '../commons/enumTabPane';
 import ImageCard from './ImageCard';
-import { enumActionSimulator } from './reducerSimulator';
-import { sum } from './utils';
+import { enumActionSimulator } from '../hooks/reducerSimulator';
+import { sum } from '../commons/utils';
 
 // YYYY/mm/dd HH:MM:SS
 const DTF = new Intl.DateTimeFormat([], {

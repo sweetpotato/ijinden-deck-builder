@@ -2,11 +2,12 @@
 
 import "fake-indexeddb/auto";
 
+import React from 'react';
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import App from "./App";
-import db from "./db";
+import db from "../commons/db";
 
 test('レシピが空だと保存できない', async () => {
   await db.decks.clear();

@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: MIT
 
+import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import App from './App';
-import { dataCardsArrayForDeck, dataCardsMap } from './dataCards';
+import { dataCardsArrayForDeck, dataCardsMap } from '../commons/dataCards';
 
 test('レシピペインの初期状態はすべて非表示', async () => {
   render(<App />);

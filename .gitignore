@@ -5,11 +5,14 @@
 /.pnp
 .pnp.js
 
+# develop
+/.cache
+
 # testing
 /coverage
 
 # production
-/build
+/public
 
 # misc
 /.vscode

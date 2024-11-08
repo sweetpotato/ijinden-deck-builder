@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import {
   Button, FormControl, InputGroup, Table, ToggleButton,
 } from 'react-bootstrap';
 
-import { dataCardsArrayForTable as dataCards } from './dataCards';
-import { handleClickDecrement, handleClickIncrement } from './handleClick';
-import { enumActionSimulator } from './reducerSimulator';
+import { dataCardsArrayForTable as dataCards } from '../commons/dataCards';
+import { handleClickDecrement, handleClickIncrement } from '../commons/handleClick';
+import { enumActionSimulator } from '../hooks/reducerSimulator';
 
 const dataExpansions = [
   { value: 0, label: 'すべて' },

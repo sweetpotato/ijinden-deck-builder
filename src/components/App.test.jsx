@@ -2,12 +2,13 @@
 
 import "fake-indexeddb/auto";
 
+import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import App from './App';
-import { dataCardsMap } from './dataCards';
-import db from "./db";
+import { dataCardsMap } from '../commons/dataCards';
+import db from "../commons/db";
 
 test("タブをクリックするとペインが表示される", async () => {
   render(<App />);
