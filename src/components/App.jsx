@@ -13,6 +13,7 @@ import enumTabPane from '../commons/enumTabPane';
 import { enumStateSimulator, reducerSimulator } from '../hooks/reducerSimulator';
 
 function App() {
+  const [deckTitle, setDeckTitle] = useState('');
   const [deckMain, setDeckMain] = useState(new Map());
   const [deckSide, setDeckSide] = useState(new Map());
   const [activeTab, setActiveTab] = useState(enumTabPane.CARD);
@@ -21,6 +22,10 @@ function App() {
     reducerSimulator,
     enumStateSimulator.INITIAL,
   );
+
+  function handleSetDeckTitle(newDeckTitle) {
+    setDeckTitle(newDeckTitle);
+  }
 
   function handleSetDeckMain(newDeckMain) {
     setDeckMain(newDeckMain);
@@ -58,6 +63,8 @@ function App() {
         </Tab>
         <Tab eventKey={enumTabPane.DECK} title="レシピ">
           <TabPaneDeck
+            deckTitle={deckTitle}
+            handleSetDeckTitle={handleSetDeckTitle}
             deckMain={deckMain}
             handleSetDeckMain={handleSetDeckMain}
             deckSide={deckSide}
@@ -69,6 +76,7 @@ function App() {
         </Tab>
         <Tab eventKey={enumTabPane.SAVE_AND_LOAD} title="マイデッキ">
           <TabPaneSave
+            handleSetDeckTitle={handleSetDeckTitle}
             handleSetDeckMain={handleSetDeckMain}
             handleSetDeckSide={handleSetDeckSide}
             activeDeckSaved={activeDeckSaved}

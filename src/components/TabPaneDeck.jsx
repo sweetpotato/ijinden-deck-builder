@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import {
   Button,
+  FormControl,
   Modal,
   ModalBody,
   ModalFooter,
@@ -19,11 +20,15 @@ import { enumActionSimulator } from '../hooks/reducerSimulator';
 import { sum } from '../commons/utils';
 
 function TabPaneDeck({
-  deckMain, handleSetDeckMain, deckSide, handleSetDeckSide,
+  deckTitle, handleSetDeckTitle, deckMain, handleSetDeckMain, deckSide, handleSetDeckSide,
   handleSetActiveDeckSaved, handleSetActiveTab, dispatchSimulator,
 }) {
   const [idZoom, setIdZoom] = useState(null);
   const [showModalEmpty, setShowModalEmpty] = useState(false);
+
+  function handleChangeDeckTitle(event) {
+    handleSetDeckTitle(event.target.value);
+  }
 
   function handleSetIdZoom(newIdZoom) {
     setIdZoom(newIdZoom);
@@ -43,7 +48,7 @@ function TabPaneDeck({
     const timestamp = new Date();
     const objectMain = [...deckMain.entries()];
     const objectSide = [...deckSide.entries()];
-    const objectDeck = { timestamp, main: objectMain, side: objectSide };
+    const objectDeck = { timestamp, title: deckTitle, main: objectMain, side: objectSide };
     // IndexedDB に保存する
     const idDeck = await db.decks.add(objectDeck);
     // マイデッキペインに移動する
@@ -52,6 +57,7 @@ function TabPaneDeck({
   }
 
   function handleClickClear() {
+    handleSetDeckTitle('');
     handleSetDeckMain(new Map());
     handleSetDeckSide(new Map());
     dispatchSimulator(enumActionSimulator.INTERRUPT);
@@ -70,9 +76,17 @@ function TabPaneDeck({
   return (
     <>
       <h2 className="m-2">デッキレシピ</h2>
-      <div className="container-button mx-2 mt-2 mb-3">
+      <div className="container-button mx-2 my-2">
         <Button variant="outline-success" onClick={handleClickSave}>マイデッキに保存</Button>
         <Button variant="outline-danger" onClick={handleClickClear}>レシピをクリア</Button>
+      </div>
+      <div className="mx-2 mt-2 mb-3">
+        <FormControl
+          type="text"
+          placeholder="デッキ名を入力 (任意)"
+          value={deckTitle}
+          onChange={handleChangeDeckTitle}
+        />
       </div>
       <Modal show={showModalEmpty}>
         <ModalHeader>
