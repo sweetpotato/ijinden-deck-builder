@@ -34,7 +34,7 @@ const DTF = new Intl.DateTimeFormat([], {
 });
 
 function TabPaneSave({
-  handleSetDeckMain, handleSetDeckSide,
+  handleSetDeckTitle, handleSetDeckMain, handleSetDeckSide,
   activeDeckSaved, handleSetActiveDeckSaved,
   handleSetActiveTab, dispatchSimulator,
 }) {
@@ -67,13 +67,15 @@ function TabPaneSave({
             {
               decksSaved.map((aDeckSaved) => {
                 const timestamp = DTF.format(new Date(aDeckSaved.timestamp));
-                const header = `#${aDeckSaved.id} (${timestamp})`;
+                const title = aDeckSaved.title || ''; // There may not be a title
+                const header = `#${aDeckSaved.id} ${title} (${timestamp})`;
                 return (
                   <AccordionItem key={aDeckSaved.id} eventKey={aDeckSaved.id}>
                     <AccordionHeader>{header}</AccordionHeader>
                     <AccordionBody>
                       <ContainerDeckSaved
                         aDeckSaved={aDeckSaved}
+                        handleSetDeckTitle={handleSetDeckTitle}
                         handleSetDeckMain={handleSetDeckMain}
                         handleSetDeckSide={handleSetDeckSide}
                         handleSetActiveTab={handleSetActiveTab}
@@ -111,11 +113,12 @@ function TabPaneSave({
 
 function ContainerDeckSaved({
   aDeckSaved,
-  handleSetDeckMain, handleSetDeckSide,
+  handleSetDeckTitle, handleSetDeckMain, handleSetDeckSide,
   handleSetActiveTab,
   dispatchSimulator,
 }) {
   function handleClickLoad() {
+    handleSetDeckTitle(aDeckSaved.title || ''); // There may not be a title
     handleSetDeckMain(new Map(aDeckSaved.main));
     handleSetDeckSide(new Map(aDeckSaved.side));
     dispatchSimulator(enumActionSimulator.INTERRUPT);
