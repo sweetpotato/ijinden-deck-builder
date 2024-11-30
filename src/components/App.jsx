@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-import React, { useEffect, useReducer, useState } from 'react';
+import React, { useReducer, useState } from 'react';
 import { Alert } from 'react-bootstrap';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
@@ -12,52 +12,7 @@ import TabPaneSimulator from './TabPaneSimulator';
 import enumTabPane from '../commons/enumTabPane';
 import { enumStateSimulator, reducerSimulator } from '../hooks/reducerSimulator';
 
-import db from '../commons/db';
-
 function App() {
-  // localStorage のマイデッキを IndexedDB へ移行する。
-  //
-  // フェッチのキャンセルのパターンにあわせてコードを書いたつもりだが、
-  // Strict Mode の開発環境ではどうしても2回実行されてしまい、
-  // 移行元のデッキが移行先でダブる事象を確認した。それとあわせて、
-  // Strict Mode を外す (本番環境を模倣する) とダブらないことも確認した。
-  //
-  // Strict Mode を外した本番環境では意図どおりに動くはずであること、
-  // またこのコードが必要な期間が1週間程度と長くないことから、
-  // このコードで妥協して本番環境にデプロイすることにする。
-  //
-  // このコードが不要になったらマイデッキのベータを外すこと。
-  //
-  useEffect(() => {
-    let active = true;
-
-    const moveDecks = async () => {
-      if (typeof window === 'undefined') {
-        return;
-      }
-      // localStorage からデッキを読み込む
-      const stringifiedDecks = window.localStorage.getItem('ijinden-deck-builder');
-      if (stringifiedDecks === null) {
-        return;
-      }
-      const decksToBeMoved = JSON.parse(stringifiedDecks).map((e) => ({
-        // IDとタイムスタンプは新しくする
-        ...e[1], timestamp: new Date(),
-      }));
-      if (active) {
-        // IndexedDB へデッキを保存する
-        await db.decks.bulkAdd(decksToBeMoved);
-        // localStorage のデータを削除する
-        window.localStorage.setItem('ijinden-deck-builder', '[]');
-      }
-    };
-    moveDecks();
-
-    return () => {
-      active = false;
-    };
-  }, []);
-
   const [deckMain, setDeckMain] = useState(new Map());
   const [deckSide, setDeckSide] = useState(new Map());
   const [activeTab, setActiveTab] = useState(enumTabPane.CARD);
