@@ -44,8 +44,8 @@ const dataTerms = [
   { value: 0, label: '指定なし' },
   { value: 1, label: '航海' },
   { value: 2, label: '執筆' },
-  { value: 3, label: '決起' },
-  { value: 4, label: '徴募' },
+  { value: 4, label: '決起' },
+  { value: 8, label: '徴募' },
 ];
 
 function TabPaneCard({
