@@ -46,6 +46,7 @@ const dataTerms = [
   { value: 2, label: '執筆' },
   { value: 4, label: '決起' },
   { value: 8, label: '徴募' },
+  { value: 16, label: '魔導' },
 ];
 
 function TabPaneCard({
@@ -179,7 +180,7 @@ function TableRowCard({
   const show = (selectedExpansion === 0 || expansion === selectedExpansion)
       && (selectedColor === 0 || (color & selectedColor) === selectedColor)
       && (selectedType === 0 || type === selectedType)
-      && (selectedTerm === 0 || term === selectedTerm);
+      && (selectedTerm === 0 || (term & selectedTerm) === selectedTerm);
   let colorClass;
   if (color === 41) {
     colorClass = 'bg-ijinden-red-yellow';
