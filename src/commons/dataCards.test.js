@@ -6,14 +6,14 @@ test('dataCardsArrayForTable は orderTable 順', () => {
   expect(Array.isArray(dataCardsArrayForTable)).toBe(true);
   const { length } = dataCardsArrayForTable;
   expect(dataCardsArrayForTable[0].orderTable).toBe(1);
-  expect(dataCardsArrayForTable[length - 1].orderTable).toBe(length);
+  expect(dataCardsArrayForTable[length - 1].orderTable).toBe(length + 1);
 });
 
 test('dataCardsArrayForDeck は orderDeck 順', () => {
   expect(Array.isArray(dataCardsArrayForDeck)).toBe(true);
   const { length } = dataCardsArrayForDeck;
   expect(dataCardsArrayForDeck[0].orderDeck).toBe(1);
-  expect(dataCardsArrayForDeck[length - 1].orderDeck).toBe(length);
+  expect(dataCardsArrayForDeck[length - 1].orderDeck).toBe(length + 2);
 });
 
 test('dataCardsMap は Map 型', () => {

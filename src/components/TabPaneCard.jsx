@@ -19,6 +19,7 @@ const dataExpansions = [
   { value: 25, label: '第２弾ブースター' },
   { value: 30, label: '発展する医療' },
   { value: 35, label: '第３弾ブースター' },
+  { value: 45, label: '第４弾ブースター' },
 ];
 
 const dataColors = [
