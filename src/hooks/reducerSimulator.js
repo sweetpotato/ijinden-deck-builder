@@ -6,7 +6,7 @@ export const enumStateSimulator = {
   FINISHED: 2,
   ABORTED: 3,
   LESS_THAN_TEN: 4,
-};
+}
 
 export const enumActionSimulator = {
   RESET: 0,
@@ -14,59 +14,59 @@ export const enumActionSimulator = {
   CONTINUE: 2,
   INTERRUPT: 3,
   CHECK_MAIN_DECK: 4,
-};
+}
 
 export function reducerSimulator(state, action) {
   switch (state) {
     case enumStateSimulator.INITIAL:
       switch (action) {
         case enumActionSimulator.START:
-          return enumStateSimulator.RUNNING;
+          return enumStateSimulator.RUNNING
         case enumActionSimulator.CHECK_MAIN_DECK:
-          return enumStateSimulator.LESS_THAN_TEN;
+          return enumStateSimulator.LESS_THAN_TEN
         default:
-          break;
+          break
       }
-      break;
+      break
     case enumStateSimulator.RUNNING:
       switch (action) {
         case enumActionSimulator.RESET:
-          return enumStateSimulator.INITIAL;
+          return enumStateSimulator.INITIAL
         case enumActionSimulator.CONTINUE:
-          return enumStateSimulator.FINISHED;
+          return enumStateSimulator.FINISHED
         case enumActionSimulator.INTERRUPT:
-          return enumStateSimulator.ABORTED;
+          return enumStateSimulator.ABORTED
         default:
-          break;
+          break
       }
-      break;
+      break
     case enumStateSimulator.FINISHED:
       switch (action) {
         case enumActionSimulator.RESET:
-          return enumStateSimulator.INITIAL;
+          return enumStateSimulator.INITIAL
         default:
-          break;
+          break
       }
-      break;
+      break
     case enumStateSimulator.ABORTED:
       switch (action) {
         case enumActionSimulator.RESET:
-          return enumStateSimulator.INITIAL;
+          return enumStateSimulator.INITIAL
         default:
-          break;
+          break
       }
-      break;
+      break
     case enumStateSimulator.LESS_THAN_TEN:
       switch (action) {
         case enumActionSimulator.RESET:
-          return enumStateSimulator.INITIAL;
+          return enumStateSimulator.INITIAL
         default:
-          break;
+          break
       }
-      break;
+      break
     default:
-      // Do nothing
+    // Do nothing
   }
 
-  return state;
+  return state
 }

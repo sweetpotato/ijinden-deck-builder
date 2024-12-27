@@ -6,6 +6,6 @@ const enumTabPane = {
   SAVE_AND_LOAD: 3,
   SIMULATOR: 4,
   HELP: 5,
-};
+}
 
-export default enumTabPane;
+export default enumTabPane

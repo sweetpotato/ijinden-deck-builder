@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 
-import { useLiveQuery } from 'dexie-react-hooks';
-import { useState } from 'react';
+import { useLiveQuery } from 'dexie-react-hooks'
+import { useState } from 'react'
 import {
   Accordion,
   AccordionBody,
@@ -14,14 +14,14 @@ import {
   ModalHeader,
   ModalTitle,
   Spinner,
-} from 'react-bootstrap';
+} from 'react-bootstrap'
 
-import { dataCardsArrayForDeck } from './commons/dataCards';
-import db from './commons/db';
-import enumTabPane from './commons/enumTabPane';
-import ImageCard from './components/ImageCard';
-import { enumActionSimulator } from './hooks/reducerSimulator';
-import { sum } from './commons/utils';
+import { dataCardsArrayForDeck } from './commons/dataCards'
+import db from './commons/db'
+import enumTabPane from './commons/enumTabPane'
+import ImageCard from './components/ImageCard'
+import { enumActionSimulator } from './hooks/reducerSimulator'
+import { sum } from './commons/utils'
 
 // YYYY/mm/dd HH:MM:SS
 const DTF = new Intl.DateTimeFormat([], {
@@ -31,141 +31,161 @@ const DTF = new Intl.DateTimeFormat([], {
   hour: '2-digit',
   minute: '2-digit',
   second: '2-digit',
-});
+})
 
 function TabPaneSave({
-  handleSetDeckTitle, handleSetDeckMain, handleSetDeckSide,
-  activeDeckSaved, handleSetActiveDeckSaved,
-  handleSetActiveTab, dispatchSimulator,
+  handleSetDeckTitle,
+  handleSetDeckMain,
+  handleSetDeckSide,
+  activeDeckSaved,
+  handleSetActiveDeckSaved,
+  handleSetActiveTab,
+  dispatchSimulator,
 }) {
-  const [showModalClear, setShowModalClear] = useState(false);
-  const decksSaved = useLiveQuery(async () => db.decks.orderBy(':id').reverse().toArray());
+  const [showModalClear, setShowModalClear] = useState(false)
+  const decksSaved = useLiveQuery(async () =>
+    db.decks.orderBy(':id').reverse().toArray()
+  )
 
   function handleSelectAccordion(eventKey) {
-    handleSetActiveDeckSaved(eventKey);
+    handleSetActiveDeckSaved(eventKey)
   }
 
   function handleClickClear() {
-    setShowModalClear(true);
+    setShowModalClear(true)
   }
 
   function handleClickCancelClear() {
-    setShowModalClear(false);
+    setShowModalClear(false)
   }
 
   async function handleClickConfirmClear() {
-    await db.decks.clear();
-    setShowModalClear(false);
+    await db.decks.clear()
+    setShowModalClear(false)
   }
 
   return (
     <>
       <h2 className="m-2">ロード</h2>
-      {
-        decksSaved ? (
-          <Accordion activeKey={activeDeckSaved} onSelect={handleSelectAccordion}>
-            {
-              decksSaved.map((aDeckSaved) => {
-                const timestamp = DTF.format(new Date(aDeckSaved.timestamp));
-                const title = aDeckSaved.title || ''; // There may not be a title
-                const header = `#${aDeckSaved.id} ${title} (${timestamp})`;
-                return (
-                  <AccordionItem key={aDeckSaved.id} eventKey={aDeckSaved.id}>
-                    <AccordionHeader>{header}</AccordionHeader>
-                    <AccordionBody>
-                      <ContainerDeckSaved
-                        aDeckSaved={aDeckSaved}
-                        handleSetDeckTitle={handleSetDeckTitle}
-                        handleSetDeckMain={handleSetDeckMain}
-                        handleSetDeckSide={handleSetDeckSide}
-                        handleSetActiveTab={handleSetActiveTab}
-                        dispatchSimulator={dispatchSimulator}
-                      />
-                    </AccordionBody>
-                  </AccordionItem>
-                );
-              })
-            }
-          </Accordion>
-        ) : (
-          <Spinner animation="border" role="status">
-            <span className="visually-hidden">読み込み中...</span>
-          </Spinner>
-        )
-      }
+      {decksSaved ? (
+        <Accordion activeKey={activeDeckSaved} onSelect={handleSelectAccordion}>
+          {decksSaved.map((aDeckSaved) => {
+            const timestamp = DTF.format(new Date(aDeckSaved.timestamp))
+            const title = aDeckSaved.title || '' // There may not be a title
+            const header = `#${aDeckSaved.id} ${title} (${timestamp})`
+            return (
+              <AccordionItem key={aDeckSaved.id} eventKey={aDeckSaved.id}>
+                <AccordionHeader>{header}</AccordionHeader>
+                <AccordionBody>
+                  <ContainerDeckSaved
+                    aDeckSaved={aDeckSaved}
+                    handleSetDeckTitle={handleSetDeckTitle}
+                    handleSetDeckMain={handleSetDeckMain}
+                    handleSetDeckSide={handleSetDeckSide}
+                    handleSetActiveTab={handleSetActiveTab}
+                    dispatchSimulator={dispatchSimulator}
+                  />
+                </AccordionBody>
+              </AccordionItem>
+            )
+          })}
+        </Accordion>
+      ) : (
+        <Spinner animation="border" role="status">
+          <span className="visually-hidden">読み込み中...</span>
+        </Spinner>
+      )}
       <h2 className="m-2">クリア</h2>
       <div className="m-2">
-        <Button variant="outline-danger" onClick={handleClickClear}>保存済みレシピをすべて削除</Button>
+        <Button variant="outline-danger" onClick={handleClickClear}>
+          保存済みレシピをすべて削除
+        </Button>
       </div>
       <Modal show={showModalClear}>
         <ModalHeader>
           <ModalTitle>マイデッキ</ModalTitle>
         </ModalHeader>
-        <ModalBody>保存済みレシピをすべて削除します。よろしいですか？</ModalBody>
+        <ModalBody>
+          保存済みレシピをすべて削除します。よろしいですか？
+        </ModalBody>
         <ModalFooter>
-          <Button variant="outline-secondary" onClick={handleClickCancelClear}>キャンセル</Button>
-          <Button variant="outline-danger" onClick={handleClickConfirmClear}>削除する</Button>
+          <Button variant="outline-secondary" onClick={handleClickCancelClear}>
+            キャンセル
+          </Button>
+          <Button variant="outline-danger" onClick={handleClickConfirmClear}>
+            削除する
+          </Button>
         </ModalFooter>
       </Modal>
     </>
-  );
+  )
 }
 
 function ContainerDeckSaved({
   aDeckSaved,
-  handleSetDeckTitle, handleSetDeckMain, handleSetDeckSide,
+  handleSetDeckTitle,
+  handleSetDeckMain,
+  handleSetDeckSide,
   handleSetActiveTab,
   dispatchSimulator,
 }) {
   function handleClickLoad() {
-    handleSetDeckTitle(aDeckSaved.title || ''); // There may not be a title
-    handleSetDeckMain(new Map(aDeckSaved.main));
-    handleSetDeckSide(new Map(aDeckSaved.side));
-    dispatchSimulator(enumActionSimulator.INTERRUPT);
-    handleSetActiveTab(enumTabPane.DECK);
+    handleSetDeckTitle(aDeckSaved.title || '') // There may not be a title
+    handleSetDeckMain(new Map(aDeckSaved.main))
+    handleSetDeckSide(new Map(aDeckSaved.side))
+    dispatchSimulator(enumActionSimulator.INTERRUPT)
+    handleSetActiveTab(enumTabPane.DECK)
   }
 
   async function handleClickDelete() {
-    await db.decks.delete(aDeckSaved.id);
+    await db.decks.delete(aDeckSaved.id)
   }
 
   return (
     <>
       <div className="container-button mb-2">
-        <Button variant="outline-success" onClick={handleClickLoad}>読込み</Button>
-        <Button variant="outline-danger" onClick={handleClickDelete}>削除</Button>
+        <Button variant="outline-success" onClick={handleClickLoad}>
+          読込み
+        </Button>
+        <Button variant="outline-danger" onClick={handleClickDelete}>
+          削除
+        </Button>
       </div>
-      <ContainerDeckSavedPart title="メインデッキ" deckSaved={new Map(aDeckSaved.main)} />
-      <ContainerDeckSavedPart title="サイドデッキ" deckSaved={new Map(aDeckSaved.side)} />
+      <ContainerDeckSavedPart
+        title="メインデッキ"
+        deckSaved={new Map(aDeckSaved.main)}
+      />
+      <ContainerDeckSavedPart
+        title="サイドデッキ"
+        deckSaved={new Map(aDeckSaved.side)}
+      />
     </>
-  );
+  )
 }
 
 function ContainerDeckSavedPart({ title, deckSaved }) {
-  const titleFull = `${title} (${sum(deckSaved.values())}枚)`;
+  const titleFull = `${title} (${sum(deckSaved.values())}枚)`
 
   return (
     <>
       <h3 className="mb-1">{titleFull}</h3>
       <div className="overflow-auto mb-1" style={{ minHeight: 60 }}>
-        {
-          dataCardsArrayForDeck.map((card) => (
-            deckSaved.has(card.id)
-              && (
-                <ImageCard
-                  key={card.id}
-                  imageUrl={card.imageUrl}
-                  alt={card.name}
-                  numCopies={deckSaved.get(card.id)}
-                  loading="lazy"
-                  small
-                />
-              )
-          ))
-        }
+        {dataCardsArrayForDeck.map(
+          (card) =>
+            deckSaved.has(card.id) && (
+              <ImageCard
+                key={card.id}
+                imageUrl={card.imageUrl}
+                alt={card.name}
+                numCopies={deckSaved.get(card.id)}
+                loading="lazy"
+                small
+              />
+            )
+        )}
       </div>
     </>
-  );
+  )
 }
 
-export default TabPaneSave;
+export default TabPaneSave

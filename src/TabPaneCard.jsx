@@ -1,13 +1,20 @@
 // SPDX-License-Identifier: MIT
 
-import { useState } from 'react';
+import { useState } from 'react'
 import {
-  Button, FormControl, InputGroup, Table, ToggleButton,
-} from 'react-bootstrap';
+  Button,
+  FormControl,
+  InputGroup,
+  Table,
+  ToggleButton,
+} from 'react-bootstrap'
 
-import { dataCardsArrayForTable as dataCards } from './commons/dataCards';
-import { handleClickDecrement, handleClickIncrement } from './commons/handleClick';
-import { enumActionSimulator } from './hooks/reducerSimulator';
+import { dataCardsArrayForTable as dataCards } from './commons/dataCards'
+import {
+  handleClickDecrement,
+  handleClickIncrement,
+} from './commons/handleClick'
+import { enumActionSimulator } from './hooks/reducerSimulator'
 
 const dataExpansions = [
   { value: 0, label: 'すべて' },
@@ -20,7 +27,7 @@ const dataExpansions = [
   { value: 30, label: '発展する医療' },
   { value: 35, label: '第３弾ブースター' },
   { value: 45, label: '第４弾ブースター' },
-];
+]
 
 const dataColors = [
   { value: 0, label: 'すべて' },
@@ -31,7 +38,7 @@ const dataColors = [
   { value: 16, label: '紫' },
   { value: 32, label: '多色' },
   { value: 64, label: '無色' },
-];
+]
 
 const dataTypes = [
   { value: 0, label: 'すべて' },
@@ -39,7 +46,7 @@ const dataTypes = [
   { value: 2, label: 'ハイケイ' },
   { value: 3, label: 'マホウ' },
   { value: 4, label: 'マリョク' },
-];
+]
 
 const dataTerms = [
   { value: 0, label: '指定なし' },
@@ -48,31 +55,34 @@ const dataTerms = [
   { value: 4, label: '決起' },
   { value: 8, label: '徴募' },
   { value: 16, label: '魔導' },
-];
+]
 
 function TabPaneCard({
-  deckMain, handleSetDeckMain, deckSide, handleSetDeckSide,
+  deckMain,
+  handleSetDeckMain,
+  deckSide,
+  handleSetDeckSide,
   dispatchSimulator,
 }) {
-  const [expansion, setExpansion] = useState(0);
-  const [color, setColor] = useState(0);
-  const [type, setType] = useState(0);
-  const [term, setTerm] = useState(0);
+  const [expansion, setExpansion] = useState(0)
+  const [color, setColor] = useState(0)
+  const [type, setType] = useState(0)
+  const [term, setTerm] = useState(0)
 
   function handleChangeExpansion(e) {
-    setExpansion(Number(e.currentTarget.value));
+    setExpansion(Number(e.currentTarget.value))
   }
 
   function handleChangeColor(e) {
-    setColor(Number(e.currentTarget.value));
+    setColor(Number(e.currentTarget.value))
   }
 
   function handleChangeType(e) {
-    setType(Number(e.currentTarget.value));
+    setType(Number(e.currentTarget.value))
   }
 
   function handleChangeTerm(e) {
-    setTerm(Number(e.currentTarget.value));
+    setTerm(Number(e.currentTarget.value))
   }
 
   return (
@@ -115,89 +125,93 @@ function TabPaneCard({
           </tr>
         </thead>
         <tbody>
-          {
-            dataCards.map((element) => (
-              <TableRowCard
-                {...element}
-                key={element.id}
-                selectedExpansion={expansion}
-                selectedColor={color}
-                selectedType={type}
-                selectedTerm={term}
-                deckMain={deckMain}
-                handleSetDeckMain={handleSetDeckMain}
-                deckSide={deckSide}
-                handleSetDeckSide={handleSetDeckSide}
-                dispatchSimulator={dispatchSimulator}
-              />
-            ))
-          }
+          {dataCards.map((element) => (
+            <TableRowCard
+              {...element}
+              key={element.id}
+              selectedExpansion={expansion}
+              selectedColor={color}
+              selectedType={type}
+              selectedTerm={term}
+              deckMain={deckMain}
+              handleSetDeckMain={handleSetDeckMain}
+              deckSide={deckSide}
+              handleSetDeckSide={handleSetDeckSide}
+              dispatchSimulator={dispatchSimulator}
+            />
+          ))}
         </tbody>
       </Table>
     </>
-  );
+  )
 }
 
-function ContainerFilter({
-  title, name, state, handleChange, data,
-}) {
+function ContainerFilter({ title, name, state, handleChange, data }) {
   return (
     <fieldset className="container-button m-2">
-      <legend className="h3">
-        {title}
-      </legend>
-      {
-        data.map((element) => {
-          const id = `${name}-${element.value}`;
-          return (
-            <ToggleButton
-              key={id}
-              type="radio"
-              variant="outline-primary"
-              id={id}
-              name={name}
-              value={element.value}
-              onChange={handleChange}
-              checked={state === element.value}
-            >
-              {element.label}
-            </ToggleButton>
-          );
-        })
-      }
+      <legend className="h3">{title}</legend>
+      {data.map((element) => {
+        const id = `${name}-${element.value}`
+        return (
+          <ToggleButton
+            key={id}
+            type="radio"
+            variant="outline-primary"
+            id={id}
+            name={name}
+            value={element.value}
+            onChange={handleChange}
+            checked={state === element.value}
+          >
+            {element.label}
+          </ToggleButton>
+        )
+      })}
     </fieldset>
-  );
+  )
 }
 
 function TableRowCard({
-  id, name, expansion, color, type, term,
-  selectedExpansion, selectedType, selectedColor, selectedTerm,
-  deckMain, handleSetDeckMain, deckSide, handleSetDeckSide,
+  id,
+  name,
+  expansion,
+  color,
+  type,
+  term,
+  selectedExpansion,
+  selectedType,
+  selectedColor,
+  selectedTerm,
+  deckMain,
+  handleSetDeckMain,
+  deckSide,
+  handleSetDeckSide,
   dispatchSimulator,
 }) {
-  const show = (selectedExpansion === 0 || expansion === selectedExpansion)
-      && (selectedColor === 0 || (color & selectedColor) === selectedColor)
-      && (selectedType === 0 || type === selectedType)
-      && (selectedTerm === 0 || (term & selectedTerm) === selectedTerm);
-  let colorClass;
+  const show =
+    (selectedExpansion === 0 || expansion === selectedExpansion) &&
+    (selectedColor === 0 || (color & selectedColor) === selectedColor) &&
+    (selectedType === 0 || type === selectedType) &&
+    (selectedTerm === 0 || (term & selectedTerm) === selectedTerm)
+  let colorClass
   if (color === 41) {
-    colorClass = 'bg-ijinden-red-yellow';
+    colorClass = 'bg-ijinden-red-yellow'
   } else if (color === 42) {
-    colorClass = 'bg-ijinden-blue-yellow';
+    colorClass = 'bg-ijinden-blue-yellow'
   } else if (color === 44) {
-    colorClass = 'bg-ijinden-green-yellow';
+    colorClass = 'bg-ijinden-green-yellow'
   } else if (color === 1) {
-    colorClass = 'bg-ijinden-red';
+    colorClass = 'bg-ijinden-red'
   } else if (color === 2) {
-    colorClass = 'bg-ijinden-blue';
+    colorClass = 'bg-ijinden-blue'
   } else if (color === 4) {
-    colorClass = 'bg-ijinden-green';
+    colorClass = 'bg-ijinden-green'
   } else if (color === 8) {
-    colorClass = 'bg-ijinden-yellow';
+    colorClass = 'bg-ijinden-yellow'
   } else if (color === 16) {
-    colorClass = 'bg-ijinden-purple';
+    colorClass = 'bg-ijinden-purple'
   } else {
-    colorClass = 'bg-ijinden-colorless';
+    colorClass = 'bg-ijinden-colorless'
   }
   return (
     <tr
@@ -206,7 +220,7 @@ function TableRowCard({
       data-color={color}
       data-type={type}
       data-term={term}
-      style={{ display: (show ? 'table-row' : 'none') }}
+      style={{ display: show ? 'table-row' : 'none' }}
     >
       <td className={colorClass}>{id}</td>
       <td>{name}</td>
@@ -219,31 +233,38 @@ function TableRowCard({
         />
       </td>
       <td>
-        <FormControlCounter id={id} deck={deckSide} handleSetDeck={handleSetDeckSide} />
+        <FormControlCounter
+          id={id}
+          deck={deckSide}
+          handleSetDeck={handleSetDeckSide}
+        />
       </td>
     </tr>
-  );
+  )
 }
 
 function FormControlCounter({
-  id, deck, handleSetDeck, dispatchSimulator = undefined,
+  id,
+  deck,
+  handleSetDeck,
+  dispatchSimulator = undefined,
 }) {
   function handleClickMinus() {
-    handleClickDecrement(id, deck, handleSetDeck);
+    handleClickDecrement(id, deck, handleSetDeck)
     if (dispatchSimulator !== undefined) {
-      dispatchSimulator(enumActionSimulator.INTERRUPT);
+      dispatchSimulator(enumActionSimulator.INTERRUPT)
     }
   }
 
   function handleClickPlus() {
-    handleClickIncrement(id, deck, handleSetDeck);
+    handleClickIncrement(id, deck, handleSetDeck)
     if (dispatchSimulator !== undefined) {
-      dispatchSimulator(enumActionSimulator.INTERRUPT);
+      dispatchSimulator(enumActionSimulator.INTERRUPT)
     }
   }
 
-  const name = (dispatchSimulator !== undefined ? 'main-' : 'side-') + id;
-  const counter = deck.has(id) ? deck.get(id) : 0;
+  const name = (dispatchSimulator !== undefined ? 'main-' : 'side-') + id
+  const counter = deck.has(id) ? deck.get(id) : 0
   return (
     <InputGroup>
       <Button
@@ -254,9 +275,11 @@ function FormControlCounter({
         -
       </Button>
       <FormControl type="number" readOnly name={name} value={counter} />
-      <Button variant="outline-secondary" onClick={handleClickPlus}>+</Button>
+      <Button variant="outline-secondary" onClick={handleClickPlus}>
+        +
+      </Button>
     </InputGroup>
-  );
+  )
 }
 
-export default TabPaneCard;
+export default TabPaneCard
