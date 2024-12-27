@@ -10,6 +10,7 @@ import {
 } from './hooks/reducerSimulator'
 import { dataCardsMap as dataCards } from './commons/dataCards'
 import { sum } from './commons/utils'
+import classNames from 'classnames'
 
 function excludeCards(array, deck) {
   array.forEach((element) => {
@@ -191,9 +192,11 @@ function TabPaneSimulator({ deck, state, dispatch }) {
 }
 
 function ContainerSection({ title, cards, guardian = false }) {
-  const containerClass = guardian
-    ? 'container-card-line-up container-guardian ms-2'
-    : 'container-card-line-up ms-2'
+  const containerClass = classNames({
+    'container-card-line-up': true,
+    'container-guardian': guardian,
+    'ms-2': true,
+  })
   return (
     <>
       <h3 className="m-2">{title}</h3>

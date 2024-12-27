@@ -15,6 +15,7 @@ import {
   handleClickIncrement,
 } from './commons/handleClick'
 import { enumActionSimulator } from './hooks/reducerSimulator'
+import classNames from 'classnames'
 
 const dataExpansions = [
   { value: 0, label: 'すべて' },
@@ -38,6 +39,18 @@ const dataColors = [
   { value: 16, label: '紫' },
   { value: 32, label: '多色' },
   { value: 64, label: '無色' },
+]
+
+const dataColorsToCss = [
+  { value: 1, css: 'bg-ijinden-red' },
+  { value: 2, css: 'bg-ijinden-blue' },
+  { value: 4, css: 'bg-ijinden-green' },
+  { value: 8, css: 'bg-ijinden-yellow' },
+  { value: 16, css: 'bg-ijinden-purple' },
+  { value: 41, css: 'bg-ijinden-red-yellow' },
+  { value: 42, css: 'bg-ijinden-blue-yellow' },
+  { value: 44, css: 'bg-ijinden-green-yellow' },
+  { value: 64, css: 'bg-ijinden-colorless' },
 ]
 
 const dataTypes = [
@@ -193,26 +206,9 @@ function TableRowCard({
     (selectedColor === 0 || (color & selectedColor) === selectedColor) &&
     (selectedType === 0 || type === selectedType) &&
     (selectedTerm === 0 || (term & selectedTerm) === selectedTerm)
-  let colorClass
-  if (color === 41) {
-    colorClass = 'bg-ijinden-red-yellow'
-  } else if (color === 42) {
-    colorClass = 'bg-ijinden-blue-yellow'
-  } else if (color === 44) {
-    colorClass = 'bg-ijinden-green-yellow'
-  } else if (color === 1) {
-    colorClass = 'bg-ijinden-red'
-  } else if (color === 2) {
-    colorClass = 'bg-ijinden-blue'
-  } else if (color === 4) {
-    colorClass = 'bg-ijinden-green'
-  } else if (color === 8) {
-    colorClass = 'bg-ijinden-yellow'
-  } else if (color === 16) {
-    colorClass = 'bg-ijinden-purple'
-  } else {
-    colorClass = 'bg-ijinden-colorless'
-  }
+  const colorClass = classNames(
+    dataColorsToCss.map((e) => e.value === color && e.css)
+  )
   return (
     <tr
       data-id={id}

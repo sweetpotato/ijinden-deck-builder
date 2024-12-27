@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "bootstrap": "^5.3.3",
+    "classnames": "^2.5.1",
     "dexie": "^4.0.10",
     "dexie-react-hooks": "^1.1.7",
     "react": "^18.3.1",
