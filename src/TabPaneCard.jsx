@@ -41,16 +41,19 @@ const dataColors = [
   { value: 64, label: '無色' },
 ]
 
+const COLOR_RED = 1
+const COLOR_YELLOW = 8
+const COLOR_COLORLESS = 64
 const dataColorsToCss = [
-  { value: 1, css: 'bg-ijinden-red' },
-  { value: 2, css: 'bg-ijinden-blue' },
-  { value: 4, css: 'bg-ijinden-green' },
-  { value: 8, css: 'bg-ijinden-yellow' },
-  { value: 16, css: 'bg-ijinden-purple' },
-  { value: 41, css: 'bg-ijinden-red-yellow' },
-  { value: 42, css: 'bg-ijinden-blue-yellow' },
-  { value: 44, css: 'bg-ijinden-green-yellow' },
-  { value: 64, css: 'bg-ijinden-colorless' },
+  { color: COLOR_RED, css: 'bg-ijinden-red' },
+  { color: 2, css: 'bg-ijinden-blue' },
+  { color: 4, css: 'bg-ijinden-green' },
+  { color: COLOR_YELLOW, css: 'bg-ijinden-yellow' },
+  { color: 16, css: 'bg-ijinden-purple' },
+  { color: 41, css: 'bg-ijinden-red-yellow' },
+  { color: 42, css: 'bg-ijinden-blue-yellow' },
+  { color: 44, css: 'bg-ijinden-green-yellow' },
+  { color: COLOR_COLORLESS, css: 'bg-ijinden-colorless' },
 ]
 
 const dataTypes = [
@@ -61,13 +64,73 @@ const dataTypes = [
   { value: 4, label: 'マリョク' },
 ]
 
+const TERM_CHROMAGIC = 16
 const dataTerms = [
   { value: 0, label: '指定なし' },
   { value: 1, label: '航海' },
   { value: 2, label: '執筆' },
   { value: 4, label: '決起' },
   { value: 8, label: '徴募' },
-  { value: 16, label: '魔導' },
+  { value: TERM_CHROMAGIC, label: '魔導' },
+]
+
+const CHROMAGIC_RED = 32
+const CHROMAGIC_BLUE = 64
+const CHROMAGIC_GREEN = 128
+const CHROMAGIC_YELLOW = 256
+const CHROMAGIC_PURPLE = 512
+// すべての実在する色と魔導の組み合わせ
+const dataChromagicsToCss = [
+  // 赤の黄魔導 (例：スペクター)
+  {
+    color: COLOR_RED,
+    chromagic: CHROMAGIC_YELLOW,
+    css: 'bg-chromagic-red-yellow',
+  },
+  // 黄の赤魔導 (例：スカーレット)
+  {
+    color: COLOR_YELLOW,
+    chromagic: CHROMAGIC_RED,
+    css: 'bg-chromagic-yellow-red',
+  },
+  // 黄の青魔導 (例：ピーコック)
+  {
+    color: COLOR_YELLOW,
+    chromagic: CHROMAGIC_BLUE,
+    css: 'bg-chromagic-yellow-blue',
+  },
+  // 黄の緑魔導 (例：シャトルーズ)
+  {
+    color: COLOR_YELLOW,
+    chromagic: CHROMAGIC_GREEN,
+    css: 'bg-chromagic-yellow-green',
+  },
+  // 無色の魔導 (例：ソリッドビジョンサイクル)
+  {
+    color: COLOR_COLORLESS,
+    chromagic: CHROMAGIC_RED,
+    css: 'bg-chromagic-colorless-red',
+  },
+  {
+    color: COLOR_COLORLESS,
+    chromagic: CHROMAGIC_BLUE,
+    css: 'bg-chromagic-colorless-blue',
+  },
+  {
+    color: COLOR_COLORLESS,
+    chromagic: CHROMAGIC_GREEN,
+    css: 'bg-chromagic-colorless-green',
+  },
+  {
+    color: COLOR_COLORLESS,
+    chromagic: CHROMAGIC_YELLOW,
+    css: 'bg-chromagic-colorless-yellow',
+  },
+  {
+    color: COLOR_COLORLESS,
+    chromagic: CHROMAGIC_PURPLE,
+    css: 'bg-chromagic-colorless-purple',
+  },
 ]
 
 function TabPaneCard({
@@ -206,9 +269,20 @@ function TableRowCard({
     (selectedColor === 0 || (color & selectedColor) === selectedColor) &&
     (selectedType === 0 || type === selectedType) &&
     (selectedTerm === 0 || (term & selectedTerm) === selectedTerm)
-  const colorClass = classNames(
-    dataColorsToCss.map((e) => e.value === color && e.css)
-  )
+  let colorClass
+  if ((term & TERM_CHROMAGIC) === TERM_CHROMAGIC) {
+    colorClass = classNames(
+      dataChromagicsToCss.map(
+        (e) =>
+          e.color === color && (term & ~TERM_CHROMAGIC) === e.chromagic && e.css
+      )
+    )
+  } else {
+    colorClass = classNames(
+      dataColorsToCss.map((e) => e.color === color && e.css)
+    )
+  }
+
   return (
     <tr
       data-id={id}
