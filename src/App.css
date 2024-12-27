@@ -168,8 +168,8 @@ fieldset {
 .table-hover > tbody > tr:hover > .bg-ijinden-yellow { --bs-table-bg-state: #ffcd39; } /* yellow-400 */
 .table > :not(caption) > * > .bg-ijinden-purple { --bs-table-bg-state: #c5b3e6; } /* purple-200 */
 .table-hover > tbody > tr:hover > .bg-ijinden-purple { --bs-table-bg-state: #8c68cd; } /* purple-400 */
-.table > :not(caption) > * > .bg-ijinden-multicolor { --bs-table-bg-state: #fecba1; } /* orange-200 */
-.table-hover > tbody > tr:hover > .bg-ijinden-multicolor { --bs-table-bg-state: #fd9843; } /* orange-400 */
+.table > :not(caption) > * > .bg-ijinden-colorless { --bs-table-bg-state: #ced4da; } /* gray-400 */
+.table-hover > tbody > tr:hover > .bg-ijinden-colorless { --bs-table-bg-state: #6c757d; } /* gray-600 */
 .table > :not(caption) > * > .bg-ijinden-red-yellow {
   --bs-table-color-state: initial;
   --bs-table-bg-state: initial;
