@@ -1,11 +1,13 @@
 // SPDX-License-Identifier: MIT
 
-import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { afterEach, expect, test } from 'vitest';
 
 import App from './App';
-import { dataCardsArrayForDeck, dataCardsMap } from '../commons/dataCards';
+import { dataCardsMap } from './commons/dataCards';
+
+afterEach(cleanup);
 
 test('レシピペインの初期状態はすべて非表示', async () => {
   render(<App />);
@@ -112,4 +114,4 @@ test('レシピペイン内でのカード枚数の増減', async () => {
   expect(imageSide).not.toBeVisible();
   expect(numCopiesMain).not.toBeVisible();
   expect(numCopiesSide).not.toBeVisible();
-}, 10000);
+});

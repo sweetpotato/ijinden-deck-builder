@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Alert, Button } from 'react-bootstrap';
 
-import ImageCard from './ImageCard';
-import { enumActionSimulator, enumStateSimulator } from '../hooks/reducerSimulator';
-import { dataCardsMap as dataCards } from '../commons/dataCards';
-import { sum } from '../commons/utils';
+import ImageCard from './components/ImageCard';
+import { enumActionSimulator, enumStateSimulator } from './hooks/reducerSimulator';
+import { dataCardsMap as dataCards } from './commons/dataCards';
+import { sum } from './commons/utils';
 
 function excludeCards(array, deck) {
   array.forEach((element) => {

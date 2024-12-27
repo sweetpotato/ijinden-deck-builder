@@ -1,11 +1,13 @@
 // SPDX-License-Identifier: MIT
 
-import React from 'react';
-import { render, screen } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { afterEach, expect, test } from 'vitest';
 
 import App from "./App";
-import { dataCardsArrayForTable } from "../commons/dataCards";
+import { dataCardsArrayForTable } from "./commons/dataCards";
+
+afterEach(cleanup);
 
 test('カードペインの初期値はカード枚数がすべて0でマイナスボタンは無効', () => {
   render(<App />);
@@ -104,4 +106,4 @@ test('カードペイン内でのカード枚数の増減', async () => {
   expect(buttonMinusSideAlpha).toBeDisabled();
   expect(inputMainAlpha.value).toBe('0');
   expect(inputSideAlpha.value).toBe('0');
-}, 10000);
+});

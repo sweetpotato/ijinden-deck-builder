@@ -2,12 +2,14 @@
 
 import "fake-indexeddb/auto";
 
-import React from 'react';
-import { render, screen, waitFor } from "@testing-library/react";
+import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { afterEach, expect, test } from 'vitest';
 
 import App from "./App";
-import db from "../commons/db";
+import db from "./commons/db";
+
+afterEach(cleanup);
 
 test('レシピが空だと保存できない', async () => {
   await db.decks.clear();
@@ -46,12 +48,6 @@ test('レシピが空だと保存できない', async () => {
 });
 
 test('レシピに1枚でもあるなら保存できる', async () => {
-  // 次のエラーを回避するためのコード
-  // ReferenceError: structuredClone is not defined
-  if(!global.structuredClone) {
-    global.structuredClone = (v) => JSON.parse(JSON.stringify(v));
-  }
-
   await db.decks.clear();
 
   render(<App />);
@@ -135,15 +131,9 @@ test('レシピに1枚でもあるなら保存できる', async () => {
   expect(decksSaved[1].side.length).toBe(1);
   expect(decksSaved[1].side[0][0]).toBe('R-2');
   expect(decksSaved[1].side[0][1]).toBe(1);
-}, 10000);
+});
 
 test('保存済みデッキの表示と削除', async () => {
-  // 次のエラーを回避するためのコード
-  // ReferenceError: structuredClone is not defined
-  if(!global.structuredClone) {
-    global.structuredClone = (v) => JSON.parse(JSON.stringify(v));
-  }
-
   let decksSaved = [
     { timestamp: new Date(), main: [['R-1', 1]], side: [] },
     { timestamp: new Date(), main: [['R-2', 2]], side: [['R-3', 3]] },

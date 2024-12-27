@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-import React, { useReducer, useState } from 'react';
+import { useReducer, useState } from 'react';
 import { Alert } from 'react-bootstrap';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
@@ -9,8 +9,8 @@ import TabPaneCard from './TabPaneCard';
 import TabPaneDeck from './TabPaneDeck';
 import TabPaneSave from './TabPaneSave';
 import TabPaneSimulator from './TabPaneSimulator';
-import enumTabPane from '../commons/enumTabPane';
-import { enumStateSimulator, reducerSimulator } from '../hooks/reducerSimulator';
+import enumTabPane from './commons/enumTabPane';
+import { enumStateSimulator, reducerSimulator } from './hooks/reducerSimulator';
 
 function App() {
   const [deckTitle, setDeckTitle] = useState('');
@@ -92,9 +92,7 @@ function App() {
           <h2>これは何？</h2>
           <p>イジンデンのデッキレシピを作成するアプリです。</p>
           <h2>マイデッキ利用時のご注意</h2>
-          {/* eslint-disable max-len */}
           <Alert variant="warning">マイデッキは「サイトデータ」として端末のブラウザに保存しているため、Safari では「履歴と Web サイトデータを消去」、Chrome では「クッキーと他のサイトデータ」を削除するとクリアされてしまうことにご注意ください。他のブラウザでも同様です。</Alert>
-          {/* eslint-enable max-len */}
           <Alert variant="info">端末やブラウザをまたいでは同じマイデッキを利用できませんのでご承知ください。</Alert>
           <h2>快適にご利用いただくために</h2>
           <Alert variant="success">
@@ -114,19 +112,15 @@ function App() {
           <h3>カード</h3>
           <p>各カードのプラス・マイナスボタンで、メインデッキ・サイドデッキ別々に枚数を増減できます。エキスパンション、色、種類、能力語でカードの絞り込みができます。</p>
           <h3>レシピ</h3>
-          {/* eslint-disable max-len */}
           <p>カードの左下をタップする (パソコンではカードの上にマウスカーソルを当てる) と、そのカードに重なるボタンが現れます。各ボタンで枚数の増減やメインデッキ・サイドデッキの入換え、カード画像のズームができます。</p>
-          {/* eslint-enable max-len */}
           <p>保存ボタンで作成したレシピをマイデッキに保存できます。また、クリアボタンでレシピを最初から編集し直すことができます。</p>
           <h3>マイデッキ</h3>
           <p>保存した各レシピのボタンで読込みや削除ができます。保存済みレシピをすべて削除することもできます。</p>
           <Alert variant="info">レシピの番号は飛び飛びになることがありますのでご承知ください。これは削除したレシピの番号を再利用していないためです。</Alert>
           <h3>シミュ (手札シミュレータ)</h3>
-          {/* eslint-disable max-len */}
           <p>対戦開始時のガーディアンと手札、およびその後のドローをランダムに表示します。</p>
           <p>スタートボタンを押した直後は対戦開始前の状態であり、マリガン (引き直す) ボタンかキープ (引き直さない) ボタンを押すと手札とドローが確定します。リセットボタンでやり直します。</p>
           <p>灰色のガーディアンはタップする (パソコンではカードの上にマウスカーソルを当てる) とオモテ面のカード画像が表示されます。</p>
-          {/* eslint-enable max-len */}
           <h2>未対応機能</h2>
           <h3>自前の画像保存</h3>
           <p>OS のスクリーンショット機能で保存願います。</p>

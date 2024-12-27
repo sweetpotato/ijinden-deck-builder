@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: MIT
 
+import { expect, test } from 'vitest';
+
 import { dataCardsArrayForTable, dataCardsArrayForDeck, dataCardsMap } from './dataCards';
 
 test('dataCardsArrayForTable は orderTable 順', () => {

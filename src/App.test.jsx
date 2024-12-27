@@ -2,13 +2,15 @@
 
 import "fake-indexeddb/auto";
 
-import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { afterEach, expect, test } from 'vitest';
 
 import App from './App';
-import { dataCardsMap } from '../commons/dataCards';
-import db from "../commons/db";
+import { dataCardsMap } from './commons/dataCards';
+import db from "./commons/db";
+
+afterEach(cleanup);
 
 test("タブをクリックするとペインが表示される", async () => {
   render(<App />);
@@ -72,7 +74,7 @@ test("タブをクリックするとペインが表示される", async () => {
   expect(tabs[2]).not.toHaveClass('active');
   expect(tabs[3]).not.toHaveClass('active');
   expect(tabs[4]).toHaveClass('active');
-}, 10000);
+});
 
 test('カードペインからレシピペインへの作用', async () => {
   render(<App />);
@@ -220,7 +222,7 @@ test('カードペインからレシピペインへの作用', async () => {
   expect(paneDeck).toBeVisible();
   expect(imageSide).not.toBeVisible();
   expect(imageSide).not.toBeVisible();
-}, 30000);
+});
 
 test('レシピペインからカードペインへの作用', async () => {
   render(<App />);
@@ -375,15 +377,9 @@ test('レシピペインからカードペインへの作用', async () => {
   expect(paneCard).toBeVisible();
   expect(inputMain.value).toBe('0');
   expect(inputSide.value).toBe('0');
-}, 15000);
+});
 
 test('保存したデッキを読み込んでレシピペインに表示する', async () => {
-  // 次のエラーを回避するためのコード
-  // ReferenceError: structuredClone is not defined
-  if(!global.structuredClone) {
-    global.structuredClone = (v) => JSON.parse(JSON.stringify(v));
-  }
-
   const decksSaved = [
     { timestamp: new Date(), main: [['R-1', 3]], side: [['R-2', 4]] }
   ];
@@ -429,8 +425,6 @@ test('保存したデッキを読み込んでレシピペインに表示する',
   expect(numCopiesAlphaMain.textContent).toBe('3');
   const numCopiesBravoSide = imageBravoSide.parentElement.querySelector('.container-num-copies');
   expect(numCopiesBravoSide.textContent).toBe('4');
-
-  jest.restoreAllMocks();
 });
 
 test('シミュレータがカードペインの操作でアボートする', async () => {
@@ -588,7 +582,7 @@ test('シミュレータがカードペインの操作でアボートする', as
   expect(buttonMulligan).toBeEnabled();
   expect(buttonKeep).toBeEnabled();
   expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0);
-}, 30000);
+});
 
 test('シミュレータがレシピペインの操作でアボートする', async () => {
   render(<App />);
@@ -842,12 +836,6 @@ test('シミュレータがレシピペインの操作でアボートする', as
 }, 30000);
 
 test('シミュレータがマイデッキペインの操作でアボートする', async () => {
-  // 次のエラーを回避するためのコード
-  // ReferenceError: structuredClone is not defined
-  if(!global.structuredClone) {
-    global.structuredClone = (v) => JSON.parse(JSON.stringify(v));
-  }
-
   const decksSaved = [
     { timestamp: new Date(), main: [['R-1', 10]], side: [] }
   ];

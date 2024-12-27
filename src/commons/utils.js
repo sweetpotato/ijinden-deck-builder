@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: MIT
 
-/* eslint-disable import/prefer-default-export */
-
 // Iterator.prototype.reduce() を使わない総和。
 // Safari on iOS では reduce がサポートされていないため必要。
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Iterator/reduce#browser_compatibility
@@ -12,5 +10,3 @@
 export function sum(iterable) {
   return [...iterable].reduce((a, b) => a + b, 0);
 }
-
-/* eslint-disable import/prefer-default-export */

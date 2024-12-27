@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   Button, FormControl, InputGroup, Table, ToggleButton,
 } from 'react-bootstrap';
 
-import { dataCardsArrayForTable as dataCards } from '../commons/dataCards';
-import { handleClickDecrement, handleClickIncrement } from '../commons/handleClick';
-import { enumActionSimulator } from '../hooks/reducerSimulator';
+import { dataCardsArrayForTable as dataCards } from './commons/dataCards';
+import { handleClickDecrement, handleClickIncrement } from './commons/handleClick';
+import { enumActionSimulator } from './hooks/reducerSimulator';
 
 const dataExpansions = [
   { value: 0, label: 'すべて' },
@@ -116,7 +116,6 @@ function TabPaneCard({
         </thead>
         <tbody>
           {
-            /* eslint-disable react/jsx-props-no-spreading */
             dataCards.map((element) => (
               <TableRowCard
                 {...element}
@@ -132,7 +131,6 @@ function TabPaneCard({
                 dispatchSimulator={dispatchSimulator}
               />
             ))
-            /* eslint-enable react/jsx-props-no-spreading */
           }
         </tbody>
       </Table>
@@ -177,7 +175,6 @@ function TableRowCard({
   deckMain, handleSetDeckMain, deckSide, handleSetDeckSide,
   dispatchSimulator,
 }) {
-  /* eslint-disable no-bitwise */
   const show = (selectedExpansion === 0 || expansion === selectedExpansion)
       && (selectedColor === 0 || (color & selectedColor) === selectedColor)
       && (selectedType === 0 || type === selectedType)
@@ -202,7 +199,6 @@ function TableRowCard({
   } else {
     colorClass = 'bg-ijinden-colorless';
   }
-  /* eslint-enable no-bitwise */
   return (
     <tr
       data-id={id}

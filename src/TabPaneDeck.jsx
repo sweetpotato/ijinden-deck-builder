@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   Button,
   FormControl,
@@ -11,13 +11,13 @@ import {
   ModalTitle,
 } from 'react-bootstrap';
 
-import ImageCard from './ImageCard';
-import { dataCardsArrayForDeck as dataCardsArray, dataCardsMap } from '../commons/dataCards';
-import db from '../commons/db';
-import enumTabPane from '../commons/enumTabPane';
-import { handleClickDecrement, handleClickIncrement } from '../commons/handleClick';
-import { enumActionSimulator } from '../hooks/reducerSimulator';
-import { sum } from '../commons/utils';
+import ImageCard from './components/ImageCard';
+import { dataCardsArrayForDeck as dataCardsArray, dataCardsMap } from './commons/dataCards';
+import db from './commons/db';
+import enumTabPane from './commons/enumTabPane';
+import { handleClickDecrement, handleClickIncrement } from './commons/handleClick';
+import { enumActionSimulator } from './hooks/reducerSimulator';
+import { sum } from './commons/utils';
 
 function TabPaneDeck({
   deckTitle, handleSetDeckTitle, deckMain, handleSetDeckMain, deckSide, handleSetDeckSide,
@@ -100,7 +100,6 @@ function TabPaneDeck({
       <h3 className="m-2">{titleMain}</h3>
       <div className="container-card-line-up ms-2">
         {
-          /* eslint-disable react/jsx-props-no-spreading */
           dataCardsArray.map((element) => (
             <ContainerDeckCard
               {...element}
@@ -113,13 +112,11 @@ function TabPaneDeck({
               dispatchSimulator={dispatchSimulator}
             />
           ))
-          /* eslint-enable react/jsx-props-no-spreading */
         }
       </div>
       <h3 className="m-2">{titleSide}</h3>
       <div className="container-card-line-up ms-2">
         {
-          /* eslint-disable react/jsx-props-no-spreading */
           dataCardsArray.map((element) => (
             <ContainerDeckCard
               {...element}
@@ -133,7 +130,6 @@ function TabPaneDeck({
               isSide
             />
           ))
-          /* eslint-enable react/jsx-props-no-spreading */
         }
       </div>
       {

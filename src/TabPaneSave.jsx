@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 
 import { useLiveQuery } from 'dexie-react-hooks';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   Accordion,
   AccordionBody,
@@ -16,12 +16,12 @@ import {
   Spinner,
 } from 'react-bootstrap';
 
-import { dataCardsArrayForDeck } from '../commons/dataCards';
-import db from '../commons/db';
-import enumTabPane from '../commons/enumTabPane';
-import ImageCard from './ImageCard';
-import { enumActionSimulator } from '../hooks/reducerSimulator';
-import { sum } from '../commons/utils';
+import { dataCardsArrayForDeck } from './commons/dataCards';
+import db from './commons/db';
+import enumTabPane from './commons/enumTabPane';
+import ImageCard from './components/ImageCard';
+import { enumActionSimulator } from './hooks/reducerSimulator';
+import { sum } from './commons/utils';
 
 // YYYY/mm/dd HH:MM:SS
 const DTF = new Intl.DateTimeFormat([], {
@@ -41,7 +41,7 @@ function TabPaneSave({
   const [showModalClear, setShowModalClear] = useState(false);
   const decksSaved = useLiveQuery(async () => db.decks.orderBy(':id').reverse().toArray());
 
-  function handleSelectAccordion(eventKey, _event) {
+  function handleSelectAccordion(eventKey) {
     handleSetActiveDeckSaved(eventKey);
   }
 
