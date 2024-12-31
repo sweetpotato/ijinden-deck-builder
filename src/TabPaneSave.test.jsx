@@ -11,10 +11,8 @@ import Home from './Home'
 import db from './commons/db'
 
 function defaultRender() {
-  const Stub = createRoutesStub([
-    { path: '/ijinden-deck-builder/', Component: Home },
-  ])
-  render(<Stub initialEntries={['/ijinden-deck-builder/']} />)
+  const Stub = createRoutesStub([{ path: '/', Component: Home }])
+  render(<Stub initialEntries={['/']} />)
 }
 
 afterEach(cleanup)

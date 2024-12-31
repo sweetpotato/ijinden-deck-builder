@@ -40,7 +40,6 @@ function TabPaneDeck({
   handleSetActiveTab,
   dispatchSimulator,
 }) {
-  const [codeMemorized] = useState(code ?? null)
   const [idZoom, setIdZoom] = useState(null)
   const [showModalEmpty, setShowModalEmpty] = useState(false)
 
@@ -99,14 +98,14 @@ function TabPaneDeck({
   return (
     <>
       <h2 className="m-2">デッキレシピ</h2>
-      {codeMemorized && showCodeError && (
+      {code && showCodeError && (
         <div className="m-2">
           <Alert
             dismissible
             variant="danger"
             onClose={() => handleSetShowCodeError(false)}
           >
-            デッキコードが正しくありません: {codeMemorized}
+            デッキコードが正しくありません: {code}
           </Alert>
         </div>
       )}
