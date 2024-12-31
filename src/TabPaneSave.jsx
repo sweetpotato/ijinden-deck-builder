@@ -158,7 +158,7 @@ function ContainerDeckSaved({
   // base は trailing slash (/) を含む
   const base = import.meta.env.VITE_LOCAL_BASE || import.meta.env.BASE_URL
   const deckCode = encodeDeck(aDeckSaved.main, aDeckSaved.side)
-  const deckUrl = deckCode ? `${base}deck/${deckCode}` : null
+  const deckUrl = deckCode ? `${base}#/deck/${deckCode}` : null
 
   return (
     <>

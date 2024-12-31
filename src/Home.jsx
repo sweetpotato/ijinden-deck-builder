@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 
-import { useEffect, useReducer, useState } from 'react'
+import { useReducer, useState } from 'react'
 import { Alert } from 'react-bootstrap'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import Tab from 'react-bootstrap/Tab'
 import Tabs from 'react-bootstrap/Tabs'
 
@@ -16,7 +16,6 @@ import { decodeDeck } from './commons/dataCards'
 
 function App() {
   // デッキコード関連
-  const navigate = useNavigate()
   const { code } = useParams()
   const resultsDecode = code && decodeDeck(code)
   const [entriesMain, entriesSide] = resultsDecode
@@ -59,12 +58,6 @@ function App() {
   function handleSetActiveDeckSaved(newActiveDeckSaved) {
     setActiveDeckSaved(newActiveDeckSaved)
   }
-
-  useEffect(() => {
-    if (code) {
-      navigate('/ijinden-deck-builder/')
-    }
-  })
 
   return (
     <>

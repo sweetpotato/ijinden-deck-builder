@@ -12,10 +12,8 @@ import db from './commons/db'
 import { createRoutesStub } from 'react-router-dom'
 
 function defaultRender() {
-  const Stub = createRoutesStub([
-    { path: '/ijinden-deck-builder/', Component: Home },
-  ])
-  render(<Stub initialEntries={['/ijinden-deck-builder/']} />)
+  const Stub = createRoutesStub([{ path: '/', Component: Home }])
+  render(<Stub initialEntries={['/']} />)
 }
 
 afterEach(cleanup)
