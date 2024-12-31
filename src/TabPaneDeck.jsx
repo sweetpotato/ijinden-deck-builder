@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import {
+  Alert,
   Button,
   FormControl,
   Modal,
@@ -26,6 +27,9 @@ import { enumActionSimulator } from './hooks/reducerSimulator'
 import { sum } from './commons/utils'
 
 function TabPaneDeck({
+  code,
+  showCodeError,
+  handleSetShowCodeError,
   deckTitle,
   handleSetDeckTitle,
   deckMain,
@@ -36,6 +40,7 @@ function TabPaneDeck({
   handleSetActiveTab,
   dispatchSimulator,
 }) {
+  const [codeMemorized] = useState(code ?? null)
   const [idZoom, setIdZoom] = useState(null)
   const [showModalEmpty, setShowModalEmpty] = useState(false)
 
@@ -94,6 +99,17 @@ function TabPaneDeck({
   return (
     <>
       <h2 className="m-2">デッキレシピ</h2>
+      {codeMemorized && showCodeError && (
+        <div className="m-2">
+          <Alert
+            dismissible
+            variant="danger"
+            onClose={() => handleSetShowCodeError(false)}
+          >
+            デッキコードが正しくありません: {codeMemorized}
+          </Alert>
+        </div>
+      )}
       <div className="container-button mx-2 my-2">
         <Button variant="outline-success" onClick={handleClickSave}>
           マイデッキに保存

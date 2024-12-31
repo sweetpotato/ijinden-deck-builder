@@ -1,15 +1,23 @@
 // SPDX-License-Identifier: MIT
 
+import { createRoutesStub } from 'react-router-dom'
 import { cleanup, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, expect, test } from 'vitest'
 
-import App from './App'
+import Home from './Home'
+
+function defaultRender() {
+  const Stub = createRoutesStub([
+    { path: '/ijinden-deck-builder/', Component: Home },
+  ])
+  render(<Stub initialEntries={['/ijinden-deck-builder/']} />)
+}
 
 afterEach(cleanup)
 
 test('メインデッキが9枚以下だとスタートできない', async () => {
-  render(<App />)
+  defaultRender()
 
   const user = userEvent.setup()
 
@@ -112,7 +120,7 @@ test('メインデッキが9枚以下だとスタートできない', async () =
 })
 
 test('メインデッキが10枚以上でスタートできる', async () => {
-  render(<App />)
+  defaultRender()
 
   const user = userEvent.setup()
 

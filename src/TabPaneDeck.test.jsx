@@ -1,16 +1,24 @@
 // SPDX-License-Identifier: MIT
 
+import { createRoutesStub } from 'react-router-dom'
 import { cleanup, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, expect, test } from 'vitest'
 
-import App from './App'
+import Home from './Home'
 import { dataCardsMap } from './commons/dataCards'
+
+function defaultRender() {
+  const Stub = createRoutesStub([
+    { path: '/ijinden-deck-builder/', Component: Home },
+  ])
+  render(<Stub initialEntries={['/ijinden-deck-builder/']} />)
+}
 
 afterEach(cleanup)
 
 test('レシピペインの初期状態はすべて非表示', async () => {
-  render(<App />)
+  defaultRender()
 
   const user = userEvent.setup()
 
@@ -25,7 +33,7 @@ test('レシピペインの初期状態はすべて非表示', async () => {
 })
 
 test('レシピペイン内でのカード枚数の増減', async () => {
-  render(<App />)
+  defaultRender()
 
   const user = userEvent.setup()
 
