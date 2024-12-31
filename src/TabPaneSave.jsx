@@ -1,22 +1,26 @@
 // SPDX-License-Identifier: MIT
 
 import { useLiveQuery } from 'dexie-react-hooks'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   Accordion,
   AccordionBody,
   AccordionHeader,
   AccordionItem,
   Button,
+  FormControl,
+  InputGroup,
   Modal,
   ModalBody,
   ModalFooter,
   ModalHeader,
   ModalTitle,
+  Overlay,
   Spinner,
+  Tooltip,
 } from 'react-bootstrap'
 
-import { dataCardsArrayForDeck } from './commons/dataCards'
+import { dataCardsArrayForDeck, encodeDeck } from './commons/dataCards'
 import db from './commons/db'
 import enumTabPane from './commons/enumTabPane'
 import ImageCard from './components/ImageCard'
@@ -129,6 +133,9 @@ function ContainerDeckSaved({
   handleSetActiveTab,
   dispatchSimulator,
 }) {
+  const [showCopied, setShowCopied] = useState(false)
+  const refTarget = useRef()
+
   function handleClickLoad() {
     handleSetDeckTitle(aDeckSaved.title || '') // There may not be a title
     handleSetDeckMain(new Map(aDeckSaved.main))
@@ -140,6 +147,18 @@ function ContainerDeckSaved({
   async function handleClickDelete() {
     await db.decks.delete(aDeckSaved.id)
   }
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowCopied(false)
+    }, 1000)
+    return () => clearTimeout(timer)
+  }, [showCopied])
+
+  // base は trailing slash (/) を含む
+  const base = import.meta.env.VITE_LOCAL_BASE || import.meta.env.BASE_URL
+  const deckCode = encodeDeck(aDeckSaved.main, aDeckSaved.side)
+  const deckUrl = deckCode ? `${base}deck/${deckCode}` : null
 
   return (
     <>
@@ -159,6 +178,31 @@ function ContainerDeckSaved({
         title="サイドデッキ"
         deckSaved={new Map(aDeckSaved.side)}
       />
+      <div className="my-2">
+        <InputGroup>
+          <Button
+            ref={refTarget}
+            variant="outline-secondary"
+            disabled={!deckUrl}
+            onClick={async () => {
+              await navigator.clipboard.writeText(deckUrl)
+              setShowCopied(true)
+            }}
+          >
+            共有リンクβをコピー
+          </Button>
+          <Overlay
+            target={refTarget.current}
+            show={showCopied}
+            placement="bottom"
+          >
+            {(props) => <Tooltip {...props}>コピーしました</Tooltip>}
+          </Overlay>
+          <FormControl
+            defaultValue={deckUrl || '(共有できる条件を満たしていません)'}
+          />
+        </InputGroup>
+      </div>
     </>
   )
 }

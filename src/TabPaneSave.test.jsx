@@ -2,19 +2,27 @@
 
 import 'fake-indexeddb/auto'
 
+import { createRoutesStub } from 'react-router-dom'
 import { cleanup, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, expect, test } from 'vitest'
 
-import App from './App'
+import Home from './Home'
 import db from './commons/db'
+
+function defaultRender() {
+  const Stub = createRoutesStub([
+    { path: '/ijinden-deck-builder/', Component: Home },
+  ])
+  render(<Stub initialEntries={['/ijinden-deck-builder/']} />)
+}
 
 afterEach(cleanup)
 
 test('レシピが空だと保存できない', async () => {
   await db.decks.clear()
 
-  render(<App />)
+  defaultRender()
 
   const user = userEvent.setup()
 
@@ -52,7 +60,7 @@ test('レシピが空だと保存できない', async () => {
 test('レシピに1枚でもあるなら保存できる', async () => {
   await db.decks.clear()
 
-  render(<App />)
+  defaultRender()
 
   const user = userEvent.setup()
 
@@ -159,7 +167,7 @@ test('保存済みデッキの表示と削除', async () => {
   await db.decks.clear()
   await db.decks.bulkAdd(decksSaved)
 
-  render(<App />)
+  defaultRender()
 
   const user = userEvent.setup()
 
