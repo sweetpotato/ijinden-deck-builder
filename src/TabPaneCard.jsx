@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 
+import classNames from 'classnames'
 import { useState } from 'react'
 import {
   Button,
@@ -15,7 +16,6 @@ import {
   handleClickIncrement,
 } from './commons/handleClick'
 import { enumActionSimulator } from './hooks/reducerSimulator'
-import classNames from 'classnames'
 
 const dataExpansions = [
   { value: 0, label: 'すべて' },
@@ -134,6 +134,7 @@ const dataChromagicsToCss = [
 ]
 
 function TabPaneCard({
+  handleSetIdZoom,
   deckMain,
   handleSetDeckMain,
   deckSide,
@@ -209,6 +210,7 @@ function TabPaneCard({
               selectedColor={color}
               selectedType={type}
               selectedTerm={term}
+              handleSetIdZoom={handleSetIdZoom}
               deckMain={deckMain}
               handleSetDeckMain={handleSetDeckMain}
               deckSide={deckSide}
@@ -258,6 +260,7 @@ function TableRowCard({
   selectedType,
   selectedColor,
   selectedTerm,
+  handleSetIdZoom,
   deckMain,
   handleSetDeckMain,
   deckSide,
@@ -293,7 +296,17 @@ function TableRowCard({
       style={{ display: show ? 'table-row' : 'none' }}
     >
       <td className={colorClass}>{id}</td>
-      <td>{name}</td>
+      <td>
+        {name}
+        <Button
+          variant="secondary-outline"
+          size="sm"
+          style={{ padding: '0', border: '0' }}
+          onClick={() => handleSetIdZoom(id)}
+        >
+          🔍
+        </Button>
+      </td>
       <td>
         <FormControlCounter
           id={id}
