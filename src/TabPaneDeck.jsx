@@ -13,10 +13,7 @@ import {
 } from 'react-bootstrap'
 
 import ImageCard from './components/ImageCard'
-import {
-  dataCardsArrayForDeck as dataCardsArray,
-  dataCardsMap,
-} from './commons/dataCards'
+import { dataCardsArrayForDeck as dataCardsArray } from './commons/dataCards'
 import db from './commons/db'
 import enumTabPane from './commons/enumTabPane'
 import {
@@ -30,6 +27,7 @@ function TabPaneDeck({
   code,
   showCodeError,
   handleSetShowCodeError,
+  handleSetIdZoom,
   deckTitle,
   handleSetDeckTitle,
   deckMain,
@@ -40,19 +38,10 @@ function TabPaneDeck({
   handleSetActiveTab,
   dispatchSimulator,
 }) {
-  const [idZoom, setIdZoom] = useState(null)
   const [showModalEmpty, setShowModalEmpty] = useState(false)
 
   function handleChangeDeckTitle(event) {
     handleSetDeckTitle(event.target.value)
-  }
-
-  function handleSetIdZoom(newIdZoom) {
-    setIdZoom(newIdZoom)
-  }
-
-  function handleClearIdZoom() {
-    setIdZoom(null)
   }
 
   async function handleClickSave() {
@@ -167,20 +156,6 @@ function TabPaneDeck({
           />
         ))}
       </div>
-      {idZoom !== null && (
-        <Modal show onHide={handleClearIdZoom}>
-          <ModalHeader closeButton>
-            <ModalTitle>{dataCardsMap.get(idZoom).name}</ModalTitle>
-          </ModalHeader>
-          <ModalBody>
-            <img
-              src={dataCardsMap.get(idZoom).imageUrl}
-              alt={dataCardsMap.get(idZoom).name}
-              style={{ width: '100%', height: 'auto' }}
-            />
-          </ModalBody>
-        </Modal>
-      )}
     </>
   )
 }
