@@ -8,6 +8,25 @@ fieldset {
   float: left;
 }
 
+.nav {
+  background-color: white;
+  position: sticky;
+  top: 0;
+  /* See https://getbootstrap.jp/docs/5.3/layout/z-index/ */ 
+  z-index: 1025;
+}
+
+.accordion-header {
+  position: sticky;
+  top: 2.5rem;
+  /* See https://getbootstrap.jp/docs/5.3/layout/z-index/ */ 
+  z-index: 1020;
+}
+
+thead.sticky-top {
+  top: 2.5rem;
+}
+
 .container-button label,
 .container-button button[type="button"] {
   margin-right: .25rem;
