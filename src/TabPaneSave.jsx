@@ -199,6 +199,7 @@ function ContainerDeckSaved({
             {(props) => <Tooltip {...props}>コピーしました</Tooltip>}
           </Overlay>
           <FormControl
+            readOnly
             defaultValue={deckUrl || '(共有できる条件を満たしていません)'}
           />
         </InputGroup>
