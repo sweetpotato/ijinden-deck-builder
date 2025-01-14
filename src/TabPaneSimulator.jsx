@@ -15,10 +15,11 @@ import {
 const enumToggle = {
   OPAQUE: 0,
   TRANSPARENT: 1,
-  ORANGE: 2,
+  RED: 2,
   BLUE: 3,
-  WHITE: 4,
-  GRAY: 5,
+  YELLOW: 4,
+  WHITE: 5,
+  BLACK: 6,
 }
 
 function makeIdArray(deck) {
@@ -53,14 +54,12 @@ function pickCards(currentLibrary, currentPicked, n) {
 function TabPaneSimulator({ deck, state, dispatch }) {
   const [guardians, setGuardians] = useState(null)
   const [hand, setHand] = useState(null)
-  const [library, setLibrary] = useState(null)
   const [guardiansToggles, setGuardiansToggles] = useState(null)
   const [handToggles, setHandToggles] = useState(null)
 
   function handleClickReset() {
     setGuardians(null)
     setHand(null)
-    setLibrary(null)
     setGuardiansToggles(null)
     setHandToggles(null)
     dispatch(enumActionSimulator.RESET)
@@ -72,50 +71,36 @@ function TabPaneSimulator({ deck, state, dispatch }) {
       return
     }
 
-    let newLibrary = makeShuffledArray(makeIdArray(deck))
+    let newHand = makeShuffledArray(makeIdArray(deck))
     // ガーディアン4枚
     let newGuardians
-    ;[newLibrary, newGuardians] = pickCards(newLibrary, [], 4)
-    // 手札6枚
-    let newHand
-    ;[newLibrary, newHand] = pickCards(newLibrary, [], 6)
+    ;[newHand, newGuardians] = pickCards(newHand, [], 4)
 
     setGuardians(newGuardians)
     setHand(newHand)
-    setLibrary(newLibrary)
     setGuardiansToggles([
       enumToggle.OPAQUE,
       enumToggle.OPAQUE,
       enumToggle.OPAQUE,
       enumToggle.OPAQUE,
     ])
-    setHandToggles([
+    const newHandToggles = [
       enumToggle.TRANSPARENT,
       enumToggle.TRANSPARENT,
       enumToggle.TRANSPARENT,
       enumToggle.TRANSPARENT,
       enumToggle.TRANSPARENT,
       enumToggle.TRANSPARENT,
-    ])
+    ]
+    for (let i = 0; i < newHand.length; ++i) {
+      newHandToggles.push(enumToggle.OPAQUE)
+    }
+    setHandToggles(newHandToggles)
     dispatch(enumActionSimulator.START)
   }
 
   function handleClickMulligan() {
-    let newLibrary = library.concat(hand)
-    // 手札6枚引き直し
-    let newHand
-    ;[newLibrary, newHand] = pickCards(newLibrary, [], 6)
-
-    setHand(newHand)
-    setLibrary(newLibrary)
-    dispatch(enumActionSimulator.CONTINUE)
-  }
-
-  function handleClickDraw() {
-    const [newLibrary, newHand] = pickCards(library.slice(), hand, 1)
-    setHand(newHand)
-    setLibrary(newLibrary)
-    setHandToggles(handToggles.concat([enumToggle.TRANSPARENT]))
+    setHand(makeShuffledArray(hand))
     dispatch(enumActionSimulator.CONTINUE)
   }
 
@@ -136,18 +121,21 @@ function TabPaneSimulator({ deck, state, dispatch }) {
         newToggle[index] = enumToggle.TRANSPARENT
         break
       case enumToggle.TRANSPARENT:
-        newToggle[index] = enumToggle.ORANGE
+        newToggle[index] = enumToggle.RED
         break
-      case enumToggle.ORANGE:
+      case enumToggle.RED:
         newToggle[index] = enumToggle.BLUE
         break
       case enumToggle.BLUE:
+        newToggle[index] = enumToggle.YELLOW
+        break
+      case enumToggle.YELLOW:
         newToggle[index] = enumToggle.WHITE
         break
       case enumToggle.WHITE:
-        newToggle[index] = enumToggle.GRAY
+        newToggle[index] = enumToggle.BLACK
         break
-      case enumToggle.GRAY:
+      case enumToggle.BLACK:
         newToggle[index] = enumToggle.TRANSPARENT
         break
       default:
@@ -164,10 +152,6 @@ function TabPaneSimulator({ deck, state, dispatch }) {
     state === enumStateSimulator.STARTING ||
     state === enumStateSimulator.RUNNING ||
     state === enumStateSimulator.ABORTED
-  const showDraw =
-    !!(library?.length > 0) &&
-    (state === enumStateSimulator.STARTING ||
-      state === enumStateSimulator.RUNNING)
   return (
     <>
       <h2 className="m-2">手札シミュレータ</h2>
@@ -217,8 +201,6 @@ function TabPaneSimulator({ deck, state, dispatch }) {
             cards={hand}
             toggles={handToggles}
             handleToggleAt={handleHandToggleAt}
-            showDraw={showDraw}
-            handleClickDraw={handleClickDraw}
           />
         </>
       )}
@@ -226,14 +208,7 @@ function TabPaneSimulator({ deck, state, dispatch }) {
   )
 }
 
-function ContainerSection({
-  title,
-  cards,
-  toggles,
-  handleToggleAt,
-  showDraw,
-  handleClickDraw,
-}) {
+function ContainerSection({ title, cards, toggles, handleToggleAt }) {
   return (
     <>
       <h3 className="m-2">{title}</h3>
@@ -252,17 +227,6 @@ function ContainerSection({
             />
           )
         })}
-        {showDraw && (
-          <div className="container-card card-medium">
-            <Button
-              className="btn-draw"
-              variant="outline-secondary"
-              onClick={handleClickDraw}
-            >
-              +
-            </Button>
-          </div>
-        )}
       </div>
     </>
   )
@@ -273,10 +237,11 @@ function ImageCardWithToggle({ imageUrl, alt, toggle, handleToggleAt, index }) {
     'btn-toggled': true,
     'btn-toggled-opaque': toggle === enumToggle.OPAQUE,
     'btn-toggled-transparent': toggle === enumToggle.TRANSPARENT,
-    'btn-toggled-orange': toggle === enumToggle.ORANGE,
+    'btn-toggled-red': toggle === enumToggle.RED,
     'btn-toggled-blue': toggle === enumToggle.BLUE,
+    'btn-toggled-yellow': toggle === enumToggle.YELLOW,
     'btn-toggled-white': toggle === enumToggle.WHITE,
-    'btn-toggled-gray': toggle === enumToggle.GRAY,
+    'btn-toggled-black': toggle === enumToggle.BLACK,
   })
 
   return (

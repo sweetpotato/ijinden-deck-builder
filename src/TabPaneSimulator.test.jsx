@@ -57,7 +57,6 @@ test('メインデッキが9枚以下だとスタートできない', async () =
   expect(buttonStart).toBeEnabled()
   expect(buttonMulligan).toBeDisabled()
   expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0)
-  expect(paneSimulator.querySelectorAll('.btn-draw').length).toBe(0)
 
   // メインのプラスボタンを9回押す
   await user.click(tabCard)
@@ -89,7 +88,6 @@ test('メインデッキが9枚以下だとスタートできない', async () =
   expect(buttonStart).toBeEnabled()
   expect(buttonMulligan).toBeDisabled()
   expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0)
-  expect(paneSimulator.querySelectorAll('.btn-draw').length).toBe(0)
 
   // スタートボタンを押す
   await user.click(buttonStart)
@@ -103,7 +101,6 @@ test('メインデッキが9枚以下だとスタートできない', async () =
     'メインデッキの枚数が少なすぎます。10枚以上にしてください。'
   )
   expect(alert).toBeVisible()
-  expect(paneSimulator.querySelectorAll('.btn-draw').length).toBe(0)
 
   // リセットボタンを押す
   await user.click(buttonReset)
@@ -113,7 +110,6 @@ test('メインデッキが9枚以下だとスタートできない', async () =
   expect(buttonStart).toBeEnabled()
   expect(buttonMulligan).toBeDisabled()
   expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0)
-  expect(paneSimulator.querySelectorAll('.btn-draw').length).toBe(0)
 })
 
 test('メインデッキが10枚以上ならスタートできるがドローボタンがない', async () => {
@@ -153,7 +149,6 @@ test('メインデッキが10枚以上ならスタートできるがドローボ
   expect(buttonStart).toBeEnabled()
   expect(buttonMulligan).toBeDisabled()
   expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0)
-  expect(paneSimulator.querySelectorAll('.btn-draw').length).toBe(0)
 
   // メインのプラスボタンを10回押す
   await user.click(tabCard)
@@ -178,7 +173,6 @@ test('メインデッキが10枚以上ならスタートできるがドローボ
   expect(buttonStart).toBeDisabled()
   expect(buttonMulligan).toBeEnabled()
   expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0)
-  expect(paneSimulator.querySelectorAll('.btn-draw').length).toBe(0)
 
   // 1c. リセットボタンを押す
   await user.click(buttonReset)
@@ -188,7 +182,6 @@ test('メインデッキが10枚以上ならスタートできるがドローボ
   expect(buttonStart).toBeEnabled()
   expect(buttonMulligan).toBeDisabled()
   expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0)
-  expect(paneSimulator.querySelectorAll('.btn-draw').length).toBe(0)
 
   // 2a. スタートボタンを押す
   await user.click(buttonStart)
@@ -198,7 +191,6 @@ test('メインデッキが10枚以上ならスタートできるがドローボ
   expect(buttonStart).toBeDisabled()
   expect(buttonMulligan).toBeEnabled()
   expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0)
-  expect(paneSimulator.querySelectorAll('.btn-draw').length).toBe(0)
 
   // 2c. マリガンボタンを押す
   await user.click(buttonMulligan)
@@ -208,7 +200,6 @@ test('メインデッキが10枚以上ならスタートできるがドローボ
   expect(buttonStart).toBeDisabled()
   expect(buttonMulligan).toBeDisabled()
   expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0)
-  expect(paneSimulator.querySelectorAll('.btn-draw').length).toBe(0)
 
   // 2e. リセットボタンを押す
   await user.click(buttonReset)
@@ -218,7 +209,6 @@ test('メインデッキが10枚以上ならスタートできるがドローボ
   expect(buttonStart).toBeEnabled()
   expect(buttonMulligan).toBeDisabled()
   expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0)
-  expect(paneSimulator.querySelectorAll('.btn-draw').length).toBe(0)
 })
 
 test('メインデッキが11枚以上ならスタートできるてドローボタンがある', async () => {
@@ -258,7 +248,6 @@ test('メインデッキが11枚以上ならスタートできるてドローボ
   expect(buttonStart).toBeEnabled()
   expect(buttonMulligan).toBeDisabled()
   expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0)
-  expect(paneSimulator.querySelectorAll('.btn-draw').length).toBe(0)
 
   // メインのプラスボタンを11回押す
   await user.click(tabCard)
@@ -284,7 +273,6 @@ test('メインデッキが11枚以上ならスタートできるてドローボ
   expect(buttonStart).toBeDisabled()
   expect(buttonMulligan).toBeEnabled()
   expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0)
-  expect(paneSimulator.querySelectorAll('.btn-draw').length).toBe(1)
 
   // 1c. リセットボタンを押す
   await user.click(buttonReset)
@@ -294,7 +282,6 @@ test('メインデッキが11枚以上ならスタートできるてドローボ
   expect(buttonStart).toBeEnabled()
   expect(buttonMulligan).toBeDisabled()
   expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0)
-  expect(paneSimulator.querySelectorAll('.btn-draw').length).toBe(0)
 
   // 2a. スタートボタンを押す
   await user.click(buttonStart)
@@ -304,7 +291,6 @@ test('メインデッキが11枚以上ならスタートできるてドローボ
   expect(buttonStart).toBeDisabled()
   expect(buttonMulligan).toBeEnabled()
   expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0)
-  expect(paneSimulator.querySelectorAll('.btn-draw').length).toBe(1)
 
   // 2c. マリガンボタンを押す
   await user.click(buttonMulligan)
@@ -314,7 +300,6 @@ test('メインデッキが11枚以上ならスタートできるてドローボ
   expect(buttonStart).toBeDisabled()
   expect(buttonMulligan).toBeDisabled()
   expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0)
-  expect(paneSimulator.querySelectorAll('.btn-draw').length).toBe(1)
 
   // 2e. リセットボタンを押す
   await user.click(buttonReset)
@@ -324,7 +309,6 @@ test('メインデッキが11枚以上ならスタートできるてドローボ
   expect(buttonStart).toBeEnabled()
   expect(buttonMulligan).toBeDisabled()
   expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0)
-  expect(paneSimulator.querySelectorAll('.btn-draw').length).toBe(0)
 })
 
 test('ドローボタンを押していくと手札が増える', async () => {
@@ -381,7 +365,6 @@ test('ドローボタンを押していくと手札が増える', async () => {
   expect(buttonStart).toBeEnabled()
   expect(buttonMulligan).toBeDisabled()
   expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0)
-  expect(paneSimulator.querySelectorAll('.btn-draw').length).toBe(0)
 
   // 1. メインデッキにカードが40枚入った保存済みデッキを読み込む
   await user.click(tabSave)
@@ -402,11 +385,4 @@ test('ドローボタンを押していくと手札が増える', async () => {
   expect(buttonStart).toBeDisabled()
   expect(buttonMulligan).toBeEnabled()
   expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0)
-  expect(paneSimulator.querySelectorAll('.btn-draw').length).toBe(1)
-
-  // 30回クリックする
-  for (let i = 0; i < 30; ++i) {
-    await user.click(paneSimulator.querySelectorAll('.btn-draw')[0])
-  }
-  expect(paneSimulator.querySelectorAll('.btn-draw').length).toBe(0)
 })

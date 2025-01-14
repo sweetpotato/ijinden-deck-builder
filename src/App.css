@@ -167,9 +167,9 @@ thead.sticky-top {
   background-color: transparent;
 }
 
-.btn-toggled-orange, .btn-toggled-orange:hover, :not(.btn-check) + .btn-toggled-orange:active {
+.btn-toggled-red, .btn-toggled-red:hover, :not(.btn-check) + .btn-toggled-red:active {
   opacity: 0.7;
-  background-color: #fd7e14;
+  background-color: #dc3545;
 }
 
 .btn-toggled-blue, .btn-toggled-blue:hover, :not(.btn-check) + .btn-toggled-blue:active {
@@ -177,12 +177,17 @@ thead.sticky-top {
   background-color: #0d6efd;
 }
 
+.btn-toggled-yellow, .btn-toggled-yellow:hover, :not(.btn-check) + .btn-toggled-yellow:active {
+  opacity: 0.7;
+  background-color: #ffc107;
+}
+
 .btn-toggled-white, .btn-toggled-white:hover, :not(.btn-check) + .btn-toggled-white:active {
   opacity: 0.7;
   background-color: white;
 }
 
-.btn-toggled-gray, .btn-toggled-gray:hover, :not(.btn-check) + .btn-toggled-gray:active {
+.btn-toggled-black, .btn-toggled-black:hover, :not(.btn-check) + .btn-toggled-black:active {
   opacity: 0.7;
   background-color: black;
 }
