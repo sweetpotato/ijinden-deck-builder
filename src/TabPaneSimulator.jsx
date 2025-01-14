@@ -15,10 +15,11 @@ import {
 const enumToggle = {
   OPAQUE: 0,
   TRANSPARENT: 1,
-  ORANGE: 2,
+  RED: 2,
   BLUE: 3,
-  WHITE: 4,
-  GRAY: 5,
+  YELLOW: 4,
+  WHITE: 5,
+  BLACK: 6,
 }
 
 function makeIdArray(deck) {
@@ -120,18 +121,21 @@ function TabPaneSimulator({ deck, state, dispatch }) {
         newToggle[index] = enumToggle.TRANSPARENT
         break
       case enumToggle.TRANSPARENT:
-        newToggle[index] = enumToggle.ORANGE
+        newToggle[index] = enumToggle.RED
         break
-      case enumToggle.ORANGE:
+      case enumToggle.RED:
         newToggle[index] = enumToggle.BLUE
         break
       case enumToggle.BLUE:
+        newToggle[index] = enumToggle.YELLOW
+        break
+      case enumToggle.YELLOW:
         newToggle[index] = enumToggle.WHITE
         break
       case enumToggle.WHITE:
-        newToggle[index] = enumToggle.GRAY
+        newToggle[index] = enumToggle.BLACK
         break
-      case enumToggle.GRAY:
+      case enumToggle.BLACK:
         newToggle[index] = enumToggle.TRANSPARENT
         break
       default:
@@ -233,10 +237,11 @@ function ImageCardWithToggle({ imageUrl, alt, toggle, handleToggleAt, index }) {
     'btn-toggled': true,
     'btn-toggled-opaque': toggle === enumToggle.OPAQUE,
     'btn-toggled-transparent': toggle === enumToggle.TRANSPARENT,
-    'btn-toggled-orange': toggle === enumToggle.ORANGE,
+    'btn-toggled-red': toggle === enumToggle.RED,
     'btn-toggled-blue': toggle === enumToggle.BLUE,
+    'btn-toggled-yellow': toggle === enumToggle.YELLOW,
     'btn-toggled-white': toggle === enumToggle.WHITE,
-    'btn-toggled-gray': toggle === enumToggle.GRAY,
+    'btn-toggled-black': toggle === enumToggle.BLACK,
   })
 
   return (
