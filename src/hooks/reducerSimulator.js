@@ -2,8 +2,8 @@
 
 export const enumStateSimulator = {
   INITIAL: 0,
-  RUNNING: 1,
-  FINISHED: 2,
+  STARTING: 1,
+  RUNNING: 2,
   ABORTED: 3,
   LESS_THAN_TEN: 4,
 }
@@ -21,9 +21,21 @@ export function reducerSimulator(state, action) {
     case enumStateSimulator.INITIAL:
       switch (action) {
         case enumActionSimulator.START:
-          return enumStateSimulator.RUNNING
+          return enumStateSimulator.STARTING
         case enumActionSimulator.CHECK_MAIN_DECK:
           return enumStateSimulator.LESS_THAN_TEN
+        default:
+          break
+      }
+      break
+    case enumStateSimulator.STARTING:
+      switch (action) {
+        case enumActionSimulator.RESET:
+          return enumStateSimulator.INITIAL
+        case enumActionSimulator.CONTINUE:
+          return enumStateSimulator.RUNNING
+        case enumActionSimulator.INTERRUPT:
+          return enumStateSimulator.ABORTED
         default:
           break
       }
@@ -32,18 +44,8 @@ export function reducerSimulator(state, action) {
       switch (action) {
         case enumActionSimulator.RESET:
           return enumStateSimulator.INITIAL
-        case enumActionSimulator.CONTINUE:
-          return enumStateSimulator.FINISHED
         case enumActionSimulator.INTERRUPT:
           return enumStateSimulator.ABORTED
-        default:
-          break
-      }
-      break
-    case enumStateSimulator.FINISHED:
-      switch (action) {
-        case enumActionSimulator.RESET:
-          return enumStateSimulator.INITIAL
         default:
           break
       }
