@@ -185,7 +185,7 @@ function TabPaneSimulator({ deck, state, dispatch }) {
       )}
       {state === enumStateSimulator.ABORTED && (
         <Alert variant="warning">
-          シミュレーション中にメインデッキが編集されました。リセットしてください。
+          シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。
         </Alert>
       )}
       {showGuardiansAndHands && (
