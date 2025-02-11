@@ -189,7 +189,7 @@ function ContainerDeckSaved({
               setShowCopied(true)
             }}
           >
-            共有リンクβをコピー
+            共有リンクをコピー
           </Button>
           <Overlay
             target={refTarget.current}
