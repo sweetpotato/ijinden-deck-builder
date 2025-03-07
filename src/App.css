@@ -23,8 +23,24 @@ fieldset {
   z-index: 1020;
 }
 
-thead.sticky-top {
+thead.sticky-top {  
   top: 2.5rem;
+}
+
+.container-filter .accordion-header {
+  position: initial;
+}
+
+.container-filter .accordion-button::after {
+  content: none;
+}
+
+.container-filter .accordion-item:nth-of-type(odd) .accordion-button {
+  background-color: #e9ecef;
+}
+
+.container-filter .accordion-item:nth-of-type(even) .accordion-button {
+  background-color: #ced4da;
 }
 
 .container-button label,
