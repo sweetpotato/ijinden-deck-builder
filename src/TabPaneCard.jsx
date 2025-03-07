@@ -80,6 +80,16 @@ const dataTerms = [
   { value: TERM_CHROMAGIC, label: '魔導' },
 ]
 
+const dataTraits = [
+  { value: 0, label: '指定なし' },
+  { value: 1, label: '剣術' },
+  { value: 2, label: '美術' },
+  { value: 4, label: '音楽' },
+  { value: 8, label: '思想' },
+  { value: 16, label: '医術' },
+  { value: 32, label: '志願' },
+]
+
 const CHROMAGIC_RED = 32
 const CHROMAGIC_BLUE = 64
 const CHROMAGIC_GREEN = 128
@@ -151,6 +161,7 @@ function TabPaneCard({
   const [color, setColor] = useState(0)
   const [type, setType] = useState(0)
   const [term, setTerm] = useState(0)
+  const [trait, setTrait] = useState(0)
 
   function handleChangeExpansion(e) {
     setExpansion(Number(e.currentTarget.value))
@@ -166,6 +177,10 @@ function TabPaneCard({
 
   function handleChangeTerm(e) {
     setTerm(Number(e.currentTarget.value))
+  }
+
+  function handleChangeTrait(e) {
+    setTrait(Number(e.currentTarget.value))
   }
 
   return (
@@ -207,6 +222,14 @@ function TabPaneCard({
           handleChange={handleChangeTerm}
           data={dataTerms}
         />
+        <AccordionItemFilter
+          eventKey="4"
+          title="特性"
+          name="trait"
+          state={trait}
+          handleChange={handleChangeTrait}
+          data={dataTraits}
+        />
       </Accordion>
       <Table hover variant="light">
         <thead className="sticky-top">
@@ -226,6 +249,7 @@ function TabPaneCard({
               selectedColor={color}
               selectedType={type}
               selectedTerm={term}
+              selectedTrait={trait}
               handleSetIdZoom={handleSetIdZoom}
               deckMain={deckMain}
               handleSetDeckMain={handleSetDeckMain}
@@ -286,10 +310,12 @@ function TableRowCard({
   color,
   type,
   term,
+  trait,
   selectedExpansion,
   selectedType,
   selectedColor,
   selectedTerm,
+  selectedTrait,
   handleSetIdZoom,
   deckMain,
   handleSetDeckMain,
@@ -301,7 +327,8 @@ function TableRowCard({
     (selectedExpansion === 0 || expansion === selectedExpansion) &&
     (selectedColor === 0 || (color & selectedColor) === selectedColor) &&
     (selectedType === 0 || type === selectedType) &&
-    (selectedTerm === 0 || (term & selectedTerm) === selectedTerm)
+    (selectedTerm === 0 || (term & selectedTerm) === selectedTerm) &&
+    (selectedTrait === 0 || (trait & selectedTrait) === selectedTrait)
   let colorClass
   if ((term & TERM_CHROMAGIC) === TERM_CHROMAGIC) {
     colorClass = classNames(
@@ -323,6 +350,7 @@ function TableRowCard({
       data-color={color}
       data-type={type}
       data-term={term}
+      data-trait={trait}
       style={{ display: show ? 'table-row' : 'none' }}
     >
       <td className={colorClass}>{id}</td>
