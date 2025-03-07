@@ -1,8 +1,13 @@
 // SPDX-License-Identifier: MIT
 
 import classNames from 'classnames'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import {
+  Accordion,
+  AccordionBody,
+  AccordionContext,
+  AccordionHeader,
+  AccordionItem,
   Button,
   FormControl,
   InputGroup,
@@ -16,6 +21,7 @@ import {
   handleClickIncrement,
 } from './commons/handleClick'
 import { enumActionSimulator } from './hooks/reducerSimulator'
+import { isAccordionItemSelected } from 'react-bootstrap/esm/AccordionContext'
 
 const dataExpansions = [
   { value: 0, label: 'すべて' },
@@ -72,6 +78,16 @@ const dataTerms = [
   { value: 4, label: '決起' },
   { value: 8, label: '徴募' },
   { value: TERM_CHROMAGIC, label: '魔導' },
+]
+
+const dataTraits = [
+  { value: 0, label: '指定なし' },
+  { value: 1, label: '剣術' },
+  { value: 2, label: '美術' },
+  { value: 4, label: '音楽' },
+  { value: 8, label: '思想' },
+  { value: 16, label: '医術' },
+  { value: 32, label: '志願' },
 ]
 
 const CHROMAGIC_RED = 32
@@ -145,6 +161,7 @@ function TabPaneCard({
   const [color, setColor] = useState(0)
   const [type, setType] = useState(0)
   const [term, setTerm] = useState(0)
+  const [trait, setTrait] = useState(0)
 
   function handleChangeExpansion(e) {
     setExpansion(Number(e.currentTarget.value))
@@ -162,36 +179,58 @@ function TabPaneCard({
     setTerm(Number(e.currentTarget.value))
   }
 
+  function handleChangeTrait(e) {
+    setTrait(Number(e.currentTarget.value))
+  }
+
   return (
     <>
-      <ContainerFilter
-        title="エキスパンション"
-        name="expansion"
-        state={expansion}
-        handleChange={handleChangeExpansion}
-        data={dataExpansions}
-      />
-      <ContainerFilter
-        title="色"
-        name="color"
-        state={color}
-        handleChange={handleChangeColor}
-        data={dataColors}
-      />
-      <ContainerFilter
-        title="種類"
-        name="type"
-        state={type}
-        handleChange={handleChangeType}
-        data={dataTypes}
-      />
-      <ContainerFilter
-        title="能力語"
-        name="term"
-        state={term}
-        handleChange={handleChangeTerm}
-        data={dataTerms}
-      />
+      <Accordion
+        className="container-filter"
+        alwaysOpen
+        defaultActiveKey={['1', '2']}
+      >
+        <AccordionItemFilter
+          eventKey="0"
+          title="エキスパンション"
+          name="expansion"
+          state={expansion}
+          handleChange={handleChangeExpansion}
+          data={dataExpansions}
+        />
+        <AccordionItemFilter
+          eventKey="1"
+          title="色"
+          name="color"
+          state={color}
+          handleChange={handleChangeColor}
+          data={dataColors}
+        />
+        <AccordionItemFilter
+          eventKey="2"
+          title="種類"
+          name="type"
+          state={type}
+          handleChange={handleChangeType}
+          data={dataTypes}
+        />
+        <AccordionItemFilter
+          eventKey="3"
+          title="能力語"
+          name="term"
+          state={term}
+          handleChange={handleChangeTerm}
+          data={dataTerms}
+        />
+        <AccordionItemFilter
+          eventKey="4"
+          title="特性"
+          name="trait"
+          state={trait}
+          handleChange={handleChangeTrait}
+          data={dataTraits}
+        />
+      </Accordion>
       <Table hover variant="light">
         <thead className="sticky-top">
           <tr>
@@ -210,6 +249,7 @@ function TabPaneCard({
               selectedColor={color}
               selectedType={type}
               selectedTerm={term}
+              selectedTrait={trait}
               handleSetIdZoom={handleSetIdZoom}
               deckMain={deckMain}
               handleSetDeckMain={handleSetDeckMain}
@@ -224,28 +264,42 @@ function TabPaneCard({
   )
 }
 
-function ContainerFilter({ title, name, state, handleChange, data }) {
+function AccordionItemFilter({
+  eventKey,
+  title,
+  name,
+  state,
+  handleChange,
+  data,
+}) {
+  const { activeEventKey } = useContext(AccordionContext)
+  const expanded = isAccordionItemSelected(activeEventKey, eventKey)
+
   return (
-    <fieldset className="container-button m-2">
-      <legend className="h3">{title}</legend>
-      {data.map((element) => {
-        const id = `${name}-${element.value}`
-        return (
-          <ToggleButton
-            key={id}
-            type="radio"
-            variant="outline-primary"
-            id={id}
-            name={name}
-            value={element.value}
-            onChange={handleChange}
-            checked={state === element.value}
-          >
-            {element.label}
-          </ToggleButton>
-        )
-      })}
-    </fieldset>
+    <AccordionItem eventKey={eventKey}>
+      <AccordionHeader as="h3">
+        {expanded ? '➖' : '➕'} {title}
+      </AccordionHeader>
+      <AccordionBody className="container-button">
+        {data.map((element) => {
+          const id = `${name}-${element.value}`
+          return (
+            <ToggleButton
+              key={id}
+              type="radio"
+              variant="outline-primary"
+              id={id}
+              name={name}
+              value={element.value}
+              onChange={handleChange}
+              checked={state === element.value}
+            >
+              {element.label}
+            </ToggleButton>
+          )
+        })}
+      </AccordionBody>
+    </AccordionItem>
   )
 }
 
@@ -256,10 +310,12 @@ function TableRowCard({
   color,
   type,
   term,
+  trait,
   selectedExpansion,
   selectedType,
   selectedColor,
   selectedTerm,
+  selectedTrait,
   handleSetIdZoom,
   deckMain,
   handleSetDeckMain,
@@ -271,7 +327,8 @@ function TableRowCard({
     (selectedExpansion === 0 || expansion === selectedExpansion) &&
     (selectedColor === 0 || (color & selectedColor) === selectedColor) &&
     (selectedType === 0 || type === selectedType) &&
-    (selectedTerm === 0 || (term & selectedTerm) === selectedTerm)
+    (selectedTerm === 0 || (term & selectedTerm) === selectedTerm) &&
+    (selectedTrait === 0 || (trait & selectedTrait) === selectedTrait)
   let colorClass
   if ((term & TERM_CHROMAGIC) === TERM_CHROMAGIC) {
     colorClass = classNames(
@@ -293,6 +350,7 @@ function TableRowCard({
       data-color={color}
       data-type={type}
       data-term={term}
+      data-trait={trait}
       style={{ display: show ? 'table-row' : 'none' }}
     >
       <td className={colorClass}>{id}</td>
