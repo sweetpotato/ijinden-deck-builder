@@ -274,11 +274,22 @@ function AccordionItemFilter({
 }) {
   const { activeEventKey } = useContext(AccordionContext)
   const expanded = isAccordionItemSelected(activeEventKey, eventKey)
+  const label = new Map(data.map((e) => [e.value, e.label])).get(state)
 
   return (
     <AccordionItem eventKey={eventKey}>
       <AccordionHeader as="h3">
-        {expanded ? '➖' : '➕'} {title}
+        {expanded ? (
+          `➖ ${title}`
+        ) : state === 0 ? (
+          `➕ ${title} ― ${label}`
+        ) : (
+          <>
+            ➕ {title}
+            &nbsp;―&nbsp;
+            <b>{label}</b>
+          </>
+        )}
       </AccordionHeader>
       <AccordionBody className="container-button">
         {data.map((element) => {
