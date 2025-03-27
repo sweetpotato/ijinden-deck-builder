@@ -13,7 +13,10 @@ import {
 } from 'react-bootstrap'
 
 import ImageCard from './components/ImageCard'
-import { dataCardsArrayForDeck as dataCardsArray } from './commons/dataCards'
+import {
+  dataCardsArrayForDeck as dataCardsArray,
+  dataCardsMap,
+} from './commons/dataCards'
 import db from './commons/db'
 import enumTabPane from './commons/enumTabPane'
 import {
@@ -22,6 +25,22 @@ import {
 } from './commons/handleClick'
 import { enumActionSimulator } from './hooks/reducerSimulator'
 import { sum } from './commons/utils'
+
+function makeTextExported(deckMain, deckSide) {
+  const numCardsMain = sum(deckMain.values())
+  const numCardsSide = sum(deckSide.values())
+  const textMain = [...deckMain.entries()]
+    .map((e) => [dataCardsMap.get(e[0]), e[1]])
+    .sort((a, b) => a[0].orderDeck - b[0].orderDeck)
+    .map((e) => `\r\n${e[0].name}\t${e[1]}`)
+    .join('')
+  const textSide = [...deckSide.entries()]
+    .map((e) => [dataCardsMap.get(e[0]), e[1]])
+    .sort((a, b) => a[0].orderDeck - b[0].orderDeck)
+    .map((e) => `\r\n${e[0].name}\t${e[1]}`)
+    .join('')
+  return `メインデッキ\t${numCardsMain}${textMain}\r\n\r\nサイドデッキ\t${numCardsSide}${textSide}`
+}
 
 function TabPaneDeck({
   code,
@@ -83,6 +102,8 @@ function TabPaneDeck({
 
   const titleMain = `メインデッキ (${numCardsMain}枚)`
   const titleSide = `サイドデッキ (${numCardsSide}枚)`
+
+  const textExported = makeTextExported(deckMain, deckSide)
 
   return (
     <>
@@ -155,6 +176,18 @@ function TabPaneDeck({
             isSide
           />
         ))}
+      </div>
+      <h2 className="m-2">テキストでエクスポート (ベータ版)</h2>
+      <p className="m-2">
+        テキストボックスの中を全選択してコピーしてください。
+      </p>
+      <div className="ms-2">
+        <FormControl
+          readOnly
+          as="textarea"
+          rows={deckMain.size + deckSide.size + 3}
+          value={textExported}
+        />
       </div>
     </>
   )
