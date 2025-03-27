@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   Alert,
   Button,
@@ -10,6 +10,8 @@ import {
   ModalFooter,
   ModalHeader,
   ModalTitle,
+  Overlay,
+  Tooltip,
 } from 'react-bootstrap'
 
 import ImageCard from './components/ImageCard'
@@ -30,14 +32,14 @@ function makeTextExported(deckMain, deckSide) {
   const numCardsMain = sum(deckMain.values())
   const numCardsSide = sum(deckSide.values())
   const textMain = [...deckMain.entries()]
-    .map((e) => [dataCardsMap.get(e[0]), e[1]])
+    .map(([id, numCopies]) => [dataCardsMap.get(id), numCopies])
     .sort((a, b) => a[0].orderDeck - b[0].orderDeck)
-    .map((e) => `\r\n${e[0].name}\t${e[1]}`)
+    .map(([card, numCopies]) => `\r\n${card.name}\t${numCopies}`)
     .join('')
   const textSide = [...deckSide.entries()]
-    .map((e) => [dataCardsMap.get(e[0]), e[1]])
+    .map(([id, numCopies]) => [dataCardsMap.get(id), numCopies])
     .sort((a, b) => a[0].orderDeck - b[0].orderDeck)
-    .map((e) => `\r\n${e[0].name}\t${e[1]}`)
+    .map(([card, numCopies]) => `\r\n${card.name}\t${numCopies}`)
     .join('')
   return `メインデッキ\t${numCardsMain}${textMain}\r\n\r\nサイドデッキ\t${numCardsSide}${textSide}`
 }
@@ -58,6 +60,9 @@ function TabPaneDeck({
   dispatchSimulator,
 }) {
   const [showModalEmpty, setShowModalEmpty] = useState(false)
+  const [showCopied, setShowCopied] = useState(false)
+  const refButton = useRef()
+  const refTextarea = useRef()
 
   function handleChangeDeckTitle(event) {
     handleSetDeckTitle(event.target.value)
@@ -96,6 +101,13 @@ function TabPaneDeck({
   function handleClickConfirmEmpty() {
     setShowModalEmpty(false)
   }
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowCopied(false)
+    }, 1000)
+    return () => clearTimeout(timer)
+  }, [showCopied])
 
   const numCardsMain = sum(deckMain.values())
   const numCardsSide = sum(deckSide.values())
@@ -177,12 +189,26 @@ function TabPaneDeck({
           />
         ))}
       </div>
-      <h2 className="m-2">テキストでエクスポート (ベータ版)</h2>
-      <p className="m-2">
-        テキストボックスの中を全選択してコピーしてください。
-      </p>
-      <div className="ms-2">
+      <h2 className="m-2">テキストでエクスポートβ</h2>
+      <div className="m-2">
+        <Button
+          ref={refButton}
+          variant="outline-secondary"
+          onClick={async () => {
+            refTextarea.current.select()
+            await navigator.clipboard.writeText(textExported)
+            setShowCopied(true)
+          }}
+        >
+          テキストをコピー
+        </Button>
+        <Overlay target={refButton.current} show={showCopied} placement="right">
+          {(props) => <Tooltip {...props}>コピーしました</Tooltip>}
+        </Overlay>
+      </div>
+      <div className="m-2">
         <FormControl
+          ref={refTextarea}
           readOnly
           as="textarea"
           rows={deckMain.size + deckSide.size + 3}
