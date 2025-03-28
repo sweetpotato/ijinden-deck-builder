@@ -289,7 +289,7 @@ function ContainerDeckExport({ deckMain, deckSide }) {
         >
           テキストをコピー
         </Button>
-        <Overlay target={refButton.current} show={showCopied} placement="right">
+        <Overlay target={refButton.current} show={showCopied} placement="top">
           {(props) => <Tooltip {...props}>コピーしました</Tooltip>}
         </Overlay>
       </div>
