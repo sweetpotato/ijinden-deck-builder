@@ -99,12 +99,6 @@ function TabPaneDeck({
     setShowModalEmpty(false)
   }
 
-  const numCardsMain = sum(deckMain.values())
-  const numCardsSide = sum(deckSide.values())
-
-  const titleMain = `メインデッキ (${numCardsMain}枚)`
-  const titleSide = `サイドデッキ (${numCardsSide}枚)`
-
   return (
     <>
       <h2 className="m-2">デッキレシピ</h2>
@@ -146,38 +140,60 @@ function TabPaneDeck({
           </Button>
         </ModalFooter>
       </Modal>
-      <h3 className="m-2">{titleMain}</h3>
-      <div className="container-card-line-up ms-2">
-        {dataCardsArray.map((element) => (
-          <ContainerDeckCard
-            {...element}
-            key={element.id}
-            deckThis={deckMain}
-            handleSetDeckThis={handleSetDeckMain}
-            deckThat={deckSide}
-            handleSetDeckThat={handleSetDeckSide}
-            handleSetIdZoom={handleSetIdZoom}
-            dispatchSimulator={dispatchSimulator}
-          />
-        ))}
-      </div>
-      <h3 className="m-2">{titleSide}</h3>
-      <div className="container-card-line-up ms-2">
-        {dataCardsArray.map((element) => (
-          <ContainerDeckCard
-            {...element}
-            key={element.id}
-            deckThis={deckSide}
-            handleSetDeckThis={handleSetDeckSide}
-            deckThat={deckMain}
-            handleSetDeckThat={handleSetDeckMain}
-            handleSetIdZoom={handleSetIdZoom}
-            dispatchSimulator={dispatchSimulator}
-            isSide
-          />
-        ))}
-      </div>
+      <ContainerDeckPart
+        title="メインデッキ"
+        deckThis={deckMain}
+        handleSetDeckThis={handleSetDeckMain}
+        deckThat={deckSide}
+        handleSetDeckThat={handleSetDeckSide}
+        handleSetIdZoom={handleSetIdZoom}
+        dispatchSimulator={dispatchSimulator}
+      />
+      <ContainerDeckPart
+        title="サイドデッキ"
+        deckThis={deckSide}
+        handleSetDeckThis={handleSetDeckSide}
+        deckThat={deckMain}
+        handleSetDeckThat={handleSetDeckMain}
+        handleSetIdZoom={handleSetIdZoom}
+        dispatchSimulator={dispatchSimulator}
+        isSide
+      />
       <ContainerDeckExport deckMain={deckMain} deckSide={deckSide} />
+    </>
+  )
+}
+
+function ContainerDeckPart({
+  title,
+  deckThis,
+  handleSetDeckThis,
+  deckThat,
+  handleSetDeckThat,
+  handleSetIdZoom,
+  dispatchSimulator,
+  isSide = false,
+}) {
+  const numCards = sum(deckThis.values())
+
+  return (
+    <>
+      <h3 className="m-2">{`${title} (${numCards}枚)`}</h3>
+      <div className="container-card-line-up ms-2">
+        {dataCardsArray.map((element) => (
+          <ContainerDeckCard
+            {...element}
+            key={element.id}
+            deckThis={deckThis}
+            handleSetDeckThis={handleSetDeckThis}
+            deckThat={deckThat}
+            handleSetDeckThat={handleSetDeckThat}
+            handleSetIdZoom={handleSetIdZoom}
+            dispatchSimulator={dispatchSimulator}
+            isSide={isSide}
+          />
+        ))}
+      </div>
     </>
   )
 }
