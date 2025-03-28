@@ -28,20 +28,20 @@ import {
 import { enumActionSimulator } from './hooks/reducerSimulator'
 import { sum } from './commons/utils'
 
+function makeTextExportedPart(title, deck) {
+  const numCards = sum(deck.values())
+  const text = [...deck.entries()]
+    .map(([id, numCopies]) => [dataCardsMap.get(id), numCopies])
+    .sort((a, b) => a[0].orderDeck - b[0].orderDeck)
+    .map(([card, numCopies]) => `\r\n${card.name}\t${numCopies}`)
+    .join('')
+  return `${title}\t${numCards}${text}`
+}
+
 function makeTextExported(deckMain, deckSide) {
-  const numCardsMain = sum(deckMain.values())
-  const numCardsSide = sum(deckSide.values())
-  const textMain = [...deckMain.entries()]
-    .map(([id, numCopies]) => [dataCardsMap.get(id), numCopies])
-    .sort((a, b) => a[0].orderDeck - b[0].orderDeck)
-    .map(([card, numCopies]) => `\r\n${card.name}\t${numCopies}`)
-    .join('')
-  const textSide = [...deckSide.entries()]
-    .map(([id, numCopies]) => [dataCardsMap.get(id), numCopies])
-    .sort((a, b) => a[0].orderDeck - b[0].orderDeck)
-    .map(([card, numCopies]) => `\r\n${card.name}\t${numCopies}`)
-    .join('')
-  return `メインデッキ\t${numCardsMain}${textMain}\r\n\r\nサイドデッキ\t${numCardsSide}${textSide}`
+  const textMain = makeTextExportedPart('メインデッキ', deckMain)
+  const textSide = makeTextExportedPart('サイドデッキ', deckSide)
+  return `${textMain}\r\n\r\n${textSide}`
 }
 
 function TabPaneDeck({
@@ -60,9 +60,6 @@ function TabPaneDeck({
   dispatchSimulator,
 }) {
   const [showModalEmpty, setShowModalEmpty] = useState(false)
-  const [showCopied, setShowCopied] = useState(false)
-  const refButton = useRef()
-  const refTextarea = useRef()
 
   function handleChangeDeckTitle(event) {
     handleSetDeckTitle(event.target.value)
@@ -101,21 +98,6 @@ function TabPaneDeck({
   function handleClickConfirmEmpty() {
     setShowModalEmpty(false)
   }
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowCopied(false)
-    }, 1000)
-    return () => clearTimeout(timer)
-  }, [showCopied])
-
-  const numCardsMain = sum(deckMain.values())
-  const numCardsSide = sum(deckSide.values())
-
-  const titleMain = `メインデッキ (${numCardsMain}枚)`
-  const titleSide = `サイドデッキ (${numCardsSide}枚)`
-
-  const textExported = makeTextExported(deckMain, deckSide)
 
   return (
     <>
@@ -158,62 +140,59 @@ function TabPaneDeck({
           </Button>
         </ModalFooter>
       </Modal>
-      <h3 className="m-2">{titleMain}</h3>
+      <ContainerDeckPart
+        title="メインデッキ"
+        deckThis={deckMain}
+        handleSetDeckThis={handleSetDeckMain}
+        deckThat={deckSide}
+        handleSetDeckThat={handleSetDeckSide}
+        handleSetIdZoom={handleSetIdZoom}
+        dispatchSimulator={dispatchSimulator}
+      />
+      <ContainerDeckPart
+        title="サイドデッキ"
+        deckThis={deckSide}
+        handleSetDeckThis={handleSetDeckSide}
+        deckThat={deckMain}
+        handleSetDeckThat={handleSetDeckMain}
+        handleSetIdZoom={handleSetIdZoom}
+        dispatchSimulator={dispatchSimulator}
+        isSide
+      />
+      <ContainerDeckExport deckMain={deckMain} deckSide={deckSide} />
+    </>
+  )
+}
+
+function ContainerDeckPart({
+  title,
+  deckThis,
+  handleSetDeckThis,
+  deckThat,
+  handleSetDeckThat,
+  handleSetIdZoom,
+  dispatchSimulator,
+  isSide = false,
+}) {
+  const numCards = sum(deckThis.values())
+
+  return (
+    <>
+      <h3 className="m-2">{`${title} (${numCards}枚)`}</h3>
       <div className="container-card-line-up ms-2">
         {dataCardsArray.map((element) => (
           <ContainerDeckCard
             {...element}
             key={element.id}
-            deckThis={deckMain}
-            handleSetDeckThis={handleSetDeckMain}
-            deckThat={deckSide}
-            handleSetDeckThat={handleSetDeckSide}
+            deckThis={deckThis}
+            handleSetDeckThis={handleSetDeckThis}
+            deckThat={deckThat}
+            handleSetDeckThat={handleSetDeckThat}
             handleSetIdZoom={handleSetIdZoom}
             dispatchSimulator={dispatchSimulator}
+            isSide={isSide}
           />
         ))}
-      </div>
-      <h3 className="m-2">{titleSide}</h3>
-      <div className="container-card-line-up ms-2">
-        {dataCardsArray.map((element) => (
-          <ContainerDeckCard
-            {...element}
-            key={element.id}
-            deckThis={deckSide}
-            handleSetDeckThis={handleSetDeckSide}
-            deckThat={deckMain}
-            handleSetDeckThat={handleSetDeckMain}
-            handleSetIdZoom={handleSetIdZoom}
-            dispatchSimulator={dispatchSimulator}
-            isSide
-          />
-        ))}
-      </div>
-      <h2 className="m-2">テキストでエクスポートβ</h2>
-      <div className="m-2">
-        <Button
-          ref={refButton}
-          variant="outline-secondary"
-          onClick={async () => {
-            refTextarea.current.select()
-            await navigator.clipboard.writeText(textExported)
-            setShowCopied(true)
-          }}
-        >
-          テキストをコピー
-        </Button>
-        <Overlay target={refButton.current} show={showCopied} placement="right">
-          {(props) => <Tooltip {...props}>コピーしました</Tooltip>}
-        </Overlay>
-      </div>
-      <div className="m-2">
-        <FormControl
-          ref={refTextarea}
-          readOnly
-          as="textarea"
-          rows={deckMain.size + deckSide.size + 3}
-          value={textExported}
-        />
       </div>
     </>
   )
@@ -294,6 +273,52 @@ function ContainerDeckCard({
         </Button>
       </ImageCard>
     )
+  )
+}
+
+function ContainerDeckExport({ deckMain, deckSide }) {
+  const [showCopied, setShowCopied] = useState(false)
+  const refButton = useRef()
+  const refTextarea = useRef()
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowCopied(false)
+    }, 1000)
+    return () => clearTimeout(timer)
+  }, [showCopied])
+
+  const textExported = makeTextExported(deckMain, deckSide)
+
+  return (
+    <>
+      <h2 className="m-2">テキストでエクスポートβ</h2>
+      <div className="m-2">
+        <Button
+          ref={refButton}
+          variant="outline-secondary"
+          onClick={async () => {
+            refTextarea.current.select()
+            await navigator.clipboard.writeText(textExported)
+            setShowCopied(true)
+          }}
+        >
+          テキストをコピー
+        </Button>
+        <Overlay target={refButton.current} show={showCopied} placement="top">
+          {(props) => <Tooltip {...props}>コピーしました</Tooltip>}
+        </Overlay>
+      </div>
+      <div className="m-2">
+        <FormControl
+          ref={refTextarea}
+          readOnly
+          as="textarea"
+          rows={deckMain.size + deckSide.size + 3}
+          value={textExported}
+        />
+      </div>
+    </>
   )
 }
 
