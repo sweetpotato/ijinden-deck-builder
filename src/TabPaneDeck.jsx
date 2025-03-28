@@ -28,20 +28,20 @@ import {
 import { enumActionSimulator } from './hooks/reducerSimulator'
 import { sum } from './commons/utils'
 
+function makeTextExportedPart(title, deck) {
+  const numCards = sum(deck.values())
+  const text = [...deck.entries()]
+    .map(([id, numCopies]) => [dataCardsMap.get(id), numCopies])
+    .sort((a, b) => a[0].orderDeck - b[0].orderDeck)
+    .map(([card, numCopies]) => `\r\n${card.name}\t${numCopies}`)
+    .join('')
+  return `${title}\t${numCards}${text}`
+}
+
 function makeTextExported(deckMain, deckSide) {
-  const numCardsMain = sum(deckMain.values())
-  const numCardsSide = sum(deckSide.values())
-  const textMain = [...deckMain.entries()]
-    .map(([id, numCopies]) => [dataCardsMap.get(id), numCopies])
-    .sort((a, b) => a[0].orderDeck - b[0].orderDeck)
-    .map(([card, numCopies]) => `\r\n${card.name}\t${numCopies}`)
-    .join('')
-  const textSide = [...deckSide.entries()]
-    .map(([id, numCopies]) => [dataCardsMap.get(id), numCopies])
-    .sort((a, b) => a[0].orderDeck - b[0].orderDeck)
-    .map(([card, numCopies]) => `\r\n${card.name}\t${numCopies}`)
-    .join('')
-  return `メインデッキ\t${numCardsMain}${textMain}\r\n\r\nサイドデッキ\t${numCardsSide}${textSide}`
+  const textMain = makeTextExportedPart('メインデッキ', deckMain)
+  const textSide = makeTextExportedPart('サイドデッキ', deckSide)
+  return `${textMain}\r\n\r\n${textSide}`
 }
 
 function TabPaneDeck({
