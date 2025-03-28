@@ -60,9 +60,6 @@ function TabPaneDeck({
   dispatchSimulator,
 }) {
   const [showModalEmpty, setShowModalEmpty] = useState(false)
-  const [showCopied, setShowCopied] = useState(false)
-  const refButton = useRef()
-  const refTextarea = useRef()
 
   function handleChangeDeckTitle(event) {
     handleSetDeckTitle(event.target.value)
@@ -102,20 +99,11 @@ function TabPaneDeck({
     setShowModalEmpty(false)
   }
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowCopied(false)
-    }, 1000)
-    return () => clearTimeout(timer)
-  }, [showCopied])
-
   const numCardsMain = sum(deckMain.values())
   const numCardsSide = sum(deckSide.values())
 
   const titleMain = `メインデッキ (${numCardsMain}枚)`
   const titleSide = `サイドデッキ (${numCardsSide}枚)`
-
-  const textExported = makeTextExported(deckMain, deckSide)
 
   return (
     <>
@@ -189,32 +177,7 @@ function TabPaneDeck({
           />
         ))}
       </div>
-      <h2 className="m-2">テキストでエクスポートβ</h2>
-      <div className="m-2">
-        <Button
-          ref={refButton}
-          variant="outline-secondary"
-          onClick={async () => {
-            refTextarea.current.select()
-            await navigator.clipboard.writeText(textExported)
-            setShowCopied(true)
-          }}
-        >
-          テキストをコピー
-        </Button>
-        <Overlay target={refButton.current} show={showCopied} placement="right">
-          {(props) => <Tooltip {...props}>コピーしました</Tooltip>}
-        </Overlay>
-      </div>
-      <div className="m-2">
-        <FormControl
-          ref={refTextarea}
-          readOnly
-          as="textarea"
-          rows={deckMain.size + deckSide.size + 3}
-          value={textExported}
-        />
-      </div>
+      <ContainerDeckExport deckMain={deckMain} deckSide={deckSide} />
     </>
   )
 }
@@ -294,6 +257,52 @@ function ContainerDeckCard({
         </Button>
       </ImageCard>
     )
+  )
+}
+
+function ContainerDeckExport({ deckMain, deckSide }) {
+  const [showCopied, setShowCopied] = useState(false)
+  const refButton = useRef()
+  const refTextarea = useRef()
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowCopied(false)
+    }, 1000)
+    return () => clearTimeout(timer)
+  }, [showCopied])
+
+  const textExported = makeTextExported(deckMain, deckSide)
+
+  return (
+    <>
+      <h2 className="m-2">テキストでエクスポートβ</h2>
+      <div className="m-2">
+        <Button
+          ref={refButton}
+          variant="outline-secondary"
+          onClick={async () => {
+            refTextarea.current.select()
+            await navigator.clipboard.writeText(textExported)
+            setShowCopied(true)
+          }}
+        >
+          テキストをコピー
+        </Button>
+        <Overlay target={refButton.current} show={showCopied} placement="right">
+          {(props) => <Tooltip {...props}>コピーしました</Tooltip>}
+        </Overlay>
+      </div>
+      <div className="m-2">
+        <FormControl
+          ref={refTextarea}
+          readOnly
+          as="textarea"
+          rows={deckMain.size + deckSide.size + 3}
+          value={textExported}
+        />
+      </div>
+    </>
   )
 }
 
