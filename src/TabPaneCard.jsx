@@ -190,7 +190,17 @@ function TabPaneCard({
   }
 
   function handleChangeLevelValue(e) {
-    setLevelValue(Number(e.currentTarget.value))
+    const currentValue = Number(e.currentTarget.value)
+    // レベル11から16までのカードは存在しないため、
+    // その値に設定してもあまり有益ではない。
+    // 代わりに、レベル10または17の近い方に四捨五入的に寄せる。
+    if (10 <= currentValue && currentValue < LEVEL_VALUE_MAX) {
+      setLevelValue(
+        currentValue < (10 + LEVEL_VALUE_MAX) / 2 ? 10 : LEVEL_VALUE_MAX
+      )
+    } else {
+      setLevelValue(currentValue)
+    }
   }
 
   function handleChangeLevelComparator(e) {
@@ -390,6 +400,7 @@ function AccordionItemLevelFilter({
             min={LEVEL_VALUE_MIN}
             max={LEVEL_VALUE_MAX}
             defaultValue={LEVEL_VALUE_MIN}
+            value={stateValue}
             onChange={handleChangeValue}
           />
         </div>
