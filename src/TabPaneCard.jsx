@@ -22,6 +22,7 @@ import {
 } from './commons/handleClick'
 import { enumActionSimulator } from './hooks/reducerSimulator'
 import { isAccordionItemSelected } from 'react-bootstrap/esm/AccordionContext'
+import FormRange from 'react-bootstrap/esm/FormRange'
 
 const dataExpansions = [
   { value: 0, label: 'すべて' },
@@ -68,6 +69,17 @@ const dataTypes = [
   { value: 2, label: 'ハイケイ' },
   { value: 3, label: 'マホウ' },
   { value: 4, label: 'マリョク' },
+]
+
+const LEVEL_VALUE_MIN = 0
+const LEVEL_VALUE_MAX = 17
+const LEVEL_COMPARATOR_GE = 'ge'
+const LEVEL_COMPARATOR_LE = 'le'
+const LEVEL_COMPARATOR_EQ = 'eq'
+const dataLevelComparators = [
+  { value: LEVEL_COMPARATOR_GE, label: '以上' },
+  { value: LEVEL_COMPARATOR_LE, label: '以下' },
+  { value: LEVEL_COMPARATOR_EQ, label: '等しい' },
 ]
 
 const TERM_CHROMAGIC = 16
@@ -160,6 +172,8 @@ function TabPaneCard({
   const [expansion, setExpansion] = useState(0)
   const [color, setColor] = useState(0)
   const [type, setType] = useState(0)
+  const [levelValue, setLevelValue] = useState(LEVEL_VALUE_MIN)
+  const [levelComparator, setLevelComparator] = useState(LEVEL_COMPARATOR_GE)
   const [term, setTerm] = useState(0)
   const [trait, setTrait] = useState(0)
 
@@ -173,6 +187,14 @@ function TabPaneCard({
 
   function handleChangeType(e) {
     setType(Number(e.currentTarget.value))
+  }
+
+  function handleChangeLevelValue(e) {
+    setLevelValue(Number(e.currentTarget.value))
+  }
+
+  function handleChangeLevelComparator(e) {
+    setLevelComparator(e.currentTarget.value)
   }
 
   function handleChangeTerm(e) {
@@ -214,8 +236,18 @@ function TabPaneCard({
           handleChange={handleChangeType}
           data={dataTypes}
         />
-        <AccordionItemRadioFilter
+        <AccordionItemLevelFilter
           eventKey="3"
+          title="レベル"
+          nameComparator="level-comparator"
+          stateValue={levelValue}
+          stateComparator={levelComparator}
+          handleChangeValue={handleChangeLevelValue}
+          handleChangeComparator={handleChangeLevelComparator}
+          data={dataLevelComparators}
+        />
+        <AccordionItemRadioFilter
+          eventKey="4"
           title="能力語"
           name="term"
           state={term}
@@ -223,7 +255,7 @@ function TabPaneCard({
           data={dataTerms}
         />
         <AccordionItemRadioFilter
-          eventKey="4"
+          eventKey="5"
           title="特性"
           name="trait"
           state={trait}
@@ -248,6 +280,8 @@ function TabPaneCard({
               selectedExpansion={expansion}
               selectedColor={color}
               selectedType={type}
+              selectedLevelValue={levelValue}
+              selectedLevelComparator={levelComparator}
               selectedTerm={term}
               selectedTrait={trait}
               handleSetIdZoom={handleSetIdZoom}
@@ -314,17 +348,89 @@ function AccordionItemRadioFilter({
   )
 }
 
+function AccordionItemLevelFilter({
+  eventKey,
+  title,
+  nameComparator,
+  stateValue,
+  stateComparator,
+  handleChangeValue,
+  handleChangeComparator,
+  data,
+}) {
+  const { activeEventKey } = useContext(AccordionContext)
+  const expanded = isAccordionItemSelected(activeEventKey, eventKey)
+  const label =
+    stateComparator === LEVEL_COMPARATOR_GE
+      ? `${stateValue}以上`
+      : stateComparator === LEVEL_COMPARATOR_LE
+      ? `${stateValue}以下`
+      : `${stateValue}に等しい`
+  const enphasized = stateValue !== 0 || stateComparator != LEVEL_COMPARATOR_GE
+
+  return (
+    <AccordionItem eventKey={eventKey}>
+      <AccordionHeader as="h3">
+        {expanded ? (
+          `➖ ${title}`
+        ) : !enphasized ? (
+          `➕ ${title} ― ${label}`
+        ) : (
+          <>
+            ➕ {title}
+            &nbsp;―&nbsp;
+            <b>{label}</b>
+          </>
+        )}
+      </AccordionHeader>
+      <AccordionBody>
+        <div>
+          <div>{stateValue}</div>
+          <FormRange
+            min={LEVEL_VALUE_MIN}
+            max={LEVEL_VALUE_MAX}
+            defaultValue={LEVEL_VALUE_MIN}
+            onChange={handleChangeValue}
+          />
+        </div>
+        <div className="container-button">
+          {data.map((element) => {
+            const id = `${nameComparator}-${element.value}`
+            return (
+              <ToggleButton
+                key={id}
+                type="radio"
+                variant="outline-primary"
+                id={id}
+                name={nameComparator}
+                value={element.value}
+                onChange={handleChangeComparator}
+                checked={stateComparator === element.value}
+              >
+                {element.label}
+              </ToggleButton>
+            )
+          })}
+        </div>
+      </AccordionBody>
+    </AccordionItem>
+  )
+}
+
 function TableRowCard({
   id,
   name,
   expansion,
   color,
   type,
+  level,
   term,
   trait,
   selectedExpansion,
   selectedType,
   selectedColor,
+  selectedLevelValue,
+  selectedLevelComparator,
   selectedTerm,
   selectedTrait,
   handleSetIdZoom,
@@ -334,10 +440,17 @@ function TableRowCard({
   handleSetDeckSide,
   dispatchSimulator,
 }) {
+  const levelMatched =
+    selectedLevelComparator === LEVEL_COMPARATOR_GE
+      ? level >= selectedLevelValue
+      : selectedLevelComparator === LEVEL_COMPARATOR_LE
+      ? level <= selectedLevelValue
+      : level === selectedLevelValue
   const show =
     (selectedExpansion === 0 || expansion === selectedExpansion) &&
     (selectedColor === 0 || (color & selectedColor) === selectedColor) &&
     (selectedType === 0 || type === selectedType) &&
+    levelMatched &&
     (selectedTerm === 0 || (term & selectedTerm) === selectedTerm) &&
     (selectedTrait === 0 || (trait & selectedTrait) === selectedTrait)
   let colorClass
@@ -360,6 +473,7 @@ function TableRowCard({
       data-expansion={expansion}
       data-color={color}
       data-type={type}
+      data-level={level}
       data-term={term}
       data-trait={trait}
       style={{ display: show ? 'table-row' : 'none' }}
