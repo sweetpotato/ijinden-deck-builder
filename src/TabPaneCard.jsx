@@ -190,7 +190,7 @@ function TabPaneCard({
         alwaysOpen
         defaultActiveKey={['1', '2']}
       >
-        <AccordionItemFilter
+        <AccordionItemRadioFilter
           eventKey="0"
           title="エキスパンション"
           name="expansion"
@@ -198,7 +198,7 @@ function TabPaneCard({
           handleChange={handleChangeExpansion}
           data={dataExpansions}
         />
-        <AccordionItemFilter
+        <AccordionItemRadioFilter
           eventKey="1"
           title="色"
           name="color"
@@ -206,7 +206,7 @@ function TabPaneCard({
           handleChange={handleChangeColor}
           data={dataColors}
         />
-        <AccordionItemFilter
+        <AccordionItemRadioFilter
           eventKey="2"
           title="種類"
           name="type"
@@ -214,7 +214,7 @@ function TabPaneCard({
           handleChange={handleChangeType}
           data={dataTypes}
         />
-        <AccordionItemFilter
+        <AccordionItemRadioFilter
           eventKey="3"
           title="能力語"
           name="term"
@@ -222,7 +222,7 @@ function TabPaneCard({
           handleChange={handleChangeTerm}
           data={dataTerms}
         />
-        <AccordionItemFilter
+        <AccordionItemRadioFilter
           eventKey="4"
           title="特性"
           name="trait"
@@ -264,7 +264,7 @@ function TabPaneCard({
   )
 }
 
-function AccordionItemFilter({
+function AccordionItemRadioFilter({
   eventKey,
   title,
   name,
