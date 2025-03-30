@@ -399,7 +399,6 @@ function AccordionItemLevelFilter({
           <FormRange
             min={LEVEL_VALUE_MIN}
             max={LEVEL_VALUE_MAX}
-            defaultValue={LEVEL_VALUE_MIN}
             value={stateValue}
             onChange={handleChangeValue}
           />
