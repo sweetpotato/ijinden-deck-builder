@@ -14,7 +14,6 @@ import {
   Tooltip,
 } from 'react-bootstrap'
 
-import ImageCard from './components/ImageCard'
 import {
   dataCardsArrayForDeck as dataCardsArray,
   dataCardsMap,
@@ -25,8 +24,9 @@ import {
   handleClickDecrement,
   handleClickIncrement,
 } from './commons/handleClick'
-import { enumActionSimulator } from './hooks/reducerSimulator'
 import { sum } from './commons/utils'
+import ImageCard from './components/ImageCard'
+import { enumActionSimulator } from './hooks/reducerSimulator'
 
 function makeTextExportedPart(title, deck) {
   const numCards = sum(deck.values())

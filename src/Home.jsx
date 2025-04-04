@@ -8,16 +8,16 @@ import {
   ModalHeader,
   ModalTitle,
 } from 'react-bootstrap'
-import { useParams } from 'react-router-dom'
 import Tab from 'react-bootstrap/Tab'
 import Tabs from 'react-bootstrap/Tabs'
+import { useParams } from 'react-router-dom'
 
 import TabPaneCard from './TabPaneCard'
 import TabPaneDeck from './TabPaneDeck'
 import TabPaneLoad from './TabPaneLoad'
 import TabPaneSimulator from './TabPaneSimulator'
-import enumTabPane from './commons/enumTabPane'
 import { dataCardsMap, decodeDeck } from './commons/dataCards'
+import enumTabPane from './commons/enumTabPane'
 import { enumStateSimulator, reducerSimulator } from './hooks/reducerSimulator'
 
 function App() {

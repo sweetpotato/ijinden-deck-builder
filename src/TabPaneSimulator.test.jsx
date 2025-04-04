@@ -3,9 +3,9 @@
 import 'fake-indexeddb/auto'
 
 import { createRoutesStub } from 'react-router-dom'
+import { afterEach, expect, test } from 'vitest'
 import { cleanup, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { afterEach, expect, test } from 'vitest'
 
 import Home from './Home'
 
