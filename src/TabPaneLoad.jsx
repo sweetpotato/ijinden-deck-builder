@@ -37,7 +37,7 @@ const DTF = new Intl.DateTimeFormat([], {
   second: '2-digit',
 })
 
-function TabPaneSave({
+function TabPaneLoad({
   handleSetDeckTitle,
   handleSetDeckMain,
   handleSetDeckSide,
@@ -233,4 +233,4 @@ function ContainerDeckSavedPart({ title, deckSaved }) {
   )
 }
 
-export default TabPaneSave
+export default TabPaneLoad

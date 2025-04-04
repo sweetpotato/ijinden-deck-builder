@@ -14,7 +14,7 @@ import Tabs from 'react-bootstrap/Tabs'
 
 import TabPaneCard from './TabPaneCard'
 import TabPaneDeck from './TabPaneDeck'
-import TabPaneSave from './TabPaneSave'
+import TabPaneLoad from './TabPaneLoad'
 import TabPaneSimulator from './TabPaneSimulator'
 import enumTabPane from './commons/enumTabPane'
 import { dataCardsMap, decodeDeck } from './commons/dataCards'
@@ -110,7 +110,7 @@ function App() {
           />
         </Tab>
         <Tab eventKey={enumTabPane.SAVE_AND_LOAD} title="マイデッキ">
-          <TabPaneSave
+          <TabPaneLoad
             handleSetDeckTitle={handleSetDeckTitle}
             handleSetDeckMain={handleSetDeckMain}
             handleSetDeckSide={handleSetDeckSide}
