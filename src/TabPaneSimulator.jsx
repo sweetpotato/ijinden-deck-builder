@@ -42,6 +42,8 @@ function makeShuffledArray(array) {
   return result
 }
 
+// "Library" の先頭から n 枚を取り出して "Picked" の末尾に加え、
+// 新しい Library と Picked の対を返す。
 function pickCards(currentLibrary, currentPicked, n) {
   const newLibrary = currentLibrary.slice()
   const newPicked = currentPicked.slice()
@@ -53,15 +55,15 @@ function pickCards(currentLibrary, currentPicked, n) {
 
 function TabPaneSimulator({ deck, state, dispatch }) {
   const [guardians, setGuardians] = useState(null)
-  const [hand, setHand] = useState(null)
-  const [guardiansToggles, setGuardiansToggles] = useState(null)
-  const [handToggles, setHandToggles] = useState(null)
+  const [handAndDeck, setHandAndDeck] = useState(null)
+  const [togglesGuardians, setTogglesGuardians] = useState(null)
+  const [togglesHandAndDeck, setTogglesHandAndDeck] = useState(null)
 
   function handleClickReset() {
     setGuardians(null)
-    setHand(null)
-    setGuardiansToggles(null)
-    setHandToggles(null)
+    setHandAndDeck(null)
+    setTogglesGuardians(null)
+    setTogglesHandAndDeck(null)
     dispatch(enumActionSimulator.RESET)
   }
 
@@ -71,20 +73,22 @@ function TabPaneSimulator({ deck, state, dispatch }) {
       return
     }
 
-    let newHand = makeShuffledArray(makeIdArray(deck))
-    // ガーディアン4枚
+    let newHandAndDeck = makeShuffledArray(makeIdArray(deck))
+    // ガーディアンが4枚、残りは手札と山札
     let newGuardians
-    ;[newHand, newGuardians] = pickCards(newHand, [], 4)
+    ;[newHandAndDeck, newGuardians] = pickCards(newHandAndDeck, [], 4)
 
     setGuardians(newGuardians)
-    setHand(newHand)
-    setGuardiansToggles([
+    setHandAndDeck(newHandAndDeck)
+    // ガーディアン4枚は不可視
+    setTogglesGuardians([
       enumToggle.OPAQUE,
       enumToggle.OPAQUE,
       enumToggle.OPAQUE,
       enumToggle.OPAQUE,
     ])
-    const newHandToggles = [
+    // 初期手札6枚は可視で、山札は不可視
+    const newTogglesHandAndDeck = [
       enumToggle.TRANSPARENT,
       enumToggle.TRANSPARENT,
       enumToggle.TRANSPARENT,
@@ -92,26 +96,26 @@ function TabPaneSimulator({ deck, state, dispatch }) {
       enumToggle.TRANSPARENT,
       enumToggle.TRANSPARENT,
     ]
-    for (let i = 0; i < newHand.length; ++i) {
-      newHandToggles.push(enumToggle.OPAQUE)
+    for (let i = 6; i < newHandAndDeck.length; ++i) {
+      newTogglesHandAndDeck.push(enumToggle.OPAQUE)
     }
-    setHandToggles(newHandToggles)
+    setTogglesHandAndDeck(newTogglesHandAndDeck)
     dispatch(enumActionSimulator.START)
   }
 
   function handleClickMulligan() {
-    setHand(makeShuffledArray(hand))
+    setHandAndDeck(makeShuffledArray(handAndDeck))
     dispatch(enumActionSimulator.CONTINUE)
   }
 
   // Given to children
-  function handleGuardiansToggleAt(index) {
-    handleToggleAt(setGuardiansToggles, guardiansToggles, index)
+  function handleToggleGuardiansAt(index) {
+    handleToggleAt(setTogglesGuardians, togglesGuardians, index)
   }
 
   // Given to children
-  function handleHandToggleAt(index) {
-    handleToggleAt(setHandToggles, handToggles, index)
+  function handleToggleHandAndDeckAt(index) {
+    handleToggleAt(setTogglesHandAndDeck, togglesHandAndDeck, index)
   }
 
   function handleToggleAt(setToggles, toggles, index) {
@@ -193,14 +197,14 @@ function TabPaneSimulator({ deck, state, dispatch }) {
           <ContainerSection
             title="ガーディアン"
             cards={guardians}
-            toggles={guardiansToggles}
-            handleToggleAt={handleGuardiansToggleAt}
+            toggles={togglesGuardians}
+            handleToggleAt={handleToggleGuardiansAt}
           />
           <ContainerSection
             title="手札"
-            cards={hand}
-            toggles={handToggles}
-            handleToggleAt={handleHandToggleAt}
+            cards={handAndDeck}
+            toggles={togglesHandAndDeck}
+            handleToggleAt={handleToggleHandAndDeckAt}
           />
         </>
       )}
@@ -213,9 +217,9 @@ function ContainerSection({ title, cards, toggles, handleToggleAt }) {
     <>
       <h3 className="m-2">{title}</h3>
       <div className="container-card-line-up ms-2">
-        {cards.map((element, index) => {
-          const key = `${element}-${index}`
-          const card = dataCards.get(element)
+        {cards.map((id, index) => {
+          const key = `${id}-${index}`
+          const card = dataCards.get(id)
           return (
             <ImageCardWithToggle
               key={key}
@@ -233,7 +237,7 @@ function ContainerSection({ title, cards, toggles, handleToggleAt }) {
 }
 
 function ImageCardWithToggle({ imageUrl, alt, toggle, handleToggleAt, index }) {
-  const buttonClass = classNames({
+  const classesButton = classNames({
     'btn-toggled': true,
     'btn-toggled-opaque': toggle === enumToggle.OPAQUE,
     'btn-toggled-transparent': toggle === enumToggle.TRANSPARENT,
@@ -246,7 +250,7 @@ function ImageCardWithToggle({ imageUrl, alt, toggle, handleToggleAt, index }) {
 
   return (
     <ImageCard imageUrl={imageUrl} alt={alt}>
-      <Button className={buttonClass} onClick={() => handleToggleAt(index)} />
+      <Button className={classesButton} onClick={() => handleToggleAt(index)} />
     </ImageCard>
   )
 }
