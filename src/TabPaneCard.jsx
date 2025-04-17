@@ -544,6 +544,7 @@ function FormControlCounter({
   return (
     <InputGroup>
       <Button
+        size="sm"
         variant="outline-secondary"
         onClick={handleClickMinus}
         disabled={counter <= 0}
@@ -551,7 +552,7 @@ function FormControlCounter({
         -
       </Button>
       <FormControl type="number" readOnly name={name} value={counter} />
-      <Button variant="outline-secondary" onClick={handleClickPlus}>
+      <Button size="sm" variant="outline-secondary" onClick={handleClickPlus}>
         +
       </Button>
     </InputGroup>
