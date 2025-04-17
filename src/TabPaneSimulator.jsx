@@ -92,7 +92,7 @@ function TabPaneSimulator({ deck, state, dispatch }) {
       enumToggle.TRANSPARENT,
       enumToggle.TRANSPARENT,
     ]
-    for (let i = 0; i < newHand.length; ++i) {
+    for (let i = 6; i < newHand.length; ++i) {
       newHandToggles.push(enumToggle.OPAQUE)
     }
     setHandToggles(newHandToggles)
