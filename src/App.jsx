@@ -1,4 +1,7 @@
+// SPDX-License-Identifier: MIT
+
 import { Route, Routes } from 'react-router-dom'
+
 import Home from './Home'
 
 function App() {

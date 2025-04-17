@@ -2,14 +2,14 @@
 
 import 'fake-indexeddb/auto'
 
+import { createRoutesStub } from 'react-router-dom'
+import { afterEach, expect, test } from 'vitest'
 import { cleanup, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { afterEach, expect, test } from 'vitest'
 
 import Home from './Home'
 import { dataCardsMap } from './commons/dataCards'
 import db from './commons/db'
-import { createRoutesStub } from 'react-router-dom'
 
 function defaultRender() {
   const Stub = createRoutesStub([{ path: '/', Component: Home }])
