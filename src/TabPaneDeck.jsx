@@ -5,6 +5,7 @@ import {
   Alert,
   Button,
   FormControl,
+  InputGroup,
   Modal,
   ModalBody,
   ModalFooter,
@@ -17,6 +18,7 @@ import {
 import {
   dataCardsArrayForDeck as dataCardsArray,
   dataCardsMap,
+  encodeDeck,
 } from './commons/dataCards'
 import db from './commons/db'
 import enumTabPane from './commons/enumTabPane'
@@ -159,6 +161,8 @@ function TabPaneDeck({
         dispatchSimulator={dispatchSimulator}
         isSide
       />
+      <h2 className="m-2">レシピを共有</h2>
+      <ContainerDeckShare deckMain={deckMain} deckSide={deckSide} />
       <ContainerDeckExport deckMain={deckMain} deckSide={deckSide} />
     </>
   )
@@ -276,10 +280,55 @@ function ContainerDeckCard({
   )
 }
 
+function ContainerDeckShare({ deckMain, deckSide }) {
+  const [showCopied, setShowCopied] = useState(false)
+  const refButton = useRef()
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowCopied(false)
+    }, 1000)
+    return () => clearTimeout(timer)
+  }, [showCopied])
+
+  // base は trailing slash (/) を含む
+  const base = import.meta.env.VITE_LOCAL_BASE || import.meta.env.BASE_URL
+  const deckCode = encodeDeck([...deckMain.entries()], [...deckSide.entries()])
+  const deckUrl = deckCode ? `${base}#/deck/${deckCode}` : null
+
+  return (
+    <div className="m-2">
+      <InputGroup>
+        <Button
+          ref={refButton}
+          variant="outline-secondary"
+          disabled={!deckUrl}
+          onClick={async () => {
+            await navigator.clipboard.writeText(deckUrl)
+            setShowCopied(true)
+          }}
+        >
+          ▶共有リンクをコピー
+        </Button>
+        <Overlay
+          target={refButton.current}
+          show={showCopied}
+          placement="bottom"
+        >
+          {(props) => <Tooltip {...props}>コピーしました</Tooltip>}
+        </Overlay>
+        <FormControl
+          readOnly
+          value={deckUrl || '(共有できる条件を満たしていません)'}
+        />
+      </InputGroup>
+    </div>
+  )
+}
+
 function ContainerDeckExport({ deckMain, deckSide }) {
   const [showCopied, setShowCopied] = useState(false)
   const refButton = useRef()
-  const refTextarea = useRef()
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -292,18 +341,16 @@ function ContainerDeckExport({ deckMain, deckSide }) {
 
   return (
     <>
-      <h2 className="m-2">テキストでエクスポートβ</h2>
       <div className="m-2">
         <Button
           ref={refButton}
           variant="outline-secondary"
           onClick={async () => {
-            refTextarea.current.select()
             await navigator.clipboard.writeText(textExported)
             setShowCopied(true)
           }}
         >
-          テキストをコピー
+          ▼テキストデータをコピーβ
         </Button>
         <Overlay target={refButton.current} show={showCopied} placement="top">
           {(props) => <Tooltip {...props}>コピーしました</Tooltip>}
@@ -311,7 +358,6 @@ function ContainerDeckExport({ deckMain, deckSide }) {
       </div>
       <div className="m-2">
         <FormControl
-          ref={refTextarea}
           readOnly
           as="textarea"
           rows={deckMain.size + deckSide.size + 3}
