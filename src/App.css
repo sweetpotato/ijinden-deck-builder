@@ -27,6 +27,10 @@ thead.sticky-top {
   top: 2.5rem;
 }
 
+tbody .input-group button {
+  width: 1.7rem;
+}
+
 .container-filter .accordion-header {
   position: initial;
 }
