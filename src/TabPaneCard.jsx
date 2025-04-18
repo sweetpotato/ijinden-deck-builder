@@ -490,15 +490,15 @@ function TableRowCard({
     >
       <td className={colorClass}>{id}</td>
       <td>
-        {name}
         <Button
           variant="secondary-outline"
           size="sm"
           style={{ padding: '0', border: '0' }}
           onClick={() => handleSetIdZoom(id)}
         >
-          🔍
+          🔎
         </Button>
+        {name}
       </td>
       <td>
         <FormControlCounter
