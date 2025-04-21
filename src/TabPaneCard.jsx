@@ -102,6 +102,20 @@ const dataTraits = [
   { value: 32, label: '志願' },
 ]
 
+// 表示順を整えるため、値の昇順にしていない
+const dataLegacies = [
+  { value: 0, label: '指定なし' },
+  { value: 1, label: '魔力化' },
+  { value: 2, label: '冥府発動' },
+  { value: 3, label: '復元' },
+  { value: 6, label: '反魂' },
+  { value: 8, label: '木霊' },
+  { value: 9, label: '喪神' },
+  { value: 4, label: '1ドローする' },
+  { value: 5, label: '手札に戻す' },
+  { value: 7, label: '山札の上か下に戻す' },
+]
+
 const CHROMAGIC_RED = 32
 const CHROMAGIC_BLUE = 64
 const CHROMAGIC_GREEN = 128
@@ -176,6 +190,7 @@ function TabPaneCard({
   const [levelComparator, setLevelComparator] = useState(LEVEL_COMPARATOR_GE)
   const [term, setTerm] = useState(0)
   const [trait, setTrait] = useState(0)
+  const [legacy, setLegacy] = useState(0)
 
   function handleChangeExpansion(e) {
     setExpansion(Number(e.currentTarget.value))
@@ -213,6 +228,10 @@ function TabPaneCard({
 
   function handleChangeTrait(e) {
     setTrait(Number(e.currentTarget.value))
+  }
+
+  function handleChangeLegacy(e) {
+    setLegacy(Number(e.currentTarget.value))
   }
 
   return (
@@ -272,6 +291,14 @@ function TabPaneCard({
           handleChange={handleChangeTrait}
           data={dataTraits}
         />
+        <AccordionItemRadioFilter
+          eventKey="6"
+          title="遺業能力"
+          name="legacy"
+          state={legacy}
+          handleChange={handleChangeLegacy}
+          data={dataLegacies}
+        />
       </Accordion>
       <Table hover variant="light">
         <thead className="sticky-top">
@@ -294,6 +321,7 @@ function TabPaneCard({
               selectedLevelComparator={levelComparator}
               selectedTerm={term}
               selectedTrait={trait}
+              selectedLegacy={legacy}
               handleSetIdZoom={handleSetIdZoom}
               deckMain={deckMain}
               handleSetDeckMain={handleSetDeckMain}
@@ -436,6 +464,7 @@ function TableRowCard({
   level,
   term,
   trait,
+  legacy,
   selectedExpansion,
   selectedType,
   selectedColor,
@@ -443,6 +472,7 @@ function TableRowCard({
   selectedLevelComparator,
   selectedTerm,
   selectedTrait,
+  selectedLegacy,
   handleSetIdZoom,
   deckMain,
   handleSetDeckMain,
@@ -462,7 +492,9 @@ function TableRowCard({
     (selectedType === 0 || type === selectedType) &&
     levelMatched &&
     (selectedTerm === 0 || (term & selectedTerm) === selectedTerm) &&
-    (selectedTrait === 0 || (trait & selectedTrait) === selectedTrait)
+    (selectedTrait === 0 || (trait & selectedTrait) === selectedTrait) &&
+    (selectedLegacy === 0 || legacy === selectedLegacy)
+
   let colorClass
   if ((term & TERM_CHROMAGIC) === TERM_CHROMAGIC) {
     colorClass = classNames(
@@ -486,6 +518,7 @@ function TableRowCard({
       data-level={level}
       data-term={term}
       data-trait={trait}
+      data-legacy={legacy}
       style={{ display: show ? 'table-row' : 'none' }}
     >
       <td className={colorClass}>{id}</td>
