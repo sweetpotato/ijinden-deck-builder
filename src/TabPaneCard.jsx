@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 
 import classNames from 'classnames'
-import { useContext, useState } from 'react'
+import { useContext, useRef, useState } from 'react'
 import {
   Accordion,
   AccordionBody,
@@ -9,6 +9,8 @@ import {
   AccordionHeader,
   AccordionItem,
   Button,
+  Form,
+  FormCheck,
   FormControl,
   InputGroup,
   Table,
@@ -191,6 +193,9 @@ function TabPaneCard({
   const [term, setTerm] = useState(0)
   const [trait, setTrait] = useState(0)
   const [legacy, setLegacy] = useState(0)
+  const [keywords, setKeywords] = useState([])
+  const [includesTraitAndLegacy, setIncludesTraitAndLegacy] = useState(true)
+  const refKeywords = useRef(null)
 
   function handleChangeExpansion(e) {
     setExpansion(Number(e.currentTarget.value))
@@ -234,13 +239,46 @@ function TabPaneCard({
     setLegacy(Number(e.currentTarget.value))
   }
 
+  function handleSubmitKeywords(e) {
+    e.preventDefault()
+    setKeywords(
+      refKeywords.current.value
+        .trim()
+        .split(/\s+/)
+        .filter((e) => e.length > 0)
+    )
+  }
+
+  function handleChangeIncludesTraitAndLegacy(e) {
+    setIncludesTraitAndLegacy(e.currentTarget.checked)
+  }
+
   return (
     <>
-      <Accordion
-        className="container-filter"
-        alwaysOpen
-        defaultActiveKey={['1', '2']}
-      >
+      <div className="m-2">
+        <Form noValidate autoComplete="off" onSubmit={handleSubmitKeywords}>
+          <InputGroup>
+            <Button variant="primary" type="submit">
+              検索
+            </Button>
+            <FormControl
+              ref={refKeywords}
+              placeholder="カード名やルールテキスト"
+              onBlur={handleSubmitKeywords}
+            ></FormControl>
+          </InputGroup>
+        </Form>
+      </div>
+      <div className="m-2">
+        <FormCheck
+          id="includes-trait-and-legacy"
+          type="checkbox"
+          label="特性と遺業能力も検索する"
+          defaultChecked={true}
+          onChange={handleChangeIncludesTraitAndLegacy}
+        />
+      </div>
+      <Accordion className="container-filter" alwaysOpen>
         <AccordionItemRadioFilter
           eventKey="0"
           title="エキスパンション"
@@ -322,6 +360,8 @@ function TabPaneCard({
               selectedTerm={term}
               selectedTrait={trait}
               selectedLegacy={legacy}
+              keywords={keywords}
+              includesTraitAndLegacy={includesTraitAndLegacy}
               handleSetIdZoom={handleSetIdZoom}
               deckMain={deckMain}
               handleSetDeckMain={handleSetDeckMain}
@@ -465,6 +505,9 @@ function TableRowCard({
   term,
   trait,
   legacy,
+  traitText,
+  ruleText,
+  legacyText,
   selectedExpansion,
   selectedType,
   selectedColor,
@@ -473,6 +516,8 @@ function TableRowCard({
   selectedTerm,
   selectedTrait,
   selectedLegacy,
+  keywords,
+  includesTraitAndLegacy,
   handleSetIdZoom,
   deckMain,
   handleSetDeckMain,
@@ -486,6 +531,14 @@ function TableRowCard({
       : selectedLevelComparator === LEVEL_COMPARATOR_LE
       ? level <= selectedLevelValue
       : level === selectedLevelValue
+  const nameMatched = keywords.every((e) => name.includes(e))
+  const traitMatched =
+    includesTraitAndLegacy &&
+    keywords.every((e) => (traitText || '').includes(e))
+  const ruleTextMatched = keywords.every((e) => ruleText.includes(e))
+  const legacyMatched =
+    includesTraitAndLegacy &&
+    keywords.every((e) => (legacyText || '').includes(e))
   const show =
     (selectedExpansion === 0 || expansion === selectedExpansion) &&
     (selectedColor === 0 || (color & selectedColor) === selectedColor) &&
@@ -493,7 +546,8 @@ function TableRowCard({
     levelMatched &&
     (selectedTerm === 0 || (term & selectedTerm) === selectedTerm) &&
     (selectedTrait === 0 || (trait & selectedTrait) === selectedTrait) &&
-    (selectedLegacy === 0 || legacy === selectedLegacy)
+    (selectedLegacy === 0 || legacy === selectedLegacy) &&
+    (nameMatched || traitMatched || ruleTextMatched || legacyMatched)
 
   let colorClass
   if ((term & TERM_CHROMAGIC) === TERM_CHROMAGIC) {
