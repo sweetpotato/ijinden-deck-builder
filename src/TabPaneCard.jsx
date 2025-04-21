@@ -274,7 +274,11 @@ function TabPaneCard({
             さらに絞り込む
           </AccordionHeader>
           <AccordionBody>
-            <Accordion className="container-filter" alwaysOpen>
+            <Accordion
+              className="container-filter"
+              alwaysOpen
+              defaultActiveKey={['1', '2']}
+            >
               <AccordionItemRadioFilter
                 eventKey="0"
                 title="エキスパンション"
