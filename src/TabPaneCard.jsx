@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 
 import classNames from 'classnames'
-import { useContext, useRef, useState } from 'react'
+import { useContext, useState } from 'react'
 import {
   Accordion,
   AccordionBody,
@@ -9,7 +9,6 @@ import {
   AccordionHeader,
   AccordionItem,
   Button,
-  Form,
   FormCheck,
   FormControl,
   InputGroup,
@@ -195,7 +194,6 @@ function TabPaneCard({
   const [legacy, setLegacy] = useState(0)
   const [keywords, setKeywords] = useState([])
   const [includesTraitAndLegacy, setIncludesTraitAndLegacy] = useState(true)
-  const refKeywords = useRef(null)
 
   function handleChangeExpansion(e) {
     setExpansion(Number(e.currentTarget.value))
@@ -239,10 +237,9 @@ function TabPaneCard({
     setLegacy(Number(e.currentTarget.value))
   }
 
-  function handleSubmitKeywords(e) {
-    e.preventDefault()
+  function handleChangeKeywords(e) {
     setKeywords(
-      refKeywords.current.value
+      e.currentTarget.value
         .trim()
         .split(/\s+/)
         .filter((e) => e.length > 0)
@@ -256,18 +253,10 @@ function TabPaneCard({
   return (
     <>
       <div className="m-2">
-        <Form noValidate autoComplete="off" onSubmit={handleSubmitKeywords}>
-          <InputGroup>
-            <Button variant="primary" type="submit">
-              検索
-            </Button>
-            <FormControl
-              ref={refKeywords}
-              placeholder="カード名やルールテキスト"
-              onBlur={handleSubmitKeywords}
-            ></FormControl>
-          </InputGroup>
-        </Form>
+        <FormControl
+          placeholder="カード名やルールテキストを入力して検索β"
+          onChange={handleChangeKeywords}
+        />
       </div>
       <div className="m-2">
         <FormCheck
