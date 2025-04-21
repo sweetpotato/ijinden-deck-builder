@@ -501,6 +501,7 @@ function AccordionItemLevelFilter({
 function TableRowCard({
   id,
   name,
+  kana,
   expansion,
   color,
   type,
@@ -534,7 +535,7 @@ function TableRowCard({
       : selectedLevelComparator === LEVEL_COMPARATOR_LE
       ? level <= selectedLevelValue
       : level === selectedLevelValue
-  let allText = name
+  let allText = name + '§' + kana
   allText += includesTraitAndLegacy && traitText ? '§' + traitText : ''
   allText += '§' + ruleText
   allText += includesTraitAndLegacy && legacyText ? '§' + legacyText : ''
