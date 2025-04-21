@@ -529,14 +529,10 @@ function TableRowCard({
       : selectedLevelComparator === LEVEL_COMPARATOR_LE
       ? level <= selectedLevelValue
       : level === selectedLevelValue
-  const nameMatched = keywords.every((e) => name.includes(e))
-  const traitMatched =
-    includesTraitAndLegacy &&
-    keywords.every((e) => (traitText || '').includes(e))
-  const ruleTextMatched = keywords.every((e) => ruleText.includes(e))
-  const legacyMatched =
-    includesTraitAndLegacy &&
-    keywords.every((e) => (legacyText || '').includes(e))
+  let allText = name
+  allText += includesTraitAndLegacy && traitText ? '§' + traitText : ''
+  allText += '§' + ruleText
+  allText += includesTraitAndLegacy && legacyText ? '§' + legacyText : ''
   const show =
     (selectedExpansion === 0 || expansion === selectedExpansion) &&
     (selectedColor === 0 || (color & selectedColor) === selectedColor) &&
@@ -545,7 +541,7 @@ function TableRowCard({
     (selectedTerm === 0 || (term & selectedTerm) === selectedTerm) &&
     (selectedTrait === 0 || (trait & selectedTrait) === selectedTrait) &&
     (selectedLegacy === 0 || legacy === selectedLegacy) &&
-    (nameMatched || traitMatched || ruleTextMatched || legacyMatched)
+    keywords.every((e) => allText.includes(e))
 
   let colorClass
   if ((term & TERM_CHROMAGIC) === TERM_CHROMAGIC) {
