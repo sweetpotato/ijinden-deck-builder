@@ -315,19 +315,19 @@ function TabPaneCard({
         />
         <AccordionItemRadioFilter
           eventKey="4"
-          title="能力語"
-          name="term"
-          state={term}
-          handleChange={handleChangeTerm}
-          data={dataTerms}
-        />
-        <AccordionItemRadioFilter
-          eventKey="5"
           title="特性"
           name="trait"
           state={trait}
           handleChange={handleChangeTrait}
           data={dataTraits}
+        />
+        <AccordionItemRadioFilter
+          eventKey="5"
+          title="能力語"
+          name="term"
+          state={term}
+          handleChange={handleChangeTerm}
+          data={dataTerms}
         />
         <AccordionItemRadioFilter
           eventKey="6"
