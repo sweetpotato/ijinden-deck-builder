@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 
 import classNames from 'classnames'
-import { useContext, useState } from 'react'
+import { useContext, useDeferredValue, useState } from 'react'
 import {
   Accordion,
   AccordionBody,
@@ -194,6 +194,7 @@ function TabPaneCard({
   const [legacy, setLegacy] = useState(0)
   const [keywords, setKeywords] = useState([])
   const [includesTraitAndLegacy, setIncludesTraitAndLegacy] = useState(true)
+  const deferredKeywords = useDeferredValue(keywords)
 
   function handleChangeExpansion(e) {
     setExpansion(Number(e.currentTarget.value))
@@ -358,7 +359,7 @@ function TabPaneCard({
               selectedTerm={term}
               selectedTrait={trait}
               selectedLegacy={legacy}
-              keywords={keywords}
+              keywords={deferredKeywords}
               includesTraitAndLegacy={includesTraitAndLegacy}
               handleSetIdZoom={handleSetIdZoom}
               deckMain={deckMain}
