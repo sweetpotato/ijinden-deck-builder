@@ -271,7 +271,7 @@ function TabPaneCard({
       <Accordion>
         <AccordionItem eventKey="0">
           <AccordionHeader as="h2" className="header-filter">
-            さらに絞り込む
+            条件で絞り込む
           </AccordionHeader>
           <AccordionBody>
             <Accordion
