@@ -38,6 +38,15 @@ const dataExpansions = [
   { value: 45, label: '第４弾ブースター' },
 ]
 
+const dataRarities = [
+  { value: 0, label: 'すべて' },
+  { value: 1, label: 'Nのみ' },
+  { value: 3, label: 'NとR' },
+  { value: 2, label: 'Rのみ' },
+  { value: 6, label: 'RとSR' },
+  { value: 4, label: 'SRのみ' },
+]
+
 const dataColors = [
   { value: 0, label: 'すべて' },
   { value: 1, label: '赤' },
@@ -185,6 +194,7 @@ function TabPaneCard({
   dispatchSimulator,
 }) {
   const [expansion, setExpansion] = useState(0)
+  const [rarity, setRarity] = useState(0)
   const [color, setColor] = useState(0)
   const [type, setType] = useState(0)
   const [levelValue, setLevelValue] = useState(LEVEL_VALUE_MIN)
@@ -198,6 +208,7 @@ function TabPaneCard({
 
   function handleClickResetConditions() {
     setExpansion(0)
+    setRarity(0)
     setColor(0)
     setType(0)
     setLevelValue(LEVEL_VALUE_MIN)
@@ -209,6 +220,10 @@ function TabPaneCard({
 
   function handleChangeExpansion(e) {
     setExpansion(Number(e.currentTarget.value))
+  }
+
+  function handleChangeRarity(e) {
+    setRarity(Number(e.currentTarget.value))
   }
 
   function handleChangeColor(e) {
@@ -296,7 +311,7 @@ function TabPaneCard({
             <Accordion
               className="container-filter"
               alwaysOpen
-              defaultActiveKey={['1', '2']}
+              defaultActiveKey={['2', '3']}
             >
               <AccordionItemRadioFilter
                 eventKey="0"
@@ -308,6 +323,14 @@ function TabPaneCard({
               />
               <AccordionItemRadioFilter
                 eventKey="1"
+                title="レアリティ"
+                name="rarity"
+                state={rarity}
+                handleChange={handleChangeRarity}
+                data={dataRarities}
+              />
+              <AccordionItemRadioFilter
+                eventKey="2"
                 title="色"
                 name="color"
                 state={color}
@@ -315,7 +338,7 @@ function TabPaneCard({
                 data={dataColors}
               />
               <AccordionItemRadioFilter
-                eventKey="2"
+                eventKey="3"
                 title="種類"
                 name="type"
                 state={type}
@@ -323,7 +346,7 @@ function TabPaneCard({
                 data={dataTypes}
               />
               <AccordionItemLevelFilter
-                eventKey="3"
+                eventKey="4"
                 title="レベル"
                 nameComparator="level-comparator"
                 stateValue={levelValue}
@@ -333,7 +356,7 @@ function TabPaneCard({
                 data={dataLevelComparators}
               />
               <AccordionItemRadioFilter
-                eventKey="4"
+                eventKey="5"
                 title="特性"
                 name="trait"
                 state={trait}
@@ -341,7 +364,7 @@ function TabPaneCard({
                 data={dataTraits}
               />
               <AccordionItemRadioFilter
-                eventKey="5"
+                eventKey="6"
                 title="能力語"
                 name="term"
                 state={term}
@@ -349,7 +372,7 @@ function TabPaneCard({
                 data={dataTerms}
               />
               <AccordionItemRadioFilter
-                eventKey="6"
+                eventKey="7"
                 title="遺業能力"
                 name="legacy"
                 state={legacy}
@@ -375,6 +398,7 @@ function TabPaneCard({
               {...element}
               key={element.id}
               selectedExpansion={expansion}
+              selectedRarity={rarity}
               selectedColor={color}
               selectedType={type}
               selectedLevelValue={levelValue}
@@ -522,6 +546,7 @@ function TableRowCard({
   name,
   kana,
   expansion,
+  rarity,
   color,
   type,
   level,
@@ -532,6 +557,7 @@ function TableRowCard({
   ruleText,
   legacyText,
   selectedExpansion,
+  selectedRarity,
   selectedType,
   selectedColor,
   selectedLevelValue,
@@ -560,6 +586,7 @@ function TableRowCard({
   allText += includesTraitAndLegacy && legacyText ? '§' + legacyText : ''
   const show =
     (selectedExpansion === 0 || expansion === selectedExpansion) &&
+    (selectedRarity === 0 || (rarity & selectedRarity) === rarity) &&
     (selectedColor === 0 || (color & selectedColor) === selectedColor) &&
     (selectedType === 0 || type === selectedType) &&
     levelMatched &&
