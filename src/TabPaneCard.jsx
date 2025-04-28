@@ -196,6 +196,17 @@ function TabPaneCard({
   const [includesTraitAndLegacy, setIncludesTraitAndLegacy] = useState(true)
   const deferredKeywords = useDeferredValue(keywords)
 
+  function handleClickResetConditions() {
+    setExpansion(0)
+    setColor(0)
+    setType(0)
+    setLevelValue(LEVEL_VALUE_MIN)
+    setLevelComparator(LEVEL_COMPARATOR_GE)
+    setTerm(0)
+    setTrait(0)
+    setLegacy(0)
+  }
+
   function handleChangeExpansion(e) {
     setExpansion(Number(e.currentTarget.value))
   }
@@ -274,6 +285,14 @@ function TabPaneCard({
             条件で絞り込む
           </AccordionHeader>
           <AccordionBody>
+            <div className="my-2 container-button">
+              <Button
+                variant="outline-danger"
+                onClick={handleClickResetConditions}
+              >
+                条件すべてをリセットする
+              </Button>
+            </div>
             <Accordion
               className="container-filter"
               alwaysOpen
