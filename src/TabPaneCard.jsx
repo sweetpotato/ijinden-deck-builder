@@ -281,7 +281,7 @@ function TabPaneCard({
     <>
       <div className="m-2">
         <FormControl
-          placeholder="カード名やルールテキストを入力して検索β"
+          placeholder="カード名やルールテキストを入力して検索"
           onChange={handleChangeKeywords}
         />
       </div>
