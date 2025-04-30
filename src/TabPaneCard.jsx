@@ -610,45 +610,37 @@ function TableRowCard({
   }
 
   return (
-    <tr
-      data-id={id}
-      data-expansion={expansion}
-      data-color={color}
-      data-type={type}
-      data-level={level}
-      data-term={term}
-      data-trait={trait}
-      data-legacy={legacy}
-      style={{ display: show ? 'table-row' : 'none' }}
-    >
-      <td className={colorClass}>{id}</td>
-      <td>
-        <Button
-          variant="secondary-outline"
-          size="sm"
-          style={{ padding: '0', border: '0' }}
-          onClick={() => handleSetIdZoom(id)}
-        >
-          🔎
-        </Button>
-        {name}
-      </td>
-      <td>
-        <FormControlCounter
-          id={id}
-          deck={deckMain}
-          handleSetDeck={handleSetDeckMain}
-          dispatchSimulator={dispatchSimulator}
-        />
-      </td>
-      <td>
-        <FormControlCounter
-          id={id}
-          deck={deckSide}
-          handleSetDeck={handleSetDeckSide}
-        />
-      </td>
-    </tr>
+    show && (
+      <tr>
+        <td className={colorClass}>{id}</td>
+        <td>
+          <Button
+            variant="secondary-outline"
+            size="sm"
+            style={{ padding: '0', border: '0' }}
+            onClick={() => handleSetIdZoom(id)}
+          >
+            🔎
+          </Button>
+          {name}
+        </td>
+        <td>
+          <FormControlCounter
+            id={id}
+            deck={deckMain}
+            handleSetDeck={handleSetDeckMain}
+            dispatchSimulator={dispatchSimulator}
+          />
+        </td>
+        <td>
+          <FormControlCounter
+            id={id}
+            deck={deckSide}
+            handleSetDeck={handleSetDeckSide}
+          />
+        </td>
+      </tr>
+    )
   )
 }
 

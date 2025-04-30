@@ -44,12 +44,12 @@ test('レシピペイン内でのカード枚数の増減', async () => {
   expect(paneCard).toBeVisible()
   await user.click(
     paneCard.querySelector(
-      'tr[data-id="R-1"] td:nth-child(3) button:nth-child(3)'
+      'tbody tr:nth-child(1) td:nth-child(3) button:nth-child(3)'
     )
   )
   await user.click(
     paneCard.querySelector(
-      'tr[data-id="R-1"] td:nth-child(4) button:nth-child(3)'
+      'tbody tr:nth-child(1) td:nth-child(4) button:nth-child(3)'
     )
   )
 

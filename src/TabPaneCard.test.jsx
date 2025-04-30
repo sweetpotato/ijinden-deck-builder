@@ -50,22 +50,22 @@ test('カードペイン内でのカード枚数の増減', async () => {
   const paneCard = screen.getAllByRole('tabpanel')[0]
 
   const buttonMinusMainAlpha = paneCard.querySelector(
-    'tr[data-id="R-1"] td:nth-child(3) button:nth-child(1)'
+    'tbody tr:nth-child(1) td:nth-child(3) button:nth-child(1)'
   )
   const inputMainAlpha = paneCard.querySelector(
-    'tr[data-id="R-1"] td:nth-child(3) input'
+    'tbody tr:nth-child(1) td:nth-child(3) input'
   )
   const buttonPlusMainAlpha = paneCard.querySelector(
-    'tr[data-id="R-1"] td:nth-child(3) button:nth-child(3)'
+    'tbody tr:nth-child(1) td:nth-child(3) button:nth-child(3)'
   )
   const buttonMinusSideAlpha = paneCard.querySelector(
-    'tr[data-id="R-1"] td:nth-child(4) button:nth-child(1)'
+    'tbody tr:nth-child(1) td:nth-child(4) button:nth-child(1)'
   )
   const inputSideAlpha = paneCard.querySelector(
-    'tr[data-id="R-1"] td:nth-child(4) input'
+    'tbody tr:nth-child(1) td:nth-child(4) input'
   )
   const buttonPlusSideAlpha = paneCard.querySelector(
-    'tr[data-id="R-1"] td:nth-child(4) button:nth-child(3)'
+    'tbody tr:nth-child(1) td:nth-child(4) button:nth-child(3)'
   )
 
   expect(buttonMinusMainAlpha).toBeDisabled()
