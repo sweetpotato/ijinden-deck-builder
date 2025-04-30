@@ -617,7 +617,7 @@ function TableRowCard({
           <Button
             variant="secondary-outline"
             size="sm"
-            style={{ padding: '0', border: '0' }}
+            className="btn-zoom-in-table"
             onClick={() => handleSetIdZoom(id)}
           >
             🔎
