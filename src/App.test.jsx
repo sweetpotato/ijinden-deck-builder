@@ -96,22 +96,22 @@ test('カードペインからレシピペインへの作用', async () => {
   expect(paneCard).toBeVisible()
 
   const buttonMinusMain = paneCard.querySelector(
-    'tr[data-id="R-1"] td:nth-child(3) button:nth-child(1)'
+    'tbody tr:nth-child(1) td:nth-child(3) button:nth-child(1)'
   )
   const inputMain = paneCard.querySelector(
-    'tr[data-id="R-1"] td:nth-child(3) input'
+    'tbody tr:nth-child(1) td:nth-child(3) input'
   )
   const buttonPlusMain = paneCard.querySelector(
-    'tr[data-id="R-1"] td:nth-child(3) button:nth-child(3)'
+    'tbody tr:nth-child(1) td:nth-child(3) button:nth-child(3)'
   )
   const buttonMinusSide = paneCard.querySelector(
-    'tr[data-id="R-1"] td:nth-child(4) button:nth-child(1)'
+    'tbody tr:nth-child(1) td:nth-child(4) button:nth-child(1)'
   )
   const inputSide = paneCard.querySelector(
-    'tr[data-id="R-1"] td:nth-child(4) input'
+    'tbody tr:nth-child(1) td:nth-child(4) input'
   )
   const buttonPlusSide = paneCard.querySelector(
-    'tr[data-id="R-1"] td:nth-child(4) button:nth-child(3)'
+    'tbody tr:nth-child(1) td:nth-child(4) button:nth-child(3)'
   )
 
   expect(buttonMinusMain.textContent).toBe('-')
@@ -267,16 +267,16 @@ test('レシピペインからカードペインへの作用', async () => {
   expect(paneCard).toBeVisible()
 
   let buttonPlusMain = paneCard.querySelector(
-    'tr[data-id="R-1"] td:nth-child(3) button:nth-child(3)'
+    'tbody tr:nth-child(1) td:nth-child(3) button:nth-child(3)'
   )
   let buttonPlusSide = paneCard.querySelector(
-    'tr[data-id="R-1"] td:nth-child(4) button:nth-child(3)'
+    'tbody tr:nth-child(1) td:nth-child(4) button:nth-child(3)'
   )
   const inputMain = paneCard.querySelector(
-    'tr[data-id="R-1"] td:nth-child(3) input'
+    'tbody tr:nth-child(1) td:nth-child(3) input'
   )
   const inputSide = paneCard.querySelector(
-    'tr[data-id="R-1"] td:nth-child(4) input'
+    'tbody tr:nth-child(1) td:nth-child(4) input'
   )
 
   expect(buttonPlusMain.textContent).toBe('+')
@@ -509,16 +509,16 @@ test('シミュレータがカードペインの操作でアボートする', as
   expect(paneCard).toBeVisible()
 
   let buttonMinusMain = paneCard.querySelector(
-    'tr[data-id="R-1"] td:nth-child(3) button:nth-child(1)'
+    'tbody tr:nth-child(1) td:nth-child(3) button:nth-child(1)'
   )
   let buttonPlusMain = paneCard.querySelector(
-    'tr[data-id="R-1"] td:nth-child(3) button:nth-child(3)'
+    'tbody tr:nth-child(1) td:nth-child(3) button:nth-child(3)'
   )
   let buttonMinusSide = paneCard.querySelector(
-    'tr[data-id="R-1"] td:nth-child(4) button:nth-child(1)'
+    'tbody tr:nth-child(1) td:nth-child(4) button:nth-child(1)'
   )
   let buttonPlusSide = paneCard.querySelector(
-    'tr[data-id="R-1"] td:nth-child(4) button:nth-child(3)'
+    'tbody tr:nth-child(1) td:nth-child(4) button:nth-child(3)'
   )
   expect(buttonMinusMain.textContent).toBe('-')
   expect(buttonPlusMain.textContent).toBe('+')
@@ -676,10 +676,10 @@ test('シミュレータがレシピペインの操作でアボートする', as
   expect(paneCard).toBeVisible()
 
   let buttonPlusMain = paneCard.querySelector(
-    'tr[data-id="R-1"] td:nth-child(3) button:nth-child(3)'
+    'tbody tr:nth-child(1) td:nth-child(3) button:nth-child(3)'
   )
   let buttonPlusSide = paneCard.querySelector(
-    'tr[data-id="R-1"] td:nth-child(4) button:nth-child(3)'
+    'tbody tr:nth-child(1) td:nth-child(4) button:nth-child(3)'
   )
   expect(buttonPlusMain.textContent).toBe('+')
   expect(buttonPlusSide.textContent).toBe('+')

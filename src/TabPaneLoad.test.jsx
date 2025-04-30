@@ -72,11 +72,11 @@ test('レシピに1枚でもあるなら保存できる', async () => {
   expect(paneCard).toHaveClass('active')
   expect(paneCard).toBeVisible()
   const buttonPlusMain = paneCard.querySelector(
-    'tr[data-id="R-1"] td:nth-child(3) button:nth-child(3)'
+    'tbody tr:nth-child(1) td:nth-child(3) button:nth-child(3)'
   )
   expect(buttonPlusMain.textContent).toBe('+')
   const inputMain = paneCard.querySelector(
-    'tr[data-id="R-1"] td:nth-child(3) input'
+    'tbody tr:nth-child(1) td:nth-child(3) input'
   )
   expect(inputMain.value).toBe('0')
   await user.click(buttonPlusMain)
@@ -111,7 +111,7 @@ test('レシピに1枚でもあるなら保存できる', async () => {
   expect(paneCard).toHaveClass('active')
   expect(paneCard).toBeVisible()
   const buttonMinusMain = paneCard.querySelector(
-    'tr[data-id="R-1"] td:nth-child(3) button:nth-child(1)'
+    'tbody tr:nth-child(1) td:nth-child(3) button:nth-child(1)'
   )
   expect(buttonMinusMain.textContent).toBe('-')
   await user.click(buttonMinusMain)
@@ -119,11 +119,11 @@ test('レシピに1枚でもあるなら保存できる', async () => {
 
   // カードペインの適当なカードのサイドプラスボタンを押す
   const buttonPlusSide = paneCard.querySelector(
-    'tr[data-id="R-2"] td:nth-child(4) button:nth-child(3)'
+    'tbody tr:nth-child(2) td:nth-child(4) button:nth-child(3)'
   )
   expect(buttonPlusSide.textContent).toBe('+')
   const inputSide = paneCard.querySelector(
-    'tr[data-id="R-2"] td:nth-child(4) input'
+    'tbody tr:nth-child(2) td:nth-child(4) input'
   )
   expect(inputSide.value).toBe('0')
   await user.click(buttonPlusSide)

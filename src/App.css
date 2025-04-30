@@ -68,6 +68,11 @@ tbody .input-group button {
   margin-right: .25rem;
 }
 
+.btn-zoom-in-table {
+  margin: 0;
+  padding: 0;
+}
+
 .container-card-line-up {
   min-height: 120px;
   overflow: auto;
