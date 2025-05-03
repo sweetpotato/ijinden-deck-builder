@@ -625,7 +625,7 @@ function TableRowCard({
           {name}
         </td>
         <td>
-          <FormControlCounter
+          <InputGroupCounter
             id={id}
             deck={deckMain}
             handleSetDeck={handleSetDeckMain}
@@ -633,7 +633,7 @@ function TableRowCard({
           />
         </td>
         <td>
-          <FormControlCounter
+          <InputGroupCounter
             id={id}
             deck={deckSide}
             handleSetDeck={handleSetDeckSide}
@@ -644,7 +644,7 @@ function TableRowCard({
   )
 }
 
-function FormControlCounter({
+function InputGroupCounter({
   id,
   deck,
   handleSetDeck,
