@@ -11,7 +11,6 @@ import {
   Button,
   FormCheck,
   FormControl,
-  InputGroup,
   Table,
   ToggleButton,
 } from 'react-bootstrap'
@@ -19,11 +18,7 @@ import { isAccordionItemSelected } from 'react-bootstrap/esm/AccordionContext'
 import FormRange from 'react-bootstrap/esm/FormRange'
 
 import { dataCardsArrayForTable as dataCards } from '../commons/dataCards'
-import {
-  handleClickDecrement,
-  handleClickIncrement,
-} from '../commons/handleClick'
-import { enumActionSimulator } from '../hooks/reducerSimulator'
+import InputGroupCounter from './InputGroupCounter'
 
 const dataExpansions = [
   { value: 0, label: 'すべて' },
@@ -641,46 +636,6 @@ function TableRowCard({
         </td>
       </tr>
     )
-  )
-}
-
-function InputGroupCounter({
-  id,
-  deck,
-  handleSetDeck,
-  dispatchSimulator = undefined,
-}) {
-  function handleClickMinus() {
-    handleClickDecrement(id, deck, handleSetDeck)
-    if (dispatchSimulator !== undefined) {
-      dispatchSimulator(enumActionSimulator.INTERRUPT)
-    }
-  }
-
-  function handleClickPlus() {
-    handleClickIncrement(id, deck, handleSetDeck)
-    if (dispatchSimulator !== undefined) {
-      dispatchSimulator(enumActionSimulator.INTERRUPT)
-    }
-  }
-
-  const name = (dispatchSimulator !== undefined ? 'main-' : 'side-') + id
-  const counter = deck.has(id) ? deck.get(id) : 0
-  return (
-    <InputGroup>
-      <Button
-        size="sm"
-        variant="outline-secondary"
-        onClick={handleClickMinus}
-        disabled={counter <= 0}
-      >
-        -
-      </Button>
-      <FormControl type="number" readOnly name={name} value={counter} />
-      <Button size="sm" variant="outline-secondary" onClick={handleClickPlus}>
-        +
-      </Button>
-    </InputGroup>
   )
 }
 
