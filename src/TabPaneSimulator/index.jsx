@@ -4,13 +4,13 @@ import classNames from 'classnames'
 import { useState } from 'react'
 import { Alert, Button } from 'react-bootstrap'
 
-import { dataCardsMap as dataCards } from './commons/dataCards'
-import { sum } from './commons/utils'
-import ImageCard from './components/ImageCard'
+import { dataCardsMap as dataCards } from '../commons/dataCards'
+import { sum } from '../commons/utils'
+import ImageCard from '../components/ImageCard'
 import {
   enumActionSimulator,
   enumStateSimulator,
-} from './hooks/reducerSimulator'
+} from '../hooks/reducerSimulator'
 
 const enumToggle = {
   OPAQUE: 0,

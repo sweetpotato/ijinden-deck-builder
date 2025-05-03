@@ -5,8 +5,8 @@ import { afterEach, expect, test } from 'vitest'
 import { cleanup, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import Home from './Home'
-import { dataCardsMap } from './commons/dataCards'
+import Home from '../Home'
+import { dataCardsMap } from '../commons/dataCards'
 
 function defaultRender() {
   const Stub = createRoutesStub([{ path: '/', Component: Home }])

@@ -18,12 +18,12 @@ import {
 import { isAccordionItemSelected } from 'react-bootstrap/esm/AccordionContext'
 import FormRange from 'react-bootstrap/esm/FormRange'
 
-import { dataCardsArrayForTable as dataCards } from './commons/dataCards'
+import { dataCardsArrayForTable as dataCards } from '../commons/dataCards'
 import {
   handleClickDecrement,
   handleClickIncrement,
-} from './commons/handleClick'
-import { enumActionSimulator } from './hooks/reducerSimulator'
+} from '../commons/handleClick'
+import { enumActionSimulator } from '../hooks/reducerSimulator'
 
 const dataExpansions = [
   { value: 0, label: 'すべて' },

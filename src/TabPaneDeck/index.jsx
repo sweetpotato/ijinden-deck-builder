@@ -19,16 +19,16 @@ import {
   dataCardsArrayForDeck as dataCardsArray,
   dataCardsMap,
   encodeDeck,
-} from './commons/dataCards'
-import db from './commons/db'
-import enumTabPane from './commons/enumTabPane'
+} from '../commons/dataCards'
+import db from '../commons/db'
+import enumTabPane from '../commons/enumTabPane'
 import {
   handleClickDecrement,
   handleClickIncrement,
-} from './commons/handleClick'
-import { sum } from './commons/utils'
-import ImageCard from './components/ImageCard'
-import { enumActionSimulator } from './hooks/reducerSimulator'
+} from '../commons/handleClick'
+import { sum } from '../commons/utils'
+import ImageCard from '../components/ImageCard'
+import { enumActionSimulator } from '../hooks/reducerSimulator'
 
 function makeTextExportedPart(title, deck) {
   const numCards = sum(deck.values())
