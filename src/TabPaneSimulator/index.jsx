@@ -1,26 +1,17 @@
 // SPDX-License-Identifier: MIT
 
-import classNames from 'classnames'
 import { useState } from 'react'
 import { Alert, Button } from 'react-bootstrap'
 
 import { dataCardsMap as dataCards } from '../commons/dataCards'
 import { sum } from '../commons/utils'
-import ImageCard from '../components/ImageCard'
 import {
   enumActionSimulator,
   enumStateSimulator,
 } from '../hooks/reducerSimulator'
-
-const enumToggle = {
-  OPAQUE: 0,
-  TRANSPARENT: 1,
-  RED: 2,
-  BLUE: 3,
-  YELLOW: 4,
-  WHITE: 5,
-  BLACK: 6,
-}
+import enumToggle from './enumToggle'
+import handleToggleAt from './handleToggleAt'
+import ImageCardWithToggle from './ImageCardWithToggle'
 
 function makeIdArray(deck) {
   const result = []
@@ -110,43 +101,12 @@ function TabPaneSimulator({ deck, state, dispatch }) {
 
   // Given to children
   function handleToggleGuardiansAt(index) {
-    handleToggleAt(setTogglesGuardians, togglesGuardians, index)
+    handleToggleAt(setTogglesGuardians, togglesGuardians, index, dispatch)
   }
 
   // Given to children
   function handleToggleHandAndDeckAt(index) {
-    handleToggleAt(setTogglesHandAndDeck, togglesHandAndDeck, index)
-  }
-
-  function handleToggleAt(setToggles, toggles, index) {
-    const newToggle = toggles.slice()
-    switch (newToggle[index]) {
-      case enumToggle.OPAQUE:
-        newToggle[index] = enumToggle.TRANSPARENT
-        break
-      case enumToggle.TRANSPARENT:
-        newToggle[index] = enumToggle.RED
-        break
-      case enumToggle.RED:
-        newToggle[index] = enumToggle.BLUE
-        break
-      case enumToggle.BLUE:
-        newToggle[index] = enumToggle.YELLOW
-        break
-      case enumToggle.YELLOW:
-        newToggle[index] = enumToggle.WHITE
-        break
-      case enumToggle.WHITE:
-        newToggle[index] = enumToggle.BLACK
-        break
-      case enumToggle.BLACK:
-        newToggle[index] = enumToggle.TRANSPARENT
-        break
-      default:
-        break
-    }
-    setToggles(newToggle)
-    dispatch(enumActionSimulator.CONTINUE)
+    handleToggleAt(setTogglesHandAndDeck, togglesHandAndDeck, index, dispatch)
   }
 
   const enabledStart = state === enumStateSimulator.INITIAL
@@ -233,25 +193,6 @@ function ContainerSection({ title, cards, toggles, handleToggleAt }) {
         })}
       </div>
     </>
-  )
-}
-
-function ImageCardWithToggle({ imageUrl, alt, toggle, handleToggleAt, index }) {
-  const classesButton = classNames({
-    'btn-toggled': true,
-    'btn-toggled-opaque': toggle === enumToggle.OPAQUE,
-    'btn-toggled-transparent': toggle === enumToggle.TRANSPARENT,
-    'btn-toggled-red': toggle === enumToggle.RED,
-    'btn-toggled-blue': toggle === enumToggle.BLUE,
-    'btn-toggled-yellow': toggle === enumToggle.YELLOW,
-    'btn-toggled-white': toggle === enumToggle.WHITE,
-    'btn-toggled-black': toggle === enumToggle.BLACK,
-  })
-
-  return (
-    <ImageCard imageUrl={imageUrl} alt={alt}>
-      <Button className={classesButton} onClick={() => handleToggleAt(index)} />
-    </ImageCard>
   )
 }
 
