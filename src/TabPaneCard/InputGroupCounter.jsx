@@ -16,16 +16,12 @@ function InputGroupCounter({
 }) {
   function handleClickMinus() {
     handleClickDecrement(id, deck, handleSetDeck)
-    if (dispatchSimulator !== undefined) {
-      dispatchSimulator(enumActionSimulator.INTERRUPT)
-    }
+    dispatchSimulator?.(enumActionSimulator.INTERRUPT)
   }
 
   function handleClickPlus() {
     handleClickIncrement(id, deck, handleSetDeck)
-    if (dispatchSimulator !== undefined) {
-      dispatchSimulator(enumActionSimulator.INTERRUPT)
-    }
+    dispatchSimulator?.(enumActionSimulator.INTERRUPT)
   }
 
   const name = (dispatchSimulator !== undefined ? 'main-' : 'side-') + id
@@ -40,7 +36,7 @@ function InputGroupCounter({
       >
         -
       </Button>
-      <FormControl type="number" readOnly name={name} value={counter} />
+      <FormControl readOnly type="number" name={name} value={counter} />
       <Button size="sm" variant="outline-secondary" onClick={handleClickPlus}>
         +
       </Button>
