@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import classNames from 'classnames'
 import { useState } from 'react'
 import { Button } from 'react-bootstrap'

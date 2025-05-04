@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import { afterEach, expect, test, vi } from 'vitest'
 import { cleanup, render } from '@testing-library/react'
 

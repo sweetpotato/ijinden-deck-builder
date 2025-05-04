@@ -1,9 +1,11 @@
+// SPDX-License-Identifier: MIT
+
+import { act } from 'react'
 import { afterEach, expect, test } from 'vitest'
 import { cleanup, render, renderHook } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 
 import useTabPaneSimulator from '.'
-import userEvent from '@testing-library/user-event'
-import { act } from 'react'
 
 afterEach(cleanup)
 

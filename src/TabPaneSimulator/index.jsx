@@ -264,4 +264,3 @@ function ContainerSection({
 }
 
 export default useTabPaneSimulator
-export { enumActionSimulator }
