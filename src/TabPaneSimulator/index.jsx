@@ -5,9 +5,10 @@ import { Alert, Button } from 'react-bootstrap'
 
 import { dataCardsMap as dataCards } from '../commons/dataCards'
 import { sum } from '../commons/utils'
-import enumToggle from './enumToggle'
-import handleToggleAt from './handleToggleAt'
-import ImageCardWithToggle from './ImageCardWithToggle'
+import {
+  ImageCardWithToggleOpaque,
+  ImageCardWithToggleTransparent,
+} from './ImageCardWithToggle'
 
 import './index.css'
 
@@ -132,14 +133,10 @@ function useTabPaneSimulator() {
 function TabPaneSimulator({ deck, state, dispatch }) {
   const [guardians, setGuardians] = useState(null)
   const [handAndDeck, setHandAndDeck] = useState(null)
-  const [togglesGuardians, setTogglesGuardians] = useState(null)
-  const [togglesHandAndDeck, setTogglesHandAndDeck] = useState(null)
 
   function handleClickReset() {
     setGuardians(null)
     setHandAndDeck(null)
-    setTogglesGuardians(null)
-    setTogglesHandAndDeck(null)
     dispatch(enumActionSimulator.RESET)
   }
 
@@ -156,46 +153,12 @@ function TabPaneSimulator({ deck, state, dispatch }) {
 
     setGuardians(newGuardians)
     setHandAndDeck(newHandAndDeck)
-    // ガーディアン4枚は不可視
-    setTogglesGuardians([
-      enumToggle.OPAQUE,
-      enumToggle.OPAQUE,
-      enumToggle.OPAQUE,
-      enumToggle.OPAQUE,
-    ])
-    // 初期手札6枚は可視で、山札は不可視
-    const newTogglesHandAndDeck = [
-      enumToggle.TRANSPARENT,
-      enumToggle.TRANSPARENT,
-      enumToggle.TRANSPARENT,
-      enumToggle.TRANSPARENT,
-      enumToggle.TRANSPARENT,
-      enumToggle.TRANSPARENT,
-    ]
-    for (let i = 6; i < newHandAndDeck.length; ++i) {
-      newTogglesHandAndDeck.push(enumToggle.OPAQUE)
-    }
-    setTogglesHandAndDeck(newTogglesHandAndDeck)
     dispatch(enumActionSimulator.START)
   }
 
   function handleClickMulligan() {
     setHandAndDeck(makeShuffledArray(handAndDeck))
     dispatch(enumActionSimulator.CONTINUE)
-  }
-
-  // Given to children
-  function handleToggleGuardiansAt(index) {
-    handleToggleAt(setTogglesGuardians, togglesGuardians, index, () =>
-      dispatch(enumActionSimulator.CONTINUE)
-    )
-  }
-
-  // Given to children
-  function handleToggleHandAndDeckAt(index) {
-    handleToggleAt(setTogglesHandAndDeck, togglesHandAndDeck, index, () =>
-      dispatch(enumActionSimulator.CONTINUE)
-    )
   }
 
   const enabledStart = state === enumStateSimulator.INITIAL
@@ -247,15 +210,15 @@ function TabPaneSimulator({ deck, state, dispatch }) {
             id="guardians"
             title="ガーディアン"
             cards={guardians}
-            toggles={togglesGuardians}
-            handleToggleAt={handleToggleGuardiansAt}
+            defaultNumTransparent={0}
+            continueSimulator={() => dispatch(enumActionSimulator.CONTINUE)}
           />
           <ContainerSection
             id="hand"
             title="手札"
             cards={handAndDeck}
-            toggles={togglesHandAndDeck}
-            handleToggleAt={handleToggleHandAndDeckAt}
+            defaultNumTransparent={6}
+            continueSimulator={() => dispatch(enumActionSimulator.CONTINUE)}
           />
         </>
       )}
@@ -263,7 +226,13 @@ function TabPaneSimulator({ deck, state, dispatch }) {
   )
 }
 
-function ContainerSection({ id, title, cards, toggles, handleToggleAt }) {
+function ContainerSection({
+  id,
+  title,
+  cards,
+  defaultNumTransparent,
+  continueSimulator,
+}) {
   return (
     <div role="group" aria-labelledby={id}>
       <h3 id={id} className="m-2">
@@ -273,14 +242,19 @@ function ContainerSection({ id, title, cards, toggles, handleToggleAt }) {
         {cards?.map((id, index) => {
           const key = `${id}-${index}`
           const card = dataCards.get(id)
-          return (
-            <ImageCardWithToggle
+          return index < defaultNumTransparent ? (
+            <ImageCardWithToggleTransparent
               key={key}
               imageUrl={card.imageUrl}
               alt={card.name}
-              toggle={toggles[index]}
-              handleToggleAt={handleToggleAt}
-              index={index}
+              continueSimulator={continueSimulator}
+            />
+          ) : (
+            <ImageCardWithToggleOpaque
+              key={key}
+              imageUrl={card.imageUrl}
+              alt={card.name}
+              continueSimulator={continueSimulator}
             />
           )
         })}
