@@ -2,12 +2,12 @@
 
 import { afterEach, expect, test, vi } from 'vitest'
 import { cleanup, render } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 
 import {
   ImageCardWithToggleOpaque,
   ImageCardWithToggleTransparent,
 } from './ImageCardWithToggle'
-import userEvent from '@testing-library/user-event'
 
 afterEach(cleanup)
 

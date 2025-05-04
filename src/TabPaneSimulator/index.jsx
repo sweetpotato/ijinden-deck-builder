@@ -105,17 +105,6 @@ function makeShuffledArray(array) {
   return result
 }
 
-// "Library" の先頭から n 枚を取り出して "Picked" の末尾に加え、
-// 新しい Library と Picked の対を返す。
-function pickCards(currentLibrary, currentPicked, n) {
-  const newLibrary = currentLibrary.slice()
-  const newPicked = currentPicked.slice()
-  for (let i = 0; i < n; ++i) {
-    newPicked.push(newLibrary.shift())
-  }
-  return [newLibrary, newPicked]
-}
-
 function useTabPaneSimulator() {
   const [state, dispatch] = useReducer(
     reducerSimulator,
@@ -134,6 +123,10 @@ function TabPaneSimulator({ deck, state, dispatch }) {
   const [guardians, setGuardians] = useState(null)
   const [handAndDeck, setHandAndDeck] = useState(null)
 
+  function continueSimulator() {
+    dispatch(enumActionSimulator.CONTINUE)
+  }
+
   function handleClickReset() {
     setGuardians(null)
     setHandAndDeck(null)
@@ -146,13 +139,10 @@ function TabPaneSimulator({ deck, state, dispatch }) {
       return
     }
 
-    let newHandAndDeck = makeShuffledArray(makeIdArray(deck))
+    const library = makeShuffledArray(makeIdArray(deck))
     // ガーディアンが4枚、残りは手札と山札
-    let newGuardians
-    ;[newHandAndDeck, newGuardians] = pickCards(newHandAndDeck, [], 4)
-
-    setGuardians(newGuardians)
-    setHandAndDeck(newHandAndDeck)
+    setGuardians(library.slice(0, 4))
+    setHandAndDeck(library.slice(4, library.length))
     dispatch(enumActionSimulator.START)
   }
 
@@ -211,14 +201,14 @@ function TabPaneSimulator({ deck, state, dispatch }) {
             title="ガーディアン"
             cards={guardians}
             defaultNumTransparent={0}
-            continueSimulator={() => dispatch(enumActionSimulator.CONTINUE)}
+            continueSimulator={continueSimulator}
           />
           <ContainerSection
             id="hand"
             title="手札"
             cards={handAndDeck}
             defaultNumTransparent={6}
-            continueSimulator={() => dispatch(enumActionSimulator.CONTINUE)}
+            continueSimulator={continueSimulator}
           />
         </>
       )}
