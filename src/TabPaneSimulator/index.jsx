@@ -9,6 +9,8 @@ import enumToggle from './enumToggle'
 import handleToggleAt from './handleToggleAt'
 import ImageCardWithToggle from './ImageCardWithToggle'
 
+import './index.css'
+
 const enumStateSimulator = {
   INITIAL: 0,
   STARTING: 1,
