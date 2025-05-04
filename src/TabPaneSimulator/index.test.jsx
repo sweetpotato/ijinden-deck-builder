@@ -1,5 +1,5 @@
 import { afterEach, expect, test } from 'vitest'
-import { cleanup, render, renderHook, screen } from '@testing-library/react'
+import { cleanup, render, renderHook } from '@testing-library/react'
 
 import useTabPaneSimulator, { enumActionSimulator } from '.'
 import userEvent from '@testing-library/user-event'
