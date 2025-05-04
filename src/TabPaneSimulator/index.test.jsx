@@ -2128,7 +2128,7 @@ test('デッキ10枚でのレンダリングでスタート、マリガン、デ
   let deck = new Map([['R-1', 10]])
   const { result } = renderHook(() => useTabPaneSimulator())
   let renderTabPaneSimulator = result.current[1]
-  const { container, rerender, getByRole, getByText, queryByText } = render(
+  const { rerender, getByRole, getByText, queryByText } = render(
     <>{renderTabPaneSimulator(deck)}</>
   )
 
@@ -2340,7 +2340,7 @@ test('デッキ40枚でのレンダリングでスタート、山札をタップ
   let deck = new Map([['R-1', 40]])
   const { result } = renderHook(() => useTabPaneSimulator())
   let renderTabPaneSimulator = result.current[1]
-  const { container, rerender, getByRole, getByText, queryByText } = render(
+  const { rerender, getByRole, getByText, queryByText } = render(
     <>{renderTabPaneSimulator(deck)}</>
   )
 
