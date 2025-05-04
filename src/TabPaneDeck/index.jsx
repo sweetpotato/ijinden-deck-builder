@@ -1,50 +1,28 @@
 // SPDX-License-Identifier: MIT
 
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 import {
   Alert,
   Button,
   FormControl,
-  InputGroup,
   Modal,
   ModalBody,
   ModalFooter,
   ModalHeader,
   ModalTitle,
-  Overlay,
-  Tooltip,
 } from 'react-bootstrap'
 
-import {
-  dataCardsArrayForDeck as dataCardsArray,
-  dataCardsMap,
-  encodeDeck,
-} from './commons/dataCards'
-import db from './commons/db'
-import enumTabPane from './commons/enumTabPane'
+import { dataCardsArrayForDeck as dataCardsArray } from '../commons/dataCards'
+import db from '../commons/db'
+import enumTabPane from '../commons/enumTabPane'
 import {
   handleClickDecrement,
   handleClickIncrement,
-} from './commons/handleClick'
-import { sum } from './commons/utils'
-import ImageCard from './components/ImageCard'
-import { enumActionSimulator } from './hooks/reducerSimulator'
-
-function makeTextExportedPart(title, deck) {
-  const numCards = sum(deck.values())
-  const text = [...deck.entries()]
-    .map(([id, numCopies]) => [dataCardsMap.get(id), numCopies])
-    .sort((a, b) => a[0].orderDeck - b[0].orderDeck)
-    .map(([card, numCopies]) => `\r\n${card.name}\t${numCopies}`)
-    .join('')
-  return `${title}\t${numCards}${text}`
-}
-
-function makeTextExported(deckMain, deckSide) {
-  const textMain = makeTextExportedPart('メインデッキ', deckMain)
-  const textSide = makeTextExportedPart('サイドデッキ', deckSide)
-  return `${textMain}\r\n\r\n${textSide}`
-}
+} from '../commons/handleClick'
+import { sum } from '../commons/utils'
+import ImageCard from '../components/ImageCard'
+import ContainerDeckShare from './ContainerDeckShare'
+import ContainerDeckExport from './ContainerDeckExport'
 
 function TabPaneDeck({
   code,
@@ -59,7 +37,7 @@ function TabPaneDeck({
   handleSetDeckSide,
   handleSetActiveDeckSaved,
   handleSetActiveTab,
-  dispatchSimulator,
+  interruptSimulator,
 }) {
   const [showModalEmpty, setShowModalEmpty] = useState(false)
 
@@ -94,7 +72,7 @@ function TabPaneDeck({
     handleSetDeckTitle('')
     handleSetDeckMain(new Map())
     handleSetDeckSide(new Map())
-    dispatchSimulator(enumActionSimulator.INTERRUPT)
+    interruptSimulator()
   }
 
   function handleClickConfirmEmpty() {
@@ -149,7 +127,7 @@ function TabPaneDeck({
         deckThat={deckSide}
         handleSetDeckThat={handleSetDeckSide}
         handleSetIdZoom={handleSetIdZoom}
-        dispatchSimulator={dispatchSimulator}
+        interruptSimulator={interruptSimulator}
       />
       <ContainerDeckPart
         title="サイドデッキ"
@@ -158,7 +136,7 @@ function TabPaneDeck({
         deckThat={deckMain}
         handleSetDeckThat={handleSetDeckMain}
         handleSetIdZoom={handleSetIdZoom}
-        dispatchSimulator={dispatchSimulator}
+        interruptSimulator={interruptSimulator}
         isSide
       />
       <h2 className="m-2">レシピを共有</h2>
@@ -175,7 +153,7 @@ function ContainerDeckPart({
   deckThat,
   handleSetDeckThat,
   handleSetIdZoom,
-  dispatchSimulator,
+  interruptSimulator,
   isSide = false,
 }) {
   const numCards = sum(deckThis.values())
@@ -193,7 +171,7 @@ function ContainerDeckPart({
             deckThat={deckThat}
             handleSetDeckThat={handleSetDeckThat}
             handleSetIdZoom={handleSetIdZoom}
-            dispatchSimulator={dispatchSimulator}
+            interruptSimulator={interruptSimulator}
             isSide={isSide}
           />
         ))}
@@ -211,27 +189,27 @@ function ContainerDeckCard({
   deckThat,
   handleSetDeckThat,
   handleSetIdZoom,
-  dispatchSimulator,
+  interruptSimulator,
   isSide = false,
 }) {
   function handleClickMinus() {
     handleClickDecrement(id, deckThis, handleSetDeckThis)
     if (!isSide) {
-      dispatchSimulator(enumActionSimulator.INTERRUPT)
+      interruptSimulator()
     }
   }
 
   function handleClickPlus() {
     handleClickIncrement(id, deckThis, handleSetDeckThis)
     if (!isSide) {
-      dispatchSimulator(enumActionSimulator.INTERRUPT)
+      interruptSimulator()
     }
   }
 
   function handleClickMove() {
     handleClickDecrement(id, deckThis, handleSetDeckThis)
     handleClickIncrement(id, deckThat, handleSetDeckThat)
-    dispatchSimulator(enumActionSimulator.INTERRUPT)
+    interruptSimulator()
   }
 
   function handleClickZoom() {
@@ -277,94 +255,6 @@ function ContainerDeckCard({
         </Button>
       </ImageCard>
     )
-  )
-}
-
-function ContainerDeckShare({ deckMain, deckSide }) {
-  const [showCopied, setShowCopied] = useState(false)
-  const refButton = useRef()
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowCopied(false)
-    }, 1000)
-    return () => clearTimeout(timer)
-  }, [showCopied])
-
-  // base は trailing slash (/) を含む
-  const base = import.meta.env.VITE_LOCAL_BASE || import.meta.env.BASE_URL
-  const deckCode = encodeDeck([...deckMain.entries()], [...deckSide.entries()])
-  const deckUrl = deckCode ? `${base}#/deck/${deckCode}` : null
-
-  return (
-    <div className="m-2">
-      <InputGroup>
-        <Button
-          ref={refButton}
-          variant="outline-secondary"
-          disabled={!deckUrl}
-          onClick={async () => {
-            await navigator.clipboard.writeText(deckUrl)
-            setShowCopied(true)
-          }}
-        >
-          ▶共有リンクをコピー
-        </Button>
-        <Overlay
-          target={refButton.current}
-          show={showCopied}
-          placement="bottom"
-        >
-          {(props) => <Tooltip {...props}>コピーしました</Tooltip>}
-        </Overlay>
-        <FormControl
-          readOnly
-          value={deckUrl || '(共有できる条件を満たしていません)'}
-        />
-      </InputGroup>
-    </div>
-  )
-}
-
-function ContainerDeckExport({ deckMain, deckSide }) {
-  const [showCopied, setShowCopied] = useState(false)
-  const refButton = useRef()
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowCopied(false)
-    }, 1000)
-    return () => clearTimeout(timer)
-  }, [showCopied])
-
-  const textExported = makeTextExported(deckMain, deckSide)
-
-  return (
-    <>
-      <div className="m-2">
-        <Button
-          ref={refButton}
-          variant="outline-secondary"
-          onClick={async () => {
-            await navigator.clipboard.writeText(textExported)
-            setShowCopied(true)
-          }}
-        >
-          ▼テキストデータをコピー
-        </Button>
-        <Overlay target={refButton.current} show={showCopied} placement="top">
-          {(props) => <Tooltip {...props}>コピーしました</Tooltip>}
-        </Overlay>
-      </div>
-      <div className="m-2">
-        <FormControl
-          readOnly
-          as="textarea"
-          rows={deckMain.size + deckSide.size + 3}
-          value={textExported}
-        />
-      </div>
-    </>
   )
 }
 

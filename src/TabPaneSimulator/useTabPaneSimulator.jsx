@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: MIT
 
-export const enumStateSimulator = {
+import { useReducer } from 'react'
+
+import TabPaneSimulator from '.'
+
+const enumStateSimulator = {
   INITIAL: 0,
   STARTING: 1,
   RUNNING: 2,
@@ -8,7 +12,7 @@ export const enumStateSimulator = {
   LESS_THAN_TEN: 4,
 }
 
-export const enumActionSimulator = {
+const enumActionSimulator = {
   RESET: 0,
   START: 1,
   CONTINUE: 2,
@@ -16,7 +20,7 @@ export const enumActionSimulator = {
   CHECK_MAIN_DECK: 4,
 }
 
-export function reducerSimulator(state, action) {
+function reducerSimulator(state, action) {
   switch (state) {
     case enumStateSimulator.INITIAL:
       switch (action) {
@@ -72,3 +76,20 @@ export function reducerSimulator(state, action) {
 
   return state
 }
+
+function useTabPaneSimulator() {
+  const [state, dispatch] = useReducer(
+    reducerSimulator,
+    enumStateSimulator.INITIAL
+  )
+  const interrupt = () => {
+    dispatch(enumActionSimulator.INTERRUPT)
+  }
+  const render = (deck) => {
+    return <TabPaneSimulator deck={deck} state={state} dispatch={dispatch} />
+  }
+  return [interrupt, render]
+}
+
+export default useTabPaneSimulator
+export { enumActionSimulator, enumStateSimulator }

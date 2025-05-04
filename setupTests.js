@@ -5,3 +5,6 @@
 // expect(element).toHaveTextContent(/react/i)
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom/vitest'
+
+// See https://ja.react.dev/reference/react/act#error-the-current-testing-environment-is-not-configured-to-support-act
+globalThis.IS_REACT_ACT_ENVIRONMENT = true

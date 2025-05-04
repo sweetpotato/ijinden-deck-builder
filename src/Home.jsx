@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-import { useReducer, useState } from 'react'
+import { useState } from 'react'
 import {
   Alert,
   Modal,
@@ -15,10 +15,9 @@ import { useParams } from 'react-router-dom'
 import TabPaneCard from './TabPaneCard'
 import TabPaneDeck from './TabPaneDeck'
 import TabPaneLoad from './TabPaneLoad'
-import TabPaneSimulator from './TabPaneSimulator'
+import useTabPaneSimulator from './TabPaneSimulator/useTabPaneSimulator'
 import { dataCardsMap, decodeDeck } from './commons/dataCards'
 import enumTabPane from './commons/enumTabPane'
-import { enumStateSimulator, reducerSimulator } from './hooks/reducerSimulator'
 
 function App() {
   // デッキコード関連
@@ -37,10 +36,7 @@ function App() {
   const [deckMain, setDeckMain] = useState(new Map(entriesMain))
   const [deckSide, setDeckSide] = useState(new Map(entriesSide))
   const [activeDeckSaved, setActiveDeckSaved] = useState([])
-  const [stateSimulator, dispatchSimulator] = useReducer(
-    reducerSimulator,
-    enumStateSimulator.INITIAL
-  )
+  const [interruptSimulator, renderTabPaneSimulator] = useTabPaneSimulator()
 
   function handleSetShowCodeError(newShowCodeError) {
     setShowCodeError(newShowCodeError)
@@ -89,7 +85,7 @@ function App() {
             handleSetDeckMain={handleSetDeckMain}
             deckSide={deckSide}
             handleSetDeckSide={handleSetDeckSide}
-            dispatchSimulator={dispatchSimulator}
+            interruptSimulator={interruptSimulator}
           />
         </Tab>
         <Tab eventKey={enumTabPane.DECK} title="レシピ">
@@ -106,7 +102,7 @@ function App() {
             handleSetDeckSide={handleSetDeckSide}
             handleSetActiveDeckSaved={handleSetActiveDeckSaved}
             handleSetActiveTab={handleSetActiveTab}
-            dispatchSimulator={dispatchSimulator}
+            interruptSimulator={interruptSimulator}
           />
         </Tab>
         <Tab eventKey={enumTabPane.SAVE_AND_LOAD} title="マイデッキ">
@@ -117,15 +113,11 @@ function App() {
             activeDeckSaved={activeDeckSaved}
             handleSetActiveDeckSaved={handleSetActiveDeckSaved}
             handleSetActiveTab={handleSetActiveTab}
-            dispatchSimulator={dispatchSimulator}
+            interruptSimulator={interruptSimulator}
           />
         </Tab>
         <Tab eventKey={enumTabPane.SIMULATOR} title="シミュ">
-          <TabPaneSimulator
-            deck={deckMain}
-            state={stateSimulator}
-            dispatch={dispatchSimulator}
-          />
+          {renderTabPaneSimulator(deckMain)}
         </Tab>
         <Tab eventKey={enumTabPane.HELP} title="ヘルプ" className="mx-2 mt-2">
           <h2>これは何？</h2>

@@ -11,19 +11,16 @@ import {
   Button,
   FormCheck,
   FormControl,
-  InputGroup,
   Table,
   ToggleButton,
 } from 'react-bootstrap'
 import { isAccordionItemSelected } from 'react-bootstrap/esm/AccordionContext'
 import FormRange from 'react-bootstrap/esm/FormRange'
 
-import { dataCardsArrayForTable as dataCards } from './commons/dataCards'
-import {
-  handleClickDecrement,
-  handleClickIncrement,
-} from './commons/handleClick'
-import { enumActionSimulator } from './hooks/reducerSimulator'
+import { dataCardsArrayForTable as dataCards } from '../commons/dataCards'
+import InputGroupCounter from './InputGroupCounter'
+
+import './index.css'
 
 const dataExpansions = [
   { value: 0, label: 'すべて' },
@@ -191,7 +188,7 @@ function TabPaneCard({
   handleSetDeckMain,
   deckSide,
   handleSetDeckSide,
-  dispatchSimulator,
+  interruptSimulator,
 }) {
   const [expansion, setExpansion] = useState(0)
   const [rarity, setRarity] = useState(0)
@@ -413,7 +410,7 @@ function TabPaneCard({
               handleSetDeckMain={handleSetDeckMain}
               deckSide={deckSide}
               handleSetDeckSide={handleSetDeckSide}
-              dispatchSimulator={dispatchSimulator}
+              interruptSimulator={interruptSimulator}
             />
           ))}
         </tbody>
@@ -572,7 +569,7 @@ function TableRowCard({
   handleSetDeckMain,
   deckSide,
   handleSetDeckSide,
-  dispatchSimulator,
+  interruptSimulator,
 }) {
   const levelMatched =
     selectedLevelComparator === LEVEL_COMPARATOR_GE
@@ -625,15 +622,15 @@ function TableRowCard({
           {name}
         </td>
         <td>
-          <FormControlCounter
+          <InputGroupCounter
             id={id}
             deck={deckMain}
             handleSetDeck={handleSetDeckMain}
-            dispatchSimulator={dispatchSimulator}
+            interruptSimulator={interruptSimulator}
           />
         </td>
         <td>
-          <FormControlCounter
+          <InputGroupCounter
             id={id}
             deck={deckSide}
             handleSetDeck={handleSetDeckSide}
@@ -641,46 +638,6 @@ function TableRowCard({
         </td>
       </tr>
     )
-  )
-}
-
-function FormControlCounter({
-  id,
-  deck,
-  handleSetDeck,
-  dispatchSimulator = undefined,
-}) {
-  function handleClickMinus() {
-    handleClickDecrement(id, deck, handleSetDeck)
-    if (dispatchSimulator !== undefined) {
-      dispatchSimulator(enumActionSimulator.INTERRUPT)
-    }
-  }
-
-  function handleClickPlus() {
-    handleClickIncrement(id, deck, handleSetDeck)
-    if (dispatchSimulator !== undefined) {
-      dispatchSimulator(enumActionSimulator.INTERRUPT)
-    }
-  }
-
-  const name = (dispatchSimulator !== undefined ? 'main-' : 'side-') + id
-  const counter = deck.has(id) ? deck.get(id) : 0
-  return (
-    <InputGroup>
-      <Button
-        size="sm"
-        variant="outline-secondary"
-        onClick={handleClickMinus}
-        disabled={counter <= 0}
-      >
-        -
-      </Button>
-      <FormControl type="number" readOnly name={name} value={counter} />
-      <Button size="sm" variant="outline-secondary" onClick={handleClickPlus}>
-        +
-      </Button>
-    </InputGroup>
   )
 }
 
