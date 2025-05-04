@@ -177,7 +177,7 @@ function ContainerSection({ title, cards, toggles, handleToggleAt }) {
     <>
       <h3 className="m-2">{title}</h3>
       <div className="container-card-line-up ms-2">
-        {cards.map((id, index) => {
+        {cards?.map((id, index) => {
           const key = `${id}-${index}`
           const card = dataCards.get(id)
           return (
