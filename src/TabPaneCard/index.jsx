@@ -20,6 +20,8 @@ import FormRange from 'react-bootstrap/esm/FormRange'
 import { dataCardsArrayForTable as dataCards } from '../commons/dataCards'
 import InputGroupCounter from './InputGroupCounter'
 
+import './index.css'
+
 const dataExpansions = [
   { value: 0, label: 'すべて' },
   { value: 10, label: '伝説の武将' },

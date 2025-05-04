@@ -23,14 +23,6 @@ fieldset {
   z-index: 1020;
 }
 
-thead.sticky-top {  
-  top: 2.5rem;
-}
-
-tbody .input-group button {
-  width: 1.7rem;
-}
-
 .header-filter {
   position: initial;
 }
