@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 import { cleanup, render } from '@testing-library/react'
 import ContainerDeckExport from './ContainerDeckExport'
