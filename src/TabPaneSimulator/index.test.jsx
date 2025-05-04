@@ -1,4 +1,4 @@
-import { afterEach, expect, test, vi } from 'vitest'
+import { afterEach, expect, test } from 'vitest'
 import { cleanup, render, renderHook } from '@testing-library/react'
 
 import useTabPaneSimulator from '.'
