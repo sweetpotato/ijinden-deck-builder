@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-import { useReducer, useState } from 'react'
+import { useState } from 'react'
 import {
   Alert,
   Modal,
