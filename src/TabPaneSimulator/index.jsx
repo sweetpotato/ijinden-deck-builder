@@ -121,7 +121,7 @@ function useTabPaneSimulator() {
   const render = (deck) => {
     return <TabPaneSimulator deck={deck} state={state} dispatch={dispatch} />
   }
-  return { dispatch, render }
+  return [dispatch, render]
 }
 
 function TabPaneSimulator({ deck, state, dispatch }) {

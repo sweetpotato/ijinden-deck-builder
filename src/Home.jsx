@@ -36,8 +36,7 @@ function App() {
   const [deckMain, setDeckMain] = useState(new Map(entriesMain))
   const [deckSide, setDeckSide] = useState(new Map(entriesSide))
   const [activeDeckSaved, setActiveDeckSaved] = useState([])
-  const { dispatch: dispatchSimulator, render: renderTabPaneSimulator } =
-    useTabPaneSimulator()
+  const [dispatchSimulator, renderTabPaneSimulator] = useTabPaneSimulator()
 
   function handleSetShowCodeError(newShowCodeError) {
     setShowCodeError(newShowCodeError)

@@ -7,10 +7,11 @@ import userEvent from '@testing-library/user-event'
 afterEach(cleanup)
 
 test('デッキ9枚でのレンダリングでスタート、リセット', async () => {
-  const { result } = renderHook(() => useTabPaneSimulator())
   const deck = new Map([['R-1', 9]])
+  const { result } = renderHook(() => useTabPaneSimulator())
+  let renderTabPaneSimulator = result.current[1]
   const { rerender, getByRole, getByText, queryByText } = render(
-    <>{result.current.render(deck)}</>
+    <>{renderTabPaneSimulator(deck)}</>
   )
 
   let buttonReset = getByRole('button', { name: 'リセット' })
@@ -34,7 +35,8 @@ test('デッキ9枚でのレンダリングでスタート、リセット', asyn
   // スタートボタンを押す
   await userEvent.click(buttonStart)
 
-  rerender(<>{result.current.render(deck)}</>)
+  renderTabPaneSimulator = result.current[1]
+  rerender(<>{renderTabPaneSimulator(deck)}</>)
 
   buttonReset = getByRole('button', { name: 'リセット' })
   expect(buttonReset).toBeVisible()
@@ -57,7 +59,8 @@ test('デッキ9枚でのレンダリングでスタート、リセット', asyn
   // リセットボタンを押す
   await userEvent.click(buttonReset)
 
-  rerender(<>{result.current.render(deck)}</>)
+  renderTabPaneSimulator = result.current[1]
+  rerender(<>{renderTabPaneSimulator(deck)}</>)
 
   buttonReset = getByRole('button', { name: 'リセット' })
   expect(buttonReset).toBeVisible()
@@ -79,10 +82,11 @@ test('デッキ9枚でのレンダリングでスタート、リセット', asyn
 })
 
 test('デッキ10枚でのレンダリングでスタート、リセット', async () => {
-  const { result } = renderHook(() => useTabPaneSimulator())
   const deck = new Map([['R-1', 10]])
+  const { result } = renderHook(() => useTabPaneSimulator())
+  let renderTabPaneSimulator = result.current[1]
   const { container, rerender, getByRole, getByText, queryByText } = render(
-    <>{result.current.render(deck)}</>
+    <>{renderTabPaneSimulator(deck)}</>
   )
 
   let buttonReset = getByRole('button', { name: 'リセット' })
@@ -106,7 +110,8 @@ test('デッキ10枚でのレンダリングでスタート、リセット', asy
   // スタートボタンを押す
   await userEvent.click(buttonStart)
 
-  rerender(<>{result.current.render(deck)}</>)
+  renderTabPaneSimulator = result.current[1]
+  rerender(<>{renderTabPaneSimulator(deck)}</>)
 
   buttonReset = getByRole('button', { name: 'リセット' })
   expect(buttonReset).toBeVisible()
@@ -156,7 +161,8 @@ test('デッキ10枚でのレンダリングでスタート、リセット', asy
   // リセットボタンを押す
   await userEvent.click(buttonReset)
 
-  rerender(<>{result.current.render(deck)}</>)
+  renderTabPaneSimulator = result.current[1]
+  rerender(<>{renderTabPaneSimulator(deck)}</>)
 
   buttonReset = getByRole('button', { name: 'リセット' })
   expect(buttonReset).toBeVisible()
@@ -178,10 +184,11 @@ test('デッキ10枚でのレンダリングでスタート、リセット', asy
 })
 
 test('デッキ10枚でのレンダリングでスタート、マリガン、リセット', async () => {
-  const { result } = renderHook(() => useTabPaneSimulator())
   const deck = new Map([['R-1', 10]])
+  const { result } = renderHook(() => useTabPaneSimulator())
+  let renderTabPaneSimulator = result.current[1]
   const { container, rerender, getByRole, getByText, queryByText } = render(
-    <>{result.current.render(deck)}</>
+    <>{renderTabPaneSimulator(deck)}</>
   )
 
   let buttonReset = getByRole('button', { name: 'リセット' })
@@ -205,7 +212,8 @@ test('デッキ10枚でのレンダリングでスタート、マリガン、リ
   // スタートボタンを押す
   await userEvent.click(buttonStart)
 
-  rerender(<>{result.current.render(deck)}</>)
+  renderTabPaneSimulator = result.current[1]
+  rerender(<>{renderTabPaneSimulator(deck)}</>)
 
   buttonReset = getByRole('button', { name: 'リセット' })
   expect(buttonReset).toBeVisible()
@@ -255,7 +263,8 @@ test('デッキ10枚でのレンダリングでスタート、マリガン、リ
   // マリガンボタンを押す
   await userEvent.click(buttonMulligan)
 
-  rerender(<>{result.current.render(deck)}</>)
+  renderTabPaneSimulator = result.current[1]
+  rerender(<>{renderTabPaneSimulator(deck)}</>)
 
   buttonReset = getByRole('button', { name: 'リセット' })
   expect(buttonReset).toBeVisible()
@@ -306,7 +315,8 @@ test('デッキ10枚でのレンダリングでスタート、マリガン、リ
   // リセットボタンを押す
   await userEvent.click(buttonReset)
 
-  rerender(<>{result.current.render(deck)}</>)
+  renderTabPaneSimulator = result.current[1]
+  rerender(<>{renderTabPaneSimulator(deck)}</>)
 
   buttonReset = getByRole('button', { name: 'リセット' })
   expect(buttonReset).toBeVisible()
@@ -328,10 +338,11 @@ test('デッキ10枚でのレンダリングでスタート、マリガン、リ
 })
 
 test('デッキ10枚でのレンダリングでスタート、カードをタップ、リセット', async () => {
-  const { result } = renderHook(() => useTabPaneSimulator())
   const deck = new Map([['R-1', 10]])
+  const { result } = renderHook(() => useTabPaneSimulator())
+  let renderTabPaneSimulator = result.current[1]
   const { container, rerender, getByRole, getByText, queryByText } = render(
-    <>{result.current.render(deck)}</>
+    <>{renderTabPaneSimulator(deck)}</>
   )
 
   let buttonReset = getByRole('button', { name: 'リセット' })
@@ -355,7 +366,8 @@ test('デッキ10枚でのレンダリングでスタート、カードをタッ
   // スタートボタンを押す
   await userEvent.click(buttonStart)
 
-  rerender(<>{result.current.render(deck)}</>)
+  renderTabPaneSimulator = result.current[1]
+  rerender(<>{renderTabPaneSimulator(deck)}</>)
 
   buttonReset = getByRole('button', { name: 'リセット' })
   expect(buttonReset).toBeVisible()
@@ -405,7 +417,8 @@ test('デッキ10枚でのレンダリングでスタート、カードをタッ
   // 手札のカードをタップする
   await userEvent.click(hand[0])
 
-  rerender(<>{result.current.render(deck)}</>)
+  renderTabPaneSimulator = result.current[1]
+  rerender(<>{renderTabPaneSimulator(deck)}</>)
 
   buttonReset = getByRole('button', { name: 'リセット' })
   expect(buttonReset).toBeVisible()
@@ -457,7 +470,8 @@ test('デッキ10枚でのレンダリングでスタート、カードをタッ
   // リセットボタンを押す
   await userEvent.click(buttonReset)
 
-  rerender(<>{result.current.render(deck)}</>)
+  renderTabPaneSimulator = result.current[1]
+  rerender(<>{renderTabPaneSimulator(deck)}</>)
 
   buttonReset = getByRole('button', { name: 'リセット' })
   expect(buttonReset).toBeVisible()
