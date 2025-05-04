@@ -21,7 +21,6 @@ import db from '../commons/db'
 import enumTabPane from '../commons/enumTabPane'
 import { sum } from '../commons/utils'
 import ImageCard from '../components/ImageCard'
-import { enumActionSimulator } from '../TabPaneSimulator'
 
 // YYYY/mm/dd HH:MM:SS
 const DTF = new Intl.DateTimeFormat([], {
@@ -40,7 +39,7 @@ function TabPaneLoad({
   activeDeckSaved,
   handleSetActiveDeckSaved,
   handleSetActiveTab,
-  dispatchSimulator,
+  interruptSimulator,
 }) {
   const [showModalClear, setShowModalClear] = useState(false)
   const decksSaved = useLiveQuery(async () =>
@@ -83,7 +82,7 @@ function TabPaneLoad({
                     handleSetDeckMain={handleSetDeckMain}
                     handleSetDeckSide={handleSetDeckSide}
                     handleSetActiveTab={handleSetActiveTab}
-                    dispatchSimulator={dispatchSimulator}
+                    interruptSimulator={interruptSimulator}
                   />
                 </AccordionBody>
               </AccordionItem>
@@ -127,13 +126,13 @@ function ContainerDeckSaved({
   handleSetDeckMain,
   handleSetDeckSide,
   handleSetActiveTab,
-  dispatchSimulator,
+  interruptSimulator,
 }) {
   function handleClickLoad() {
     handleSetDeckTitle(aDeckSaved.title || '') // There may not be a title
     handleSetDeckMain(new Map(aDeckSaved.main))
     handleSetDeckSide(new Map(aDeckSaved.side))
-    dispatchSimulator(enumActionSimulator.INTERRUPT)
+    interruptSimulator()
     handleSetActiveTab(enumTabPane.DECK)
   }
 

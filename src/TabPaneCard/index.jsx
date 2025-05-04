@@ -186,7 +186,7 @@ function TabPaneCard({
   handleSetDeckMain,
   deckSide,
   handleSetDeckSide,
-  dispatchSimulator,
+  interruptSimulator,
 }) {
   const [expansion, setExpansion] = useState(0)
   const [rarity, setRarity] = useState(0)
@@ -408,7 +408,7 @@ function TabPaneCard({
               handleSetDeckMain={handleSetDeckMain}
               deckSide={deckSide}
               handleSetDeckSide={handleSetDeckSide}
-              dispatchSimulator={dispatchSimulator}
+              interruptSimulator={interruptSimulator}
             />
           ))}
         </tbody>
@@ -567,7 +567,7 @@ function TableRowCard({
   handleSetDeckMain,
   deckSide,
   handleSetDeckSide,
-  dispatchSimulator,
+  interruptSimulator,
 }) {
   const levelMatched =
     selectedLevelComparator === LEVEL_COMPARATOR_GE
@@ -624,7 +624,7 @@ function TableRowCard({
             id={id}
             deck={deckMain}
             handleSetDeck={handleSetDeckMain}
-            dispatchSimulator={dispatchSimulator}
+            interruptSimulator={interruptSimulator}
           />
         </td>
         <td>

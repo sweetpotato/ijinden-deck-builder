@@ -6,25 +6,24 @@ import {
   handleClickDecrement,
   handleClickIncrement,
 } from '../commons/handleClick'
-import { enumActionSimulator } from '../TabPaneSimulator'
 
 function InputGroupCounter({
   id,
   deck,
   handleSetDeck,
-  dispatchSimulator = undefined,
+  interruptSimulator = undefined,
 }) {
   function handleClickMinus() {
     handleClickDecrement(id, deck, handleSetDeck)
-    dispatchSimulator?.(enumActionSimulator.INTERRUPT)
+    interruptSimulator?.()
   }
 
   function handleClickPlus() {
     handleClickIncrement(id, deck, handleSetDeck)
-    dispatchSimulator?.(enumActionSimulator.INTERRUPT)
+    interruptSimulator?.()
   }
 
-  const name = (dispatchSimulator !== undefined ? 'main-' : 'side-') + id
+  const name = (interruptSimulator !== undefined ? 'main-' : 'side-') + id
   const counter = deck.has(id) ? deck.get(id) : 0
   return (
     <InputGroup>

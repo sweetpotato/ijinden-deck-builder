@@ -120,10 +120,13 @@ function useTabPaneSimulator() {
     reducerSimulator,
     enumStateSimulator.INITIAL
   )
+  const interrupt = () => {
+    dispatch(enumActionSimulator.INTERRUPT)
+  }
   const render = (deck) => {
     return <TabPaneSimulator deck={deck} state={state} dispatch={dispatch} />
   }
-  return [dispatch, render]
+  return [interrupt, render]
 }
 
 function TabPaneSimulator({ deck, state, dispatch }) {

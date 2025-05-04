@@ -28,7 +28,6 @@ import {
 } from '../commons/handleClick'
 import { sum } from '../commons/utils'
 import ImageCard from '../components/ImageCard'
-import { enumActionSimulator } from '../TabPaneSimulator'
 
 function makeTextExportedPart(title, deck) {
   const numCards = sum(deck.values())
@@ -59,7 +58,7 @@ function TabPaneDeck({
   handleSetDeckSide,
   handleSetActiveDeckSaved,
   handleSetActiveTab,
-  dispatchSimulator,
+  interruptSimulator,
 }) {
   const [showModalEmpty, setShowModalEmpty] = useState(false)
 
@@ -94,7 +93,7 @@ function TabPaneDeck({
     handleSetDeckTitle('')
     handleSetDeckMain(new Map())
     handleSetDeckSide(new Map())
-    dispatchSimulator(enumActionSimulator.INTERRUPT)
+    interruptSimulator()
   }
 
   function handleClickConfirmEmpty() {
@@ -149,7 +148,7 @@ function TabPaneDeck({
         deckThat={deckSide}
         handleSetDeckThat={handleSetDeckSide}
         handleSetIdZoom={handleSetIdZoom}
-        dispatchSimulator={dispatchSimulator}
+        interruptSimulator={interruptSimulator}
       />
       <ContainerDeckPart
         title="サイドデッキ"
@@ -158,7 +157,7 @@ function TabPaneDeck({
         deckThat={deckMain}
         handleSetDeckThat={handleSetDeckMain}
         handleSetIdZoom={handleSetIdZoom}
-        dispatchSimulator={dispatchSimulator}
+        interruptSimulator={interruptSimulator}
         isSide
       />
       <h2 className="m-2">レシピを共有</h2>
@@ -175,7 +174,7 @@ function ContainerDeckPart({
   deckThat,
   handleSetDeckThat,
   handleSetIdZoom,
-  dispatchSimulator,
+  interruptSimulator,
   isSide = false,
 }) {
   const numCards = sum(deckThis.values())
@@ -193,7 +192,7 @@ function ContainerDeckPart({
             deckThat={deckThat}
             handleSetDeckThat={handleSetDeckThat}
             handleSetIdZoom={handleSetIdZoom}
-            dispatchSimulator={dispatchSimulator}
+            interruptSimulator={interruptSimulator}
             isSide={isSide}
           />
         ))}
@@ -211,27 +210,27 @@ function ContainerDeckCard({
   deckThat,
   handleSetDeckThat,
   handleSetIdZoom,
-  dispatchSimulator,
+  interruptSimulator,
   isSide = false,
 }) {
   function handleClickMinus() {
     handleClickDecrement(id, deckThis, handleSetDeckThis)
     if (!isSide) {
-      dispatchSimulator(enumActionSimulator.INTERRUPT)
+      interruptSimulator()
     }
   }
 
   function handleClickPlus() {
     handleClickIncrement(id, deckThis, handleSetDeckThis)
     if (!isSide) {
-      dispatchSimulator(enumActionSimulator.INTERRUPT)
+      interruptSimulator()
     }
   }
 
   function handleClickMove() {
     handleClickDecrement(id, deckThis, handleSetDeckThis)
     handleClickIncrement(id, deckThat, handleSetDeckThat)
-    dispatchSimulator(enumActionSimulator.INTERRUPT)
+    interruptSimulator()
   }
 
   function handleClickZoom() {

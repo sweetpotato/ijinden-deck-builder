@@ -4,7 +4,6 @@ import { afterEach, expect, test, vi } from 'vitest'
 import { cleanup, render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import { enumActionSimulator } from '../TabPaneSimulator'
 import InputGroupCounter from './InputGroupCounter'
 
 afterEach(cleanup)
@@ -12,13 +11,13 @@ afterEach(cleanup)
 test('メインデッキのカウンターを0から1に増やす', async () => {
   const deck = new Map()
   const handleSetDeck = vi.fn()
-  const dispatchSimulator = vi.fn()
+  const interruptSimulator = vi.fn()
   const { findByRole } = render(
     <InputGroupCounter
       id="R-1"
       deck={deck}
       handleSetDeck={handleSetDeck}
-      dispatchSimulator={dispatchSimulator}
+      interruptSimulator={interruptSimulator}
     />
   )
 
@@ -46,21 +45,20 @@ test('メインデッキのカウンターを0から1に増やす', async () => 
   expect(newDeck.get('R-1')).toBe(1)
 
   // シミュレータに通知が送られる
-  expect(dispatchSimulator.mock.calls.length).toBe(1)
-  const action = dispatchSimulator.mock.lastCall[0]
-  expect(action).toBe(enumActionSimulator.INTERRUPT)
+  expect(interruptSimulator.mock.calls.length).toBe(1)
+  expect(interruptSimulator.mock.lastCall.length).toBe(0)
 })
 
 test('メインデッキのカウンターを1から0に減らす', async () => {
   const deck = new Map([['B-1', 1]])
   const handleSetDeck = vi.fn()
-  const dispatchSimulator = vi.fn()
+  const interruptSimulator = vi.fn()
   const { findByRole } = render(
     <InputGroupCounter
       id="B-1"
       deck={deck}
       handleSetDeck={handleSetDeck}
-      dispatchSimulator={dispatchSimulator}
+      interruptSimulator={interruptSimulator}
     />
   )
 
@@ -85,21 +83,20 @@ test('メインデッキのカウンターを1から0に減らす', async () => 
   expect(newDeck.size).toBe(0)
 
   // シミュレータに通知が送られる
-  expect(dispatchSimulator.mock.calls.length).toBe(1)
-  const action = dispatchSimulator.mock.lastCall[0]
-  expect(action).toBe(enumActionSimulator.INTERRUPT)
+  expect(interruptSimulator.mock.calls.length).toBe(1)
+  expect(interruptSimulator.mock.lastCall.length).toBe(0)
 })
 
 test('メインデッキのカウンターを1から2に増やす', async () => {
   const deck = new Map([['G-1', 1]])
   const handleSetDeck = vi.fn()
-  const dispatchSimulator = vi.fn()
+  const interruptSimulator = vi.fn()
   const { findByRole } = render(
     <InputGroupCounter
       id="G-1"
       deck={deck}
       handleSetDeck={handleSetDeck}
-      dispatchSimulator={dispatchSimulator}
+      interruptSimulator={interruptSimulator}
     />
   )
 
@@ -126,9 +123,8 @@ test('メインデッキのカウンターを1から2に増やす', async () => 
   expect(newDeck.get('G-1')).toBe(2)
 
   // シミュレータに通知が送られる
-  expect(dispatchSimulator.mock.calls.length).toBe(1)
-  const action = dispatchSimulator.mock.lastCall[0]
-  expect(action).toBe(enumActionSimulator.INTERRUPT)
+  expect(interruptSimulator.mock.calls.length).toBe(1)
+  expect(interruptSimulator.mock.lastCall.length).toBe(0)
 })
 
 test('サイドデッキのカウンターを0から1に増やす', async () => {

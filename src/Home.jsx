@@ -36,7 +36,7 @@ function App() {
   const [deckMain, setDeckMain] = useState(new Map(entriesMain))
   const [deckSide, setDeckSide] = useState(new Map(entriesSide))
   const [activeDeckSaved, setActiveDeckSaved] = useState([])
-  const [dispatchSimulator, renderTabPaneSimulator] = useTabPaneSimulator()
+  const [interruptSimulator, renderTabPaneSimulator] = useTabPaneSimulator()
 
   function handleSetShowCodeError(newShowCodeError) {
     setShowCodeError(newShowCodeError)
@@ -85,7 +85,7 @@ function App() {
             handleSetDeckMain={handleSetDeckMain}
             deckSide={deckSide}
             handleSetDeckSide={handleSetDeckSide}
-            dispatchSimulator={dispatchSimulator}
+            interruptSimulator={interruptSimulator}
           />
         </Tab>
         <Tab eventKey={enumTabPane.DECK} title="レシピ">
@@ -102,7 +102,7 @@ function App() {
             handleSetDeckSide={handleSetDeckSide}
             handleSetActiveDeckSaved={handleSetActiveDeckSaved}
             handleSetActiveTab={handleSetActiveTab}
-            dispatchSimulator={dispatchSimulator}
+            interruptSimulator={interruptSimulator}
           />
         </Tab>
         <Tab eventKey={enumTabPane.SAVE_AND_LOAD} title="マイデッキ">
@@ -113,7 +113,7 @@ function App() {
             activeDeckSaved={activeDeckSaved}
             handleSetActiveDeckSaved={handleSetActiveDeckSaved}
             handleSetActiveTab={handleSetActiveTab}
-            dispatchSimulator={dispatchSimulator}
+            interruptSimulator={interruptSimulator}
           />
         </Tab>
         <Tab eventKey={enumTabPane.SIMULATOR} title="シミュ">
