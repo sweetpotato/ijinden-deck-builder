@@ -2,13 +2,12 @@ import { cleanup } from '@testing-library/react'
 import { afterEach, expect, test, vi } from 'vitest'
 import handleToggleAt from './handleToggleAt'
 import enumToggle from './enumToggle'
-import { enumActionSimulator } from '.'
 
 afterEach(cleanup)
 
 test('指定したインデックスを変更する', () => {
   const setToggles = vi.fn()
-  const dispatch = vi.fn()
+  const continueSimulator = vi.fn()
   handleToggleAt(
     setToggles,
     [
@@ -18,7 +17,7 @@ test('指定したインデックスを変更する', () => {
       enumToggle.OPAQUE,
     ],
     0,
-    dispatch
+    continueSimulator
   )
 
   expect(setToggles.mock.calls.length).toBe(1)
@@ -30,7 +29,6 @@ test('指定したインデックスを変更する', () => {
     enumToggle.OPAQUE,
   ])
 
-  expect(dispatch.mock.calls.length).toBe(1)
-  expect(dispatch.mock.lastCall.length).toBe(1)
-  expect(dispatch.mock.lastCall[0]).toBe(enumActionSimulator.CONTINUE)
+  expect(continueSimulator.mock.calls.length).toBe(1)
+  expect(continueSimulator.mock.lastCall.length).toBe(0)
 })

@@ -186,12 +186,16 @@ function TabPaneSimulator({ deck, state, dispatch }) {
 
   // Given to children
   function handleToggleGuardiansAt(index) {
-    handleToggleAt(setTogglesGuardians, togglesGuardians, index, dispatch)
+    handleToggleAt(setTogglesGuardians, togglesGuardians, index, () =>
+      dispatch(enumActionSimulator.CONTINUE)
+    )
   }
 
   // Given to children
   function handleToggleHandAndDeckAt(index) {
-    handleToggleAt(setTogglesHandAndDeck, togglesHandAndDeck, index, dispatch)
+    handleToggleAt(setTogglesHandAndDeck, togglesHandAndDeck, index, () =>
+      dispatch(enumActionSimulator.CONTINUE)
+    )
   }
 
   const enabledStart = state === enumStateSimulator.INITIAL

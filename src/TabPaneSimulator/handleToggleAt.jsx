@@ -1,7 +1,6 @@
-import { enumActionSimulator } from '.'
 import enumToggle from './enumToggle'
 
-function handleToggleAt(setToggles, toggles, index, dispatch) {
+function handleToggleAt(setToggles, toggles, index, continueSimulator) {
   const newToggle = toggles.slice()
   switch (newToggle[index]) {
     case enumToggle.OPAQUE:
@@ -29,7 +28,7 @@ function handleToggleAt(setToggles, toggles, index, dispatch) {
       break
   }
   setToggles(newToggle)
-  dispatch(enumActionSimulator.CONTINUE)
+  continueSimulator()
 }
 
 export default handleToggleAt
