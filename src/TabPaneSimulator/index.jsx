@@ -1,17 +1,86 @@
 // SPDX-License-Identifier: MIT
 
-import { useState } from 'react'
+import { useReducer, useState } from 'react'
 import { Alert, Button } from 'react-bootstrap'
 
 import { dataCardsMap as dataCards } from '../commons/dataCards'
 import { sum } from '../commons/utils'
-import {
-  enumActionSimulator,
-  enumStateSimulator,
-} from '../hooks/reducerSimulator'
 import enumToggle from './enumToggle'
 import handleToggleAt from './handleToggleAt'
 import ImageCardWithToggle from './ImageCardWithToggle'
+
+const enumStateSimulator = {
+  INITIAL: 0,
+  STARTING: 1,
+  RUNNING: 2,
+  ABORTED: 3,
+  LESS_THAN_TEN: 4,
+}
+
+const enumActionSimulator = {
+  RESET: 0,
+  START: 1,
+  CONTINUE: 2,
+  INTERRUPT: 3,
+  CHECK_MAIN_DECK: 4,
+}
+
+function reducerSimulator(state, action) {
+  switch (state) {
+    case enumStateSimulator.INITIAL:
+      switch (action) {
+        case enumActionSimulator.START:
+          return enumStateSimulator.STARTING
+        case enumActionSimulator.CHECK_MAIN_DECK:
+          return enumStateSimulator.LESS_THAN_TEN
+        default:
+          break
+      }
+      break
+    case enumStateSimulator.STARTING:
+      switch (action) {
+        case enumActionSimulator.RESET:
+          return enumStateSimulator.INITIAL
+        case enumActionSimulator.CONTINUE:
+          return enumStateSimulator.RUNNING
+        case enumActionSimulator.INTERRUPT:
+          return enumStateSimulator.ABORTED
+        default:
+          break
+      }
+      break
+    case enumStateSimulator.RUNNING:
+      switch (action) {
+        case enumActionSimulator.RESET:
+          return enumStateSimulator.INITIAL
+        case enumActionSimulator.INTERRUPT:
+          return enumStateSimulator.ABORTED
+        default:
+          break
+      }
+      break
+    case enumStateSimulator.ABORTED:
+      switch (action) {
+        case enumActionSimulator.RESET:
+          return enumStateSimulator.INITIAL
+        default:
+          break
+      }
+      break
+    case enumStateSimulator.LESS_THAN_TEN:
+      switch (action) {
+        case enumActionSimulator.RESET:
+          return enumStateSimulator.INITIAL
+        default:
+          break
+      }
+      break
+    default:
+    // Do nothing
+  }
+
+  return state
+}
 
 function makeIdArray(deck) {
   const result = []
@@ -42,6 +111,17 @@ function pickCards(currentLibrary, currentPicked, n) {
     newPicked.push(newLibrary.shift())
   }
   return [newLibrary, newPicked]
+}
+
+function useTabPaneSimulator() {
+  const [state, dispatch] = useReducer(
+    reducerSimulator,
+    enumStateSimulator.INITIAL
+  )
+  const render = (deck) => {
+    return <TabPaneSimulator deck={deck} state={state} dispatch={dispatch} />
+  }
+  return { dispatch, render }
 }
 
 function TabPaneSimulator({ deck, state, dispatch }) {
@@ -196,4 +276,5 @@ function ContainerSection({ title, cards, toggles, handleToggleAt }) {
   )
 }
 
-export default TabPaneSimulator
+export default useTabPaneSimulator
+export { enumActionSimulator }

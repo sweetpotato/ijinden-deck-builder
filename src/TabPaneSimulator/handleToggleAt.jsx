@@ -1,4 +1,4 @@
-import { enumActionSimulator } from '../hooks/reducerSimulator'
+import { enumActionSimulator } from '.'
 import enumToggle from './enumToggle'
 
 function handleToggleAt(setToggles, toggles, index, dispatch) {

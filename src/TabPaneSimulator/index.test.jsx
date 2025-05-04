@@ -1,26 +1,17 @@
 import { afterEach, expect, test, vi } from 'vitest'
-import { cleanup, render } from '@testing-library/react'
+import { cleanup, render, renderHook } from '@testing-library/react'
 
-import {
-  enumActionSimulator,
-  enumStateSimulator,
-} from '../hooks/reducerSimulator'
-import TabPaneSimulator from '.'
+import useTabPaneSimulator from '.'
 import userEvent from '@testing-library/user-event'
 
 afterEach(cleanup)
 
 test('デッキ9枚でのレンダリングでスタート、リセット', async () => {
+  const { result } = renderHook(() => useTabPaneSimulator())
   const deck = new Map([['R-1', 9]])
-  const dispatch = vi.fn()
   const { rerender, getByRole, getByText, queryByText } = render(
-    <TabPaneSimulator
-      deck={deck}
-      state={enumStateSimulator.INITIAL}
-      dispatch={dispatch}
-    />
+    <>{result.current.render(deck)}</>
   )
-  expect(dispatch.mock.calls.length).toBe(0)
 
   let buttonReset = getByRole('button', { name: 'リセット' })
   expect(buttonReset).toBeVisible()
@@ -42,17 +33,8 @@ test('デッキ9枚でのレンダリングでスタート、リセット', asyn
 
   // スタートボタンを押す
   await userEvent.click(buttonStart)
-  expect(dispatch.mock.calls.length).toBe(1)
-  expect(dispatch.mock.lastCall.length).toBe(1)
-  expect(dispatch.mock.lastCall[0]).toBe(enumActionSimulator.CHECK_MAIN_DECK)
 
-  rerender(
-    <TabPaneSimulator
-      deck={deck}
-      state={enumStateSimulator.LESS_THAN_TEN}
-      dispatch={dispatch}
-    />
-  )
+  rerender(<>{result.current.render(deck)}</>)
 
   buttonReset = getByRole('button', { name: 'リセット' })
   expect(buttonReset).toBeVisible()
@@ -74,17 +56,8 @@ test('デッキ9枚でのレンダリングでスタート、リセット', asyn
 
   // リセットボタンを押す
   await userEvent.click(buttonReset)
-  expect(dispatch.mock.calls.length).toBe(2)
-  expect(dispatch.mock.lastCall.length).toBe(1)
-  expect(dispatch.mock.lastCall[0]).toBe(enumActionSimulator.RESET)
 
-  rerender(
-    <TabPaneSimulator
-      deck={deck}
-      state={enumStateSimulator.INITIAL}
-      dispatch={dispatch}
-    />
-  )
+  rerender(<>{result.current.render(deck)}</>)
 
   buttonReset = getByRole('button', { name: 'リセット' })
   expect(buttonReset).toBeVisible()
@@ -106,16 +79,11 @@ test('デッキ9枚でのレンダリングでスタート、リセット', asyn
 })
 
 test('デッキ10枚でのレンダリングでスタート、リセット', async () => {
+  const { result } = renderHook(() => useTabPaneSimulator())
   const deck = new Map([['R-1', 10]])
-  const dispatch = vi.fn()
   const { container, rerender, getByRole, getByText, queryByText } = render(
-    <TabPaneSimulator
-      deck={deck}
-      state={enumStateSimulator.INITIAL}
-      dispatch={dispatch}
-    />
+    <>{result.current.render(deck)}</>
   )
-  expect(dispatch.mock.calls.length).toBe(0)
 
   let buttonReset = getByRole('button', { name: 'リセット' })
   expect(buttonReset).toBeVisible()
@@ -137,17 +105,8 @@ test('デッキ10枚でのレンダリングでスタート、リセット', asy
 
   // スタートボタンを押す
   await userEvent.click(buttonStart)
-  expect(dispatch.mock.calls.length).toBe(1)
-  expect(dispatch.mock.lastCall.length).toBe(1)
-  expect(dispatch.mock.lastCall[0]).toBe(enumActionSimulator.START)
 
-  rerender(
-    <TabPaneSimulator
-      deck={deck}
-      state={enumStateSimulator.STARTING}
-      dispatch={dispatch}
-    />
-  )
+  rerender(<>{result.current.render(deck)}</>)
 
   buttonReset = getByRole('button', { name: 'リセット' })
   expect(buttonReset).toBeVisible()
@@ -196,17 +155,8 @@ test('デッキ10枚でのレンダリングでスタート、リセット', asy
 
   // リセットボタンを押す
   await userEvent.click(buttonReset)
-  expect(dispatch.mock.calls.length).toBe(2)
-  expect(dispatch.mock.lastCall.length).toBe(1)
-  expect(dispatch.mock.lastCall[0]).toBe(enumActionSimulator.RESET)
 
-  rerender(
-    <TabPaneSimulator
-      deck={deck}
-      state={enumStateSimulator.INITIAL}
-      dispatch={dispatch}
-    />
-  )
+  rerender(<>{result.current.render(deck)}</>)
 
   buttonReset = getByRole('button', { name: 'リセット' })
   expect(buttonReset).toBeVisible()
@@ -228,16 +178,11 @@ test('デッキ10枚でのレンダリングでスタート、リセット', asy
 })
 
 test('デッキ10枚でのレンダリングでスタート、マリガン、リセット', async () => {
+  const { result } = renderHook(() => useTabPaneSimulator())
   const deck = new Map([['R-1', 10]])
-  const dispatch = vi.fn()
   const { container, rerender, getByRole, getByText, queryByText } = render(
-    <TabPaneSimulator
-      deck={deck}
-      state={enumStateSimulator.INITIAL}
-      dispatch={dispatch}
-    />
+    <>{result.current.render(deck)}</>
   )
-  expect(dispatch.mock.calls.length).toBe(0)
 
   let buttonReset = getByRole('button', { name: 'リセット' })
   expect(buttonReset).toBeVisible()
@@ -259,17 +204,8 @@ test('デッキ10枚でのレンダリングでスタート、マリガン、リ
 
   // スタートボタンを押す
   await userEvent.click(buttonStart)
-  expect(dispatch.mock.calls.length).toBe(1)
-  expect(dispatch.mock.lastCall.length).toBe(1)
-  expect(dispatch.mock.lastCall[0]).toBe(enumActionSimulator.START)
 
-  rerender(
-    <TabPaneSimulator
-      deck={deck}
-      state={enumStateSimulator.STARTING}
-      dispatch={dispatch}
-    />
-  )
+  rerender(<>{result.current.render(deck)}</>)
 
   buttonReset = getByRole('button', { name: 'リセット' })
   expect(buttonReset).toBeVisible()
@@ -318,17 +254,8 @@ test('デッキ10枚でのレンダリングでスタート、マリガン、リ
 
   // マリガンボタンを押す
   await userEvent.click(buttonMulligan)
-  expect(dispatch.mock.calls.length).toBe(2)
-  expect(dispatch.mock.lastCall.length).toBe(1)
-  expect(dispatch.mock.lastCall[0]).toBe(enumActionSimulator.CONTINUE)
 
-  rerender(
-    <TabPaneSimulator
-      deck={deck}
-      state={enumStateSimulator.RUNNING}
-      dispatch={dispatch}
-    />
-  )
+  rerender(<>{result.current.render(deck)}</>)
 
   buttonReset = getByRole('button', { name: 'リセット' })
   expect(buttonReset).toBeVisible()
@@ -378,17 +305,8 @@ test('デッキ10枚でのレンダリングでスタート、マリガン、リ
 
   // リセットボタンを押す
   await userEvent.click(buttonReset)
-  expect(dispatch.mock.calls.length).toBe(3)
-  expect(dispatch.mock.lastCall.length).toBe(1)
-  expect(dispatch.mock.lastCall[0]).toBe(enumActionSimulator.RESET)
 
-  rerender(
-    <TabPaneSimulator
-      deck={deck}
-      state={enumStateSimulator.INITIAL}
-      dispatch={dispatch}
-    />
-  )
+  rerender(<>{result.current.render(deck)}</>)
 
   buttonReset = getByRole('button', { name: 'リセット' })
   expect(buttonReset).toBeVisible()
@@ -410,16 +328,11 @@ test('デッキ10枚でのレンダリングでスタート、マリガン、リ
 })
 
 test('デッキ10枚でのレンダリングでスタート、カードをタップ、リセット', async () => {
+  const { result } = renderHook(() => useTabPaneSimulator())
   const deck = new Map([['R-1', 10]])
-  const dispatch = vi.fn()
   const { container, rerender, getByRole, getByText, queryByText } = render(
-    <TabPaneSimulator
-      deck={deck}
-      state={enumStateSimulator.INITIAL}
-      dispatch={dispatch}
-    />
+    <>{result.current.render(deck)}</>
   )
-  expect(dispatch.mock.calls.length).toBe(0)
 
   let buttonReset = getByRole('button', { name: 'リセット' })
   expect(buttonReset).toBeVisible()
@@ -441,17 +354,8 @@ test('デッキ10枚でのレンダリングでスタート、カードをタッ
 
   // スタートボタンを押す
   await userEvent.click(buttonStart)
-  expect(dispatch.mock.calls.length).toBe(1)
-  expect(dispatch.mock.lastCall.length).toBe(1)
-  expect(dispatch.mock.lastCall[0]).toBe(enumActionSimulator.START)
 
-  rerender(
-    <TabPaneSimulator
-      deck={deck}
-      state={enumStateSimulator.STARTING}
-      dispatch={dispatch}
-    />
-  )
+  rerender(<>{result.current.render(deck)}</>)
 
   buttonReset = getByRole('button', { name: 'リセット' })
   expect(buttonReset).toBeVisible()
@@ -500,17 +404,8 @@ test('デッキ10枚でのレンダリングでスタート、カードをタッ
 
   // 手札のカードをタップする
   await userEvent.click(hand[0])
-  expect(dispatch.mock.calls.length).toBe(2)
-  expect(dispatch.mock.lastCall.length).toBe(1)
-  expect(dispatch.mock.lastCall[0]).toBe(enumActionSimulator.CONTINUE)
 
-  rerender(
-    <TabPaneSimulator
-      deck={deck}
-      state={enumStateSimulator.RUNNING}
-      dispatch={dispatch}
-    />
-  )
+  rerender(<>{result.current.render(deck)}</>)
 
   buttonReset = getByRole('button', { name: 'リセット' })
   expect(buttonReset).toBeVisible()
@@ -561,17 +456,8 @@ test('デッキ10枚でのレンダリングでスタート、カードをタッ
 
   // リセットボタンを押す
   await userEvent.click(buttonReset)
-  expect(dispatch.mock.calls.length).toBe(3)
-  expect(dispatch.mock.lastCall.length).toBe(1)
-  expect(dispatch.mock.lastCall[0]).toBe(enumActionSimulator.RESET)
 
-  rerender(
-    <TabPaneSimulator
-      deck={deck}
-      state={enumStateSimulator.INITIAL}
-      dispatch={dispatch}
-    />
-  )
+  rerender(<>{result.current.render(deck)}</>)
 
   buttonReset = getByRole('button', { name: 'リセット' })
   expect(buttonReset).toBeVisible()

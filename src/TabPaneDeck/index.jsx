@@ -28,7 +28,7 @@ import {
 } from '../commons/handleClick'
 import { sum } from '../commons/utils'
 import ImageCard from '../components/ImageCard'
-import { enumActionSimulator } from '../hooks/reducerSimulator'
+import { enumActionSimulator } from '../TabPaneSimulator'
 
 function makeTextExportedPart(title, deck) {
   const numCards = sum(deck.values())

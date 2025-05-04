@@ -6,7 +6,7 @@ import {
   handleClickDecrement,
   handleClickIncrement,
 } from '../commons/handleClick'
-import { enumActionSimulator } from '../hooks/reducerSimulator'
+import { enumActionSimulator } from '../TabPaneSimulator'
 
 function InputGroupCounter({
   id,

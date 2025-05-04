@@ -2,7 +2,7 @@ import { cleanup } from '@testing-library/react'
 import { afterEach, expect, test, vi } from 'vitest'
 import handleToggleAt from './handleToggleAt'
 import enumToggle from './enumToggle'
-import { enumActionSimulator } from '../hooks/reducerSimulator'
+import { enumActionSimulator } from '.'
 
 afterEach(cleanup)
 

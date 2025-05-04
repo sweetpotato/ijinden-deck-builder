@@ -4,7 +4,7 @@ import { afterEach, expect, test, vi } from 'vitest'
 import { cleanup, render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import { enumActionSimulator } from '../hooks/reducerSimulator'
+import { enumActionSimulator } from '../TabPaneSimulator'
 import InputGroupCounter from './InputGroupCounter'
 
 afterEach(cleanup)

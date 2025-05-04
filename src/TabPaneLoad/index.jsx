@@ -21,7 +21,7 @@ import db from '../commons/db'
 import enumTabPane from '../commons/enumTabPane'
 import { sum } from '../commons/utils'
 import ImageCard from '../components/ImageCard'
-import { enumActionSimulator } from '../hooks/reducerSimulator'
+import { enumActionSimulator } from '../TabPaneSimulator'
 
 // YYYY/mm/dd HH:MM:SS
 const DTF = new Intl.DateTimeFormat([], {
