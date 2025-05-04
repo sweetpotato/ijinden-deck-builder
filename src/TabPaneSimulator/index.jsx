@@ -244,12 +244,14 @@ function TabPaneSimulator({ deck, state, dispatch }) {
       {showGuardiansAndHands && (
         <>
           <ContainerSection
+            id="guardians"
             title="ガーディアン"
             cards={guardians}
             toggles={togglesGuardians}
             handleToggleAt={handleToggleGuardiansAt}
           />
           <ContainerSection
+            id="hand"
             title="手札"
             cards={handAndDeck}
             toggles={togglesHandAndDeck}
@@ -261,10 +263,12 @@ function TabPaneSimulator({ deck, state, dispatch }) {
   )
 }
 
-function ContainerSection({ title, cards, toggles, handleToggleAt }) {
+function ContainerSection({ id, title, cards, toggles, handleToggleAt }) {
   return (
-    <>
-      <h3 className="m-2">{title}</h3>
+    <div role="group" aria-labelledby={id}>
+      <h3 id={id} className="m-2">
+        {title}
+      </h3>
       <div className="container-card-line-up ms-2">
         {cards?.map((id, index) => {
           const key = `${id}-${index}`
@@ -281,7 +285,7 @@ function ContainerSection({ title, cards, toggles, handleToggleAt }) {
           )
         })}
       </div>
-    </>
+    </div>
   )
 }
 
