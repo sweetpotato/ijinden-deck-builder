@@ -15,7 +15,7 @@ import { useParams } from 'react-router-dom'
 import TabPaneCard from './TabPaneCard'
 import TabPaneDeck from './TabPaneDeck'
 import TabPaneLoad from './TabPaneLoad'
-import useTabPaneSimulator from './TabPaneSimulator'
+import useTabPaneSimulator from './TabPaneSimulator/useTabPaneSimulator'
 import { dataCardsMap, decodeDeck } from './commons/dataCards'
 import enumTabPane from './commons/enumTabPane'
 
