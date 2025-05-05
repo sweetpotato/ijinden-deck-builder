@@ -18,6 +18,7 @@ import { isAccordionItemSelected } from 'react-bootstrap/esm/AccordionContext'
 import FormRange from 'react-bootstrap/esm/FormRange'
 
 import { dataCardsArrayForTable as dataCards } from '../commons/dataCards'
+import useAccordionItemRadioFilter from './useAccordionItemRadioFilter'
 import InputGroupCounter from './InputGroupCounter'
 
 import './index.css'
@@ -190,45 +191,58 @@ function TabPaneCard({
   handleSetDeckSide,
   interruptSimulator,
 }) {
-  const [expansion, setExpansion] = useState(0)
-  const [rarity, setRarity] = useState(0)
-  const [color, setColor] = useState(0)
-  const [type, setType] = useState(0)
+  const [expansion, resetExpansion, renderExpansion] =
+    useAccordionItemRadioFilter({
+      title: 'エキスパンション',
+      name: 'expansion',
+      data: dataExpansions,
+    })
+  const [rarity, resetRarity, renderRarity] = useAccordionItemRadioFilter({
+    title: 'レアリティ',
+    name: 'rarity',
+    data: dataRarities,
+  })
+  const [color, resetColor, renderColor] = useAccordionItemRadioFilter({
+    title: '色',
+    name: 'color',
+    data: dataColors,
+  })
+  const [type, resetType, renderType] = useAccordionItemRadioFilter({
+    title: '種類',
+    name: 'type',
+    data: dataTypes,
+  })
   const [levelValue, setLevelValue] = useState(LEVEL_VALUE_MIN)
   const [levelComparator, setLevelComparator] = useState(LEVEL_COMPARATOR_GE)
-  const [term, setTerm] = useState(0)
-  const [trait, setTrait] = useState(0)
-  const [legacy, setLegacy] = useState(0)
+  const [trait, resetTrait, renderTrait] = useAccordionItemRadioFilter({
+    title: '特性',
+    name: 'trait',
+    data: dataTraits,
+  })
+  const [term, resetTerm, renderTerm] = useAccordionItemRadioFilter({
+    title: '能力語',
+    name: 'term',
+    data: dataTerms,
+  })
+  const [legacy, resetLegacy, renderLegacy] = useAccordionItemRadioFilter({
+    title: '遺業能力',
+    name: 'legacy',
+    data: dataLegacies,
+  })
   const [keywords, setKeywords] = useState([])
   const [includesTraitAndLegacy, setIncludesTraitAndLegacy] = useState(true)
   const deferredKeywords = useDeferredValue(keywords)
 
   function handleClickResetConditions() {
-    setExpansion(0)
-    setRarity(0)
-    setColor(0)
-    setType(0)
+    resetExpansion()
+    resetRarity()
+    resetColor()
+    resetType()
     setLevelValue(LEVEL_VALUE_MIN)
     setLevelComparator(LEVEL_COMPARATOR_GE)
-    setTerm(0)
-    setTrait(0)
-    setLegacy(0)
-  }
-
-  function handleChangeExpansion(e) {
-    setExpansion(Number(e.currentTarget.value))
-  }
-
-  function handleChangeRarity(e) {
-    setRarity(Number(e.currentTarget.value))
-  }
-
-  function handleChangeColor(e) {
-    setColor(Number(e.currentTarget.value))
-  }
-
-  function handleChangeType(e) {
-    setType(Number(e.currentTarget.value))
+    resetTrait()
+    resetTerm()
+    resetLegacy()
   }
 
   function handleChangeLevelValue(e) {
@@ -247,18 +261,6 @@ function TabPaneCard({
 
   function handleChangeLevelComparator(e) {
     setLevelComparator(e.currentTarget.value)
-  }
-
-  function handleChangeTerm(e) {
-    setTerm(Number(e.currentTarget.value))
-  }
-
-  function handleChangeTrait(e) {
-    setTrait(Number(e.currentTarget.value))
-  }
-
-  function handleChangeLegacy(e) {
-    setLegacy(Number(e.currentTarget.value))
   }
 
   function handleChangeKeywords(e) {
@@ -310,38 +312,10 @@ function TabPaneCard({
               alwaysOpen
               defaultActiveKey={['2', '3']}
             >
-              <AccordionItemRadioFilter
-                eventKey="0"
-                title="エキスパンション"
-                name="expansion"
-                state={expansion}
-                handleChange={handleChangeExpansion}
-                data={dataExpansions}
-              />
-              <AccordionItemRadioFilter
-                eventKey="1"
-                title="レアリティ"
-                name="rarity"
-                state={rarity}
-                handleChange={handleChangeRarity}
-                data={dataRarities}
-              />
-              <AccordionItemRadioFilter
-                eventKey="2"
-                title="色"
-                name="color"
-                state={color}
-                handleChange={handleChangeColor}
-                data={dataColors}
-              />
-              <AccordionItemRadioFilter
-                eventKey="3"
-                title="種類"
-                name="type"
-                state={type}
-                handleChange={handleChangeType}
-                data={dataTypes}
-              />
+              {renderExpansion(0)}
+              {renderRarity(1)}
+              {renderColor(2)}
+              {renderType(3)}
               <AccordionItemLevelFilter
                 eventKey="4"
                 title="レベル"
@@ -352,30 +326,9 @@ function TabPaneCard({
                 handleChangeComparator={handleChangeLevelComparator}
                 data={dataLevelComparators}
               />
-              <AccordionItemRadioFilter
-                eventKey="5"
-                title="特性"
-                name="trait"
-                state={trait}
-                handleChange={handleChangeTrait}
-                data={dataTraits}
-              />
-              <AccordionItemRadioFilter
-                eventKey="6"
-                title="能力語"
-                name="term"
-                state={term}
-                handleChange={handleChangeTerm}
-                data={dataTerms}
-              />
-              <AccordionItemRadioFilter
-                eventKey="7"
-                title="遺業能力"
-                name="legacy"
-                state={legacy}
-                handleChange={handleChangeLegacy}
-                data={dataLegacies}
-              />
+              {renderTrait(5)}
+              {renderTerm(6)}
+              {renderLegacy(7)}
             </Accordion>
           </AccordionBody>
         </AccordionItem>
@@ -416,56 +369,6 @@ function TabPaneCard({
         </tbody>
       </Table>
     </>
-  )
-}
-
-function AccordionItemRadioFilter({
-  eventKey,
-  title,
-  name,
-  state,
-  handleChange,
-  data,
-}) {
-  const { activeEventKey } = useContext(AccordionContext)
-  const expanded = isAccordionItemSelected(activeEventKey, eventKey)
-  const label = new Map(data.map((e) => [e.value, e.label])).get(state)
-
-  return (
-    <AccordionItem eventKey={eventKey}>
-      <AccordionHeader as="h3">
-        {expanded ? (
-          `➖ ${title}`
-        ) : state === 0 ? (
-          `➕ ${title} ― ${label}`
-        ) : (
-          <>
-            ➕ {title}
-            &nbsp;―&nbsp;
-            <b>{label}</b>
-          </>
-        )}
-      </AccordionHeader>
-      <AccordionBody className="container-button">
-        {data.map((element) => {
-          const id = `${name}-${element.value}`
-          return (
-            <ToggleButton
-              key={id}
-              type="radio"
-              variant="outline-primary"
-              id={id}
-              name={name}
-              value={element.value}
-              onChange={handleChange}
-              checked={state === element.value}
-            >
-              {element.label}
-            </ToggleButton>
-          )
-        })}
-      </AccordionBody>
-    </AccordionItem>
   )
 }
 
