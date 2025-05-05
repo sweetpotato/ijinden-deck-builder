@@ -1,8 +1,9 @@
-import { cleanup, render } from '@testing-library/react'
+import { cleanup, render, renderHook } from '@testing-library/react'
 import { Accordion } from 'react-bootstrap'
-import { afterEach, expect, test, vi } from 'vitest'
-import AccordionItemRadioFilter from './AccordionItemRadioFilter'
+import { afterEach, expect, test } from 'vitest'
 import userEvent from '@testing-library/user-event'
+import useAccordionItemRadioFilter from './useAccordionItemRadioFilter'
+import { act } from 'react'
 
 afterEach(cleanup)
 
@@ -26,20 +27,20 @@ const dataColors = [
 ]
 
 test('種類のようにビットセットでないフィルタ', async () => {
-  const handleChange = vi.fn()
-  const { rerender, getByRole } = render(
-    <Accordion alwaysOpen>
-      <AccordionItemRadioFilter
-        eventKey={0}
-        title="種類"
-        name="type"
-        state={0} // すべて
-        handleChange={handleChange}
-        data={dataTypes}
-      />
-    </Accordion>
+  const { result } = renderHook(() =>
+    useAccordionItemRadioFilter({
+      eventKey: 0,
+      title: '種類',
+      name: 'type',
+      defaultState: 0, // すべて
+      data: dataTypes,
+    })
   )
-  expect(handleChange.mock.calls.length).toBe(0)
+  let [state, resetState, renderAccordionItem] = result.current
+  expect(state).toBe(0) // すべて
+  const { rerender, getByRole } = render(
+    <Accordion alwaysOpen>{renderAccordionItem()}</Accordion>
+  )
 
   let buttonAll = getByRole('radio', { name: 'すべて' })
   expect(buttonAll).toBeVisible()
@@ -60,25 +61,9 @@ test('種類のようにビットセットでないフィルタ', async () => {
 
   // イジンを選択する
   await userEvent.click(buttonIjin)
-
-  expect(handleChange.mock.calls.length).toBe(1)
-  expect(handleChange.mock.lastCall.length).toBe(1)
-  // TODO currentTarget が null になってしまう
-  expect(handleChange.mock.lastCall[0].currentTarget).toBeNull()
-  expect(handleChange.mock.lastCall[0].target.value).toBe('1') // イジン
-
-  rerender(
-    <Accordion alwaysOpen>
-      <AccordionItemRadioFilter
-        eventKey={0}
-        title="種類"
-        name="type"
-        state={1} // イジン
-        handleChange={handleChange}
-        data={dataTypes}
-      />
-    </Accordion>
-  )
+  ;[state, resetState, renderAccordionItem] = result.current
+  expect(state).toBe(1) // イジン
+  rerender(<Accordion alwaysOpen>{renderAccordionItem()}</Accordion>)
 
   buttonAll = getByRole('radio', { name: 'すべて' })
   expect(buttonAll).toBeVisible()
@@ -99,25 +84,9 @@ test('種類のようにビットセットでないフィルタ', async () => {
 
   // ハイケイを選択する
   await userEvent.click(buttonHaikei)
-
-  expect(handleChange.mock.calls.length).toBe(2)
-  expect(handleChange.mock.lastCall.length).toBe(1)
-  // TODO currentTarget が null になってしまう
-  expect(handleChange.mock.lastCall[0].currentTarget).toBeNull()
-  expect(handleChange.mock.lastCall[0].target.value).toBe('2') // ハイケイ
-
-  rerender(
-    <Accordion alwaysOpen>
-      <AccordionItemRadioFilter
-        eventKey={0}
-        title="種類"
-        name="type"
-        state={2} // ハイケイ
-        handleChange={handleChange}
-        data={dataTypes}
-      />
-    </Accordion>
-  )
+  ;[state, resetState, renderAccordionItem] = result.current
+  expect(state).toBe(2) // ハイケイ
+  rerender(<Accordion alwaysOpen>{renderAccordionItem()}</Accordion>)
 
   buttonAll = getByRole('radio', { name: 'すべて' })
   expect(buttonAll).toBeVisible()
@@ -138,25 +107,9 @@ test('種類のようにビットセットでないフィルタ', async () => {
 
   // マホウを選択する
   await userEvent.click(buttonMahou)
-
-  expect(handleChange.mock.calls.length).toBe(3)
-  expect(handleChange.mock.lastCall.length).toBe(1)
-  // TODO currentTarget が null になってしまう
-  expect(handleChange.mock.lastCall[0].currentTarget).toBeNull()
-  expect(handleChange.mock.lastCall[0].target.value).toBe('3') // マホウ
-
-  rerender(
-    <Accordion alwaysOpen>
-      <AccordionItemRadioFilter
-        eventKey={0}
-        title="種類"
-        name="type"
-        state={3} // マホウ
-        handleChange={handleChange}
-        data={dataTypes}
-      />
-    </Accordion>
-  )
+  ;[state, resetState, renderAccordionItem] = result.current
+  expect(state).toBe(3) // マホウ
+  rerender(<Accordion alwaysOpen>{renderAccordionItem()}</Accordion>)
 
   buttonAll = getByRole('radio', { name: 'すべて' })
   expect(buttonAll).toBeVisible()
@@ -177,25 +130,9 @@ test('種類のようにビットセットでないフィルタ', async () => {
 
   // マリョクを選択する
   await userEvent.click(buttonMaryoku)
-
-  expect(handleChange.mock.calls.length).toBe(4)
-  expect(handleChange.mock.lastCall.length).toBe(1)
-  // TODO currentTarget が null になってしまう
-  expect(handleChange.mock.lastCall[0].currentTarget).toBeNull()
-  expect(handleChange.mock.lastCall[0].target.value).toBe('4') // マリョク
-
-  rerender(
-    <Accordion alwaysOpen>
-      <AccordionItemRadioFilter
-        eventKey={0}
-        title="種類"
-        name="type"
-        state={4} // マリョク
-        handleChange={handleChange}
-        data={dataTypes}
-      />
-    </Accordion>
-  )
+  ;[state, resetState, renderAccordionItem] = result.current
+  expect(state).toBe(4) // マリョク
+  rerender(<Accordion alwaysOpen>{renderAccordionItem()}</Accordion>)
 
   buttonAll = getByRole('radio', { name: 'すべて' })
   expect(buttonAll).toBeVisible()
@@ -213,23 +150,46 @@ test('種類のようにビットセットでないフィルタ', async () => {
   expect(buttonMaryoku).toBeVisible()
   // マリョクが選択されている
   expect(buttonMaryoku).toBeChecked()
+
+  // 状態をリセットする
+  act(() => resetState())
+  ;[state, resetState, renderAccordionItem] = result.current
+  expect(state).toBe(0) // すべて
+  rerender(<Accordion alwaysOpen>{renderAccordionItem()}</Accordion>)
+
+  buttonAll = getByRole('radio', { name: 'すべて' })
+  expect(buttonAll).toBeVisible()
+  // すべてが選択されている
+  expect(buttonAll).toBeChecked()
+  buttonIjin = getByRole('radio', { name: 'イジン' })
+  expect(buttonIjin).toBeVisible()
+  expect(buttonIjin).not.toBeChecked()
+  buttonHaikei = getByRole('radio', { name: 'ハイケイ' })
+  expect(buttonHaikei).toBeVisible()
+  expect(buttonHaikei).not.toBeChecked()
+  buttonMahou = getByRole('radio', { name: 'マホウ' })
+  expect(buttonMahou).toBeVisible()
+  expect(buttonMahou).not.toBeChecked()
+  buttonMaryoku = getByRole('radio', { name: 'マリョク' })
+  expect(buttonMaryoku).toBeVisible()
+  expect(buttonMaryoku).not.toBeChecked()
 })
 
 test('色のようにビットセットであるフィルタ', async () => {
-  const handleChange = vi.fn()
-  const { rerender, getByRole } = render(
-    <Accordion alwaysOpen>
-      <AccordionItemRadioFilter
-        eventKey={0}
-        title="色"
-        name="color"
-        state={0} // すべて
-        handleChange={handleChange}
-        data={dataColors}
-      />
-    </Accordion>
+  const { result } = renderHook(() =>
+    useAccordionItemRadioFilter({
+      eventKey: 0,
+      title: '色',
+      name: 'color',
+      defaultState: 0, // すべて
+      data: dataColors,
+    })
   )
-  expect(handleChange.mock.calls.length).toBe(0)
+  let [state, resetState, renderAccordionItem] = result.current
+  expect(state).toBe(0) // すべて
+  const { rerender, getByRole } = render(
+    <Accordion alwaysOpen>{renderAccordionItem()}</Accordion>
+  )
 
   let buttonAll = getByRole('radio', { name: 'すべて' })
   expect(buttonAll).toBeVisible()
@@ -259,25 +219,9 @@ test('色のようにビットセットであるフィルタ', async () => {
 
   // 赤を選択する
   await userEvent.click(buttonRed)
-
-  expect(handleChange.mock.calls.length).toBe(1)
-  expect(handleChange.mock.lastCall.length).toBe(1)
-  // TODO currentTarget が null になってしまう
-  expect(handleChange.mock.lastCall[0].currentTarget).toBeNull()
-  expect(handleChange.mock.lastCall[0].target.value).toBe('1') // 赤
-
-  rerender(
-    <Accordion alwaysOpen>
-      <AccordionItemRadioFilter
-        eventKey={0}
-        title="色"
-        name="color"
-        state={1} // 赤
-        handleChange={handleChange}
-        data={dataColors}
-      />
-    </Accordion>
-  )
+  ;[state, resetState, renderAccordionItem] = result.current
+  expect(state).toBe(1) // 赤
+  rerender(<Accordion alwaysOpen>{renderAccordionItem()}</Accordion>)
 
   buttonAll = getByRole('radio', { name: 'すべて' })
   expect(buttonAll).toBeVisible()
@@ -307,25 +251,9 @@ test('色のようにビットセットであるフィルタ', async () => {
 
   // 青を選択する
   await userEvent.click(buttonBlue)
-
-  expect(handleChange.mock.calls.length).toBe(2)
-  expect(handleChange.mock.lastCall.length).toBe(1)
-  // TODO currentTarget が null になってしまう
-  expect(handleChange.mock.lastCall[0].currentTarget).toBeNull()
-  expect(handleChange.mock.lastCall[0].target.value).toBe('2') // 青
-
-  rerender(
-    <Accordion alwaysOpen>
-      <AccordionItemRadioFilter
-        eventKey={0}
-        title="色"
-        name="color"
-        state={2} // 青
-        handleChange={handleChange}
-        data={dataColors}
-      />
-    </Accordion>
-  )
+  ;[state, resetState, renderAccordionItem] = result.current
+  expect(state).toBe(2) // 青
+  rerender(<Accordion alwaysOpen>{renderAccordionItem()}</Accordion>)
 
   buttonAll = getByRole('radio', { name: 'すべて' })
   expect(buttonAll).toBeVisible()
@@ -355,25 +283,9 @@ test('色のようにビットセットであるフィルタ', async () => {
 
   // 緑を選択する
   await userEvent.click(buttonGreen)
-
-  expect(handleChange.mock.calls.length).toBe(3)
-  expect(handleChange.mock.lastCall.length).toBe(1)
-  // TODO currentTarget が null になってしまう
-  expect(handleChange.mock.lastCall[0].currentTarget).toBeNull()
-  expect(handleChange.mock.lastCall[0].target.value).toBe('4') // 緑
-
-  rerender(
-    <Accordion alwaysOpen>
-      <AccordionItemRadioFilter
-        eventKey={0}
-        title="色"
-        name="color"
-        state={4} // 緑
-        handleChange={handleChange}
-        data={dataColors}
-      />
-    </Accordion>
-  )
+  ;[state, resetState, renderAccordionItem] = result.current
+  expect(state).toBe(4) // 緑
+  rerender(<Accordion alwaysOpen>{renderAccordionItem()}</Accordion>)
 
   buttonAll = getByRole('radio', { name: 'すべて' })
   expect(buttonAll).toBeVisible()
@@ -403,25 +315,9 @@ test('色のようにビットセットであるフィルタ', async () => {
 
   // 黄を選択する
   await userEvent.click(buttonYellow)
-
-  expect(handleChange.mock.calls.length).toBe(4)
-  expect(handleChange.mock.lastCall.length).toBe(1)
-  // TODO currentTarget が null になってしまう
-  expect(handleChange.mock.lastCall[0].currentTarget).toBeNull()
-  expect(handleChange.mock.lastCall[0].target.value).toBe('8') // 黄
-
-  rerender(
-    <Accordion alwaysOpen>
-      <AccordionItemRadioFilter
-        eventKey={0}
-        title="色"
-        name="color"
-        state={8} // 黄
-        handleChange={handleChange}
-        data={dataColors}
-      />
-    </Accordion>
-  )
+  ;[state, resetState, renderAccordionItem] = result.current
+  expect(state).toBe(8) // 黄
+  rerender(<Accordion alwaysOpen>{renderAccordionItem()}</Accordion>)
 
   buttonAll = getByRole('radio', { name: 'すべて' })
   expect(buttonAll).toBeVisible()
@@ -451,25 +347,9 @@ test('色のようにビットセットであるフィルタ', async () => {
 
   // 紫を選択する
   await userEvent.click(buttonPurple)
-
-  expect(handleChange.mock.calls.length).toBe(5)
-  expect(handleChange.mock.lastCall.length).toBe(1)
-  // TODO currentTarget が null になってしまう
-  expect(handleChange.mock.lastCall[0].currentTarget).toBeNull()
-  expect(handleChange.mock.lastCall[0].target.value).toBe('16') // 紫
-
-  rerender(
-    <Accordion alwaysOpen>
-      <AccordionItemRadioFilter
-        eventKey={0}
-        title="色"
-        name="color"
-        state={16} // 紫
-        handleChange={handleChange}
-        data={dataColors}
-      />
-    </Accordion>
-  )
+  ;[state, resetState, renderAccordionItem] = result.current
+  expect(state).toBe(16) // 紫
+  rerender(<Accordion alwaysOpen>{renderAccordionItem()}</Accordion>)
 
   buttonAll = getByRole('radio', { name: 'すべて' })
   expect(buttonAll).toBeVisible()
@@ -499,25 +379,9 @@ test('色のようにビットセットであるフィルタ', async () => {
 
   // 多色を選択する
   await userEvent.click(buttonMulticolor)
-
-  expect(handleChange.mock.calls.length).toBe(6)
-  expect(handleChange.mock.lastCall.length).toBe(1)
-  // TODO currentTarget が null になってしまう
-  expect(handleChange.mock.lastCall[0].currentTarget).toBeNull()
-  expect(handleChange.mock.lastCall[0].target.value).toBe('32') // 多色
-
-  rerender(
-    <Accordion alwaysOpen>
-      <AccordionItemRadioFilter
-        eventKey={0}
-        title="色"
-        name="color"
-        state={32} // 多色
-        handleChange={handleChange}
-        data={dataColors}
-      />
-    </Accordion>
-  )
+  ;[state, resetState, renderAccordionItem] = result.current
+  expect(state).toBe(32) // 多色
+  rerender(<Accordion alwaysOpen>{renderAccordionItem()}</Accordion>)
 
   buttonAll = getByRole('radio', { name: 'すべて' })
   expect(buttonAll).toBeVisible()
@@ -547,25 +411,9 @@ test('色のようにビットセットであるフィルタ', async () => {
 
   // 無色を選択する
   await userEvent.click(buttonColorless)
-
-  expect(handleChange.mock.calls.length).toBe(7)
-  expect(handleChange.mock.lastCall.length).toBe(1)
-  // TODO currentTarget が null になってしまう
-  expect(handleChange.mock.lastCall[0].currentTarget).toBeNull()
-  expect(handleChange.mock.lastCall[0].target.value).toBe('64') // 多色
-
-  rerender(
-    <Accordion alwaysOpen>
-      <AccordionItemRadioFilter
-        eventKey={0}
-        title="色"
-        name="color"
-        state={64} // 無色
-        handleChange={handleChange}
-        data={dataColors}
-      />
-    </Accordion>
-  )
+  ;[state, resetState, renderAccordionItem] = result.current
+  expect(state).toBe(64) // 無色
+  rerender(<Accordion alwaysOpen>{renderAccordionItem()}</Accordion>)
 
   buttonAll = getByRole('radio', { name: 'すべて' })
   expect(buttonAll).toBeVisible()
@@ -592,4 +440,36 @@ test('色のようにビットセットであるフィルタ', async () => {
   expect(buttonColorless).toBeVisible()
   // 無色が選択されている
   expect(buttonColorless).toBeChecked()
+
+  // 状態をリセットする
+  act(() => resetState())
+  ;[state, resetState, renderAccordionItem] = result.current
+  expect(state).toBe(0) // すべて
+  rerender(<Accordion alwaysOpen>{renderAccordionItem()}</Accordion>)
+
+  buttonAll = getByRole('radio', { name: 'すべて' })
+  expect(buttonAll).toBeVisible()
+  // すべてが選択されている
+  expect(buttonAll).toBeChecked()
+  buttonRed = getByRole('radio', { name: '赤' })
+  expect(buttonRed).toBeVisible()
+  expect(buttonRed).not.toBeChecked()
+  buttonBlue = getByRole('radio', { name: '青' })
+  expect(buttonBlue).toBeVisible()
+  expect(buttonBlue).not.toBeChecked()
+  buttonGreen = getByRole('radio', { name: '緑' })
+  expect(buttonGreen).toBeVisible()
+  expect(buttonGreen).not.toBeChecked()
+  buttonYellow = getByRole('radio', { name: '黄' })
+  expect(buttonYellow).toBeVisible()
+  expect(buttonYellow).not.toBeChecked()
+  buttonPurple = getByRole('radio', { name: '紫' })
+  expect(buttonPurple).toBeVisible()
+  expect(buttonPurple).not.toBeChecked()
+  buttonMulticolor = getByRole('radio', { name: '多色' })
+  expect(buttonMulticolor).toBeVisible()
+  expect(buttonMulticolor).not.toBeChecked()
+  buttonColorless = getByRole('radio', { name: '無色' })
+  expect(buttonColorless).toBeVisible()
+  expect(buttonColorless).not.toBeChecked()
 })
