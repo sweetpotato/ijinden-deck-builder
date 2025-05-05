@@ -312,10 +312,10 @@ function TabPaneCard({
               alwaysOpen
               defaultActiveKey={['2', '3']}
             >
-              {renderExpansion(0)}
-              {renderRarity(1)}
-              {renderColor(2)}
-              {renderType(3)}
+              {renderExpansion('0')}
+              {renderRarity('1')}
+              {renderColor('2')}
+              {renderType('3')}
               <AccordionItemLevelFilter
                 eventKey="4"
                 title="レベル"
@@ -326,9 +326,9 @@ function TabPaneCard({
                 handleChangeComparator={handleChangeLevelComparator}
                 data={dataLevelComparators}
               />
-              {renderTrait(5)}
-              {renderTerm(6)}
-              {renderLegacy(7)}
+              {renderTrait('5')}
+              {renderTerm('6')}
+              {renderLegacy('7')}
             </Accordion>
           </AccordionBody>
         </AccordionItem>
