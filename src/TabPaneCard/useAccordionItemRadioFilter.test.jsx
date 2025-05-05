@@ -1,9 +1,12 @@
-import { cleanup, render, renderHook } from '@testing-library/react'
+// SPDX-License-Identifier: MIT
+
+import { act } from 'react'
 import { Accordion } from 'react-bootstrap'
 import { afterEach, expect, test } from 'vitest'
+import { cleanup, render, renderHook } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+
 import useAccordionItemRadioFilter from './useAccordionItemRadioFilter'
-import { act } from 'react'
 
 afterEach(cleanup)
 

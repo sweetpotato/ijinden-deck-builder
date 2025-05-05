@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import { useContext } from 'react'
 import {
   AccordionBody,

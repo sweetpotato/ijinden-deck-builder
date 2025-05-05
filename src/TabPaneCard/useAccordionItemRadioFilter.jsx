@@ -1,4 +1,7 @@
+// SPDX-License-Identifier: MIT
+
 import { useState } from 'react'
+
 import AccordionItemRadioFilter from './AccordionItemRadioFilter'
 
 function useAccordionItemRadioFilter({

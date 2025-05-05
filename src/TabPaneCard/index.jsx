@@ -18,10 +18,10 @@ import { isAccordionItemSelected } from 'react-bootstrap/esm/AccordionContext'
 import FormRange from 'react-bootstrap/esm/FormRange'
 
 import { dataCardsArrayForTable as dataCards } from '../commons/dataCards'
+import useAccordionItemRadioFilter from './useAccordionItemRadioFilter'
 import InputGroupCounter from './InputGroupCounter'
 
 import './index.css'
-import useAccordionItemRadioFilter from './useAccordionItemRadioFilter'
 
 const dataExpansions = [
   { value: 0, label: 'すべて' },
@@ -191,7 +191,7 @@ function TabPaneCard({
   handleSetDeckSide,
   interruptSimulator,
 }) {
-  const [expansion, resetExpansion, renderItemExpansion] =
+  const [expansion, resetExpansion, renderExpansion] =
     useAccordionItemRadioFilter({
       eventKey: '0',
       title: 'エキスパンション',
@@ -222,19 +222,19 @@ function TabPaneCard({
   })
   const [levelValue, setLevelValue] = useState(LEVEL_VALUE_MIN)
   const [levelComparator, setLevelComparator] = useState(LEVEL_COMPARATOR_GE)
-  const [term, resetTerm, renderTerm] = useAccordionItemRadioFilter({
-    eventKey: '6',
-    title: '能力語',
-    name: 'term',
-    defaultState: 0, // 指定なし
-    data: dataTerms,
-  })
   const [trait, resetTrait, renderTrait] = useAccordionItemRadioFilter({
     eventKey: '5',
     title: '特性',
     name: 'trait',
     defaultState: 0, // 指定なし
     data: dataTraits,
+  })
+  const [term, resetTerm, renderTerm] = useAccordionItemRadioFilter({
+    eventKey: '6',
+    title: '能力語',
+    name: 'term',
+    defaultState: 0, // 指定なし
+    data: dataTerms,
   })
   const [legacy, resetLegacy, renderLegacy] = useAccordionItemRadioFilter({
     eventKey: '7',
@@ -254,8 +254,8 @@ function TabPaneCard({
     resetType()
     setLevelValue(LEVEL_VALUE_MIN)
     setLevelComparator(LEVEL_COMPARATOR_GE)
-    resetTerm()
     resetTrait()
+    resetTerm()
     resetLegacy()
   }
 
@@ -326,7 +326,7 @@ function TabPaneCard({
               alwaysOpen
               defaultActiveKey={['2', '3']}
             >
-              {renderItemExpansion()}
+              {renderExpansion()}
               {renderRarity()}
               {renderColor()}
               {renderType()}
