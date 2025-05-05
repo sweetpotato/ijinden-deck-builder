@@ -193,54 +193,40 @@ function TabPaneCard({
 }) {
   const [expansion, resetExpansion, renderExpansion] =
     useAccordionItemRadioFilter({
-      eventKey: '0',
       title: 'エキスパンション',
       name: 'expansion',
-      defaultState: 0, // すべて
       data: dataExpansions,
     })
   const [rarity, resetRarity, renderRarity] = useAccordionItemRadioFilter({
-    eventKey: '1',
     title: 'レアリティ',
     name: 'rarity',
-    defaultState: 0, // すべて
     data: dataRarities,
   })
   const [color, resetColor, renderColor] = useAccordionItemRadioFilter({
-    eventKey: '2',
     title: '色',
     name: 'color',
-    defaultState: 0, // すべて
     data: dataColors,
   })
   const [type, resetType, renderType] = useAccordionItemRadioFilter({
-    eventKey: '3',
     title: '種類',
     name: 'type',
-    defaultState: 0, // すべて
     data: dataTypes,
   })
   const [levelValue, setLevelValue] = useState(LEVEL_VALUE_MIN)
   const [levelComparator, setLevelComparator] = useState(LEVEL_COMPARATOR_GE)
   const [trait, resetTrait, renderTrait] = useAccordionItemRadioFilter({
-    eventKey: '5',
     title: '特性',
     name: 'trait',
-    defaultState: 0, // 指定なし
     data: dataTraits,
   })
   const [term, resetTerm, renderTerm] = useAccordionItemRadioFilter({
-    eventKey: '6',
     title: '能力語',
     name: 'term',
-    defaultState: 0, // 指定なし
     data: dataTerms,
   })
   const [legacy, resetLegacy, renderLegacy] = useAccordionItemRadioFilter({
-    eventKey: '7',
     title: '遺業能力',
     name: 'legacy',
-    defaultState: 0, // 指定なし
     data: dataLegacies,
   })
   const [keywords, setKeywords] = useState([])
@@ -326,10 +312,10 @@ function TabPaneCard({
               alwaysOpen
               defaultActiveKey={['2', '3']}
             >
-              {renderExpansion()}
-              {renderRarity()}
-              {renderColor()}
-              {renderType()}
+              {renderExpansion(0)}
+              {renderRarity(1)}
+              {renderColor(2)}
+              {renderType(3)}
               <AccordionItemLevelFilter
                 eventKey="4"
                 title="レベル"
@@ -340,9 +326,9 @@ function TabPaneCard({
                 handleChangeComparator={handleChangeLevelComparator}
                 data={dataLevelComparators}
               />
-              {renderTrait()}
-              {renderTerm()}
-              {renderLegacy()}
+              {renderTrait(5)}
+              {renderTerm(6)}
+              {renderLegacy(7)}
             </Accordion>
           </AccordionBody>
         </AccordionItem>
