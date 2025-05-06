@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 
 import classNames from 'classnames'
-import { useContext, useDeferredValue, useState } from 'react'
+import { useContext, useState } from 'react'
 import {
   Accordion,
   AccordionBody,
@@ -17,10 +17,10 @@ import FormRange from 'react-bootstrap/esm/FormRange'
 
 import { dataCardsArrayForTable as dataCards } from '../commons/dataCards'
 import useAccordionItemRadioFilter from './useAccordionItemRadioFilter'
-import ContainerTextSearch from './ContainerTextSearch'
 import InputGroupCounter from './InputGroupCounter'
 
 import './index.css'
+import useContainerTextSearch from './useContainerTextSearch'
 
 const dataExpansions = [
   { value: 0, label: 'すべて' },
@@ -228,9 +228,8 @@ function TabPaneCard({
     name: 'legacy',
     data: dataLegacies,
   })
-  const [keywords, setKeywords] = useState([])
-  const [includesTraitAndLegacy, setIncludesTraitAndLegacy] = useState(true)
-  const deferredKeywords = useDeferredValue(keywords)
+  const [deferredKeywords, includesTraitAndLegacy, renderTextSearch] =
+    useContainerTextSearch()
 
   function handleClickResetConditions() {
     resetExpansion()
@@ -262,25 +261,9 @@ function TabPaneCard({
     setLevelComparator(e.currentTarget.value)
   }
 
-  function handleChangeKeywords(e) {
-    setKeywords(
-      e.currentTarget.value
-        .trim()
-        .split(/\s+/)
-        .filter((e) => e.length > 0)
-    )
-  }
-
-  function handleChangeIncludesTraitAndLegacy(e) {
-    setIncludesTraitAndLegacy(e.currentTarget.checked)
-  }
-
   return (
     <>
-      <ContainerTextSearch
-        handleChangeKeywords={handleChangeKeywords}
-        handleChangeIncludesTraitAndLegacy={handleChangeIncludesTraitAndLegacy}
-      />
+      {renderTextSearch()}
       <Accordion>
         <AccordionItem eventKey="0">
           <AccordionHeader as="h2" className="header-filter">
