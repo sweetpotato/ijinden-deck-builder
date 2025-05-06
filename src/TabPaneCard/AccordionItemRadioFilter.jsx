@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-import { useContext } from 'react'
+import { useContext, useId } from 'react'
 import {
   AccordionBody,
   AccordionContext,
@@ -13,11 +13,11 @@ import { isAccordionItemSelected } from 'react-bootstrap/esm/AccordionContext'
 function AccordionItemRadioFilter({
   eventKey,
   title,
-  name,
   state,
   handleChange,
   data,
 }) {
+  const name = useId()
   const { activeEventKey } = useContext(AccordionContext)
   const expanded = isAccordionItemSelected(activeEventKey, eventKey)
   const label = new Map(data.map((e) => [e.value, e.label])).get(state)

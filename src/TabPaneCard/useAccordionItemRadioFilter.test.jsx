@@ -31,16 +31,12 @@ const dataColors = [
 
 test('種類のようにビットセットでないフィルタ', async () => {
   const { result } = renderHook(() =>
-    useAccordionItemRadioFilter({
-      title: '種類',
-      name: 'type',
-      data: dataTypes,
-    })
+    useAccordionItemRadioFilter('種類', dataTypes)
   )
   let [state, resetState, renderAccordionItem] = result.current
   expect(state).toBe(0)
   const { rerender, getByRole } = render(
-    <Accordion alwaysOpen>{renderAccordionItem(0)}</Accordion>
+    <Accordion alwaysOpen>{renderAccordionItem('0')}</Accordion>
   )
 
   let buttonAll = getByRole('radio', { name: 'すべて' })
@@ -64,7 +60,7 @@ test('種類のようにビットセットでないフィルタ', async () => {
   await userEvent.click(buttonIjin)
   ;[state, resetState, renderAccordionItem] = result.current
   expect(state).toBe(1) // イジン
-  rerender(<Accordion alwaysOpen>{renderAccordionItem(0)}</Accordion>)
+  rerender(<Accordion alwaysOpen>{renderAccordionItem('0')}</Accordion>)
 
   buttonAll = getByRole('radio', { name: 'すべて' })
   expect(buttonAll).toBeVisible()
@@ -87,7 +83,7 @@ test('種類のようにビットセットでないフィルタ', async () => {
   await userEvent.click(buttonHaikei)
   ;[state, resetState, renderAccordionItem] = result.current
   expect(state).toBe(2) // ハイケイ
-  rerender(<Accordion alwaysOpen>{renderAccordionItem(0)}</Accordion>)
+  rerender(<Accordion alwaysOpen>{renderAccordionItem('0')}</Accordion>)
 
   buttonAll = getByRole('radio', { name: 'すべて' })
   expect(buttonAll).toBeVisible()
@@ -110,7 +106,7 @@ test('種類のようにビットセットでないフィルタ', async () => {
   await userEvent.click(buttonMahou)
   ;[state, resetState, renderAccordionItem] = result.current
   expect(state).toBe(3) // マホウ
-  rerender(<Accordion alwaysOpen>{renderAccordionItem(0)}</Accordion>)
+  rerender(<Accordion alwaysOpen>{renderAccordionItem('0')}</Accordion>)
 
   buttonAll = getByRole('radio', { name: 'すべて' })
   expect(buttonAll).toBeVisible()
@@ -133,7 +129,7 @@ test('種類のようにビットセットでないフィルタ', async () => {
   await userEvent.click(buttonMaryoku)
   ;[state, resetState, renderAccordionItem] = result.current
   expect(state).toBe(4) // マリョク
-  rerender(<Accordion alwaysOpen>{renderAccordionItem(0)}</Accordion>)
+  rerender(<Accordion alwaysOpen>{renderAccordionItem('0')}</Accordion>)
 
   buttonAll = getByRole('radio', { name: 'すべて' })
   expect(buttonAll).toBeVisible()
@@ -156,7 +152,7 @@ test('種類のようにビットセットでないフィルタ', async () => {
   act(() => resetState())
   ;[state, resetState, renderAccordionItem] = result.current
   expect(state).toBe(0) // すべて
-  rerender(<Accordion alwaysOpen>{renderAccordionItem(0)}</Accordion>)
+  rerender(<Accordion alwaysOpen>{renderAccordionItem('0')}</Accordion>)
 
   buttonAll = getByRole('radio', { name: 'すべて' })
   expect(buttonAll).toBeVisible()
@@ -178,16 +174,12 @@ test('種類のようにビットセットでないフィルタ', async () => {
 
 test('色のようにビットセットであるフィルタ', async () => {
   const { result } = renderHook(() =>
-    useAccordionItemRadioFilter({
-      title: '色',
-      name: 'color',
-      data: dataColors,
-    })
+    useAccordionItemRadioFilter('色', dataColors)
   )
   let [state, resetState, renderAccordionItem] = result.current
   expect(state).toBe(0)
   const { rerender, getByRole } = render(
-    <Accordion alwaysOpen>{renderAccordionItem(0)}</Accordion>
+    <Accordion alwaysOpen>{renderAccordionItem('0')}</Accordion>
   )
 
   let buttonAll = getByRole('radio', { name: 'すべて' })
@@ -220,7 +212,7 @@ test('色のようにビットセットであるフィルタ', async () => {
   await userEvent.click(buttonRed)
   ;[state, resetState, renderAccordionItem] = result.current
   expect(state).toBe(1) // 赤
-  rerender(<Accordion alwaysOpen>{renderAccordionItem(0)}</Accordion>)
+  rerender(<Accordion alwaysOpen>{renderAccordionItem('0')}</Accordion>)
 
   buttonAll = getByRole('radio', { name: 'すべて' })
   expect(buttonAll).toBeVisible()
@@ -252,7 +244,7 @@ test('色のようにビットセットであるフィルタ', async () => {
   await userEvent.click(buttonBlue)
   ;[state, resetState, renderAccordionItem] = result.current
   expect(state).toBe(2) // 青
-  rerender(<Accordion alwaysOpen>{renderAccordionItem(0)}</Accordion>)
+  rerender(<Accordion alwaysOpen>{renderAccordionItem('0')}</Accordion>)
 
   buttonAll = getByRole('radio', { name: 'すべて' })
   expect(buttonAll).toBeVisible()
@@ -284,7 +276,7 @@ test('色のようにビットセットであるフィルタ', async () => {
   await userEvent.click(buttonGreen)
   ;[state, resetState, renderAccordionItem] = result.current
   expect(state).toBe(4) // 緑
-  rerender(<Accordion alwaysOpen>{renderAccordionItem(0)}</Accordion>)
+  rerender(<Accordion alwaysOpen>{renderAccordionItem('0')}</Accordion>)
 
   buttonAll = getByRole('radio', { name: 'すべて' })
   expect(buttonAll).toBeVisible()
@@ -316,7 +308,7 @@ test('色のようにビットセットであるフィルタ', async () => {
   await userEvent.click(buttonYellow)
   ;[state, resetState, renderAccordionItem] = result.current
   expect(state).toBe(8) // 黄
-  rerender(<Accordion alwaysOpen>{renderAccordionItem(0)}</Accordion>)
+  rerender(<Accordion alwaysOpen>{renderAccordionItem('0')}</Accordion>)
 
   buttonAll = getByRole('radio', { name: 'すべて' })
   expect(buttonAll).toBeVisible()
@@ -348,7 +340,7 @@ test('色のようにビットセットであるフィルタ', async () => {
   await userEvent.click(buttonPurple)
   ;[state, resetState, renderAccordionItem] = result.current
   expect(state).toBe(16) // 紫
-  rerender(<Accordion alwaysOpen>{renderAccordionItem(0)}</Accordion>)
+  rerender(<Accordion alwaysOpen>{renderAccordionItem('0')}</Accordion>)
 
   buttonAll = getByRole('radio', { name: 'すべて' })
   expect(buttonAll).toBeVisible()
@@ -380,7 +372,7 @@ test('色のようにビットセットであるフィルタ', async () => {
   await userEvent.click(buttonMulticolor)
   ;[state, resetState, renderAccordionItem] = result.current
   expect(state).toBe(32) // 多色
-  rerender(<Accordion alwaysOpen>{renderAccordionItem(0)}</Accordion>)
+  rerender(<Accordion alwaysOpen>{renderAccordionItem('0')}</Accordion>)
 
   buttonAll = getByRole('radio', { name: 'すべて' })
   expect(buttonAll).toBeVisible()
@@ -412,7 +404,7 @@ test('色のようにビットセットであるフィルタ', async () => {
   await userEvent.click(buttonColorless)
   ;[state, resetState, renderAccordionItem] = result.current
   expect(state).toBe(64) // 無色
-  rerender(<Accordion alwaysOpen>{renderAccordionItem(0)}</Accordion>)
+  rerender(<Accordion alwaysOpen>{renderAccordionItem('0')}</Accordion>)
 
   buttonAll = getByRole('radio', { name: 'すべて' })
   expect(buttonAll).toBeVisible()
@@ -444,7 +436,7 @@ test('色のようにビットセットであるフィルタ', async () => {
   act(() => resetState())
   ;[state, resetState, renderAccordionItem] = result.current
   expect(state).toBe(0) // すべて
-  rerender(<Accordion alwaysOpen>{renderAccordionItem(0)}</Accordion>)
+  rerender(<Accordion alwaysOpen>{renderAccordionItem('0')}</Accordion>)
 
   buttonAll = getByRole('radio', { name: 'すべて' })
   expect(buttonAll).toBeVisible()

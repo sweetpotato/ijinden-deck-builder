@@ -191,43 +191,33 @@ function TabPaneCard({
   interruptSimulator,
 }) {
   const [expansion, resetExpansion, renderExpansion] =
-    useAccordionItemRadioFilter({
-      title: 'エキスパンション',
-      name: 'expansion',
-      data: dataExpansions,
-    })
-  const [rarity, resetRarity, renderRarity] = useAccordionItemRadioFilter({
-    title: 'レアリティ',
-    name: 'rarity',
-    data: dataRarities,
-  })
-  const [color, resetColor, renderColor] = useAccordionItemRadioFilter({
-    title: '色',
-    name: 'color',
-    data: dataColors,
-  })
-  const [type, resetType, renderType] = useAccordionItemRadioFilter({
-    title: '種類',
-    name: 'type',
-    data: dataTypes,
-  })
+    useAccordionItemRadioFilter('エキスパンション', dataExpansions)
+  const [rarity, resetRarity, renderRarity] = useAccordionItemRadioFilter(
+    'レアリティ',
+    dataRarities
+  )
+  const [color, resetColor, renderColor] = useAccordionItemRadioFilter(
+    '色',
+    dataColors
+  )
+  const [type, resetType, renderType] = useAccordionItemRadioFilter(
+    '種類',
+    dataTypes
+  )
   const [levelValue, setLevelValue] = useState(LEVEL_VALUE_MIN)
   const [levelComparator, setLevelComparator] = useState(LEVEL_COMPARATOR_GE)
-  const [trait, resetTrait, renderTrait] = useAccordionItemRadioFilter({
-    title: '特性',
-    name: 'trait',
-    data: dataTraits,
-  })
-  const [term, resetTerm, renderTerm] = useAccordionItemRadioFilter({
-    title: '能力語',
-    name: 'term',
-    data: dataTerms,
-  })
-  const [legacy, resetLegacy, renderLegacy] = useAccordionItemRadioFilter({
-    title: '遺業能力',
-    name: 'legacy',
-    data: dataLegacies,
-  })
+  const [trait, resetTrait, renderTrait] = useAccordionItemRadioFilter(
+    '特性',
+    dataTraits
+  )
+  const [term, resetTerm, renderTerm] = useAccordionItemRadioFilter(
+    '能力語',
+    dataTerms
+  )
+  const [legacy, resetLegacy, renderLegacy] = useAccordionItemRadioFilter(
+    '遺業能力',
+    dataLegacies
+  )
   const [deferredKeywords, includesTraitAndLegacy, renderTextSearch] =
     useContainerTextSearch()
 
