@@ -31,10 +31,7 @@ const dataColors = [
 
 test('種類のようにビットセットでないフィルタ', async () => {
   const { result } = renderHook(() =>
-    useAccordionItemRadioFilter({
-      title: '種類',
-      data: dataTypes,
-    })
+    useAccordionItemRadioFilter('種類', dataTypes)
   )
   let [state, resetState, renderAccordionItem] = result.current
   expect(state).toBe(0)
@@ -177,10 +174,7 @@ test('種類のようにビットセットでないフィルタ', async () => {
 
 test('色のようにビットセットであるフィルタ', async () => {
   const { result } = renderHook(() =>
-    useAccordionItemRadioFilter({
-      title: '色',
-      data: dataColors,
-    })
+    useAccordionItemRadioFilter('色', dataColors)
   )
   let [state, resetState, renderAccordionItem] = result.current
   expect(state).toBe(0)

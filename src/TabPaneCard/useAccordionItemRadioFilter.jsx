@@ -4,7 +4,7 @@ import { useState } from 'react'
 
 import AccordionItemRadioFilter from './AccordionItemRadioFilter'
 
-function useAccordionItemRadioFilter({ title, data }) {
+function useAccordionItemRadioFilter(title, data) {
   const [state, setState] = useState(0)
   const resetState = () => setState(0)
   const render = (eventKey) => (
