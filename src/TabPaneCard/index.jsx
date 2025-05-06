@@ -9,8 +9,6 @@ import {
   AccordionHeader,
   AccordionItem,
   Button,
-  FormCheck,
-  FormControl,
   Table,
   ToggleButton,
 } from 'react-bootstrap'
@@ -19,6 +17,7 @@ import FormRange from 'react-bootstrap/esm/FormRange'
 
 import { dataCardsArrayForTable as dataCards } from '../commons/dataCards'
 import useAccordionItemRadioFilter from './useAccordionItemRadioFilter'
+import ContainerTextSearch from './ContainerTextSearch'
 import InputGroupCounter from './InputGroupCounter'
 
 import './index.css'
@@ -278,21 +277,10 @@ function TabPaneCard({
 
   return (
     <>
-      <div className="m-2">
-        <FormControl
-          placeholder="カード名やルールテキストを入力して検索"
-          onChange={handleChangeKeywords}
-        />
-      </div>
-      <div className="m-2">
-        <FormCheck
-          id="includes-trait-and-legacy"
-          type="checkbox"
-          label="特性と遺業能力も検索する"
-          defaultChecked={true}
-          onChange={handleChangeIncludesTraitAndLegacy}
-        />
-      </div>
+      <ContainerTextSearch
+        handleChangeKeywords={handleChangeKeywords}
+        handleChangeIncludesTraitAndLegacy={handleChangeIncludesTraitAndLegacy}
+      />
       <Accordion>
         <AccordionItem eventKey="0">
           <AccordionHeader as="h2" className="header-filter">
