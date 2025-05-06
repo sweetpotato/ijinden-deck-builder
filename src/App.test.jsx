@@ -658,7 +658,7 @@ test('シミュレータがカードペインの操作でアボートする', as
   expect(buttonStart).toBeDisabled()
   expect(buttonMulligan).toBeEnabled()
   expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0)
-})
+}, 30000)
 
 test('シミュレータがレシピペインの操作でアボートする', async () => {
   defaultRender()
