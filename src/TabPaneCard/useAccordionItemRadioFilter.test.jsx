@@ -33,7 +33,6 @@ test('種類のようにビットセットでないフィルタ', async () => {
   const { result } = renderHook(() =>
     useAccordionItemRadioFilter({
       title: '種類',
-      name: 'type',
       data: dataTypes,
     })
   )
@@ -180,7 +179,6 @@ test('色のようにビットセットであるフィルタ', async () => {
   const { result } = renderHook(() =>
     useAccordionItemRadioFilter({
       title: '色',
-      name: 'color',
       data: dataColors,
     })
   )
