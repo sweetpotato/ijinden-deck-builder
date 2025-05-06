@@ -8,7 +8,8 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "vitest"
+    "test": "vitest",
+    "test-once": "vitest run"
   },
   "dependencies": {
     "bootstrap": "^5.3.3",
