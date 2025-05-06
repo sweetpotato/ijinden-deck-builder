@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 
 import classNames from 'classnames'
-import { useContext, useDeferredValue, useState } from 'react'
+import { useContext, useState } from 'react'
 import {
   Accordion,
   AccordionBody,
@@ -9,8 +9,6 @@ import {
   AccordionHeader,
   AccordionItem,
   Button,
-  FormCheck,
-  FormControl,
   Table,
   ToggleButton,
 } from 'react-bootstrap'
@@ -22,6 +20,7 @@ import useAccordionItemRadioFilter from './useAccordionItemRadioFilter'
 import InputGroupCounter from './InputGroupCounter'
 
 import './index.css'
+import useContainerTextSearch from './useContainerTextSearch'
 
 const dataExpansions = [
   { value: 0, label: 'すべて' },
@@ -229,9 +228,8 @@ function TabPaneCard({
     name: 'legacy',
     data: dataLegacies,
   })
-  const [keywords, setKeywords] = useState([])
-  const [includesTraitAndLegacy, setIncludesTraitAndLegacy] = useState(true)
-  const deferredKeywords = useDeferredValue(keywords)
+  const [deferredKeywords, includesTraitAndLegacy, renderTextSearch] =
+    useContainerTextSearch()
 
   function handleClickResetConditions() {
     resetExpansion()
@@ -263,36 +261,9 @@ function TabPaneCard({
     setLevelComparator(e.currentTarget.value)
   }
 
-  function handleChangeKeywords(e) {
-    setKeywords(
-      e.currentTarget.value
-        .trim()
-        .split(/\s+/)
-        .filter((e) => e.length > 0)
-    )
-  }
-
-  function handleChangeIncludesTraitAndLegacy(e) {
-    setIncludesTraitAndLegacy(e.currentTarget.checked)
-  }
-
   return (
     <>
-      <div className="m-2">
-        <FormControl
-          placeholder="カード名やルールテキストを入力して検索"
-          onChange={handleChangeKeywords}
-        />
-      </div>
-      <div className="m-2">
-        <FormCheck
-          id="includes-trait-and-legacy"
-          type="checkbox"
-          label="特性と遺業能力も検索する"
-          defaultChecked={true}
-          onChange={handleChangeIncludesTraitAndLegacy}
-        />
-      </div>
+      {renderTextSearch()}
       <Accordion>
         <AccordionItem eventKey="0">
           <AccordionHeader as="h2" className="header-filter">
