@@ -251,6 +251,32 @@ function TabPaneCard({
     setLevelComparator(e.currentTarget.value)
   }
 
+  function filterCard(card) {
+    const levelMatched =
+      levelComparator === LEVEL_COMPARATOR_GE
+        ? card.level >= levelValue
+        : levelComparator === LEVEL_COMPARATOR_LE
+        ? card.level <= levelValue
+        : card.level === levelValue
+    let allText = card.name + '§' + card.kana
+    allText +=
+      includesTraitAndLegacy && card.traitText ? '§' + card.traitText : ''
+    allText += '§' + card.ruleText
+    allText +=
+      includesTraitAndLegacy && card.legacyText ? '§' + card.legacyText : ''
+    return (
+      (expansion === 0 || card.expansion === expansion) &&
+      (rarity === 0 || (card.rarity & rarity) === card.rarity) &&
+      (color === 0 || (card.color & color) === color) &&
+      (type === 0 || card.type === type) &&
+      levelMatched &&
+      (term === 0 || (card.term & term) === term) &&
+      (trait === 0 || (card.trait & trait) === trait) &&
+      (legacy === 0 || card.legacy === legacy) &&
+      deferredKeywords.every((e) => allText.includes(e))
+    )
+  }
+
   return (
     <>
       {renderTextSearch()}
@@ -304,29 +330,25 @@ function TabPaneCard({
           </tr>
         </thead>
         <tbody>
-          {dataCards.map((element) => (
-            <TableRowCard
-              {...element}
-              key={element.id}
-              selectedExpansion={expansion}
-              selectedRarity={rarity}
-              selectedColor={color}
-              selectedType={type}
-              selectedLevelValue={levelValue}
-              selectedLevelComparator={levelComparator}
-              selectedTerm={term}
-              selectedTrait={trait}
-              selectedLegacy={legacy}
-              keywords={deferredKeywords}
-              includesTraitAndLegacy={includesTraitAndLegacy}
-              handleSetIdZoom={handleSetIdZoom}
-              deckMain={deckMain}
-              handleSetDeckMain={handleSetDeckMain}
-              deckSide={deckSide}
-              handleSetDeckSide={handleSetDeckSide}
-              interruptSimulator={interruptSimulator}
-            />
-          ))}
+          {dataCards.map((element) => {
+            return (
+              filterCard(element) && (
+                <TableRowCard
+                  key={element.id}
+                  id={element.id}
+                  name={element.name}
+                  color={element.color}
+                  term={element.term}
+                  handleSetIdZoom={handleSetIdZoom}
+                  deckMain={deckMain}
+                  handleSetDeckMain={handleSetDeckMain}
+                  deckSide={deckSide}
+                  handleSetDeckSide={handleSetDeckSide}
+                  interruptSimulator={interruptSimulator}
+                />
+              )
+            )
+          })}
         </tbody>
       </Table>
     </>
@@ -405,29 +427,8 @@ function AccordionItemLevelFilter({
 function TableRowCard({
   id,
   name,
-  kana,
-  expansion,
-  rarity,
   color,
-  type,
-  level,
   term,
-  trait,
-  legacy,
-  traitText,
-  ruleText,
-  legacyText,
-  selectedExpansion,
-  selectedRarity,
-  selectedType,
-  selectedColor,
-  selectedLevelValue,
-  selectedLevelComparator,
-  selectedTerm,
-  selectedTrait,
-  selectedLegacy,
-  keywords,
-  includesTraitAndLegacy,
   handleSetIdZoom,
   deckMain,
   handleSetDeckMain,
@@ -435,27 +436,6 @@ function TableRowCard({
   handleSetDeckSide,
   interruptSimulator,
 }) {
-  const levelMatched =
-    selectedLevelComparator === LEVEL_COMPARATOR_GE
-      ? level >= selectedLevelValue
-      : selectedLevelComparator === LEVEL_COMPARATOR_LE
-      ? level <= selectedLevelValue
-      : level === selectedLevelValue
-  let allText = name + '§' + kana
-  allText += includesTraitAndLegacy && traitText ? '§' + traitText : ''
-  allText += '§' + ruleText
-  allText += includesTraitAndLegacy && legacyText ? '§' + legacyText : ''
-  const show =
-    (selectedExpansion === 0 || expansion === selectedExpansion) &&
-    (selectedRarity === 0 || (rarity & selectedRarity) === rarity) &&
-    (selectedColor === 0 || (color & selectedColor) === selectedColor) &&
-    (selectedType === 0 || type === selectedType) &&
-    levelMatched &&
-    (selectedTerm === 0 || (term & selectedTerm) === selectedTerm) &&
-    (selectedTrait === 0 || (trait & selectedTrait) === selectedTrait) &&
-    (selectedLegacy === 0 || legacy === selectedLegacy) &&
-    keywords.every((e) => allText.includes(e))
-
   let colorClass
   if ((term & TERM_CHROMAGIC) === TERM_CHROMAGIC) {
     colorClass = classNames(
@@ -471,37 +451,35 @@ function TableRowCard({
   }
 
   return (
-    show && (
-      <tr>
-        <td className={colorClass}>{id}</td>
-        <td>
-          <Button
-            variant="secondary-outline"
-            size="sm"
-            className="btn-zoom-in-table"
-            onClick={() => handleSetIdZoom(id)}
-          >
-            🔎
-          </Button>
-          {name}
-        </td>
-        <td>
-          <InputGroupCounter
-            id={id}
-            deck={deckMain}
-            handleSetDeck={handleSetDeckMain}
-            interruptSimulator={interruptSimulator}
-          />
-        </td>
-        <td>
-          <InputGroupCounter
-            id={id}
-            deck={deckSide}
-            handleSetDeck={handleSetDeckSide}
-          />
-        </td>
-      </tr>
-    )
+    <tr>
+      <td className={colorClass}>{id}</td>
+      <td>
+        <Button
+          variant="secondary-outline"
+          size="sm"
+          className="btn-zoom-in-table"
+          onClick={() => handleSetIdZoom(id)}
+        >
+          🔎
+        </Button>
+        {name}
+      </td>
+      <td>
+        <InputGroupCounter
+          id={id}
+          deck={deckMain}
+          handleSetDeck={handleSetDeckMain}
+          interruptSimulator={interruptSimulator}
+        />
+      </td>
+      <td>
+        <InputGroupCounter
+          id={id}
+          deck={deckSide}
+          handleSetDeck={handleSetDeckSide}
+        />
+      </td>
+    </tr>
   )
 }
 
