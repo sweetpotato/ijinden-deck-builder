@@ -111,7 +111,7 @@ function TableRowCard({
         <Button
           variant="secondary-outline"
           size="sm"
-          className="m-0 p-0"
+          className="m-0 p-0 border-0"
           onClick={() => handleSetIdZoom(id)}
         >
           🔎
