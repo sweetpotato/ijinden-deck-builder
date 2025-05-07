@@ -1,0 +1,142 @@
+/* SPDX-License-Identifier: MIT */
+
+.btn-zoom-in-table {
+  margin: 0;
+  padding: 0;
+}
+
+/* カードリストの背景色付け */
+.table > :not(caption) > * > .bg-ijinden-red { --bs-table-bg-state: #f1aeb5; } /* red-200 */
+.table-hover > tbody > tr:hover > .bg-ijinden-red { --bs-table-bg-state: #e35d6a; } /* red-400 */
+.table > :not(caption) > * > .bg-ijinden-blue { --bs-table-bg-state: #9ec5fe; } /* blue-200 */
+.table-hover > tbody > tr:hover > .bg-ijinden-blue { --bs-table-bg-state: #3d8bfd; } /* blue-400 */
+.table > :not(caption) > * > .bg-ijinden-green { --bs-table-bg-state: #a3cfbb; } /* green-200 */
+.table-hover > tbody > tr:hover > .bg-ijinden-green { --bs-table-bg-state: #479f76; } /* green-400 */
+.table > :not(caption) > * > .bg-ijinden-yellow { --bs-table-bg-state: #ffe69c; } /* yellow-200 */
+.table-hover > tbody > tr:hover > .bg-ijinden-yellow { --bs-table-bg-state: #ffcd39; } /* yellow-400 */
+.table > :not(caption) > * > .bg-ijinden-purple { --bs-table-bg-state: #c5b3e6; } /* purple-200 */
+.table-hover > tbody > tr:hover > .bg-ijinden-purple { --bs-table-bg-state: #8c68cd; } /* purple-400 */
+.table > :not(caption) > * > .bg-ijinden-colorless { --bs-table-bg-state: #ced4da; } /* gray-400 */
+.table-hover > tbody > tr:hover > .bg-ijinden-colorless { --bs-table-bg-state: #6c757d; } /* gray-600 */
+/* 多色 */
+.table > :not(caption) > * > .bg-ijinden-red-yellow {
+  --bs-table-color-state: initial;
+  --bs-table-bg-state: initial;
+  background: linear-gradient(to bottom right, #f1aeb5 50%, #ffe69c 50%);
+}
+.table-hover > tbody > tr:hover > .bg-ijinden-red-yellow {
+  --bs-table-color-state: initial;
+  --bs-table-bg-state: initial;
+  background: linear-gradient(to bottom right, #e35d6a 50%, #ffcd39 50%);
+}
+.table > :not(caption) > * > .bg-ijinden-blue-yellow {
+  --bs-table-color-state: initial;
+  --bs-table-bg-state: initial;
+  background: linear-gradient(to bottom right, #9ec5fe 50%, #ffe69c 50%);
+}
+.table-hover > tbody > tr:hover > .bg-ijinden-blue-yellow {
+  --bs-table-color-state: initial;
+  --bs-table-bg-state: initial;
+  background: linear-gradient(to bottom right, #3d8bfd 50%, #ffcd39 50%);
+}
+.table > :not(caption) > * > .bg-ijinden-green-yellow {
+  --bs-table-color-state: initial;
+  --bs-table-bg-state: initial;
+  background: linear-gradient(to bottom right, #a3cfbb 50%, #ffe69c 50%);
+}
+.table-hover > tbody > tr:hover > .bg-ijinden-green-yellow {
+  --bs-table-color-state: initial;
+  --bs-table-bg-state: initial;
+  background: linear-gradient(to bottom right, #479f76 50%, #ffcd39 50%);
+}
+/* 魔導 */
+.table > :not(caption) > * > .bg-chromagic-red-yellow {
+  --bs-table-color-state: initial;
+  --bs-table-bg-state: initial;
+  background: linear-gradient(to bottom right, #f1aeb5 90%, #ffe69c 90%);
+}
+.table-hover > tbody > tr:hover > .bg-chromagic-red-yellow {
+  --bs-table-color-state: initial;
+  --bs-table-bg-state: initial;
+  background: linear-gradient(to bottom right, #e35d6a 90%, #ffcd39 90%);
+}
+.table > :not(caption) > * > .bg-chromagic-yellow-red {
+  --bs-table-color-state: initial;
+  --bs-table-bg-state: initial;
+  background: linear-gradient(to bottom right, #ffe69c 90%, #f1aeb5 90%);
+}
+.table-hover > tbody > tr:hover > .bg-chromagic-yellow-red {
+  --bs-table-color-state: initial;
+  --bs-table-bg-state: initial;
+  background: linear-gradient(to bottom right, #ffcd39 90%, #e35d6a 90%);
+}
+.table > :not(caption) > * > .bg-chromagic-yellow-blue {
+  --bs-table-color-state: initial;
+  --bs-table-bg-state: initial;
+  background: linear-gradient(to bottom right, #ffe69c 90%, #9ec5fe 90%);
+}
+.table-hover > tbody > tr:hover > .bg-chromagic-yellow-blue {
+  --bs-table-color-state: initial;
+  --bs-table-bg-state: initial;
+  background: linear-gradient(to bottom right, #ffcd39 90%, #3d8bfd 90%);
+}
+.table > :not(caption) > * > .bg-chromagic-yellow-green {
+  --bs-table-color-state: initial;
+  --bs-table-bg-state: initial;
+  background: linear-gradient(to bottom right, #ffe69c 90%, #a3cfbb 90%);
+}
+.table-hover > tbody > tr:hover > .bg-chromagic-yellow-green {
+  --bs-table-color-state: initial;
+  --bs-table-bg-state: initial;
+  background: linear-gradient(to bottom right, #ffcd39 90%, #479f76 90%);
+}
+.table > :not(caption) > * > .bg-chromagic-colorless-red {
+  --bs-table-color-state: initial;
+  --bs-table-bg-state: initial;
+  background: linear-gradient(to bottom right, #ced4da 90%, #f1aeb5 90%);
+}
+.table-hover > tbody > tr:hover > .bg-chromagic-colorless-red {
+  --bs-table-color-state: initial;
+  --bs-table-bg-state: initial;
+  background: linear-gradient(to bottom right, #6c757d 90%, #e35d6a 90%);
+}
+.table > :not(caption) > * > .bg-chromagic-colorless-blue {
+  --bs-table-color-state: initial;
+  --bs-table-bg-state: initial;
+  background: linear-gradient(to bottom right, #ced4da 90%, #9ec5fe 90%);
+}
+.table-hover > tbody > tr:hover > .bg-chromagic-colorless-blue {
+  --bs-table-color-state: initial;
+  --bs-table-bg-state: initial;
+  background: linear-gradient(to bottom right, #6c757d 90%, #3d8bfd 90%);
+}
+.table > :not(caption) > * > .bg-chromagic-colorless-green {
+  --bs-table-color-state: initial;
+  --bs-table-bg-state: initial;
+  background: linear-gradient(to bottom right, #ced4da 90%, #a3cfbb 90%);
+}
+.table-hover > tbody > tr:hover > .bg-chromagic-colorless-green {
+  --bs-table-color-state: initial;
+  --bs-table-bg-state: initial;
+  background: linear-gradient(to bottom right, #6c757d 90%, #479f76 90%);
+}
+.table > :not(caption) > * > .bg-chromagic-colorless-yellow {
+  --bs-table-color-state: initial;
+  --bs-table-bg-state: initial;
+  background: linear-gradient(to bottom right, #ced4da 90%, #ffe69c 90%);
+}
+.table-hover > tbody > tr:hover > .bg-chromagic-colorless-yellow {
+  --bs-table-color-state: initial;
+  --bs-table-bg-state: initial;
+  background: linear-gradient(to bottom right, #6c757d 90%, #ffcd39 90%);
+}
+.table > :not(caption) > * > .bg-chromagic-colorless-purple {
+  --bs-table-color-state: initial;
+  --bs-table-bg-state: initial;
+  background: linear-gradient(to bottom right, #ced4da 90%, #c5b3e6 90%);
+}
+.table-hover > tbody > tr:hover > .bg-chromagic-colorless-purple {
+  --bs-table-color-state: initial;
+  --bs-table-bg-state: initial;
+  background: linear-gradient(to bottom right, #6c757d 90%, #8c68cd 90%);
+}

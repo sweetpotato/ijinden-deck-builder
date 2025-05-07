@@ -8,6 +8,8 @@ import enumColor from './enumColor'
 import enumTerm from './enumTerm'
 import InputGroupCounter from './InputGroupCounter'
 
+import './TableRowCard.css'
+
 const dataColorsToCss = [
   { color: enumColor.RED, css: 'bg-ijinden-red' },
   { color: enumColor.BLUE, css: 'bg-ijinden-blue' },
