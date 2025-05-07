@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: MIT
 
-import classNames from 'classnames'
 import { useContext, useState } from 'react'
 import {
   Accordion,
@@ -16,8 +15,10 @@ import { isAccordionItemSelected } from 'react-bootstrap/esm/AccordionContext'
 import FormRange from 'react-bootstrap/esm/FormRange'
 
 import { dataCardsArrayForTable as dataCards } from '../commons/dataCards'
+import enumColor from './enumColor'
+import enumTerm from './enumTerm'
 import useAccordionItemRadioFilter from './useAccordionItemRadioFilter'
-import InputGroupCounter from './InputGroupCounter'
+import TableRowCard from './TableRowCard'
 
 import './index.css'
 import useContainerTextSearch from './useContainerTextSearch'
@@ -46,28 +47,13 @@ const dataRarities = [
 
 const dataColors = [
   { value: 0, label: 'すべて' },
-  { value: 1, label: '赤' },
-  { value: 2, label: '青' },
-  { value: 4, label: '緑' },
-  { value: 8, label: '黄' },
-  { value: 16, label: '紫' },
-  { value: 32, label: '多色' },
-  { value: 64, label: '無色' },
-]
-
-const COLOR_RED = 1
-const COLOR_YELLOW = 8
-const COLOR_COLORLESS = 64
-const dataColorsToCss = [
-  { color: COLOR_RED, css: 'bg-ijinden-red' },
-  { color: 2, css: 'bg-ijinden-blue' },
-  { color: 4, css: 'bg-ijinden-green' },
-  { color: COLOR_YELLOW, css: 'bg-ijinden-yellow' },
-  { color: 16, css: 'bg-ijinden-purple' },
-  { color: 41, css: 'bg-ijinden-red-yellow' },
-  { color: 42, css: 'bg-ijinden-blue-yellow' },
-  { color: 44, css: 'bg-ijinden-green-yellow' },
-  { color: COLOR_COLORLESS, css: 'bg-ijinden-colorless' },
+  { value: enumColor.RED, label: '赤' },
+  { value: enumColor.BLUE, label: '青' },
+  { value: enumColor.GREEN, label: '緑' },
+  { value: enumColor.YELLOW, label: '黄' },
+  { value: enumColor.PURPLE, label: '紫' },
+  { value: enumColor.MULTICOLOR, label: '多色' },
+  { value: enumColor.COLORLESS, label: '無色' },
 ]
 
 const dataTypes = [
@@ -89,14 +75,13 @@ const dataLevelComparators = [
   { value: LEVEL_COMPARATOR_EQ, label: '等しい' },
 ]
 
-const TERM_CHROMAGIC = 16
 const dataTerms = [
   { value: 0, label: '指定なし' },
-  { value: 1, label: '航海' },
-  { value: 2, label: '執筆' },
-  { value: 4, label: '決起' },
-  { value: 8, label: '徴募' },
-  { value: TERM_CHROMAGIC, label: '魔導' },
+  { value: enumTerm.SAILING, label: '航海' },
+  { value: enumTerm.WRITING, label: '執筆' },
+  { value: enumTerm.RISING, label: '決起' },
+  { value: enumTerm.RECRUITMENT, label: '徴募' },
+  { value: enumTerm.CHROMAGIC, label: '魔導' },
 ]
 
 const dataTraits = [
@@ -121,65 +106,6 @@ const dataLegacies = [
   { value: 4, label: '1ドローする' },
   { value: 5, label: '手札に戻す' },
   { value: 7, label: '山札の上か下に戻す' },
-]
-
-const CHROMAGIC_RED = 32
-const CHROMAGIC_BLUE = 64
-const CHROMAGIC_GREEN = 128
-const CHROMAGIC_YELLOW = 256
-const CHROMAGIC_PURPLE = 512
-// すべての実在する色と魔導の組み合わせ
-const dataChromagicsToCss = [
-  // 赤の黄魔導 (例：スペクター)
-  {
-    color: COLOR_RED,
-    chromagic: CHROMAGIC_YELLOW,
-    css: 'bg-chromagic-red-yellow',
-  },
-  // 黄の赤魔導 (例：スカーレット)
-  {
-    color: COLOR_YELLOW,
-    chromagic: CHROMAGIC_RED,
-    css: 'bg-chromagic-yellow-red',
-  },
-  // 黄の青魔導 (例：ピーコック)
-  {
-    color: COLOR_YELLOW,
-    chromagic: CHROMAGIC_BLUE,
-    css: 'bg-chromagic-yellow-blue',
-  },
-  // 黄の緑魔導 (例：シャトルーズ)
-  {
-    color: COLOR_YELLOW,
-    chromagic: CHROMAGIC_GREEN,
-    css: 'bg-chromagic-yellow-green',
-  },
-  // 無色の魔導 (例：ソリッドビジョンサイクル)
-  {
-    color: COLOR_COLORLESS,
-    chromagic: CHROMAGIC_RED,
-    css: 'bg-chromagic-colorless-red',
-  },
-  {
-    color: COLOR_COLORLESS,
-    chromagic: CHROMAGIC_BLUE,
-    css: 'bg-chromagic-colorless-blue',
-  },
-  {
-    color: COLOR_COLORLESS,
-    chromagic: CHROMAGIC_GREEN,
-    css: 'bg-chromagic-colorless-green',
-  },
-  {
-    color: COLOR_COLORLESS,
-    chromagic: CHROMAGIC_YELLOW,
-    css: 'bg-chromagic-colorless-yellow',
-  },
-  {
-    color: COLOR_COLORLESS,
-    chromagic: CHROMAGIC_PURPLE,
-    css: 'bg-chromagic-colorless-purple',
-  },
 ]
 
 function TabPaneCard({
@@ -251,6 +177,32 @@ function TabPaneCard({
     setLevelComparator(e.currentTarget.value)
   }
 
+  function filterCard(card) {
+    const levelMatched =
+      levelComparator === LEVEL_COMPARATOR_GE
+        ? card.level >= levelValue
+        : levelComparator === LEVEL_COMPARATOR_LE
+        ? card.level <= levelValue
+        : card.level === levelValue
+    let allText = card.name + '§' + card.kana
+    allText +=
+      includesTraitAndLegacy && card.traitText ? '§' + card.traitText : ''
+    allText += '§' + card.ruleText
+    allText +=
+      includesTraitAndLegacy && card.legacyText ? '§' + card.legacyText : ''
+    return (
+      (expansion === 0 || card.expansion === expansion) &&
+      (rarity === 0 || (card.rarity & rarity) === card.rarity) &&
+      (color === 0 || (card.color & color) === color) &&
+      (type === 0 || card.type === type) &&
+      levelMatched &&
+      (term === 0 || (card.term & term) === term) &&
+      (trait === 0 || (card.trait & trait) === trait) &&
+      (legacy === 0 || card.legacy === legacy) &&
+      deferredKeywords.every((e) => allText.includes(e))
+    )
+  }
+
   return (
     <>
       {renderTextSearch()}
@@ -304,29 +256,25 @@ function TabPaneCard({
           </tr>
         </thead>
         <tbody>
-          {dataCards.map((element) => (
-            <TableRowCard
-              {...element}
-              key={element.id}
-              selectedExpansion={expansion}
-              selectedRarity={rarity}
-              selectedColor={color}
-              selectedType={type}
-              selectedLevelValue={levelValue}
-              selectedLevelComparator={levelComparator}
-              selectedTerm={term}
-              selectedTrait={trait}
-              selectedLegacy={legacy}
-              keywords={deferredKeywords}
-              includesTraitAndLegacy={includesTraitAndLegacy}
-              handleSetIdZoom={handleSetIdZoom}
-              deckMain={deckMain}
-              handleSetDeckMain={handleSetDeckMain}
-              deckSide={deckSide}
-              handleSetDeckSide={handleSetDeckSide}
-              interruptSimulator={interruptSimulator}
-            />
-          ))}
+          {dataCards.map((element) => {
+            return (
+              filterCard(element) && (
+                <TableRowCard
+                  key={element.id}
+                  id={element.id}
+                  name={element.name}
+                  color={element.color}
+                  term={element.term}
+                  deckMain={deckMain}
+                  deckSide={deckSide}
+                  handleSetDeckMain={handleSetDeckMain}
+                  handleSetDeckSide={handleSetDeckSide}
+                  handleSetIdZoom={handleSetIdZoom}
+                  interruptSimulator={interruptSimulator}
+                />
+              )
+            )
+          })}
         </tbody>
       </Table>
     </>
@@ -399,109 +347,6 @@ function AccordionItemLevelFilter({
         </div>
       </AccordionBody>
     </AccordionItem>
-  )
-}
-
-function TableRowCard({
-  id,
-  name,
-  kana,
-  expansion,
-  rarity,
-  color,
-  type,
-  level,
-  term,
-  trait,
-  legacy,
-  traitText,
-  ruleText,
-  legacyText,
-  selectedExpansion,
-  selectedRarity,
-  selectedType,
-  selectedColor,
-  selectedLevelValue,
-  selectedLevelComparator,
-  selectedTerm,
-  selectedTrait,
-  selectedLegacy,
-  keywords,
-  includesTraitAndLegacy,
-  handleSetIdZoom,
-  deckMain,
-  handleSetDeckMain,
-  deckSide,
-  handleSetDeckSide,
-  interruptSimulator,
-}) {
-  const levelMatched =
-    selectedLevelComparator === LEVEL_COMPARATOR_GE
-      ? level >= selectedLevelValue
-      : selectedLevelComparator === LEVEL_COMPARATOR_LE
-      ? level <= selectedLevelValue
-      : level === selectedLevelValue
-  let allText = name + '§' + kana
-  allText += includesTraitAndLegacy && traitText ? '§' + traitText : ''
-  allText += '§' + ruleText
-  allText += includesTraitAndLegacy && legacyText ? '§' + legacyText : ''
-  const show =
-    (selectedExpansion === 0 || expansion === selectedExpansion) &&
-    (selectedRarity === 0 || (rarity & selectedRarity) === rarity) &&
-    (selectedColor === 0 || (color & selectedColor) === selectedColor) &&
-    (selectedType === 0 || type === selectedType) &&
-    levelMatched &&
-    (selectedTerm === 0 || (term & selectedTerm) === selectedTerm) &&
-    (selectedTrait === 0 || (trait & selectedTrait) === selectedTrait) &&
-    (selectedLegacy === 0 || legacy === selectedLegacy) &&
-    keywords.every((e) => allText.includes(e))
-
-  let colorClass
-  if ((term & TERM_CHROMAGIC) === TERM_CHROMAGIC) {
-    colorClass = classNames(
-      dataChromagicsToCss.map(
-        (e) =>
-          e.color === color && (term & ~TERM_CHROMAGIC) === e.chromagic && e.css
-      )
-    )
-  } else {
-    colorClass = classNames(
-      dataColorsToCss.map((e) => e.color === color && e.css)
-    )
-  }
-
-  return (
-    show && (
-      <tr>
-        <td className={colorClass}>{id}</td>
-        <td>
-          <Button
-            variant="secondary-outline"
-            size="sm"
-            className="btn-zoom-in-table"
-            onClick={() => handleSetIdZoom(id)}
-          >
-            🔎
-          </Button>
-          {name}
-        </td>
-        <td>
-          <InputGroupCounter
-            id={id}
-            deck={deckMain}
-            handleSetDeck={handleSetDeckMain}
-            interruptSimulator={interruptSimulator}
-          />
-        </td>
-        <td>
-          <InputGroupCounter
-            id={id}
-            deck={deckSide}
-            handleSetDeck={handleSetDeckSide}
-          />
-        </td>
-      </tr>
-    )
   )
 }
 
