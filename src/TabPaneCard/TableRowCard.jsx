@@ -81,16 +81,16 @@ function TableRowCard({
   name,
   color,
   term,
-  handleSetIdZoom,
   deckMain,
-  handleSetDeckMain,
   deckSide,
+  handleSetDeckMain,
   handleSetDeckSide,
+  handleSetIdZoom,
   interruptSimulator,
 }) {
-  let colorClass
+  let classesColor
   if ((term & enumTerm.CHROMAGIC) === enumTerm.CHROMAGIC) {
-    colorClass = classNames(
+    classesColor = classNames(
       dataChromagicsToCss.map(
         (e) =>
           e.color === color &&
@@ -99,19 +99,19 @@ function TableRowCard({
       )
     )
   } else {
-    colorClass = classNames(
+    classesColor = classNames(
       dataColorsToCss.map((e) => e.color === color && e.css)
     )
   }
 
   return (
     <tr>
-      <td className={colorClass}>{id}</td>
+      <td className={classesColor}>{id}</td>
       <td>
         <Button
           variant="secondary-outline"
           size="sm"
-          className="btn-zoom-in-table"
+          className="m-0 p-0"
           onClick={() => handleSetIdZoom(id)}
         >
           🔎

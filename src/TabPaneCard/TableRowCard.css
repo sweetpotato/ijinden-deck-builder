@@ -1,10 +1,5 @@
 /* SPDX-License-Identifier: MIT */
 
-.btn-zoom-in-table {
-  margin: 0;
-  padding: 0;
-}
-
 /* カードリストの背景色付け */
 .table > :not(caption) > * > .bg-ijinden-red { --bs-table-bg-state: #f1aeb5; } /* red-200 */
 .table-hover > tbody > tr:hover > .bg-ijinden-red { --bs-table-bg-state: #e35d6a; } /* red-400 */

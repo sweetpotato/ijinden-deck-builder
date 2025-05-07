@@ -34,11 +34,11 @@ test('インタラクション', async () => {
           name="織田信長"
           term={0}
           color={enumColor.RED}
-          handleSetIdZoom={handleSetIdZoom}
           deckMain={deckMain}
-          handleSetDeckMain={handleSetDeckMain}
           deckSide={deckSide}
+          handleSetDeckMain={handleSetDeckMain}
           handleSetDeckSide={handleSetDeckSide}
+          handleSetIdZoom={handleSetIdZoom}
           interruptSimulator={interruptSimulator}
         />
       </tbody>
@@ -93,11 +93,11 @@ test('インタラクション', async () => {
           name="織田信長"
           term={0}
           color={enumColor.RED}
-          handleSetIdZoom={handleSetIdZoom}
           deckMain={deckMain}
-          handleSetDeckMain={handleSetDeckMain}
           deckSide={deckSide}
+          handleSetDeckMain={handleSetDeckMain}
           handleSetDeckSide={handleSetDeckSide}
+          handleSetIdZoom={handleSetIdZoom}
           interruptSimulator={interruptSimulator}
         />
       </tbody>
@@ -146,11 +146,11 @@ test('インタラクション', async () => {
           name="織田信長"
           term={0}
           color={enumColor.RED}
-          handleSetIdZoom={handleSetIdZoom}
           deckMain={deckMain}
-          handleSetDeckMain={handleSetDeckMain}
           deckSide={deckSide}
+          handleSetDeckMain={handleSetDeckMain}
           handleSetDeckSide={handleSetDeckSide}
+          handleSetIdZoom={handleSetIdZoom}
           interruptSimulator={interruptSimulator}
         />
       </tbody>
@@ -198,11 +198,11 @@ test('インタラクション', async () => {
           name="織田信長"
           term={0}
           color={enumColor.RED}
-          handleSetIdZoom={handleSetIdZoom}
           deckMain={deckMain}
-          handleSetDeckMain={handleSetDeckMain}
           deckSide={deckSide}
+          handleSetDeckMain={handleSetDeckMain}
           handleSetDeckSide={handleSetDeckSide}
+          handleSetIdZoom={handleSetIdZoom}
           interruptSimulator={interruptSimulator}
         />
       </tbody>
@@ -250,11 +250,11 @@ test('インタラクション', async () => {
           name="織田信長"
           term={0}
           color={enumColor.RED}
-          handleSetIdZoom={handleSetIdZoom}
           deckMain={deckMain}
-          handleSetDeckMain={handleSetDeckMain}
           deckSide={deckSide}
+          handleSetDeckMain={handleSetDeckMain}
           handleSetDeckSide={handleSetDeckSide}
+          handleSetIdZoom={handleSetIdZoom}
           interruptSimulator={interruptSimulator}
         />
       </tbody>
@@ -301,11 +301,11 @@ test('レンダリング赤', async () => {
           name="上杉謙信"
           term={0}
           color={enumColor.RED}
-          handleSetIdZoom={vi.fn()}
           deckMain={new Map()}
-          handleSetDeckMain={vi.fn()}
           deckSide={new Map()}
+          handleSetDeckMain={vi.fn()}
           handleSetDeckSide={vi.fn()}
+          handleSetIdZoom={vi.fn()}
           interruptSimulator={vi.fn()}
         />
       </tbody>
@@ -328,11 +328,11 @@ test('レンダリング青', async () => {
           name="レオナルド・ダ・ヴィンチ"
           term={0}
           color={enumColor.BLUE}
-          handleSetIdZoom={vi.fn()}
           deckMain={new Map()}
-          handleSetDeckMain={vi.fn()}
           deckSide={new Map()}
+          handleSetDeckMain={vi.fn()}
           handleSetDeckSide={vi.fn()}
+          handleSetIdZoom={vi.fn()}
           interruptSimulator={vi.fn()}
         />
       </tbody>
@@ -355,11 +355,11 @@ test('レンダリング緑', async () => {
           name="出雲の阿国"
           term={0}
           color={enumColor.GREEN}
-          handleSetIdZoom={vi.fn()}
           deckMain={new Map()}
-          handleSetDeckMain={vi.fn()}
           deckSide={new Map()}
+          handleSetDeckMain={vi.fn()}
           handleSetDeckSide={vi.fn()}
+          handleSetIdZoom={vi.fn()}
           interruptSimulator={vi.fn()}
         />
       </tbody>
@@ -382,11 +382,11 @@ test('レンダリング黄', async () => {
           name="諸葛亮"
           term={0}
           color={enumColor.YELLOW}
-          handleSetIdZoom={vi.fn()}
           deckMain={new Map()}
-          handleSetDeckMain={vi.fn()}
           deckSide={new Map()}
+          handleSetDeckMain={vi.fn()}
           handleSetDeckSide={vi.fn()}
+          handleSetIdZoom={vi.fn()}
           interruptSimulator={vi.fn()}
         />
       </tbody>
@@ -409,11 +409,11 @@ test('レンダリング紫', async () => {
           name="マリ・キュリー"
           term={0}
           color={enumColor.PURPLE}
-          handleSetIdZoom={vi.fn()}
           deckMain={new Map()}
-          handleSetDeckMain={vi.fn()}
           deckSide={new Map()}
+          handleSetDeckMain={vi.fn()}
           handleSetDeckSide={vi.fn()}
+          handleSetIdZoom={vi.fn()}
           interruptSimulator={vi.fn()}
         />
       </tbody>
@@ -436,11 +436,11 @@ test('レンダリング赤黄', async () => {
           name="RYマーブルオーブ"
           term={0}
           color={enumColor.RED_YELLOW}
-          handleSetIdZoom={vi.fn()}
           deckMain={new Map()}
-          handleSetDeckMain={vi.fn()}
           deckSide={new Map()}
+          handleSetDeckMain={vi.fn()}
           handleSetDeckSide={vi.fn()}
+          handleSetIdZoom={vi.fn()}
           interruptSimulator={vi.fn()}
         />
       </tbody>
@@ -463,11 +463,11 @@ test('レンダリング青黄', async () => {
           name="BYマーブルオーブ"
           term={0}
           color={enumColor.BLUE_YELLOW}
-          handleSetIdZoom={vi.fn()}
           deckMain={new Map()}
-          handleSetDeckMain={vi.fn()}
           deckSide={new Map()}
+          handleSetDeckMain={vi.fn()}
           handleSetDeckSide={vi.fn()}
+          handleSetIdZoom={vi.fn()}
           interruptSimulator={vi.fn()}
         />
       </tbody>
@@ -490,11 +490,11 @@ test('レンダリング青黄', async () => {
           name="GYマーブルオーブ"
           term={0}
           color={enumColor.GREEN_YELLOW}
-          handleSetIdZoom={vi.fn()}
           deckMain={new Map()}
-          handleSetDeckMain={vi.fn()}
           deckSide={new Map()}
+          handleSetDeckMain={vi.fn()}
           handleSetDeckSide={vi.fn()}
+          handleSetIdZoom={vi.fn()}
           interruptSimulator={vi.fn()}
         />
       </tbody>
@@ -517,11 +517,11 @@ test('レンダリング赤の黄魔導', async () => {
           name="スペクター"
           term={TERM_CHROMAGIC_YELLOW}
           color={enumColor.RED}
-          handleSetIdZoom={vi.fn()}
           deckMain={new Map()}
-          handleSetDeckMain={vi.fn()}
           deckSide={new Map()}
+          handleSetDeckMain={vi.fn()}
           handleSetDeckSide={vi.fn()}
+          handleSetIdZoom={vi.fn()}
           interruptSimulator={vi.fn()}
         />
       </tbody>
@@ -544,11 +544,11 @@ test('レンダリング黄の赤魔導', async () => {
           name="スカーレット"
           term={TERM_CHROMAGIC_RED}
           color={enumColor.YELLOW}
-          handleSetIdZoom={vi.fn()}
           deckMain={new Map()}
-          handleSetDeckMain={vi.fn()}
           deckSide={new Map()}
+          handleSetDeckMain={vi.fn()}
           handleSetDeckSide={vi.fn()}
+          handleSetIdZoom={vi.fn()}
           interruptSimulator={vi.fn()}
         />
       </tbody>
@@ -571,11 +571,11 @@ test('レンダリング黄の青魔導', async () => {
           name="ピーコック"
           term={TERM_CHROMAGIC_BLUE}
           color={enumColor.YELLOW}
-          handleSetIdZoom={vi.fn()}
           deckMain={new Map()}
-          handleSetDeckMain={vi.fn()}
           deckSide={new Map()}
+          handleSetDeckMain={vi.fn()}
           handleSetDeckSide={vi.fn()}
+          handleSetIdZoom={vi.fn()}
           interruptSimulator={vi.fn()}
         />
       </tbody>
@@ -598,11 +598,11 @@ test('レンダリング黄の緑魔導', async () => {
           name="シャトルーズ"
           term={TERM_CHROMAGIC_GREEN}
           color={enumColor.YELLOW}
-          handleSetIdZoom={vi.fn()}
           deckMain={new Map()}
-          handleSetDeckMain={vi.fn()}
           deckSide={new Map()}
+          handleSetDeckMain={vi.fn()}
           handleSetDeckSide={vi.fn()}
+          handleSetIdZoom={vi.fn()}
           interruptSimulator={vi.fn()}
         />
       </tbody>
@@ -625,11 +625,11 @@ test('レンダリング無色の赤魔導', async () => {
           name="ソリッドビジョンα"
           term={TERM_CHROMAGIC_RED}
           color={enumColor.COLORLESS}
-          handleSetIdZoom={vi.fn()}
           deckMain={new Map()}
-          handleSetDeckMain={vi.fn()}
           deckSide={new Map()}
+          handleSetDeckMain={vi.fn()}
           handleSetDeckSide={vi.fn()}
+          handleSetIdZoom={vi.fn()}
           interruptSimulator={vi.fn()}
         />
       </tbody>
@@ -652,11 +652,11 @@ test('レンダリング無色の青魔導', async () => {
           name="ソリッドビジョンδ"
           term={TERM_CHROMAGIC_BLUE}
           color={enumColor.COLORLESS}
-          handleSetIdZoom={vi.fn()}
           deckMain={new Map()}
-          handleSetDeckMain={vi.fn()}
           deckSide={new Map()}
+          handleSetDeckMain={vi.fn()}
           handleSetDeckSide={vi.fn()}
+          handleSetIdZoom={vi.fn()}
           interruptSimulator={vi.fn()}
         />
       </tbody>
@@ -679,11 +679,11 @@ test('レンダリング無色の緑魔導', async () => {
           name="ソリッドビジョンΩ"
           term={TERM_CHROMAGIC_GREEN}
           color={enumColor.COLORLESS}
-          handleSetIdZoom={vi.fn()}
           deckMain={new Map()}
-          handleSetDeckMain={vi.fn()}
           deckSide={new Map()}
+          handleSetDeckMain={vi.fn()}
           handleSetDeckSide={vi.fn()}
+          handleSetIdZoom={vi.fn()}
           interruptSimulator={vi.fn()}
         />
       </tbody>
@@ -706,11 +706,11 @@ test('レンダリング無色の黄魔導', async () => {
           name="ソリッドビジョンβ"
           term={TERM_CHROMAGIC_YELLOW}
           color={enumColor.COLORLESS}
-          handleSetIdZoom={vi.fn()}
           deckMain={new Map()}
-          handleSetDeckMain={vi.fn()}
           deckSide={new Map()}
+          handleSetDeckMain={vi.fn()}
           handleSetDeckSide={vi.fn()}
+          handleSetIdZoom={vi.fn()}
           interruptSimulator={vi.fn()}
         />
       </tbody>
@@ -733,11 +733,11 @@ test('レンダリング無色の紫魔導', async () => {
           name="ソリッドビジョンγ"
           term={TERM_CHROMAGIC_PURPLE}
           color={enumColor.COLORLESS}
-          handleSetIdZoom={vi.fn()}
           deckMain={new Map()}
-          handleSetDeckMain={vi.fn()}
           deckSide={new Map()}
+          handleSetDeckMain={vi.fn()}
           handleSetDeckSide={vi.fn()}
+          handleSetIdZoom={vi.fn()}
           interruptSimulator={vi.fn()}
         />
       </tbody>

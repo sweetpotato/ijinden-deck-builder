@@ -265,11 +265,11 @@ function TabPaneCard({
                   name={element.name}
                   color={element.color}
                   term={element.term}
-                  handleSetIdZoom={handleSetIdZoom}
                   deckMain={deckMain}
-                  handleSetDeckMain={handleSetDeckMain}
                   deckSide={deckSide}
+                  handleSetDeckMain={handleSetDeckMain}
                   handleSetDeckSide={handleSetDeckSide}
+                  handleSetIdZoom={handleSetIdZoom}
                   interruptSimulator={interruptSimulator}
                 />
               )
