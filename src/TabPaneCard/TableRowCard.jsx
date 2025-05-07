@@ -3,6 +3,7 @@
 import classNames from 'classnames'
 import { Button } from 'react-bootstrap'
 
+import enumChromagic from './enumChromagic'
 import enumColor from './enumColor'
 import enumTerm from './enumTerm'
 import InputGroupCounter from './InputGroupCounter'
@@ -19,61 +20,56 @@ const dataColorsToCss = [
   { color: enumColor.COLORLESS, css: 'bg-ijinden-colorless' },
 ]
 
-const CHROMAGIC_RED = 32
-const CHROMAGIC_BLUE = 64
-const CHROMAGIC_GREEN = 128
-const CHROMAGIC_YELLOW = 256
-const CHROMAGIC_PURPLE = 512
 // すべての実在する色と魔導の組み合わせ
 const dataChromagicsToCss = [
   // 赤の黄魔導 (例：スペクター)
   {
     color: enumColor.RED,
-    chromagic: CHROMAGIC_YELLOW,
+    chromagic: enumChromagic.YELLOW,
     css: 'bg-chromagic-red-yellow',
   },
   // 黄の赤魔導 (例：スカーレット)
   {
     color: enumColor.YELLOW,
-    chromagic: CHROMAGIC_RED,
+    chromagic: enumChromagic.RED,
     css: 'bg-chromagic-yellow-red',
   },
   // 黄の青魔導 (例：ピーコック)
   {
     color: enumColor.YELLOW,
-    chromagic: CHROMAGIC_BLUE,
+    chromagic: enumChromagic.BLUE,
     css: 'bg-chromagic-yellow-blue',
   },
   // 黄の緑魔導 (例：シャトルーズ)
   {
     color: enumColor.YELLOW,
-    chromagic: CHROMAGIC_GREEN,
+    chromagic: enumChromagic.GREEN,
     css: 'bg-chromagic-yellow-green',
   },
   // 無色の魔導 (例：ソリッドビジョンサイクル)
   {
     color: enumColor.COLORLESS,
-    chromagic: CHROMAGIC_RED,
+    chromagic: enumChromagic.RED,
     css: 'bg-chromagic-colorless-red',
   },
   {
     color: enumColor.COLORLESS,
-    chromagic: CHROMAGIC_BLUE,
+    chromagic: enumChromagic.BLUE,
     css: 'bg-chromagic-colorless-blue',
   },
   {
     color: enumColor.COLORLESS,
-    chromagic: CHROMAGIC_GREEN,
+    chromagic: enumChromagic.GREEN,
     css: 'bg-chromagic-colorless-green',
   },
   {
     color: enumColor.COLORLESS,
-    chromagic: CHROMAGIC_YELLOW,
+    chromagic: enumChromagic.YELLOW,
     css: 'bg-chromagic-colorless-yellow',
   },
   {
     color: enumColor.COLORLESS,
-    chromagic: CHROMAGIC_PURPLE,
+    chromagic: enumChromagic.PURPLE,
     css: 'bg-chromagic-colorless-purple',
   },
 ]
