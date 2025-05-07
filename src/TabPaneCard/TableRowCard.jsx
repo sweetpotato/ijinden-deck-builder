@@ -4,10 +4,8 @@ import classNames from 'classnames'
 import { Button } from 'react-bootstrap'
 
 import enumColor from './enumColor'
+import enumTerm from './enumTerm'
 import InputGroupCounter from './InputGroupCounter'
-
-// TODO index.jsx と二重定義
-const TERM_CHROMAGIC = 16
 
 const dataColorsToCss = [
   { color: enumColor.RED, css: 'bg-ijinden-red' },
@@ -93,11 +91,13 @@ function TableRowCard({
   interruptSimulator,
 }) {
   let colorClass
-  if ((term & TERM_CHROMAGIC) === TERM_CHROMAGIC) {
+  if ((term & enumTerm.CHROMAGIC) === enumTerm.CHROMAGIC) {
     colorClass = classNames(
       dataChromagicsToCss.map(
         (e) =>
-          e.color === color && (term & ~TERM_CHROMAGIC) === e.chromagic && e.css
+          e.color === color &&
+          (term & ~enumTerm.CHROMAGIC) === e.chromagic &&
+          e.css
       )
     )
   } else {

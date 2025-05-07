@@ -6,15 +6,14 @@ import { cleanup, render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import enumColor from './enumColor'
+import enumTerm from './enumTerm'
 import TableRowCard from './TableRowCard'
 
-// TODO ややこしい
-const TERM_CHROMAGIC = 16
-const TERM_CHROMAGIC_RED = TERM_CHROMAGIC | 32
-const TERM_CHROMAGIC_BLUE = TERM_CHROMAGIC | 64
-const TERM_CHROMAGIC_GREEN = TERM_CHROMAGIC | 128
-const TERM_CHROMAGIC_YELLOW = TERM_CHROMAGIC | 256
-const TERM_CHROMAGIC_PURPLE = TERM_CHROMAGIC | 512
+const TERM_CHROMAGIC_RED = enumTerm.CHROMAGIC | 32
+const TERM_CHROMAGIC_BLUE = enumTerm.CHROMAGIC | 64
+const TERM_CHROMAGIC_GREEN = enumTerm.CHROMAGIC | 128
+const TERM_CHROMAGIC_YELLOW = enumTerm.CHROMAGIC | 256
+const TERM_CHROMAGIC_PURPLE = enumTerm.CHROMAGIC | 512
 
 afterEach(cleanup)
 

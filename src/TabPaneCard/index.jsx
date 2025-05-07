@@ -16,6 +16,7 @@ import FormRange from 'react-bootstrap/esm/FormRange'
 
 import { dataCardsArrayForTable as dataCards } from '../commons/dataCards'
 import enumColor from './enumColor'
+import enumTerm from './enumTerm'
 import useAccordionItemRadioFilter from './useAccordionItemRadioFilter'
 import TableRowCard from './TableRowCard'
 
@@ -74,15 +75,13 @@ const dataLevelComparators = [
   { value: LEVEL_COMPARATOR_EQ, label: '等しい' },
 ]
 
-// TODO TableRowCard.jsx と二重定義
-const TERM_CHROMAGIC = 16
 const dataTerms = [
   { value: 0, label: '指定なし' },
-  { value: 1, label: '航海' },
-  { value: 2, label: '執筆' },
-  { value: 4, label: '決起' },
-  { value: 8, label: '徴募' },
-  { value: TERM_CHROMAGIC, label: '魔導' },
+  { value: enumTerm.SAILING, label: '航海' },
+  { value: enumTerm.WRITING, label: '執筆' },
+  { value: enumTerm.RISING, label: '決起' },
+  { value: enumTerm.RECRUITMENT, label: '徴募' },
+  { value: enumTerm.CHROMAGIC, label: '魔導' },
 ]
 
 const dataTraits = [
