@@ -11,8 +11,6 @@ import {
   ImageCardWithToggleTransparent,
 } from './ImageCardWithToggle'
 
-import './index.css'
-
 function makeIdArray(deck) {
   const result = []
   for (const [id, numCopies] of deck.entries()) {
