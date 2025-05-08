@@ -2,7 +2,7 @@
 
 import { useReducer } from 'react'
 
-import TabPaneSimulator from '.'
+import TabPaneSimulator from './TabPaneSimulator'
 
 const enumStateSimulator = {
   INITIAL: 0,
