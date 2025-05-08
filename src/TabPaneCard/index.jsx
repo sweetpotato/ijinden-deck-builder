@@ -18,10 +18,10 @@ import { dataCardsArrayForTable as dataCards } from '../commons/dataCards'
 import enumColor from './enumColor'
 import enumTerm from './enumTerm'
 import useAccordionItemRadioFilter from './AccordionItemRadioFilter'
+import useContainerTextSearch from './ContainerTextSearch'
 import TableRowCard from './TableRowCard'
 
 import './index.css'
-import useContainerTextSearch from './useContainerTextSearch'
 
 const dataExpansions = [
   { value: 0, label: 'すべて' },
