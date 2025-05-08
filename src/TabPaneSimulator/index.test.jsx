@@ -5,7 +5,7 @@ import { afterEach, expect, test } from 'vitest'
 import { cleanup, render, renderHook } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import useTabPaneSimulator from './useTabPaneSimulator'
+import useTabPaneSimulator from '.'
 
 afterEach(cleanup)
 

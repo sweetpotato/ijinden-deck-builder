@@ -5,7 +5,7 @@ import { Alert, Button } from 'react-bootstrap'
 
 import { dataCardsMap as dataCards } from '../commons/dataCards'
 import { sum } from '../commons/utils'
-import { enumActionSimulator, enumStateSimulator } from './useTabPaneSimulator'
+import { enumActionSimulator, enumStateSimulator } from '.'
 import {
   ImageCardWithToggleOpaque,
   ImageCardWithToggleTransparent,
