@@ -26,12 +26,12 @@ import './index.css'
 const dataExpansions = [
   { value: 0, label: 'すべて' },
   { value: 10, label: '伝説の武将' },
-  { value: 11, label: '知と美の革命' },
+  { value: 11, label: '美と知の革命' },
   { value: 12, label: '日本の大天才' },
   { value: 15, label: '第１弾ブースター' },
   { value: 20, label: '三国の英傑' },
   { value: 25, label: '第２弾ブースター' },
-  { value: 30, label: '発展する医療' },
+  { value: 30, label: '発展する医学' },
   { value: 35, label: '第３弾ブースター' },
   { value: 45, label: '第４弾ブースター' },
 ]
