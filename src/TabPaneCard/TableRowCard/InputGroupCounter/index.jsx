@@ -5,7 +5,7 @@ import { Button, FormControl, InputGroup } from 'react-bootstrap'
 import {
   handleClickDecrement,
   handleClickIncrement,
-} from '../../commons/handleClick'
+} from '../../../commons/handleClick'
 
 function InputGroupCounter({
   id,
