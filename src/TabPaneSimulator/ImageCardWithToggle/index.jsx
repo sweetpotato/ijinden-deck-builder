@@ -4,7 +4,9 @@ import classNames from 'classnames'
 import { useState } from 'react'
 import { Button } from 'react-bootstrap'
 
-import ImageCard from '../components/ImageCard'
+import ImageCard from '../../components/ImageCard'
+
+import './index.css'
 
 const enumToggle = {
   OPAQUE: 0,
