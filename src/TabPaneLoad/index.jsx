@@ -70,8 +70,16 @@ function TabPaneLoad({
         <Accordion activeKey={activeDeckSaved} onSelect={handleSelectAccordion}>
           {decksSaved.map((aDeckSaved) => {
             const timestamp = DTF.format(new Date(aDeckSaved.timestamp))
+            const numCardsMain = sum(aDeckSaved.main.map(([, n]) => n))
+            const numCardsSide = sum(aDeckSaved.side.map(([, n]) => n))
             const title = aDeckSaved.title || '' // There may not be a title
-            const header = `#${aDeckSaved.id} ${title} (${timestamp})`
+            const subNumCardsMain =
+              numCardsSide !== 0
+                ? `メイン${numCardsMain}枚`
+                : `${numCardsMain}枚`
+            const subNumCardsSide =
+              numCardsSide !== 0 ? `/サイド${numCardsSide}枚` : ''
+            const header = `#${aDeckSaved.id} ${title} [${subNumCardsMain}${subNumCardsSide}] (${timestamp})`
             return (
               <AccordionItem key={aDeckSaved.id} eventKey={aDeckSaved.id}>
                 <AccordionHeader>{header}</AccordionHeader>
