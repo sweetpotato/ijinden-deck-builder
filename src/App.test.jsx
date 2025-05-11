@@ -9,7 +9,7 @@ import userEvent from '@testing-library/user-event'
 
 import Home from './Home'
 import { dataCardsMap } from './commons/dataCards'
-import db from './commons/db'
+import { dbBulkAddDecks, dbClearDecks } from './commons/db'
 
 function defaultRender() {
   const Stub = createRoutesStub([{ path: '/', Component: Home }])
@@ -434,8 +434,8 @@ test('保存したデッキを読み込んでレシピペインに表示する',
     { timestamp: new Date(), main: [['R-1', 3]], side: [['R-2', 4]] },
   ]
 
-  await db.decks.clear()
-  await db.decks.bulkAdd(decksSaved)
+  await dbClearDecks()
+  await dbBulkAddDecks(decksSaved)
 
   defaultRender()
 
@@ -925,8 +925,8 @@ test('シミュレータがレシピペインの操作でアボートする', as
 test('シミュレータがマイデッキペインの操作でアボートする', async () => {
   const decksSaved = [{ timestamp: new Date(), main: [['R-1', 10]], side: [] }]
 
-  await db.decks.clear()
-  await db.decks.bulkAdd(decksSaved)
+  await dbClearDecks()
+  await dbBulkAddDecks(decksSaved)
 
   defaultRender()
 

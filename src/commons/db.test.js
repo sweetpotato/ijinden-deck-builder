@@ -6,17 +6,21 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { afterEach, expect, test } from 'vitest'
 import { cleanup, renderHook, waitFor } from '@testing-library/react'
 
-import db from './db'
-
-const defaultQuery = () => db.decks.orderBy(':id').reverse().toArray()
+import {
+  dbAddDeck,
+  dbBulkAddDecks,
+  dbClearDecks,
+  dbDeleteDeck,
+  dbQueryDecks,
+} from './db'
 
 afterEach(async () => {
-  await db.decks.clear()
+  await dbClearDecks()
   cleanup()
 })
 
 test('空のDBからは何も読み取れない', async () => {
-  const { result } = renderHook(() => useLiveQuery(defaultQuery))
+  const { result } = renderHook(() => useLiveQuery(dbQueryDecks))
   // 初期値は undefined だが、しばらく経つと実際の値になる
   await waitFor(() => expect(result.current).not.toBeUndefined())
   expect(result.current).toStrictEqual([])
@@ -26,13 +30,13 @@ test('基本的な読み書き操作', async () => {
   const timestamp1 = new Date()
   const timestamp2 = new Date()
   const timestamp3 = new Date()
-  await db.decks.bulkAdd([
+  await dbBulkAddDecks([
     { timestamp: timestamp1, main: [['R-1', 1]], side: [] },
     { timestamp: timestamp2, main: [['B-1', 2]], side: [['G-1', 3]] },
     { timestamp: timestamp3, main: [], side: [['Y-1', 4]] },
   ])
 
-  const { result } = renderHook(() => useLiveQuery(defaultQuery))
+  const { result } = renderHook(() => useLiveQuery(dbQueryDecks))
   await waitFor(() => expect(result.current).not.toBeUndefined())
   expect(result.current.length).toBe(3)
   expect(result.current[0].timestamp).toEqual(timestamp3)
@@ -46,7 +50,7 @@ test('基本的な読み書き操作', async () => {
   expect(result.current[2].side).toStrictEqual([])
 
   // 削除
-  await db.decks.delete(2)
+  await dbDeleteDeck(2)
   await waitFor(() => expect(result.current.length).toBe(2))
   expect(result.current[0].timestamp).toEqual(timestamp3)
   expect(result.current[0].main).toStrictEqual([])
@@ -57,7 +61,7 @@ test('基本的な読み書き操作', async () => {
 
   // 追加
   const timestamp4 = new Date()
-  await db.decks.add({
+  await dbAddDeck({
     timestamp: timestamp4,
     main: [['1-1', 4]],
     side: [['2-1', 4]],
@@ -76,7 +80,7 @@ test('基本的な読み書き操作', async () => {
 
 test('4-01から4-09まで', async () => {
   const timestamp = new Date()
-  await db.decks.bulkAdd([
+  await dbBulkAddDecks([
     {
       timestamp,
       main: [
@@ -94,7 +98,7 @@ test('4-01から4-09まで', async () => {
     },
   ])
 
-  const { result } = renderHook(() => useLiveQuery(defaultQuery))
+  const { result } = renderHook(() => useLiveQuery(dbQueryDecks))
   await waitFor(() => expect(result.current).not.toBeUndefined())
   expect(result.current.length).toBe(1)
   expect(result.current[0].timestamp).toEqual(timestamp)

@@ -8,7 +8,7 @@ import { cleanup, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import Home from '../Home'
-import db from '../commons/db'
+import { dbBulkAddDecks, dbClearDecks, dbQueryDecks } from '../commons/db'
 
 function defaultRender() {
   const Stub = createRoutesStub([{ path: '/', Component: Home }])
@@ -18,7 +18,7 @@ function defaultRender() {
 afterEach(cleanup)
 
 test('レシピが空だと保存できない', async () => {
-  await db.decks.clear()
+  await dbClearDecks()
 
   defaultRender()
 
@@ -39,7 +39,7 @@ test('レシピが空だと保存できない', async () => {
   await user.click(buttonSave)
 
   // 現在のレシピが空のため保存されない
-  await waitFor(async () => expect(await db.decks.toArray()).toStrictEqual([]))
+  await waitFor(async () => expect(await dbQueryDecks()).toStrictEqual([]))
 
   // モーダルが表示される
   const modal = screen.getByRole('dialog')
@@ -56,7 +56,7 @@ test('レシピが空だと保存できない', async () => {
 })
 
 test('レシピに1枚でもあるなら保存できる', async () => {
-  await db.decks.clear()
+  await dbClearDecks()
 
   defaultRender()
 
@@ -99,7 +99,7 @@ test('レシピに1枚でもあるなら保存できる', async () => {
   )
 
   // 保存されたデータの検証
-  let decksSaved = await db.decks.orderBy(':id').toArray()
+  let decksSaved = await dbQueryDecks()
   expect(decksSaved.length).toBe(1)
   expect(decksSaved[0].main.length).toBe(1)
   expect(decksSaved[0].main[0][0]).toBe('R-1')
@@ -142,17 +142,17 @@ test('レシピに1枚でもあるなら保存できる', async () => {
   await waitFor(() =>
     expect(paneSave.querySelectorAll('.accordion-item').length).toBe(2)
   )
-  // 新しく保存されたデッキはリストの末尾に追加される
-  decksSaved = await db.decks.orderBy(':id').toArray()
+  // 新しく保存されたデッキはリストの戦闘に追加される
+  decksSaved = await dbQueryDecks()
   expect(decksSaved.length).toBe(2)
-  expect(decksSaved[0].main.length).toBe(1)
-  expect(decksSaved[0].main[0][0]).toBe('R-1')
-  expect(decksSaved[0].main[0][1]).toBe(1)
-  expect(decksSaved[0].side.length).toBe(0)
-  expect(decksSaved[1].main.length).toBe(0)
-  expect(decksSaved[1].side.length).toBe(1)
-  expect(decksSaved[1].side[0][0]).toBe('R-2')
-  expect(decksSaved[1].side[0][1]).toBe(1)
+  expect(decksSaved[0].main.length).toBe(0)
+  expect(decksSaved[0].side.length).toBe(1)
+  expect(decksSaved[0].side[0][0]).toBe('R-2')
+  expect(decksSaved[0].side[0][1]).toBe(1)
+  expect(decksSaved[1].main.length).toBe(1)
+  expect(decksSaved[1].main[0][0]).toBe('R-1')
+  expect(decksSaved[1].main[0][1]).toBe(1)
+  expect(decksSaved[1].side.length).toBe(0)
 })
 
 test('保存済みデッキの表示と削除', async () => {
@@ -162,8 +162,8 @@ test('保存済みデッキの表示と削除', async () => {
     { timestamp: new Date(), main: [], side: [['R-4', 4]] },
   ]
 
-  await db.decks.clear()
-  await db.decks.bulkAdd(decksSaved)
+  await dbClearDecks()
+  await dbBulkAddDecks(decksSaved)
 
   defaultRender()
 
@@ -192,16 +192,16 @@ test('保存済みデッキの表示と削除', async () => {
     expect(paneSave.querySelectorAll('.accordion-item').length).toBe(2)
   )
   // 保存されたデータの検証
-  decksSaved = await db.decks.orderBy(':id').toArray()
+  decksSaved = await dbQueryDecks()
   expect(decksSaved.length).toBe(2)
-  expect(decksSaved[0].main.length).toBe(1)
-  expect(decksSaved[0].main[0][0]).toBe('R-1')
-  expect(decksSaved[0].main[0][1]).toBe(1)
-  expect(decksSaved[0].side.length).toBe(0)
-  expect(decksSaved[1].main.length).toBe(0)
-  expect(decksSaved[1].side.length).toBe(1)
-  expect(decksSaved[1].side[0][0]).toBe('R-4')
-  expect(decksSaved[1].side[0][1]).toBe(4)
+  expect(decksSaved[0].main.length).toBe(0)
+  expect(decksSaved[0].side.length).toBe(1)
+  expect(decksSaved[0].side[0][0]).toBe('R-4')
+  expect(decksSaved[0].side[0][1]).toBe(4)
+  expect(decksSaved[1].main.length).toBe(1)
+  expect(decksSaved[1].main[0][0]).toBe('R-1')
+  expect(decksSaved[1].main[0][1]).toBe(1)
+  expect(decksSaved[1].side.length).toBe(0)
 
   // 保存済みレシピをすべて削除ボタンを押す
   const buttonClear = paneSave.querySelector('div:nth-child(4) button')
@@ -223,16 +223,16 @@ test('保存済みデッキの表示と削除', async () => {
   expect(screen.queryByRole('dialog')).toBeNull()
 
   // デッキはクリアされていない
-  decksSaved = await db.decks.orderBy(':id').toArray()
+  decksSaved = await dbQueryDecks()
   expect(decksSaved.length).toBe(2)
-  expect(decksSaved[0].main.length).toBe(1)
-  expect(decksSaved[0].main[0][0]).toBe('R-1')
-  expect(decksSaved[0].main[0][1]).toBe(1)
-  expect(decksSaved[0].side.length).toBe(0)
-  expect(decksSaved[1].main.length).toBe(0)
-  expect(decksSaved[1].side.length).toBe(1)
-  expect(decksSaved[1].side[0][0]).toBe('R-4')
-  expect(decksSaved[1].side[0][1]).toBe(4)
+  expect(decksSaved[0].main.length).toBe(0)
+  expect(decksSaved[0].side.length).toBe(1)
+  expect(decksSaved[0].side[0][0]).toBe('R-4')
+  expect(decksSaved[0].side[0][1]).toBe(4)
+  expect(decksSaved[1].main.length).toBe(1)
+  expect(decksSaved[1].main[0][0]).toBe('R-1')
+  expect(decksSaved[1].main[0][1]).toBe(1)
+  expect(decksSaved[1].side.length).toBe(0)
 
   // 保存済みレシピをすべて削除ボタンを再度押す
   await user.click(buttonClear)
@@ -258,6 +258,6 @@ test('保存済みデッキの表示と削除', async () => {
     expect(paneSave.querySelectorAll('.accordion-item').length).toBe(0)
   )
   // 保存されたデータの検証
-  decksSaved = await db.decks.orderBy(':id').toArray()
+  decksSaved = await dbQueryDecks()
   expect(decksSaved.length).toBe(0)
 })
