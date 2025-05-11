@@ -13,7 +13,7 @@ import {
 } from 'react-bootstrap'
 
 import { dataCardsArrayForDeck as dataCardsArray } from '../commons/dataCards'
-import db from '../commons/db'
+import { dbAddDeck } from '../commons/db'
 import enumTabPane from '../commons/enumTabPane'
 import {
   handleClickDecrement,
@@ -62,7 +62,7 @@ function TabPaneDeck({
       side: objectSide,
     }
     // IndexedDB に保存する
-    const idDeck = await db.decks.add(objectDeck)
+    const idDeck = await dbAddDeck(objectDeck)
     // マイデッキペインに移動する
     handleSetActiveDeckSaved(idDeck)
     handleSetActiveTab(enumTabPane.SAVE_AND_LOAD)

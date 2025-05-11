@@ -17,7 +17,7 @@ import {
 } from 'react-bootstrap'
 
 import { dataCardsArrayForDeck } from '../commons/dataCards'
-import db from '../commons/db'
+import { dbClearDecks, dbDeleteDeck, dbQueryDecks } from '../commons/db'
 import enumTabPane from '../commons/enumTabPane'
 import { sum } from '../commons/utils'
 import ImageCard from '../components/ImageCard'
@@ -42,9 +42,7 @@ function TabPaneLoad({
   interruptSimulator,
 }) {
   const [showModalClear, setShowModalClear] = useState(false)
-  const decksSaved = useLiveQuery(async () =>
-    db.decks.orderBy(':id').reverse().toArray()
-  )
+  const decksSaved = useLiveQuery(async () => await dbQueryDecks())
 
   function handleSelectAccordion(eventKey) {
     handleSetActiveDeckSaved(eventKey)
@@ -59,7 +57,7 @@ function TabPaneLoad({
   }
 
   async function handleClickConfirmClear() {
-    await db.decks.clear()
+    await dbClearDecks()
     setShowModalClear(false)
   }
 
@@ -145,7 +143,7 @@ function ContainerDeckSaved({
   }
 
   async function handleClickDelete() {
-    await db.decks.delete(aDeckSaved.id)
+    await dbDeleteDeck(aDeckSaved.id)
   }
 
   return (
