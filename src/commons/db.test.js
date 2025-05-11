@@ -13,6 +13,43 @@ import {
   dbDeleteDeck,
   dbQueryDecks,
 } from './db'
+import Dexie from 'dexie'
+
+// アップグレード処理の実装は既知とする
+const upgradeDeck = (deck) => {
+  return deck.map(([id, numCopies]) => {
+    switch (id) {
+      case '4-01': {
+        return ['4-1', numCopies]
+      }
+      case '4-02': {
+        return ['4-2', numCopies]
+      }
+      case '4-03': {
+        return ['4-3', numCopies]
+      }
+      case '4-04': {
+        return ['4-4', numCopies]
+      }
+      case '4-05': {
+        return ['4-5', numCopies]
+      }
+      case '4-06': {
+        return ['4-6', numCopies]
+      }
+      case '4-07': {
+        return ['4-7', numCopies]
+      }
+      case '4-08': {
+        return ['4-8', numCopies]
+      }
+      case '4-09': {
+        return ['4-9', numCopies]
+      }
+    }
+    return [id, numCopies]
+  })
+}
 
 afterEach(async () => {
   await dbClearDecks()
@@ -79,39 +116,79 @@ test('基本的な読み書き操作', async () => {
 })
 
 test('4-01から4-09まで', async () => {
+  // 実際のデータベースを模倣した別のデータベースでテストする
+  // DB操作やアップグレード処理などの内部実装も既知のものとする
+  let dbTest = new Dexie('db-test')
+  dbTest.version(1).stores({ decks: '++id' })
+  // データベースを開いてデータを保存する
   const timestamp = new Date()
-  await dbBulkAddDecks([
-    {
-      timestamp,
-      main: [
-        ['4-01', 1],
-        ['4-02', 1],
-        ['4-03', 1],
-        ['4-04', 1],
-        ['4-05', 1],
-        ['4-06', 1],
-        ['4-07', 1],
-        ['4-08', 1],
-        ['4-09', 1],
-      ],
-      side: [],
-    },
-  ])
-
-  const { result } = renderHook(() => useLiveQuery(dbQueryDecks))
-  await waitFor(() => expect(result.current).not.toBeUndefined())
-  expect(result.current.length).toBe(1)
-  expect(result.current[0].timestamp).toEqual(timestamp)
-  expect(result.current[0].main).toStrictEqual([
+  await dbTest.open()
+  await dbTest.decks.add({
+    timestamp,
+    main: [
+      ['4-01', 1],
+      ['4-02', 2],
+      ['4-03', 3],
+      ['4-04', 4],
+      ['4-05', 1],
+    ],
+    side: [
+      ['4-06', 2],
+      ['4-07', 3],
+      ['4-08', 4],
+      ['4-09', 1],
+    ],
+  })
+  let result = await dbTest.decks.orderBy(':id').reverse().toArray()
+  expect(result.length).toBe(1)
+  expect(result[0].timestamp).toEqual(timestamp)
+  expect(result[0].main).toStrictEqual([
     ['4-01', 1],
-    ['4-02', 1],
-    ['4-03', 1],
-    ['4-04', 1],
+    ['4-02', 2],
+    ['4-03', 3],
+    ['4-04', 4],
     ['4-05', 1],
-    ['4-06', 1],
-    ['4-07', 1],
-    ['4-08', 1],
+  ])
+  expect(result[0].side).toStrictEqual([
+    ['4-06', 2],
+    ['4-07', 3],
+    ['4-08', 4],
     ['4-09', 1],
   ])
-  expect(result.current[0].side).toStrictEqual([])
+
+  // データベースを開き直してアップグレードする
+  dbTest.close()
+  dbTest = new Dexie('db-test')
+  dbTest.version(1).stores({ decks: '++id' })
+  dbTest
+    .version(2)
+    .stores({ decks: '++id' })
+    .upgrade((transaction) => {
+      return transaction
+        .table('decks')
+        .toCollection()
+        .modify((deck) => {
+          deck.main = upgradeDeck(deck.main)
+          deck.side = upgradeDeck(deck.side)
+        })
+    })
+
+  // アップグレードは open によってトリガーされる
+  await dbTest.open()
+  result = await dbTest.decks.orderBy(':id').reverse().toArray()
+  expect(result.length).toBe(1)
+  expect(result[0].timestamp).toEqual(timestamp)
+  expect(result[0].main).toStrictEqual([
+    ['4-1', 1],
+    ['4-2', 2],
+    ['4-3', 3],
+    ['4-4', 4],
+    ['4-5', 1],
+  ])
+  expect(result[0].side).toStrictEqual([
+    ['4-6', 2],
+    ['4-7', 3],
+    ['4-8', 4],
+    ['4-9', 1],
+  ])
 })
