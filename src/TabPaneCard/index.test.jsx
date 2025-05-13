@@ -421,6 +421,782 @@ test('初期状態', async () => {
   expect(buttonLegacyBackToStock).not.toBeChecked()
 })
 
+test('プラスマイナスボタンの操作', async () => {
+  let deckMain = new Map()
+  let deckSide = new Map()
+  const handleSetDeckMain = vi.fn()
+  const handleSetDeckSide = vi.fn()
+  const handleSetIdZoom = vi.fn()
+  const interruptSimulator = vi.fn()
+  const { rerender, getByTestId } = render(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  expect(handleSetDeckMain.mock.calls.length).toBe(0)
+  expect(handleSetDeckSide.mock.calls.length).toBe(0)
+  expect(handleSetIdZoom.mock.calls.length).toBe(0)
+  expect(interruptSimulator.mock.calls.length).toBe(0)
+
+  let buttonMainMinus1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(3) button:nth-child(1)'
+  )
+  expect(buttonMainMinus1).toBeVisible()
+  expect(buttonMainMinus1).not.toBeEnabled()
+  let textboxMain1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(3) input'
+  )
+  expect(textboxMain1).toBeVisible()
+  expect(textboxMain1).toHaveAttribute('readonly')
+  expect(textboxMain1).toHaveValue(0)
+  let buttonMainPlus1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(3) button:nth-child(3)'
+  )
+  expect(buttonMainPlus1).toBeVisible()
+  expect(buttonMainPlus1).toBeEnabled()
+  let buttonSideMinus1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(4) button:nth-child(1)'
+  )
+  expect(buttonSideMinus1).toBeVisible()
+  expect(buttonSideMinus1).not.toBeEnabled()
+  let textboxSide1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(4) input'
+  )
+  expect(textboxSide1).toBeVisible()
+  expect(textboxSide1).toHaveAttribute('readonly')
+  expect(textboxSide1).toHaveValue(0)
+  let buttonSidePlus1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(4) button:nth-child(3)'
+  )
+  expect(buttonSidePlus1).toBeVisible()
+  expect(buttonSidePlus1).toBeEnabled()
+  let buttonMainMinus2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(3) button:nth-child(1)'
+  )
+  expect(buttonMainMinus2).toBeVisible()
+  expect(buttonMainMinus2).not.toBeEnabled()
+  let textboxMain2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(3) input'
+  )
+  expect(textboxMain2).toBeVisible()
+  expect(textboxMain2).toHaveAttribute('readonly')
+  expect(textboxMain2).toHaveValue(0)
+  let buttonMainPlus2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(3) button:nth-child(3)'
+  )
+  expect(buttonMainPlus2).toBeVisible()
+  expect(buttonMainPlus2).toBeEnabled()
+  let buttonSideMinus2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(4) button:nth-child(1)'
+  )
+  expect(buttonSideMinus2).toBeVisible()
+  expect(buttonSideMinus2).not.toBeEnabled()
+  let textboxSide2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(4) input'
+  )
+  expect(textboxSide2).toBeVisible()
+  expect(textboxSide2).toHaveAttribute('readonly')
+  expect(textboxSide2).toHaveValue(0)
+  let buttonSidePlus2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(4) button:nth-child(3)'
+  )
+  expect(buttonSidePlus2).toBeVisible()
+  expect(buttonSidePlus2).toBeEnabled()
+
+  // R-1 メインのプラスボタンを押す
+  await userEvent.click(buttonMainPlus1)
+  expect(handleSetDeckMain.mock.calls.length).toBe(1) // 実行された
+  expect(handleSetDeckMain.mock.lastCall.length).toBe(1)
+  expect(handleSetDeckMain.mock.lastCall[0].has('R-1')).toBe(true)
+  expect(handleSetDeckMain.mock.lastCall[0].get('R-1')).toBe(1)
+  expect(handleSetDeckMain.mock.lastCall[0].has('R-2')).toBe(false)
+  expect(handleSetDeckSide.mock.calls.length).toBe(0)
+  expect(handleSetIdZoom.mock.calls.length).toBe(0)
+  expect(interruptSimulator.mock.calls.length).toBe(1) // 実行された
+  deckMain = handleSetDeckMain.mock.lastCall[0]
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  buttonMainMinus1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(3) button:nth-child(1)'
+  )
+  expect(buttonMainMinus1).toBeVisible()
+  expect(buttonMainMinus1).toBeEnabled() // 有効になった
+  textboxMain1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(3) input'
+  )
+  expect(textboxMain1).toBeVisible()
+  expect(textboxMain1).toHaveAttribute('readonly')
+  expect(textboxMain1).toHaveValue(1) // 増えた
+  buttonMainPlus1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(3) button:nth-child(3)'
+  )
+  expect(buttonMainPlus1).toBeVisible()
+  expect(buttonMainPlus1).toBeEnabled()
+  buttonSideMinus1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(4) button:nth-child(1)'
+  )
+  expect(buttonSideMinus1).toBeVisible()
+  expect(buttonSideMinus1).not.toBeEnabled()
+  textboxSide1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(4) input'
+  )
+  expect(textboxSide1).toBeVisible()
+  expect(textboxSide1).toHaveAttribute('readonly')
+  expect(textboxSide1).toHaveValue(0)
+  buttonSidePlus1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(4) button:nth-child(3)'
+  )
+  expect(buttonSidePlus1).toBeVisible()
+  expect(buttonSidePlus1).toBeEnabled()
+  buttonMainMinus2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(3) button:nth-child(1)'
+  )
+  expect(buttonMainMinus2).toBeVisible()
+  expect(buttonMainMinus2).not.toBeEnabled()
+  textboxMain2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(3) input'
+  )
+  expect(textboxMain2).toBeVisible()
+  expect(textboxMain2).toHaveAttribute('readonly')
+  expect(textboxMain2).toHaveValue(0)
+  buttonMainPlus2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(3) button:nth-child(3)'
+  )
+  expect(buttonMainPlus2).toBeVisible()
+  expect(buttonMainPlus2).toBeEnabled()
+  buttonSideMinus2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(4) button:nth-child(1)'
+  )
+  expect(buttonSideMinus2).toBeVisible()
+  expect(buttonSideMinus2).not.toBeEnabled()
+  textboxSide2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(4) input'
+  )
+  expect(textboxSide2).toBeVisible()
+  expect(textboxSide2).toHaveAttribute('readonly')
+  expect(textboxSide2).toHaveValue(0)
+  buttonSidePlus2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(4) button:nth-child(3)'
+  )
+  expect(buttonSidePlus2).toBeVisible()
+  expect(buttonSidePlus2).toBeEnabled()
+
+  // R-1 サイドのプラスボタンを押す
+  await userEvent.click(buttonSidePlus1)
+  expect(handleSetDeckMain.mock.calls.length).toBe(1)
+  expect(handleSetDeckSide.mock.calls.length).toBe(1) // 実行された
+  expect(handleSetDeckSide.mock.lastCall.length).toBe(1)
+  expect(handleSetDeckSide.mock.lastCall[0].has('R-1')).toBe(true)
+  expect(handleSetDeckSide.mock.lastCall[0].get('R-1')).toBe(1)
+  expect(handleSetDeckSide.mock.lastCall[0].has('R-2')).toBe(false)
+  expect(handleSetIdZoom.mock.calls.length).toBe(0)
+  expect(interruptSimulator.mock.calls.length).toBe(1)
+  deckSide = handleSetDeckSide.mock.lastCall[0]
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  buttonMainMinus1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(3) button:nth-child(1)'
+  )
+  expect(buttonMainMinus1).toBeVisible()
+  expect(buttonMainMinus1).toBeEnabled()
+  textboxMain1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(3) input'
+  )
+  expect(textboxMain1).toBeVisible()
+  expect(textboxMain1).toHaveAttribute('readonly')
+  expect(textboxMain1).toHaveValue(1)
+  buttonMainPlus1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(3) button:nth-child(3)'
+  )
+  expect(buttonMainPlus1).toBeVisible()
+  expect(buttonMainPlus1).toBeEnabled()
+  buttonSideMinus1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(4) button:nth-child(1)'
+  )
+  expect(buttonSideMinus1).toBeVisible()
+  expect(buttonSideMinus1).toBeEnabled() // 有効になった
+  textboxSide1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(4) input'
+  )
+  expect(textboxSide1).toBeVisible()
+  expect(textboxSide1).toHaveAttribute('readonly')
+  expect(textboxSide1).toHaveValue(1) // 増えた
+  buttonSidePlus1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(4) button:nth-child(3)'
+  )
+  expect(buttonSidePlus1).toBeVisible()
+  expect(buttonSidePlus1).toBeEnabled()
+  buttonMainMinus2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(3) button:nth-child(1)'
+  )
+  expect(buttonMainMinus2).toBeVisible()
+  expect(buttonMainMinus2).not.toBeEnabled()
+  textboxMain2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(3) input'
+  )
+  expect(textboxMain2).toBeVisible()
+  expect(textboxMain2).toHaveAttribute('readonly')
+  expect(textboxMain2).toHaveValue(0)
+  buttonMainPlus2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(3) button:nth-child(3)'
+  )
+  expect(buttonMainPlus2).toBeVisible()
+  expect(buttonMainPlus2).toBeEnabled()
+  buttonSideMinus2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(4) button:nth-child(1)'
+  )
+  expect(buttonSideMinus2).toBeVisible()
+  expect(buttonSideMinus2).not.toBeEnabled()
+  textboxSide2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(4) input'
+  )
+  expect(textboxSide2).toBeVisible()
+  expect(textboxSide2).toHaveAttribute('readonly')
+  expect(textboxSide2).toHaveValue(0)
+  buttonSidePlus2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(4) button:nth-child(3)'
+  )
+  expect(buttonSidePlus2).toBeVisible()
+  expect(buttonSidePlus2).toBeEnabled()
+
+  // R-2 メインのプラスボタンを押す
+  await userEvent.click(buttonMainPlus2)
+  expect(handleSetDeckMain.mock.calls.length).toBe(2) // 実行された
+  expect(handleSetDeckMain.mock.lastCall.length).toBe(1)
+  expect(handleSetDeckMain.mock.lastCall[0].has('R-1')).toBe(true)
+  expect(handleSetDeckMain.mock.lastCall[0].get('R-1')).toBe(1)
+  expect(handleSetDeckMain.mock.lastCall[0].has('R-2')).toBe(true)
+  expect(handleSetDeckMain.mock.lastCall[0].get('R-2')).toBe(1)
+  expect(handleSetDeckSide.mock.calls.length).toBe(1)
+  expect(handleSetIdZoom.mock.calls.length).toBe(0)
+  expect(interruptSimulator.mock.calls.length).toBe(2) // 実行された
+  deckMain = handleSetDeckMain.mock.lastCall[0]
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  buttonMainMinus1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(3) button:nth-child(1)'
+  )
+  expect(buttonMainMinus1).toBeVisible()
+  expect(buttonMainMinus1).toBeEnabled()
+  textboxMain1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(3) input'
+  )
+  expect(textboxMain1).toBeVisible()
+  expect(textboxMain1).toHaveAttribute('readonly')
+  expect(textboxMain1).toHaveValue(1)
+  buttonMainPlus1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(3) button:nth-child(3)'
+  )
+  expect(buttonMainPlus1).toBeVisible()
+  expect(buttonMainPlus1).toBeEnabled()
+  buttonSideMinus1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(4) button:nth-child(1)'
+  )
+  expect(buttonSideMinus1).toBeVisible()
+  expect(buttonSideMinus1).toBeEnabled()
+  textboxSide1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(4) input'
+  )
+  expect(textboxSide1).toBeVisible()
+  expect(textboxSide1).toHaveAttribute('readonly')
+  expect(textboxSide1).toHaveValue(1)
+  buttonSidePlus1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(4) button:nth-child(3)'
+  )
+  expect(buttonSidePlus1).toBeVisible()
+  expect(buttonSidePlus1).toBeEnabled()
+  buttonMainMinus2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(3) button:nth-child(1)'
+  )
+  expect(buttonMainMinus2).toBeVisible()
+  expect(buttonMainMinus2).toBeEnabled() // 有効になった
+  textboxMain2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(3) input'
+  )
+  expect(textboxMain2).toBeVisible()
+  expect(textboxMain2).toHaveAttribute('readonly')
+  expect(textboxMain2).toHaveValue(1) // 増えた
+  buttonMainPlus2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(3) button:nth-child(3)'
+  )
+  expect(buttonMainPlus2).toBeVisible()
+  expect(buttonMainPlus2).toBeEnabled()
+  buttonSideMinus2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(4) button:nth-child(1)'
+  )
+  expect(buttonSideMinus2).toBeVisible()
+  expect(buttonSideMinus2).not.toBeEnabled()
+  textboxSide2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(4) input'
+  )
+  expect(textboxSide2).toBeVisible()
+  expect(textboxSide2).toHaveAttribute('readonly')
+  expect(textboxSide2).toHaveValue(0)
+  buttonSidePlus2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(4) button:nth-child(3)'
+  )
+  expect(buttonSidePlus2).toBeVisible()
+  expect(buttonSidePlus2).toBeEnabled()
+
+  // R-2 サイドのプラスボタンを押す
+  await userEvent.click(buttonSidePlus2)
+  expect(handleSetDeckMain.mock.calls.length).toBe(2)
+  expect(handleSetDeckSide.mock.calls.length).toBe(2) // 実行された
+  expect(handleSetDeckSide.mock.lastCall.length).toBe(1)
+  expect(handleSetDeckSide.mock.lastCall[0].has('R-1')).toBe(true)
+  expect(handleSetDeckSide.mock.lastCall[0].get('R-1')).toBe(1)
+  expect(handleSetDeckSide.mock.lastCall[0].has('R-2')).toBe(true)
+  expect(handleSetDeckSide.mock.lastCall[0].get('R-2')).toBe(1)
+  expect(handleSetIdZoom.mock.calls.length).toBe(0)
+  expect(interruptSimulator.mock.calls.length).toBe(2)
+  deckSide = handleSetDeckSide.mock.lastCall[0]
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  buttonMainMinus1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(3) button:nth-child(1)'
+  )
+  expect(buttonMainMinus1).toBeVisible()
+  expect(buttonMainMinus1).toBeEnabled()
+  textboxMain1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(3) input'
+  )
+  expect(textboxMain1).toBeVisible()
+  expect(textboxMain1).toHaveAttribute('readonly')
+  expect(textboxMain1).toHaveValue(1)
+  buttonMainPlus1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(3) button:nth-child(3)'
+  )
+  expect(buttonMainPlus1).toBeVisible()
+  expect(buttonMainPlus1).toBeEnabled()
+  buttonSideMinus1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(4) button:nth-child(1)'
+  )
+  expect(buttonSideMinus1).toBeVisible()
+  expect(buttonSideMinus1).toBeEnabled()
+  textboxSide1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(4) input'
+  )
+  expect(textboxSide1).toBeVisible()
+  expect(textboxSide1).toHaveAttribute('readonly')
+  expect(textboxSide1).toHaveValue(1)
+  buttonSidePlus1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(4) button:nth-child(3)'
+  )
+  expect(buttonSidePlus1).toBeVisible()
+  expect(buttonSidePlus1).toBeEnabled()
+  buttonMainMinus2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(3) button:nth-child(1)'
+  )
+  expect(buttonMainMinus2).toBeVisible()
+  expect(buttonMainMinus2).toBeEnabled()
+  textboxMain2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(3) input'
+  )
+  expect(textboxMain2).toBeVisible()
+  expect(textboxMain2).toHaveAttribute('readonly')
+  expect(textboxMain2).toHaveValue(1)
+  buttonMainPlus2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(3) button:nth-child(3)'
+  )
+  expect(buttonMainPlus2).toBeVisible()
+  expect(buttonMainPlus2).toBeEnabled()
+  buttonSideMinus2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(4) button:nth-child(1)'
+  )
+  expect(buttonSideMinus2).toBeVisible()
+  expect(buttonSideMinus2).toBeEnabled() // 有効になった
+  textboxSide2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(4) input'
+  )
+  expect(textboxSide2).toBeVisible()
+  expect(textboxSide2).toHaveAttribute('readonly')
+  expect(textboxSide2).toHaveValue(1) // 増えた
+  buttonSidePlus2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(4) button:nth-child(3)'
+  )
+  expect(buttonSidePlus2).toBeVisible()
+  expect(buttonSidePlus2).toBeEnabled()
+
+  // R-1 メインのマイナスボタンを押す
+  await userEvent.click(buttonMainMinus1)
+  expect(handleSetDeckMain.mock.calls.length).toBe(3) // 実行された
+  expect(handleSetDeckMain.mock.lastCall.length).toBe(1)
+  expect(handleSetDeckMain.mock.lastCall[0].has('R-1')).toBe(false)
+  expect(handleSetDeckMain.mock.lastCall[0].has('R-2')).toBe(true)
+  expect(handleSetDeckMain.mock.lastCall[0].get('R-2')).toBe(1)
+  expect(handleSetDeckSide.mock.calls.length).toBe(2)
+  expect(handleSetIdZoom.mock.calls.length).toBe(0)
+  expect(interruptSimulator.mock.calls.length).toBe(3) // 実行された
+  deckMain = handleSetDeckMain.mock.lastCall[0]
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  buttonMainMinus1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(3) button:nth-child(1)'
+  )
+  expect(buttonMainMinus1).toBeVisible()
+  expect(buttonMainMinus1).not.toBeEnabled() // 無効になった
+  textboxMain1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(3) input'
+  )
+  expect(textboxMain1).toBeVisible()
+  expect(textboxMain1).toHaveAttribute('readonly')
+  expect(textboxMain1).toHaveValue(0) // 減った
+  buttonMainPlus1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(3) button:nth-child(3)'
+  )
+  expect(buttonMainPlus1).toBeVisible()
+  expect(buttonMainPlus1).toBeEnabled()
+  buttonSideMinus1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(4) button:nth-child(1)'
+  )
+  expect(buttonSideMinus1).toBeVisible()
+  expect(buttonSideMinus1).toBeEnabled()
+  textboxSide1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(4) input'
+  )
+  expect(textboxSide1).toBeVisible()
+  expect(textboxSide1).toHaveAttribute('readonly')
+  expect(textboxSide1).toHaveValue(1)
+  buttonSidePlus1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(4) button:nth-child(3)'
+  )
+  expect(buttonSidePlus1).toBeVisible()
+  expect(buttonSidePlus1).toBeEnabled()
+  buttonMainMinus2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(3) button:nth-child(1)'
+  )
+  expect(buttonMainMinus2).toBeVisible()
+  expect(buttonMainMinus2).toBeEnabled()
+  textboxMain2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(3) input'
+  )
+  expect(textboxMain2).toBeVisible()
+  expect(textboxMain2).toHaveAttribute('readonly')
+  expect(textboxMain2).toHaveValue(1)
+  buttonMainPlus2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(3) button:nth-child(3)'
+  )
+  expect(buttonMainPlus2).toBeVisible()
+  expect(buttonMainPlus2).toBeEnabled()
+  buttonSideMinus2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(4) button:nth-child(1)'
+  )
+  expect(buttonSideMinus2).toBeVisible()
+  expect(buttonSideMinus2).toBeEnabled()
+  textboxSide2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(4) input'
+  )
+  expect(textboxSide2).toBeVisible()
+  expect(textboxSide2).toHaveAttribute('readonly')
+  expect(textboxSide2).toHaveValue(1)
+  buttonSidePlus2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(4) button:nth-child(3)'
+  )
+  expect(buttonSidePlus2).toBeVisible()
+  expect(buttonSidePlus2).toBeEnabled()
+
+  // R-1 サイドのマイナスボタンを押す
+  await userEvent.click(buttonSideMinus1)
+  expect(handleSetDeckMain.mock.calls.length).toBe(3)
+  expect(handleSetDeckSide.mock.calls.length).toBe(3) // 実行された
+  expect(handleSetDeckSide.mock.lastCall.length).toBe(1)
+  expect(handleSetDeckSide.mock.lastCall[0].has('R-1')).toBe(false)
+  expect(handleSetDeckSide.mock.lastCall[0].has('R-2')).toBe(true)
+  expect(handleSetDeckSide.mock.lastCall[0].get('R-2')).toBe(1)
+  expect(handleSetIdZoom.mock.calls.length).toBe(0)
+  expect(interruptSimulator.mock.calls.length).toBe(3)
+  deckSide = handleSetDeckSide.mock.lastCall[0]
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  buttonMainMinus1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(3) button:nth-child(1)'
+  )
+  expect(buttonMainMinus1).toBeVisible()
+  expect(buttonMainMinus1).not.toBeEnabled()
+  textboxMain1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(3) input'
+  )
+  expect(textboxMain1).toBeVisible()
+  expect(textboxMain1).toHaveAttribute('readonly')
+  expect(textboxMain1).toHaveValue(0)
+  buttonMainPlus1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(3) button:nth-child(3)'
+  )
+  expect(buttonMainPlus1).toBeVisible()
+  expect(buttonMainPlus1).toBeEnabled()
+  buttonSideMinus1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(4) button:nth-child(1)'
+  )
+  expect(buttonSideMinus1).toBeVisible()
+  expect(buttonSideMinus1).not.toBeEnabled() // 無効になった
+  textboxSide1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(4) input'
+  )
+  expect(textboxSide1).toBeVisible()
+  expect(textboxSide1).toHaveAttribute('readonly')
+  expect(textboxSide1).toHaveValue(0) // 減った
+  buttonSidePlus1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(4) button:nth-child(3)'
+  )
+  expect(buttonSidePlus1).toBeVisible()
+  expect(buttonSidePlus1).toBeEnabled()
+  buttonMainMinus2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(3) button:nth-child(1)'
+  )
+  expect(buttonMainMinus2).toBeVisible()
+  expect(buttonMainMinus2).toBeEnabled()
+  textboxMain2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(3) input'
+  )
+  expect(textboxMain2).toBeVisible()
+  expect(textboxMain2).toHaveAttribute('readonly')
+  expect(textboxMain2).toHaveValue(1)
+  buttonMainPlus2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(3) button:nth-child(3)'
+  )
+  expect(buttonMainPlus2).toBeVisible()
+  expect(buttonMainPlus2).toBeEnabled()
+  buttonSideMinus2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(4) button:nth-child(1)'
+  )
+  expect(buttonSideMinus2).toBeVisible()
+  expect(buttonSideMinus2).toBeEnabled()
+  textboxSide2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(4) input'
+  )
+  expect(textboxSide2).toBeVisible()
+  expect(textboxSide2).toHaveAttribute('readonly')
+  expect(textboxSide2).toHaveValue(1)
+  buttonSidePlus2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(4) button:nth-child(3)'
+  )
+  expect(buttonSidePlus2).toBeVisible()
+  expect(buttonSidePlus2).toBeEnabled()
+
+  // R-2 メインのマイナスボタンを押す
+  await userEvent.click(buttonMainMinus2)
+  expect(handleSetDeckMain.mock.calls.length).toBe(4) // 実行された
+  expect(handleSetDeckMain.mock.lastCall.length).toBe(1)
+  expect(handleSetDeckMain.mock.lastCall[0].has('R-1')).toBe(false)
+  expect(handleSetDeckMain.mock.lastCall[0].has('R-2')).toBe(false)
+  expect(handleSetDeckSide.mock.calls.length).toBe(3)
+  expect(handleSetIdZoom.mock.calls.length).toBe(0)
+  expect(interruptSimulator.mock.calls.length).toBe(4) // 実行された
+  deckMain = handleSetDeckMain.mock.lastCall[0]
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  buttonMainMinus1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(3) button:nth-child(1)'
+  )
+  expect(buttonMainMinus1).toBeVisible()
+  expect(buttonMainMinus1).not.toBeEnabled()
+  textboxMain1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(3) input'
+  )
+  expect(textboxMain1).toBeVisible()
+  expect(textboxMain1).toHaveAttribute('readonly')
+  expect(textboxMain1).toHaveValue(0)
+  buttonMainPlus1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(3) button:nth-child(3)'
+  )
+  expect(buttonMainPlus1).toBeVisible()
+  expect(buttonMainPlus1).toBeEnabled()
+  buttonSideMinus1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(4) button:nth-child(1)'
+  )
+  expect(buttonSideMinus1).toBeVisible()
+  expect(buttonSideMinus1).not.toBeEnabled()
+  textboxSide1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(4) input'
+  )
+  expect(textboxSide1).toBeVisible()
+  expect(textboxSide1).toHaveAttribute('readonly')
+  expect(textboxSide1).toHaveValue(0)
+  buttonSidePlus1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(4) button:nth-child(3)'
+  )
+  expect(buttonSidePlus1).toBeVisible()
+  expect(buttonSidePlus1).toBeEnabled()
+  buttonMainMinus2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(3) button:nth-child(1)'
+  )
+  expect(buttonMainMinus2).toBeVisible()
+  expect(buttonMainMinus2).not.toBeEnabled() // 無効になった
+  textboxMain2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(3) input'
+  )
+  expect(textboxMain2).toBeVisible()
+  expect(textboxMain2).toHaveAttribute('readonly')
+  expect(textboxMain2).toHaveValue(0) // 減った
+  buttonMainPlus2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(3) button:nth-child(3)'
+  )
+  expect(buttonMainPlus2).toBeVisible()
+  expect(buttonMainPlus2).toBeEnabled()
+  buttonSideMinus2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(4) button:nth-child(1)'
+  )
+  expect(buttonSideMinus2).toBeVisible()
+  expect(buttonSideMinus2).toBeEnabled()
+  textboxSide2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(4) input'
+  )
+  expect(textboxSide2).toBeVisible()
+  expect(textboxSide2).toHaveAttribute('readonly')
+  expect(textboxSide2).toHaveValue(1)
+  buttonSidePlus2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(4) button:nth-child(3)'
+  )
+  expect(buttonSidePlus2).toBeVisible()
+  expect(buttonSidePlus2).toBeEnabled()
+
+  // R-2 サイドのマイナスボタンを押す
+  await userEvent.click(buttonSideMinus2)
+  expect(handleSetDeckMain.mock.calls.length).toBe(4)
+  expect(handleSetDeckSide.mock.calls.length).toBe(4) // 実行された
+  expect(handleSetDeckSide.mock.lastCall.length).toBe(1)
+  expect(handleSetDeckSide.mock.lastCall[0].has('R-1')).toBe(false)
+  expect(handleSetDeckSide.mock.lastCall[0].has('R-2')).toBe(false)
+  expect(handleSetIdZoom.mock.calls.length).toBe(0)
+  expect(interruptSimulator.mock.calls.length).toBe(4) // 実行された
+  deckSide = handleSetDeckSide.mock.lastCall[0]
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  buttonMainMinus1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(3) button:nth-child(1)'
+  )
+  expect(buttonMainMinus1).toBeVisible()
+  expect(buttonMainMinus1).not.toBeEnabled()
+  textboxMain1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(3) input'
+  )
+  expect(textboxMain1).toBeVisible()
+  expect(textboxMain1).toHaveAttribute('readonly')
+  expect(textboxMain1).toHaveValue(0)
+  buttonMainPlus1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(3) button:nth-child(3)'
+  )
+  expect(buttonMainPlus1).toBeVisible()
+  expect(buttonMainPlus1).toBeEnabled()
+  buttonSideMinus1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(4) button:nth-child(1)'
+  )
+  expect(buttonSideMinus1).toBeVisible()
+  expect(buttonSideMinus1).not.toBeEnabled()
+  textboxSide1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(4) input'
+  )
+  expect(textboxSide1).toBeVisible()
+  expect(textboxSide1).toHaveAttribute('readonly')
+  expect(textboxSide1).toHaveValue(0)
+  buttonSidePlus1 = getByTestId('table-row-R-1').querySelector(
+    'td:nth-child(4) button:nth-child(3)'
+  )
+  expect(buttonSidePlus1).toBeVisible()
+  expect(buttonSidePlus1).toBeEnabled()
+  buttonMainMinus2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(3) button:nth-child(1)'
+  )
+  expect(buttonMainMinus2).toBeVisible()
+  expect(buttonMainMinus2).not.toBeEnabled()
+  textboxMain2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(3) input'
+  )
+  expect(textboxMain2).toBeVisible()
+  expect(textboxMain2).toHaveAttribute('readonly')
+  expect(textboxMain2).toHaveValue(0)
+  buttonMainPlus2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(3) button:nth-child(3)'
+  )
+  expect(buttonMainPlus2).toBeVisible()
+  expect(buttonMainPlus2).toBeEnabled()
+  buttonSideMinus2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(4) button:nth-child(1)'
+  )
+  expect(buttonSideMinus2).toBeVisible()
+  expect(buttonSideMinus2).not.toBeEnabled() // 無効になった
+  textboxSide2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(4) input'
+  )
+  expect(textboxSide2).toBeVisible()
+  expect(textboxSide2).toHaveAttribute('readonly')
+  expect(textboxSide2).toHaveValue(0) // 減った
+  buttonSidePlus2 = getByTestId('table-row-R-2').querySelector(
+    'td:nth-child(4) button:nth-child(3)'
+  )
+  expect(buttonSidePlus2).toBeVisible()
+  expect(buttonSidePlus2).toBeEnabled()
+})
+
 test('エキスパンションによるフィルタ', async () => {
   const deckMain = new Map()
   const deckSide = new Map()
