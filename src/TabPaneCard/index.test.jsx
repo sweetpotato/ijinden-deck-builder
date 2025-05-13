@@ -874,3 +874,247 @@ test('レアリティによるフィルタ', async () => {
   expect(queryByTestId('table-row-1-15')).toBeNull()
   expect(queryByTestId('table-row-1-17')).toBeNull()
 })
+
+test('色によるフィルタ', async () => {
+  let deckMain = new Map()
+  let deckSide = new Map()
+  const handleSetDeckMain = vi.fn()
+  const handleSetDeckSide = vi.fn()
+  const handleSetIdZoom = vi.fn()
+  const interruptSimulator = vi.fn()
+  const { rerender, getByRole, getByTestId, queryByTestId } = render(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  expect(handleSetDeckMain.mock.calls.length).toBe(0)
+  expect(handleSetDeckSide.mock.calls.length).toBe(0)
+  expect(handleSetIdZoom.mock.calls.length).toBe(0)
+  expect(interruptSimulator.mock.calls.length).toBe(0)
+
+  // 条件で絞り込むアコーディオンを開く
+  const buttonFilterTop = getByRole('button', {
+    name: '条件で絞り込む',
+    expanded: false,
+  })
+  expect(buttonFilterTop).toBeVisible()
+  await userEvent.click(buttonFilterTop)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+
+  // 色アコーディオンアイテムを開く
+  const buttonColor = getByRole('button', {
+    name: '➖ 色',
+    expanded: true,
+  })
+  expect(buttonColor).toBeVisible()
+  await userEvent.click(buttonColor)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+
+  expect(getByTestId('table-row-2-78')).toBeVisible() // RYマーブルオーブ (赤黄)
+  expect(getByTestId('table-row-2-79')).toBeVisible() // RYマーブルオーブ (青黄)
+  expect(getByTestId('table-row-2-80')).toBeVisible() // RYマーブルオーブ (緑黄)
+  expect(getByTestId('table-row-3-15')).toBeVisible() // 淀殿 (赤)
+  expect(getByTestId('table-row-3-19')).toBeVisible() // 伊達政宗 (青)
+  expect(getByTestId('table-row-3-27')).toBeVisible() // 小野小町 (緑)
+  expect(getByTestId('table-row-3-35')).toBeVisible() // 徳川吉宗 (黄)
+  expect(getByTestId('table-row-3-45')).toBeVisible() // 坂本龍馬 (紫)
+  expect(getByTestId('table-row-3-80')).toBeVisible() // オブシディアン (無色)
+
+  // 赤ボタンを押す
+  const buttonColorRed = getByRole('radio', { name: '赤' })
+  expect(buttonColorRed).toBeVisible()
+  expect(buttonColorRed).not.toBeChecked()
+  await userEvent.click(buttonColorRed)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  expect(getByTestId('table-row-2-78')).toBeVisible() // RYマーブルオーブ (赤黄)
+  expect(queryByTestId('table-row-2-79')).toBeNull() // RYマーブルオーブ (青黄)
+  expect(queryByTestId('table-row-2-80')).toBeNull() // RYマーブルオーブ (緑黄)
+  expect(getByTestId('table-row-3-15')).toBeVisible() // 淀殿 (赤)
+  expect(queryByTestId('table-row-3-19')).toBeNull() // 伊達政宗 (青)
+  expect(queryByTestId('table-row-3-27')).toBeNull() // 小野小町 (緑)
+  expect(queryByTestId('table-row-3-35')).toBeNull() // 徳川吉宗 (黄)
+  expect(queryByTestId('table-row-3-45')).toBeNull() // 坂本龍馬 (紫)
+  expect(queryByTestId('table-row-3-80')).toBeNull() // オブシディアン (無色)
+
+  // 青ボタンを押す
+  const buttonColorBlue = getByRole('radio', { name: '青' })
+  expect(buttonColorBlue).toBeVisible()
+  expect(buttonColorBlue).not.toBeChecked()
+  await userEvent.click(buttonColorBlue)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  expect(queryByTestId('table-row-2-78')).toBeNull() // RYマーブルオーブ (赤黄)
+  expect(getByTestId('table-row-2-79')).toBeVisible() // RYマーブルオーブ (青黄)
+  expect(queryByTestId('table-row-2-80')).toBeNull() // RYマーブルオーブ (緑黄)
+  expect(queryByTestId('table-row-3-15')).toBeNull() // 淀殿 (赤)
+  expect(getByTestId('table-row-3-19')).toBeVisible() // 伊達政宗 (青)
+  expect(queryByTestId('table-row-3-27')).toBeNull() // 小野小町 (緑)
+  expect(queryByTestId('table-row-3-35')).toBeNull() // 徳川吉宗 (黄)
+  expect(queryByTestId('table-row-3-45')).toBeNull() // 坂本龍馬 (紫)
+  expect(queryByTestId('table-row-3-80')).toBeNull() // オブシディアン (無色)
+
+  // 緑ボタンを押す
+  const buttonColorGreen = getByRole('radio', { name: '緑' })
+  expect(buttonColorGreen).toBeVisible()
+  expect(buttonColorGreen).not.toBeChecked()
+  await userEvent.click(buttonColorGreen)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  expect(queryByTestId('table-row-2-78')).toBeNull() // RYマーブルオーブ (赤黄)
+  expect(queryByTestId('table-row-2-79')).toBeNull() // RYマーブルオーブ (青黄)
+  expect(getByTestId('table-row-2-80')).toBeVisible() // RYマーブルオーブ (緑黄)
+  expect(queryByTestId('table-row-3-15')).toBeNull() // 淀殿 (赤)
+  expect(queryByTestId('table-row-3-19')).toBeNull() // 伊達政宗 (青)
+  expect(getByTestId('table-row-3-27')).toBeVisible() // 小野小町 (緑)
+  expect(queryByTestId('table-row-3-35')).toBeNull() // 徳川吉宗 (黄)
+  expect(queryByTestId('table-row-3-45')).toBeNull() // 坂本龍馬 (紫)
+  expect(queryByTestId('table-row-3-80')).toBeNull() // オブシディアン (無色)
+
+  // 黄ボタンを押す
+  const buttonColorYellow = getByRole('radio', { name: '黄' })
+  expect(buttonColorYellow).toBeVisible()
+  expect(buttonColorYellow).not.toBeChecked()
+  await userEvent.click(buttonColorYellow)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  expect(getByTestId('table-row-2-78')).toBeVisible() // RYマーブルオーブ (赤黄)
+  expect(getByTestId('table-row-2-79')).toBeVisible() // RYマーブルオーブ (青黄)
+  expect(getByTestId('table-row-2-80')).toBeVisible() // RYマーブルオーブ (緑黄)
+  expect(queryByTestId('table-row-3-15')).toBeNull() // 淀殿 (赤)
+  expect(queryByTestId('table-row-3-19')).toBeNull() // 伊達政宗 (青)
+  expect(queryByTestId('table-row-3-27')).toBeNull() // 小野小町 (緑)
+  expect(getByTestId('table-row-3-35')).toBeVisible() // 徳川吉宗 (黄)
+  expect(queryByTestId('table-row-3-45')).toBeNull() // 坂本龍馬 (紫)
+  expect(queryByTestId('table-row-3-80')).toBeNull() // オブシディアン (無色)
+
+  // 紫ボタンを押す
+  const buttonColorPurple = getByRole('radio', { name: '紫' })
+  expect(buttonColorPurple).toBeVisible()
+  expect(buttonColorPurple).not.toBeChecked()
+  await userEvent.click(buttonColorPurple)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  expect(queryByTestId('table-row-2-78')).toBeNull() // RYマーブルオーブ (赤黄)
+  expect(queryByTestId('table-row-2-79')).toBeNull() // RYマーブルオーブ (青黄)
+  expect(queryByTestId('table-row-2-80')).toBeNull() // RYマーブルオーブ (緑黄)
+  expect(queryByTestId('table-row-3-15')).toBeNull() // 淀殿 (赤)
+  expect(queryByTestId('table-row-3-19')).toBeNull() // 伊達政宗 (青)
+  expect(queryByTestId('table-row-3-27')).toBeNull() // 小野小町 (緑)
+  expect(queryByTestId('table-row-3-35')).toBeNull() // 徳川吉宗 (黄)
+  expect(getByTestId('table-row-3-45')).toBeVisible() // 坂本龍馬 (紫)
+  expect(queryByTestId('table-row-3-80')).toBeNull() // オブシディアン (無色)
+
+  // 多色ボタンを押す
+  const buttonColorMulticolor = getByRole('radio', { name: '多色' })
+  expect(buttonColorMulticolor).toBeVisible()
+  expect(buttonColorMulticolor).not.toBeChecked()
+  await userEvent.click(buttonColorMulticolor)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  expect(getByTestId('table-row-2-78')).toBeVisible() // RYマーブルオーブ (赤黄)
+  expect(getByTestId('table-row-2-79')).toBeVisible() // RYマーブルオーブ (青黄)
+  expect(getByTestId('table-row-2-80')).toBeVisible() // RYマーブルオーブ (緑黄)
+  expect(queryByTestId('table-row-3-15')).toBeNull() // 淀殿 (赤)
+  expect(queryByTestId('table-row-3-19')).toBeNull() // 伊達政宗 (青)
+  expect(queryByTestId('table-row-3-27')).toBeNull() // 小野小町 (緑)
+  expect(queryByTestId('table-row-3-35')).toBeNull() // 徳川吉宗 (黄)
+  expect(queryByTestId('table-row-3-45')).toBeNull() // 坂本龍馬 (紫)
+  expect(queryByTestId('table-row-3-80')).toBeNull() // オブシディアン (無色)
+
+  // 無色ボタンを押す
+  const buttonColorColorless = getByRole('radio', { name: '無色' })
+  expect(buttonColorColorless).toBeVisible()
+  expect(buttonColorColorless).not.toBeChecked()
+  await userEvent.click(buttonColorColorless)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  expect(queryByTestId('table-row-2-78')).toBeNull() // RYマーブルオーブ (赤黄)
+  expect(queryByTestId('table-row-2-79')).toBeNull() // RYマーブルオーブ (青黄)
+  expect(queryByTestId('table-row-2-80')).toBeNull() // RYマーブルオーブ (緑黄)
+  expect(queryByTestId('table-row-3-15')).toBeNull() // 淀殿 (赤)
+  expect(queryByTestId('table-row-3-19')).toBeNull() // 伊達政宗 (青)
+  expect(queryByTestId('table-row-3-27')).toBeNull() // 小野小町 (緑)
+  expect(queryByTestId('table-row-3-35')).toBeNull() // 徳川吉宗 (黄)
+  expect(queryByTestId('table-row-3-45')).toBeNull() // 坂本龍馬 (紫)
+  expect(getByTestId('table-row-3-80')).toBeVisible() // オブシディアン (無色)
+})
