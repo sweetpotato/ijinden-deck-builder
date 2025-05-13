@@ -440,12 +440,12 @@ test('エキスパンションによるフィルタ', async () => {
   expect(handleSetIdZoom.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(0)
 
+  // 条件で絞り込むアコーディオンを開く
   const buttonFilterTop = getByRole('button', {
     name: '条件で絞り込む',
-    expanded: false, // 初期状態では閉じている
+    expanded: false,
   })
   expect(buttonFilterTop).toBeVisible()
-
   await userEvent.click(buttonFilterTop)
   rerender(
     <TabPaneCard
@@ -458,12 +458,12 @@ test('エキスパンションによるフィルタ', async () => {
     />
   )
 
+  // エキスパンションアコーディオンアイテムを開く
   const buttonExpansion = getByRole('button', {
     name: '➕ エキスパンション ― すべて',
     expanded: false,
   })
   expect(buttonExpansion).toBeVisible()
-
   await userEvent.click(buttonExpansion)
   rerender(
     <TabPaneCard
@@ -475,7 +475,6 @@ test('エキスパンションによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-
   expect(getByTestId('table-row-R-1')).toBeVisible()
   expect(getByTestId('table-row-B-1')).toBeVisible()
   expect(getByTestId('table-row-G-1')).toBeVisible()
@@ -486,7 +485,7 @@ test('エキスパンションによるフィルタ', async () => {
   expect(getByTestId('table-row-3-1')).toBeVisible()
   expect(getByTestId('table-row-4-01')).toBeVisible()
 
-  // 「伝説の武将」ボタンを押す
+  // 伝説の武将ボタンを押す
   const buttonExpansionRed = getByRole('radio', { name: '伝説の武将' })
   expect(buttonExpansionRed).toBeVisible()
   expect(buttonExpansionRed).not.toBeChecked()
@@ -501,8 +500,7 @@ test('エキスパンションによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-
-  expect(getByTestId('table-row-R-1')).toBeVisible() // ここだけ表示
+  expect(getByTestId('table-row-R-1')).toBeVisible()
   expect(queryByTestId('table-row-B-1')).toBeNull()
   expect(queryByTestId('table-row-G-1')).toBeNull()
   expect(queryByTestId('table-row-1-1')).toBeNull()
@@ -510,10 +508,9 @@ test('エキスパンションによるフィルタ', async () => {
   expect(queryByTestId('table-row-2-1')).toBeNull()
   expect(queryByTestId('table-row-P-1')).toBeNull()
   expect(queryByTestId('table-row-3-1')).toBeNull()
-  //
   expect(queryByTestId('table-row-4-01')).toBeNull()
 
-  // 「美と知の革命」ボタンを押す
+  // 美と知の革命ボタンを押す
   const buttonExpansionBlue = getByRole('radio', { name: '美と知の革命' })
   expect(buttonExpansionBlue).toBeVisible()
   expect(buttonExpansionBlue).not.toBeChecked()
@@ -528,9 +525,8 @@ test('エキスパンションによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-
   expect(queryByTestId('table-row-R-1')).toBeNull()
-  expect(getByTestId('table-row-B-1')).toBeVisible() // ここだけ表示
+  expect(getByTestId('table-row-B-1')).toBeVisible()
   expect(queryByTestId('table-row-G-1')).toBeNull()
   expect(queryByTestId('table-row-1-1')).toBeNull()
   expect(queryByTestId('table-row-Y-1')).toBeNull()
@@ -539,7 +535,7 @@ test('エキスパンションによるフィルタ', async () => {
   expect(queryByTestId('table-row-3-1')).toBeNull()
   expect(queryByTestId('table-row-4-01')).toBeNull()
 
-  // 「日本の大天才」ボタンを押す
+  // 日本の大天才ボタンを押す
   const buttonExpansionGreen = getByRole('radio', { name: '日本の大天才' })
   expect(buttonExpansionGreen).toBeVisible()
   expect(buttonExpansionGreen).not.toBeChecked()
@@ -554,10 +550,9 @@ test('エキスパンションによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-
   expect(queryByTestId('table-row-R-1')).toBeNull()
   expect(queryByTestId('table-row-B-1')).toBeNull()
-  expect(getByTestId('table-row-G-1')).toBeVisible() // ここだけ表示
+  expect(getByTestId('table-row-G-1')).toBeVisible()
   expect(queryByTestId('table-row-1-1')).toBeNull()
   expect(queryByTestId('table-row-Y-1')).toBeNull()
   expect(queryByTestId('table-row-2-1')).toBeNull()
@@ -565,7 +560,7 @@ test('エキスパンションによるフィルタ', async () => {
   expect(queryByTestId('table-row-3-1')).toBeNull()
   expect(queryByTestId('table-row-4-01')).toBeNull()
 
-  // 「第１弾ブースター」ボタンを押す
+  // 第１弾ブースターボタンを押す
   const buttonExpansionFirst = getByRole('radio', { name: '第１弾ブースター' })
   expect(buttonExpansionFirst).toBeVisible()
   expect(buttonExpansionFirst).not.toBeChecked()
@@ -580,18 +575,17 @@ test('エキスパンションによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-
   expect(queryByTestId('table-row-R-1')).toBeNull()
   expect(queryByTestId('table-row-B-1')).toBeNull()
   expect(queryByTestId('table-row-G-1')).toBeNull()
-  expect(getByTestId('table-row-1-1')).toBeVisible() // ここだけ表示
+  expect(getByTestId('table-row-1-1')).toBeVisible()
   expect(queryByTestId('table-row-Y-1')).toBeNull()
   expect(queryByTestId('table-row-2-1')).toBeNull()
   expect(queryByTestId('table-row-P-1')).toBeNull()
   expect(queryByTestId('table-row-3-1')).toBeNull()
   expect(queryByTestId('table-row-4-01')).toBeNull()
 
-  // 「三国の英傑」ボタンを押す
+  // 三国の英傑ボタンを押す
   const buttonExpansionYellow = getByRole('radio', { name: '三国の英傑' })
   expect(buttonExpansionYellow).toBeVisible()
   expect(buttonExpansionYellow).not.toBeChecked()
@@ -606,18 +600,17 @@ test('エキスパンションによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-
   expect(queryByTestId('table-row-R-1')).toBeNull()
   expect(queryByTestId('table-row-B-1')).toBeNull()
   expect(queryByTestId('table-row-G-1')).toBeNull()
   expect(queryByTestId('table-row-1-1')).toBeNull()
-  expect(getByTestId('table-row-Y-1')).toBeVisible() // ここだけ表示
+  expect(getByTestId('table-row-Y-1')).toBeVisible()
   expect(queryByTestId('table-row-2-1')).toBeNull()
   expect(queryByTestId('table-row-P-1')).toBeNull()
   expect(queryByTestId('table-row-3-1')).toBeNull()
   expect(queryByTestId('table-row-4-01')).toBeNull()
 
-  // 「第２弾ブースター」ボタンを押す
+  // 第２弾ブースターボタンを押す
   const buttonExpansionSecond = getByRole('radio', { name: '第２弾ブースター' })
   expect(buttonExpansionSecond).toBeVisible()
   expect(buttonExpansionSecond).not.toBeChecked()
@@ -632,18 +625,17 @@ test('エキスパンションによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-
   expect(queryByTestId('table-row-R-1')).toBeNull()
   expect(queryByTestId('table-row-B-1')).toBeNull()
   expect(queryByTestId('table-row-G-1')).toBeNull()
   expect(queryByTestId('table-row-1-1')).toBeNull()
   expect(queryByTestId('table-row-Y-1')).toBeNull()
-  expect(getByTestId('table-row-2-1')).toBeVisible() // ここだけ表示
+  expect(getByTestId('table-row-2-1')).toBeVisible()
   expect(queryByTestId('table-row-P-1')).toBeNull()
   expect(queryByTestId('table-row-3-1')).toBeNull()
   expect(queryByTestId('table-row-4-01')).toBeNull()
 
-  // 「発展する医学」ボタンを押す
+  // 発展する医学ボタンを押す
   const buttonExpansionPurple = getByRole('radio', { name: '発展する医学' })
   expect(buttonExpansionPurple).toBeVisible()
   expect(buttonExpansionPurple).not.toBeChecked()
@@ -658,18 +650,17 @@ test('エキスパンションによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-
   expect(queryByTestId('table-row-R-1')).toBeNull()
   expect(queryByTestId('table-row-B-1')).toBeNull()
   expect(queryByTestId('table-row-G-1')).toBeNull()
   expect(queryByTestId('table-row-1-1')).toBeNull()
   expect(queryByTestId('table-row-Y-1')).toBeNull()
   expect(queryByTestId('table-row-2-1')).toBeNull()
-  expect(getByTestId('table-row-P-1')).toBeVisible() // ここだけ表示
+  expect(getByTestId('table-row-P-1')).toBeVisible()
   expect(queryByTestId('table-row-3-1')).toBeNull()
   expect(queryByTestId('table-row-4-01')).toBeNull()
 
-  // 「第３弾ブースター」ボタンを押す
+  // 第３弾ブースターボタンを押す
   const buttonExpansionThird = getByRole('radio', { name: '第３弾ブースター' })
   expect(buttonExpansionThird).toBeVisible()
   expect(buttonExpansionThird).not.toBeChecked()
@@ -684,7 +675,6 @@ test('エキスパンションによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-
   expect(queryByTestId('table-row-R-1')).toBeNull()
   expect(queryByTestId('table-row-B-1')).toBeNull()
   expect(queryByTestId('table-row-G-1')).toBeNull()
@@ -692,10 +682,10 @@ test('エキスパンションによるフィルタ', async () => {
   expect(queryByTestId('table-row-Y-1')).toBeNull()
   expect(queryByTestId('table-row-2-1')).toBeNull()
   expect(queryByTestId('table-row-P-1')).toBeNull()
-  expect(getByTestId('table-row-3-1')).toBeVisible() // ここだけ表示
+  expect(getByTestId('table-row-3-1')).toBeVisible()
   expect(queryByTestId('table-row-4-01')).toBeNull()
 
-  // 「第４弾ブースター」ボタンを押す
+  // 第４弾ブースターボタンを押す
   const buttonExpansionFourth = getByRole('radio', { name: '第４弾ブースター' })
   expect(buttonExpansionFourth).toBeVisible()
   expect(buttonExpansionFourth).not.toBeChecked()
@@ -710,7 +700,6 @@ test('エキスパンションによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-
   expect(queryByTestId('table-row-R-1')).toBeNull()
   expect(queryByTestId('table-row-B-1')).toBeNull()
   expect(queryByTestId('table-row-G-1')).toBeNull()
@@ -719,7 +708,7 @@ test('エキスパンションによるフィルタ', async () => {
   expect(queryByTestId('table-row-2-1')).toBeNull()
   expect(queryByTestId('table-row-P-1')).toBeNull()
   expect(queryByTestId('table-row-3-1')).toBeNull()
-  expect(getByTestId('table-row-4-01')).toBeVisible() // ここだけ表示
+  expect(getByTestId('table-row-4-01')).toBeVisible()
 })
 
 test('レアリティによるフィルタ', async () => {
@@ -744,12 +733,12 @@ test('レアリティによるフィルタ', async () => {
   expect(handleSetIdZoom.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(0)
 
+  // 条件で絞り込むアコーディオンを開く
   const buttonFilterTop = getByRole('button', {
     name: '条件で絞り込む',
-    expanded: false, // 初期状態では閉じている
+    expanded: false,
   })
   expect(buttonFilterTop).toBeVisible()
-
   await userEvent.click(buttonFilterTop)
   rerender(
     <TabPaneCard
@@ -762,12 +751,12 @@ test('レアリティによるフィルタ', async () => {
     />
   )
 
+  // レアリティアコーディオンアイテムを開く
   const buttonRarity = getByRole('button', {
     name: '➕ レアリティ ― すべて',
     expanded: false,
   })
   expect(buttonRarity).toBeVisible()
-
   await userEvent.click(buttonRarity)
   rerender(
     <TabPaneCard
@@ -779,12 +768,11 @@ test('レアリティによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-
   expect(getByTestId('table-row-1-1')).toBeVisible() // 織田信長 (SR)
   expect(getByTestId('table-row-1-15')).toBeVisible() // 中臣鎌足 (R)
   expect(getByTestId('table-row-1-17')).toBeVisible() // 藤原道長 (N)
 
-  // 「Nのみ」ボタンを押す
+  // Nのみボタンを押す
   const buttonRarityN = getByRole('radio', { name: 'Nのみ' })
   await userEvent.click(buttonRarityN)
   rerender(
@@ -797,12 +785,11 @@ test('レアリティによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-
   expect(queryByTestId('table-row-1-1')).toBeNull()
   expect(queryByTestId('table-row-1-15')).toBeNull()
   expect(getByTestId('table-row-1-17')).toBeVisible()
 
-  // 「NとR」ボタンを押す
+  // NとRボタンを押す
   const buttonRarityNandR = getByRole('radio', { name: 'NとR' })
   await userEvent.click(buttonRarityNandR)
   rerender(
@@ -815,12 +802,11 @@ test('レアリティによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-
   expect(queryByTestId('table-row-1-1')).toBeNull()
   expect(getByTestId('table-row-1-15')).toBeVisible()
   expect(getByTestId('table-row-1-17')).toBeVisible()
 
-  // 「Rのみ」ボタンを押す
+  // Rのみボタンを押す
   const buttonRarityR = getByRole('radio', { name: 'Rのみ' })
   await userEvent.click(buttonRarityR)
   rerender(
@@ -833,12 +819,11 @@ test('レアリティによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-
   expect(queryByTestId('table-row-1-1')).toBeNull()
   expect(getByTestId('table-row-1-15')).toBeVisible()
   expect(queryByTestId('table-row-1-17')).toBeNull()
 
-  // 「RとSR」ボタンを押す
+  // RとSRボタンを押す
   const buttonRarityRandSR = getByRole('radio', { name: 'RとSR' })
   await userEvent.click(buttonRarityRandSR)
   rerender(
@@ -851,12 +836,11 @@ test('レアリティによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-
   expect(getByTestId('table-row-1-1')).toBeVisible()
   expect(getByTestId('table-row-1-15')).toBeVisible()
   expect(queryByTestId('table-row-1-17')).toBeNull()
 
-  // 「SRのみ」ボタンを押す
+  // SRのみボタンを押す
   const buttonRaritySR = getByRole('radio', { name: 'SRのみ' })
   await userEvent.click(buttonRaritySR)
   rerender(
@@ -869,7 +853,6 @@ test('レアリティによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-
   expect(getByTestId('table-row-1-1')).toBeVisible()
   expect(queryByTestId('table-row-1-15')).toBeNull()
   expect(queryByTestId('table-row-1-17')).toBeNull()
@@ -932,7 +915,6 @@ test('色によるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-
   expect(getByTestId('table-row-2-78')).toBeVisible() // RYマーブルオーブ (赤黄)
   expect(getByTestId('table-row-2-79')).toBeVisible() // RYマーブルオーブ (青黄)
   expect(getByTestId('table-row-2-80')).toBeVisible() // RYマーブルオーブ (緑黄)
