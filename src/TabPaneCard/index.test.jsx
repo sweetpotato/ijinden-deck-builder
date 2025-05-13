@@ -2198,3 +2198,396 @@ test('能力語によるフィルタ', async () => {
   expect(getByTestId('table-row-2-55')).toBeVisible() // 凱旋門 (テキストに徴募を持つハイケイ)
   expect(getByTestId('table-row-4-08')).toBeVisible() // アルキメデス (テキストに魔導を持つイジン)
 })
+
+test('遺業能力によるフィルタ', async () => {
+  const deckMain = new Map()
+  const deckSide = new Map()
+  const handleSetDeckMain = vi.fn()
+  const handleSetDeckSide = vi.fn()
+  const handleSetIdZoom = vi.fn()
+  const interruptSimulator = vi.fn()
+  const { rerender, getByRole, getByTestId, queryByTestId } = render(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+
+  // 条件で絞り込むアコーディオンを開く
+  await userEvent.click(
+    getByRole('button', {
+      name: '条件で絞り込む',
+      expanded: false,
+    })
+  )
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  expect(
+    getByRole('button', {
+      name: '条件で絞り込む',
+      expanded: true,
+    })
+  ).toBeVisible()
+
+  // 遺業能力アコーディオンアイテムを開く
+  const buttonLegacy = getByRole('button', {
+    name: '➕ 遺業能力 ― 指定なし',
+    expanded: false,
+  })
+  expect(buttonLegacy).toBeVisible()
+  await userEvent.click(buttonLegacy)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  expect(
+    getByRole('button', {
+      name: '➖ 遺業能力',
+      expanded: true,
+    })
+  ).toBeVisible()
+
+  // 初期状態では指定なしボタンが選択されている
+  let buttonLegacyUnspecified = getByTestId(
+    'button-legacy-unspecified'
+  ).querySelector('input[type="radio"]')
+  expect(buttonLegacyUnspecified).toBeVisible()
+  expect(buttonLegacyUnspecified).toBeChecked()
+
+  expect(getByTestId('table-row-4-46')).toBeVisible() // 大日本沿海輿地全図 (魔力化)
+  expect(getByTestId('table-row-4-58')).toBeVisible() // ルーナ (冥府発動)
+  expect(getByTestId('table-row-4-78')).toBeVisible() // ホプロン (復元)
+  expect(getByTestId('table-row-4-15')).toBeVisible() // ねね (反魂)
+  expect(getByTestId('table-row-4-18')).toBeVisible() // ポンパドゥール夫人 (木霊)
+  expect(getByTestId('table-row-4-47')).toBeVisible() // マザーグース (喪神)
+  expect(getByTestId('table-row-4-11')).toBeVisible() // 島津斉彬 (1ドローする)
+  expect(getByTestId('table-row-4-43')).toBeVisible() // 火と氷の大地 (手札に戻す)
+  expect(getByTestId('table-row-4-48')).toBeVisible() // 遠征軍 (山札の上か下に戻す)
+  expect(getByTestId('table-row-3-59')).toBeVisible() // 森閑たる離宮 (ルールテキストに冥府発動を持つハイケイ)
+
+  // 魔力化ボタンを押す
+  let buttonLegacyMaryokuka = getByRole('radio', { name: '魔力化' })
+  expect(buttonLegacyMaryokuka).toBeVisible()
+  expect(buttonLegacyMaryokuka).not.toBeChecked()
+  await userEvent.click(buttonLegacyMaryokuka)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  buttonLegacyMaryokuka = getByRole('radio', { name: '魔力化' })
+  expect(buttonLegacyMaryokuka).toBeVisible()
+  expect(buttonLegacyMaryokuka).toBeChecked()
+
+  expect(getByTestId('table-row-4-46')).toBeVisible() // 大日本沿海輿地全図 (魔力化)
+  expect(queryByTestId('table-row-4-58')).toBeNull() // ルーナ (冥府発動)
+  expect(queryByTestId('table-row-4-78')).toBeNull() // ホプロン (復元)
+  expect(queryByTestId('table-row-4-15')).toBeNull() // ねね (反魂)
+  expect(queryByTestId('table-row-4-18')).toBeNull() // ポンパドゥール夫人 (木霊)
+  expect(queryByTestId('table-row-4-47')).toBeNull() // マザーグース (喪神)
+  expect(queryByTestId('table-row-4-11')).toBeNull() // 島津斉彬 (1ドローする)
+  expect(queryByTestId('table-row-4-43')).toBeNull() // 火と氷の大地 (手札に戻す)
+  expect(queryByTestId('table-row-4-48')).toBeNull() // 遠征軍 (山札の上か下に戻す)
+  expect(queryByTestId('table-row-3-59')).toBeNull() // 森閑たる離宮 (ルールテキストに冥府発動を持つハイケイ)
+
+  // 冥府発動ボタンを押す
+  let buttonLegacyNether = getByRole('radio', { name: '冥府発動' })
+  expect(buttonLegacyNether).toBeVisible()
+  expect(buttonLegacyNether).not.toBeChecked()
+  await userEvent.click(buttonLegacyNether)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  buttonLegacyNether = getByRole('radio', { name: '冥府発動' })
+  expect(buttonLegacyNether).toBeVisible()
+  expect(buttonLegacyNether).toBeChecked()
+
+  expect(queryByTestId('table-row-4-46')).toBeNull() // 大日本沿海輿地全図 (魔力化)
+  expect(getByTestId('table-row-4-58')).toBeVisible() // ルーナ (冥府発動)
+  expect(queryByTestId('table-row-4-78')).toBeNull() // ホプロン (復元)
+  expect(queryByTestId('table-row-4-15')).toBeNull() // ねね (反魂)
+  expect(queryByTestId('table-row-4-18')).toBeNull() // ポンパドゥール夫人 (木霊)
+  expect(queryByTestId('table-row-4-47')).toBeNull() // マザーグース (喪神)
+  expect(queryByTestId('table-row-4-11')).toBeNull() // 島津斉彬 (1ドローする)
+  expect(queryByTestId('table-row-4-43')).toBeNull() // 火と氷の大地 (手札に戻す)
+  expect(queryByTestId('table-row-4-48')).toBeNull() // 遠征軍 (山札の上か下に戻す)
+  expect(queryByTestId('table-row-3-59')).toBeNull() // 森閑たる離宮 (ルールテキストに冥府発動を持つハイケイ)
+
+  // 復元ボタンを押す
+  let buttonLegacyRestoration = getByRole('radio', { name: '復元' })
+  expect(buttonLegacyRestoration).toBeVisible()
+  expect(buttonLegacyRestoration).not.toBeChecked()
+  await userEvent.click(buttonLegacyRestoration)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  buttonLegacyRestoration = getByRole('radio', { name: '復元' })
+  expect(buttonLegacyRestoration).toBeVisible()
+  expect(buttonLegacyRestoration).toBeChecked()
+
+  expect(queryByTestId('table-row-4-46')).toBeNull() // 大日本沿海輿地全図 (魔力化)
+  expect(queryByTestId('table-row-4-58')).toBeNull() // ルーナ (冥府発動)
+  expect(getByTestId('table-row-4-78')).toBeVisible() // ホプロン (復元)
+  expect(queryByTestId('table-row-4-15')).toBeNull() // ねね (反魂)
+  expect(queryByTestId('table-row-4-18')).toBeNull() // ポンパドゥール夫人 (木霊)
+  expect(queryByTestId('table-row-4-47')).toBeNull() // マザーグース (喪神)
+  expect(queryByTestId('table-row-4-11')).toBeNull() // 島津斉彬 (1ドローする)
+  expect(queryByTestId('table-row-4-43')).toBeNull() // 火と氷の大地 (手札に戻す)
+  expect(queryByTestId('table-row-4-48')).toBeNull() // 遠征軍 (山札の上か下に戻す)
+  expect(queryByTestId('table-row-3-59')).toBeNull() // 森閑たる離宮 (ルールテキストに冥府発動を持つハイケイ)
+
+  // 反魂ボタンを押す
+  let buttonLegacyResurrection = getByRole('radio', { name: '反魂' })
+  expect(buttonLegacyResurrection).toBeVisible()
+  expect(buttonLegacyResurrection).not.toBeChecked()
+  await userEvent.click(buttonLegacyResurrection)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  buttonLegacyResurrection = getByRole('radio', { name: '反魂' })
+  expect(buttonLegacyResurrection).toBeVisible()
+  expect(buttonLegacyResurrection).toBeChecked()
+
+  expect(queryByTestId('table-row-4-46')).toBeNull() // 大日本沿海輿地全図 (魔力化)
+  expect(queryByTestId('table-row-4-58')).toBeNull() // ルーナ (冥府発動)
+  expect(queryByTestId('table-row-4-78')).toBeNull() // ホプロン (復元)
+  expect(getByTestId('table-row-4-15')).toBeVisible() // ねね (反魂)
+  expect(queryByTestId('table-row-4-18')).toBeNull() // ポンパドゥール夫人 (木霊)
+  expect(queryByTestId('table-row-4-47')).toBeNull() // マザーグース (喪神)
+  expect(queryByTestId('table-row-4-11')).toBeNull() // 島津斉彬 (1ドローする)
+  expect(queryByTestId('table-row-4-43')).toBeNull() // 火と氷の大地 (手札に戻す)
+  expect(queryByTestId('table-row-4-48')).toBeNull() // 遠征軍 (山札の上か下に戻す)
+  expect(queryByTestId('table-row-3-59')).toBeNull() // 森閑たる離宮 (ルールテキストに冥府発動を持つハイケイ)
+
+  // 木霊ボタンを押す
+  let buttonLegacyEcho = getByRole('radio', { name: '木霊' })
+  expect(buttonLegacyEcho).toBeVisible()
+  expect(buttonLegacyEcho).not.toBeChecked()
+  await userEvent.click(buttonLegacyEcho)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  buttonLegacyEcho = getByRole('radio', { name: '木霊' })
+  expect(buttonLegacyEcho).toBeVisible()
+  expect(buttonLegacyEcho).toBeChecked()
+
+  expect(queryByTestId('table-row-4-46')).toBeNull() // 大日本沿海輿地全図 (魔力化)
+  expect(queryByTestId('table-row-4-58')).toBeNull() // ルーナ (冥府発動)
+  expect(queryByTestId('table-row-4-78')).toBeNull() // ホプロン (復元)
+  expect(queryByTestId('table-row-4-15')).toBeNull() // ねね (反魂)
+  expect(getByTestId('table-row-4-18')).toBeVisible() // ポンパドゥール夫人 (木霊)
+  expect(queryByTestId('table-row-4-47')).toBeNull() // マザーグース (喪神)
+  expect(queryByTestId('table-row-4-11')).toBeNull() // 島津斉彬 (1ドローする)
+  expect(queryByTestId('table-row-4-43')).toBeNull() // 火と氷の大地 (手札に戻す)
+  expect(queryByTestId('table-row-4-48')).toBeNull() // 遠征軍 (山札の上か下に戻す)
+  expect(queryByTestId('table-row-3-59')).toBeNull() // 森閑たる離宮 (ルールテキストに冥府発動を持つハイケイ)
+
+  // 喪神ボタンを押す
+  let buttonLegacyFaint = getByRole('radio', { name: '喪神' })
+  expect(buttonLegacyFaint).toBeVisible()
+  expect(buttonLegacyFaint).not.toBeChecked()
+  await userEvent.click(buttonLegacyFaint)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  buttonLegacyFaint = getByRole('radio', { name: '喪神' })
+  expect(buttonLegacyFaint).toBeVisible()
+  expect(buttonLegacyFaint).toBeChecked()
+
+  expect(queryByTestId('table-row-4-46')).toBeNull() // 大日本沿海輿地全図 (魔力化)
+  expect(queryByTestId('table-row-4-58')).toBeNull() // ルーナ (冥府発動)
+  expect(queryByTestId('table-row-4-78')).toBeNull() // ホプロン (復元)
+  expect(queryByTestId('table-row-4-15')).toBeNull() // ねね (反魂)
+  expect(queryByTestId('table-row-4-18')).toBeNull() // ポンパドゥール夫人 (木霊)
+  expect(getByTestId('table-row-4-47')).toBeVisible() // マザーグース (喪神)
+  expect(queryByTestId('table-row-4-11')).toBeNull() // 島津斉彬 (1ドローする)
+  expect(queryByTestId('table-row-4-43')).toBeNull() // 火と氷の大地 (手札に戻す)
+  expect(queryByTestId('table-row-4-48')).toBeNull() // 遠征軍 (山札の上か下に戻す)
+  expect(queryByTestId('table-row-3-59')).toBeNull() // 森閑たる離宮 (ルールテキストに冥府発動を持つハイケイ)
+
+  // 1ドローするボタンを押す
+  let buttonLegacyDraw1 = getByRole('radio', { name: '1ドローする' })
+  expect(buttonLegacyDraw1).toBeVisible()
+  expect(buttonLegacyDraw1).not.toBeChecked()
+  await userEvent.click(buttonLegacyDraw1)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  buttonLegacyDraw1 = getByRole('radio', { name: '1ドローする' })
+  expect(buttonLegacyDraw1).toBeVisible()
+  expect(buttonLegacyDraw1).toBeChecked()
+
+  expect(queryByTestId('table-row-4-46')).toBeNull() // 大日本沿海輿地全図 (魔力化)
+  expect(queryByTestId('table-row-4-58')).toBeNull() // ルーナ (冥府発動)
+  expect(queryByTestId('table-row-4-78')).toBeNull() // ホプロン (復元)
+  expect(queryByTestId('table-row-4-15')).toBeNull() // ねね (反魂)
+  expect(queryByTestId('table-row-4-18')).toBeNull() // ポンパドゥール夫人 (木霊)
+  expect(queryByTestId('table-row-4-47')).toBeNull() // マザーグース (喪神)
+  expect(getByTestId('table-row-4-11')).toBeVisible() // 島津斉彬 (1ドローする)
+  expect(queryByTestId('table-row-4-43')).toBeNull() // 火と氷の大地 (手札に戻す)
+  expect(queryByTestId('table-row-4-48')).toBeNull() // 遠征軍 (山札の上か下に戻す)
+  expect(queryByTestId('table-row-3-59')).toBeNull() // 森閑たる離宮 (ルールテキストに冥府発動を持つハイケイ)
+
+  // 手札に戻すボタンを押す
+  let buttonBackToHand = getByRole('radio', { name: '手札に戻す' })
+  expect(buttonBackToHand).toBeVisible()
+  expect(buttonBackToHand).not.toBeChecked()
+  await userEvent.click(buttonBackToHand)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  buttonBackToHand = getByRole('radio', { name: '手札に戻す' })
+  expect(buttonBackToHand).toBeVisible()
+  expect(buttonBackToHand).toBeChecked()
+
+  expect(queryByTestId('table-row-4-46')).toBeNull() // 大日本沿海輿地全図 (魔力化)
+  expect(queryByTestId('table-row-4-58')).toBeNull() // ルーナ (冥府発動)
+  expect(queryByTestId('table-row-4-78')).toBeNull() // ホプロン (復元)
+  expect(queryByTestId('table-row-4-15')).toBeNull() // ねね (反魂)
+  expect(queryByTestId('table-row-4-18')).toBeNull() // ポンパドゥール夫人 (木霊)
+  expect(queryByTestId('table-row-4-47')).toBeNull() // マザーグース (喪神)
+  expect(queryByTestId('table-row-4-11')).toBeNull() // 島津斉彬 (1ドローする)
+  expect(getByTestId('table-row-4-43')).toBeVisible() // 火と氷の大地 (手札に戻す)
+  expect(queryByTestId('table-row-4-48')).toBeNull() // 遠征軍 (山札の上か下に戻す)
+  expect(queryByTestId('table-row-3-59')).toBeNull() // 森閑たる離宮 (ルールテキストに冥府発動を持つハイケイ)
+
+  // 山札の上か下に戻すボタンを押す
+  let buttonBackToStock = getByRole('radio', { name: '山札の上か下に戻す' })
+  expect(buttonBackToStock).toBeVisible()
+  expect(buttonBackToStock).not.toBeChecked()
+  await userEvent.click(buttonBackToStock)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  buttonBackToStock = getByRole('radio', { name: '山札の上か下に戻す' })
+  expect(buttonBackToStock).toBeVisible()
+  expect(buttonBackToStock).toBeChecked()
+
+  expect(queryByTestId('table-row-4-46')).toBeNull() // 大日本沿海輿地全図 (魔力化)
+  expect(queryByTestId('table-row-4-58')).toBeNull() // ルーナ (冥府発動)
+  expect(queryByTestId('table-row-4-78')).toBeNull() // ホプロン (復元)
+  expect(queryByTestId('table-row-4-15')).toBeNull() // ねね (反魂)
+  expect(queryByTestId('table-row-4-18')).toBeNull() // ポンパドゥール夫人 (木霊)
+  expect(queryByTestId('table-row-4-47')).toBeNull() // マザーグース (喪神)
+  expect(queryByTestId('table-row-4-11')).toBeNull() // 島津斉彬 (1ドローする)
+  expect(queryByTestId('table-row-4-43')).toBeNull() // 火と氷の大地 (手札に戻す)
+  expect(getByTestId('table-row-4-48')).toBeVisible() // 遠征軍 (山札の上か下に戻す)
+  expect(queryByTestId('table-row-3-59')).toBeNull() // 森閑たる離宮 (ルールテキストに冥府発動を持つハイケイ)
+
+  // 条件すべてをリセットするボタンを押す
+  buttonLegacyUnspecified = getByTestId(
+    'button-legacy-unspecified'
+  ).querySelector('input[type="radio"]')
+  expect(buttonLegacyUnspecified).toBeVisible()
+  expect(buttonLegacyUnspecified).not.toBeChecked()
+  await userEvent.click(
+    getByRole('button', {
+      name: '条件すべてをリセットする',
+    })
+  )
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  buttonLegacyUnspecified = getByTestId(
+    'button-legacy-unspecified'
+  ).querySelector('input[type="radio"]')
+  expect(buttonLegacyUnspecified).toBeVisible()
+  expect(buttonLegacyUnspecified).toBeChecked()
+
+  expect(getByTestId('table-row-4-46')).toBeVisible() // 大日本沿海輿地全図 (魔力化)
+  expect(getByTestId('table-row-4-58')).toBeVisible() // ルーナ (冥府発動)
+  expect(getByTestId('table-row-4-78')).toBeVisible() // ホプロン (復元)
+  expect(getByTestId('table-row-4-15')).toBeVisible() // ねね (反魂)
+  expect(getByTestId('table-row-4-18')).toBeVisible() // ポンパドゥール夫人 (木霊)
+  expect(getByTestId('table-row-4-47')).toBeVisible() // マザーグース (喪神)
+  expect(getByTestId('table-row-4-11')).toBeVisible() // 島津斉彬 (1ドローする)
+  expect(getByTestId('table-row-4-43')).toBeVisible() // 火と氷の大地 (手札に戻す)
+  expect(getByTestId('table-row-4-48')).toBeVisible() // 遠征軍 (山札の上か下に戻す)
+  expect(getByTestId('table-row-3-59')).toBeVisible() // 森閑たる離宮 (ルールテキストに冥府発動を持つハイケイ)
+})
