@@ -105,7 +105,13 @@ function TableRowCard({
   }
 
   return (
-    <tr>
+    /*
+     * プラスボタンやマイナスボタンをセレクタで特定できるように
+     * 各行にカードIDを含む data-testid を設定する。
+     * 実際のユーザはID列を見て一意に識別できるため、
+     * アクセシビリティとしては問題ないはずである。
+     */
+    <tr data-testid={`table-row-${id}`}>
       <td className={classesColor}>{id}</td>
       <td>
         <Button

@@ -417,3 +417,307 @@ test('初期状態', async () => {
   expect(buttonLegacyBackToStock).toBeVisible()
   expect(buttonLegacyBackToStock).not.toBeChecked()
 })
+
+test('エキスパンションによるフィルタ', async () => {
+  let deckMain = new Map()
+  let deckSide = new Map()
+  const handleSetDeckMain = vi.fn()
+  const handleSetDeckSide = vi.fn()
+  const handleSetIdZoom = vi.fn()
+  const interruptSimulator = vi.fn()
+  const { rerender, getByRole, getByTestId, queryByTestId } = render(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  expect(handleSetDeckMain.mock.calls.length).toBe(0)
+  expect(handleSetDeckSide.mock.calls.length).toBe(0)
+  expect(handleSetIdZoom.mock.calls.length).toBe(0)
+  expect(interruptSimulator.mock.calls.length).toBe(0)
+
+  const buttonFilterTop = getByRole('button', {
+    name: '条件で絞り込む',
+    expanded: false, // 初期状態では閉じている
+  })
+  expect(buttonFilterTop).toBeVisible()
+
+  await userEvent.click(buttonFilterTop)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+
+  const buttonExpansion = getByRole('button', {
+    name: '➕ エキスパンション ― すべて',
+    expanded: false,
+  })
+  expect(buttonExpansion).toBeVisible()
+
+  await userEvent.click(buttonExpansion)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+
+  expect(getByTestId('table-row-R-1')).toBeVisible()
+  expect(getByTestId('table-row-B-1')).toBeVisible()
+  expect(getByTestId('table-row-G-1')).toBeVisible()
+  expect(getByTestId('table-row-1-1')).toBeVisible()
+  expect(getByTestId('table-row-Y-1')).toBeVisible()
+  expect(getByTestId('table-row-2-1')).toBeVisible()
+  expect(getByTestId('table-row-P-1')).toBeVisible()
+  expect(getByTestId('table-row-3-1')).toBeVisible()
+  expect(getByTestId('table-row-4-01')).toBeVisible()
+
+  // 「伝説の武将」ボタンを押す
+  const buttonExpansionRed = getByRole('radio', { name: '伝説の武将' })
+  expect(buttonExpansionRed).toBeVisible()
+  expect(buttonExpansionRed).not.toBeChecked()
+  await userEvent.click(buttonExpansionRed)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+
+  expect(getByTestId('table-row-R-1')).toBeVisible() // ここだけ表示
+  expect(queryByTestId('table-row-B-1')).toBeNull()
+  expect(queryByTestId('table-row-G-1')).toBeNull()
+  expect(queryByTestId('table-row-1-1')).toBeNull()
+  expect(queryByTestId('table-row-Y-1')).toBeNull()
+  expect(queryByTestId('table-row-2-1')).toBeNull()
+  expect(queryByTestId('table-row-P-1')).toBeNull()
+  expect(queryByTestId('table-row-3-1')).toBeNull()
+  //
+  expect(queryByTestId('table-row-4-01')).toBeNull()
+
+  // 「美と知の革命」ボタンを押す
+  const buttonExpansionBlue = getByRole('radio', { name: '美と知の革命' })
+  expect(buttonExpansionBlue).toBeVisible()
+  expect(buttonExpansionBlue).not.toBeChecked()
+  await userEvent.click(buttonExpansionBlue)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+
+  expect(queryByTestId('table-row-R-1')).toBeNull()
+  expect(getByTestId('table-row-B-1')).toBeVisible() // ここだけ表示
+  expect(queryByTestId('table-row-G-1')).toBeNull()
+  expect(queryByTestId('table-row-1-1')).toBeNull()
+  expect(queryByTestId('table-row-Y-1')).toBeNull()
+  expect(queryByTestId('table-row-2-1')).toBeNull()
+  expect(queryByTestId('table-row-P-1')).toBeNull()
+  expect(queryByTestId('table-row-3-1')).toBeNull()
+  expect(queryByTestId('table-row-4-01')).toBeNull()
+
+  // 「日本の大天才」ボタンを押す
+  const buttonExpansionGreen = getByRole('radio', { name: '日本の大天才' })
+  expect(buttonExpansionGreen).toBeVisible()
+  expect(buttonExpansionGreen).not.toBeChecked()
+  await userEvent.click(buttonExpansionGreen)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+
+  expect(queryByTestId('table-row-R-1')).toBeNull()
+  expect(queryByTestId('table-row-B-1')).toBeNull()
+  expect(getByTestId('table-row-G-1')).toBeVisible() // ここだけ表示
+  expect(queryByTestId('table-row-1-1')).toBeNull()
+  expect(queryByTestId('table-row-Y-1')).toBeNull()
+  expect(queryByTestId('table-row-2-1')).toBeNull()
+  expect(queryByTestId('table-row-P-1')).toBeNull()
+  expect(queryByTestId('table-row-3-1')).toBeNull()
+  expect(queryByTestId('table-row-4-01')).toBeNull()
+
+  // 「第１弾ブースター」ボタンを押す
+  const buttonExpansionFirst = getByRole('radio', { name: '第１弾ブースター' })
+  expect(buttonExpansionFirst).toBeVisible()
+  expect(buttonExpansionFirst).not.toBeChecked()
+  await userEvent.click(buttonExpansionFirst)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+
+  expect(queryByTestId('table-row-R-1')).toBeNull()
+  expect(queryByTestId('table-row-B-1')).toBeNull()
+  expect(queryByTestId('table-row-G-1')).toBeNull()
+  expect(getByTestId('table-row-1-1')).toBeVisible() // ここだけ表示
+  expect(queryByTestId('table-row-Y-1')).toBeNull()
+  expect(queryByTestId('table-row-2-1')).toBeNull()
+  expect(queryByTestId('table-row-P-1')).toBeNull()
+  expect(queryByTestId('table-row-3-1')).toBeNull()
+  expect(queryByTestId('table-row-4-01')).toBeNull()
+
+  // 「三国の英傑」ボタンを押す
+  const buttonExpansionYellow = getByRole('radio', { name: '三国の英傑' })
+  expect(buttonExpansionYellow).toBeVisible()
+  expect(buttonExpansionYellow).not.toBeChecked()
+  await userEvent.click(buttonExpansionYellow)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+
+  expect(queryByTestId('table-row-R-1')).toBeNull()
+  expect(queryByTestId('table-row-B-1')).toBeNull()
+  expect(queryByTestId('table-row-G-1')).toBeNull()
+  expect(queryByTestId('table-row-1-1')).toBeNull()
+  expect(getByTestId('table-row-Y-1')).toBeVisible() // ここだけ表示
+  expect(queryByTestId('table-row-2-1')).toBeNull()
+  expect(queryByTestId('table-row-P-1')).toBeNull()
+  expect(queryByTestId('table-row-3-1')).toBeNull()
+  expect(queryByTestId('table-row-4-01')).toBeNull()
+
+  // 「第２弾ブースター」ボタンを押す
+  const buttonExpansionSecond = getByRole('radio', { name: '第２弾ブースター' })
+  expect(buttonExpansionSecond).toBeVisible()
+  expect(buttonExpansionSecond).not.toBeChecked()
+  await userEvent.click(buttonExpansionSecond)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+
+  expect(queryByTestId('table-row-R-1')).toBeNull()
+  expect(queryByTestId('table-row-B-1')).toBeNull()
+  expect(queryByTestId('table-row-G-1')).toBeNull()
+  expect(queryByTestId('table-row-1-1')).toBeNull()
+  expect(queryByTestId('table-row-Y-1')).toBeNull()
+  expect(getByTestId('table-row-2-1')).toBeVisible() // ここだけ表示
+  expect(queryByTestId('table-row-P-1')).toBeNull()
+  expect(queryByTestId('table-row-3-1')).toBeNull()
+  expect(queryByTestId('table-row-4-01')).toBeNull()
+
+  // 「発展する医学」ボタンを押す
+  const buttonExpansionPurple = getByRole('radio', { name: '発展する医学' })
+  expect(buttonExpansionPurple).toBeVisible()
+  expect(buttonExpansionPurple).not.toBeChecked()
+  await userEvent.click(buttonExpansionPurple)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+
+  expect(queryByTestId('table-row-R-1')).toBeNull()
+  expect(queryByTestId('table-row-B-1')).toBeNull()
+  expect(queryByTestId('table-row-G-1')).toBeNull()
+  expect(queryByTestId('table-row-1-1')).toBeNull()
+  expect(queryByTestId('table-row-Y-1')).toBeNull()
+  expect(queryByTestId('table-row-2-1')).toBeNull()
+  expect(getByTestId('table-row-P-1')).toBeVisible() // ここだけ表示
+  expect(queryByTestId('table-row-3-1')).toBeNull()
+  expect(queryByTestId('table-row-4-01')).toBeNull()
+
+  // 「第３弾ブースター」ボタンを押す
+  const buttonExpansionThird = getByRole('radio', { name: '第３弾ブースター' })
+  expect(buttonExpansionThird).toBeVisible()
+  expect(buttonExpansionThird).not.toBeChecked()
+  await userEvent.click(buttonExpansionThird)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+
+  expect(queryByTestId('table-row-R-1')).toBeNull()
+  expect(queryByTestId('table-row-B-1')).toBeNull()
+  expect(queryByTestId('table-row-G-1')).toBeNull()
+  expect(queryByTestId('table-row-1-1')).toBeNull()
+  expect(queryByTestId('table-row-Y-1')).toBeNull()
+  expect(queryByTestId('table-row-2-1')).toBeNull()
+  expect(queryByTestId('table-row-P-1')).toBeNull()
+  expect(getByTestId('table-row-3-1')).toBeVisible() // ここだけ表示
+  expect(queryByTestId('table-row-4-01')).toBeNull()
+
+  // 「第４弾ブースター」ボタンを押す
+  const buttonExpansionFourth = getByRole('radio', { name: '第４弾ブースター' })
+  expect(buttonExpansionFourth).toBeVisible()
+  expect(buttonExpansionFourth).not.toBeChecked()
+  await userEvent.click(buttonExpansionFourth)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+
+  expect(queryByTestId('table-row-R-1')).toBeNull()
+  expect(queryByTestId('table-row-B-1')).toBeNull()
+  expect(queryByTestId('table-row-G-1')).toBeNull()
+  expect(queryByTestId('table-row-1-1')).toBeNull()
+  expect(queryByTestId('table-row-Y-1')).toBeNull()
+  expect(queryByTestId('table-row-2-1')).toBeNull()
+  expect(queryByTestId('table-row-P-1')).toBeNull()
+  expect(queryByTestId('table-row-3-1')).toBeNull()
+  expect(getByTestId('table-row-4-01')).toBeVisible() // ここだけ表示
+})
