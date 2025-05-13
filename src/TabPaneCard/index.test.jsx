@@ -957,23 +957,14 @@ test('色によるフィルタ', async () => {
     />
   )
 
-  // 色アコーディオンアイテムを開く
-  const buttonColor = getByRole('button', {
-    name: '➖ 色',
-    expanded: true,
-  })
-  expect(buttonColor).toBeVisible()
-  await userEvent.click(buttonColor)
-  rerender(
-    <TabPaneCard
-      deckMain={deckMain}
-      deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
-      handleSetIdZoom={handleSetIdZoom}
-      interruptSimulator={interruptSimulator}
-    />
-  )
+  // 色アコーディオンアイテムは既に開いている
+  expect(
+    getByRole('button', {
+      name: '➖ 色',
+      expanded: true,
+    })
+  ).toBeVisible()
+
   expect(getByTestId('table-row-2-78')).toBeVisible() // RYマーブルオーブ (赤黄)
   expect(getByTestId('table-row-2-79')).toBeVisible() // RYマーブルオーブ (青黄)
   expect(getByTestId('table-row-2-80')).toBeVisible() // RYマーブルオーブ (緑黄)
