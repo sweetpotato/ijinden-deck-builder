@@ -1183,3 +1183,165 @@ test('色によるフィルタ', async () => {
   expect(getByTestId('table-row-3-45')).toBeVisible() // 坂本龍馬 (紫)
   expect(getByTestId('table-row-3-80')).toBeVisible() // オブシディアン (無色)
 })
+
+test('種類によるフィルタ', async () => {
+  let deckMain = new Map()
+  let deckSide = new Map()
+  const handleSetDeckMain = vi.fn()
+  const handleSetDeckSide = vi.fn()
+  const handleSetIdZoom = vi.fn()
+  const interruptSimulator = vi.fn()
+  const { rerender, getByRole, getByTestId, queryByTestId } = render(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  expect(handleSetDeckMain.mock.calls.length).toBe(0)
+  expect(handleSetDeckSide.mock.calls.length).toBe(0)
+  expect(handleSetIdZoom.mock.calls.length).toBe(0)
+  expect(interruptSimulator.mock.calls.length).toBe(0)
+
+  // 条件で絞り込むアコーディオンを開く
+  const buttonFilterTop = getByRole('button', {
+    name: '条件で絞り込む',
+    expanded: false,
+  })
+  expect(buttonFilterTop).toBeVisible()
+  await userEvent.click(buttonFilterTop)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+
+  // 種類アコーディオンアイテムは既に開いている
+  expect(
+    getByRole('button', {
+      name: '➖ 種類',
+      expanded: true,
+    })
+  ).toBeVisible()
+
+  expect(getByTestId('table-row-B-2')).toBeVisible() // ヴァスコ・ダ・ガマ
+  expect(getByTestId('table-row-B-9')).toBeVisible() // モナ・リザ
+  expect(getByTestId('table-row-B-11')).toBeVisible() // フリート
+  expect(getByTestId('table-row-B-13')).toBeVisible() // ブルーストーン
+
+  // イジンボタンを押す
+  const buttonTypeIjin = getByRole('radio', { name: 'イジン' })
+  expect(buttonTypeIjin).toBeVisible()
+  expect(buttonTypeIjin).not.toBeChecked()
+  await userEvent.click(buttonTypeIjin)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  expect(getByTestId('table-row-B-2')).toBeVisible()
+  expect(queryByTestId('table-row-B-9')).toBeNull()
+  expect(queryByTestId('table-row-B-11')).toBeNull()
+  expect(queryByTestId('table-row-B-13')).toBeNull()
+
+  // ハイケイボタンを押す
+  const buttonTypeHaikei = getByRole('radio', { name: 'ハイケイ' })
+  expect(buttonTypeHaikei).toBeVisible()
+  expect(buttonTypeHaikei).not.toBeChecked()
+  await userEvent.click(buttonTypeHaikei)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  expect(queryByTestId('table-row-B-2')).toBeNull()
+  expect(getByTestId('table-row-B-9')).toBeVisible()
+  expect(queryByTestId('table-row-B-11')).toBeNull()
+  expect(queryByTestId('table-row-B-13')).toBeNull()
+
+  // マホウボタンを押す
+  const buttonTypeMahou = getByRole('radio', { name: 'マホウ' })
+  expect(buttonTypeMahou).toBeVisible()
+  expect(buttonTypeMahou).not.toBeChecked()
+  await userEvent.click(buttonTypeMahou)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  expect(queryByTestId('table-row-B-2')).toBeNull()
+  expect(queryByTestId('table-row-B-9')).toBeNull()
+  expect(getByTestId('table-row-B-11')).toBeVisible()
+  expect(queryByTestId('table-row-B-13')).toBeNull()
+
+  // マリョクボタンを押す
+  const buttonTypeMaryoku = getByRole('radio', { name: 'マリョク' })
+  expect(buttonTypeMaryoku).toBeVisible()
+  expect(buttonTypeMaryoku).not.toBeChecked()
+  await userEvent.click(buttonTypeMaryoku)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  expect(queryByTestId('table-row-B-2')).toBeNull()
+  expect(queryByTestId('table-row-B-9')).toBeNull()
+  expect(queryByTestId('table-row-B-11')).toBeNull()
+  expect(getByTestId('table-row-B-13')).toBeVisible()
+
+  // 条件すべてをリセットするボタンを押す
+  const buttonResetAll = getByRole('button', {
+    name: '条件すべてをリセットする',
+  })
+  expect(buttonResetAll).toBeVisible()
+  expect(buttonResetAll).not.toBeChecked()
+  await userEvent.click(buttonResetAll)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  const buttonColorAll = getByTestId('button-color-all').querySelector(
+    'input[type="radio"]'
+  )
+  expect(buttonColorAll).toBeVisible()
+  expect(buttonColorAll).toBeChecked()
+
+  expect(getByTestId('table-row-B-2')).toBeVisible()
+  expect(getByTestId('table-row-B-9')).toBeVisible()
+  expect(getByTestId('table-row-B-11')).toBeVisible()
+  expect(getByTestId('table-row-B-13')).toBeVisible()
+})
