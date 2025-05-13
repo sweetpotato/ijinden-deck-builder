@@ -721,3 +721,156 @@ test('エキスパンションによるフィルタ', async () => {
   expect(queryByTestId('table-row-3-1')).toBeNull()
   expect(getByTestId('table-row-4-01')).toBeVisible() // ここだけ表示
 })
+
+test('レアリティによるフィルタ', async () => {
+  let deckMain = new Map()
+  let deckSide = new Map()
+  const handleSetDeckMain = vi.fn()
+  const handleSetDeckSide = vi.fn()
+  const handleSetIdZoom = vi.fn()
+  const interruptSimulator = vi.fn()
+  const { rerender, getByRole, getByTestId, queryByTestId } = render(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  expect(handleSetDeckMain.mock.calls.length).toBe(0)
+  expect(handleSetDeckSide.mock.calls.length).toBe(0)
+  expect(handleSetIdZoom.mock.calls.length).toBe(0)
+  expect(interruptSimulator.mock.calls.length).toBe(0)
+
+  const buttonFilterTop = getByRole('button', {
+    name: '条件で絞り込む',
+    expanded: false, // 初期状態では閉じている
+  })
+  expect(buttonFilterTop).toBeVisible()
+
+  await userEvent.click(buttonFilterTop)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+
+  const buttonRarity = getByRole('button', {
+    name: '➕ レアリティ ― すべて',
+    expanded: false,
+  })
+  expect(buttonRarity).toBeVisible()
+
+  await userEvent.click(buttonRarity)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+
+  expect(getByTestId('table-row-1-1')).toBeVisible() // 織田信長 (SR)
+  expect(getByTestId('table-row-1-15')).toBeVisible() // 中臣鎌足 (R)
+  expect(getByTestId('table-row-1-17')).toBeVisible() // 藤原道長 (N)
+
+  // 「Nのみ」ボタンを押す
+  const buttonRarityN = getByRole('radio', { name: 'Nのみ' })
+  await userEvent.click(buttonRarityN)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+
+  expect(queryByTestId('table-row-1-1')).toBeNull()
+  expect(queryByTestId('table-row-1-15')).toBeNull()
+  expect(getByTestId('table-row-1-17')).toBeVisible()
+
+  // 「NとR」ボタンを押す
+  const buttonRarityNandR = getByRole('radio', { name: 'NとR' })
+  await userEvent.click(buttonRarityNandR)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+
+  expect(queryByTestId('table-row-1-1')).toBeNull()
+  expect(getByTestId('table-row-1-15')).toBeVisible()
+  expect(getByTestId('table-row-1-17')).toBeVisible()
+
+  // 「Rのみ」ボタンを押す
+  const buttonRarityR = getByRole('radio', { name: 'Rのみ' })
+  await userEvent.click(buttonRarityR)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+
+  expect(queryByTestId('table-row-1-1')).toBeNull()
+  expect(getByTestId('table-row-1-15')).toBeVisible()
+  expect(queryByTestId('table-row-1-17')).toBeNull()
+
+  // 「RとSR」ボタンを押す
+  const buttonRarityRandSR = getByRole('radio', { name: 'RとSR' })
+  await userEvent.click(buttonRarityRandSR)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+
+  expect(getByTestId('table-row-1-1')).toBeVisible()
+  expect(getByTestId('table-row-1-15')).toBeVisible()
+  expect(queryByTestId('table-row-1-17')).toBeNull()
+
+  // 「SRのみ」ボタンを押す
+  const buttonRaritySR = getByRole('radio', { name: 'SRのみ' })
+  await userEvent.click(buttonRaritySR)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+
+  expect(getByTestId('table-row-1-1')).toBeVisible()
+  expect(queryByTestId('table-row-1-15')).toBeNull()
+  expect(queryByTestId('table-row-1-17')).toBeNull()
+})
