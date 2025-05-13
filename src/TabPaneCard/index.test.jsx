@@ -709,6 +709,38 @@ test('エキスパンションによるフィルタ', async () => {
   expect(queryByTestId('table-row-P-1')).toBeNull()
   expect(queryByTestId('table-row-3-1')).toBeNull()
   expect(getByTestId('table-row-4-01')).toBeVisible()
+
+  // 条件すべてをリセットするボタンを押す
+  const buttonResetAll = getByRole('button', {
+    name: '条件すべてをリセットする',
+  })
+  expect(buttonResetAll).toBeVisible()
+  expect(buttonResetAll).not.toBeChecked()
+  await userEvent.click(buttonResetAll)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  const buttonExpansionAll = getByTestId('button-expansion-all').querySelector(
+    'input[type="radio"]'
+  )
+  expect(buttonExpansionAll).toBeVisible()
+  expect(buttonExpansionAll).toBeChecked()
+  expect(getByTestId('table-row-R-1')).toBeVisible()
+  expect(getByTestId('table-row-B-1')).toBeVisible()
+  expect(getByTestId('table-row-G-1')).toBeVisible()
+  expect(getByTestId('table-row-1-1')).toBeVisible()
+  expect(getByTestId('table-row-Y-1')).toBeVisible()
+  expect(getByTestId('table-row-2-1')).toBeVisible()
+  expect(getByTestId('table-row-P-1')).toBeVisible()
+  expect(getByTestId('table-row-3-1')).toBeVisible()
+  expect(getByTestId('table-row-4-01')).toBeVisible()
 })
 
 test('レアリティによるフィルタ', async () => {
@@ -856,6 +888,33 @@ test('レアリティによるフィルタ', async () => {
   expect(getByTestId('table-row-1-1')).toBeVisible()
   expect(queryByTestId('table-row-1-15')).toBeNull()
   expect(queryByTestId('table-row-1-17')).toBeNull()
+
+  // 条件すべてをリセットするボタンを押す
+  const buttonResetAll = getByRole('button', {
+    name: '条件すべてをリセットする',
+  })
+  expect(buttonResetAll).toBeVisible()
+  expect(buttonResetAll).not.toBeChecked()
+  await userEvent.click(buttonResetAll)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  const buttonRarityAll = getByTestId('button-rarity-all').querySelector(
+    'input[type="radio"]'
+  )
+  expect(buttonRarityAll).toBeVisible()
+  expect(buttonRarityAll).toBeChecked()
+
+  expect(getByTestId('table-row-1-1')).toBeVisible()
+  expect(getByTestId('table-row-1-15')).toBeVisible()
+  expect(getByTestId('table-row-1-17')).toBeVisible()
 })
 
 test('色によるフィルタ', async () => {
@@ -1098,5 +1157,38 @@ test('色によるフィルタ', async () => {
   expect(queryByTestId('table-row-3-27')).toBeNull() // 小野小町 (緑)
   expect(queryByTestId('table-row-3-35')).toBeNull() // 徳川吉宗 (黄)
   expect(queryByTestId('table-row-3-45')).toBeNull() // 坂本龍馬 (紫)
+  expect(getByTestId('table-row-3-80')).toBeVisible() // オブシディアン (無色)
+
+  // 条件すべてをリセットするボタンを押す
+  const buttonResetAll = getByRole('button', {
+    name: '条件すべてをリセットする',
+  })
+  expect(buttonResetAll).toBeVisible()
+  expect(buttonResetAll).not.toBeChecked()
+  await userEvent.click(buttonResetAll)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  const buttonColorAll = getByTestId('button-color-all').querySelector(
+    'input[type="radio"]'
+  )
+  expect(buttonColorAll).toBeVisible()
+  expect(buttonColorAll).toBeChecked()
+
+  expect(getByTestId('table-row-2-78')).toBeVisible() // RYマーブルオーブ (赤黄)
+  expect(getByTestId('table-row-2-79')).toBeVisible() // RYマーブルオーブ (青黄)
+  expect(getByTestId('table-row-2-80')).toBeVisible() // RYマーブルオーブ (緑黄)
+  expect(getByTestId('table-row-3-15')).toBeVisible() // 淀殿 (赤)
+  expect(getByTestId('table-row-3-19')).toBeVisible() // 伊達政宗 (青)
+  expect(getByTestId('table-row-3-27')).toBeVisible() // 小野小町 (緑)
+  expect(getByTestId('table-row-3-35')).toBeVisible() // 徳川吉宗 (黄)
+  expect(getByTestId('table-row-3-45')).toBeVisible() // 坂本龍馬 (紫)
   expect(getByTestId('table-row-3-80')).toBeVisible() // オブシディアン (無色)
 })
