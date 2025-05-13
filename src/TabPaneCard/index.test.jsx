@@ -15,7 +15,7 @@ test('初期状態', async () => {
   const handleSetDeckSide = vi.fn()
   const handleSetIdZoom = vi.fn()
   const interruptSimulator = vi.fn()
-  const { rerender, getByPlaceholderText, getByRole } = render(
+  const { rerender, getByPlaceholderText, getByRole, getByTestId } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
@@ -80,7 +80,14 @@ test('初期状態', async () => {
   })
   expect(buttonColor).toBeVisible()
 
-  // TODO 色のすべてボタン
+  const spanColorAll = getByTestId('button-color-all')
+  expect(spanColorAll).toBeVisible()
+  const buttonColorAll = spanColorAll.querySelector('input[type="radio"]')
+  expect(buttonColorAll).toBeVisible()
+  expect(buttonColorAll).toBeChecked()
+  const labelColorAll = spanColorAll.querySelector('label')
+  expect(labelColorAll).toBeVisible()
+  expect(labelColorAll.textContent).toBe('すべて')
 
   const buttonType = getByRole('button', {
     name: '➖ 種類',
@@ -88,7 +95,14 @@ test('初期状態', async () => {
   })
   expect(buttonType).toBeVisible()
 
-  // TODO 種類のすべてボタン
+  const spanTypeAll = getByTestId('button-color-all')
+  expect(spanTypeAll).toBeVisible()
+  const buttonTypeAll = spanTypeAll.querySelector('input[type="radio"]')
+  expect(buttonTypeAll).toBeVisible()
+  expect(buttonTypeAll).toBeChecked()
+  const labelTypeAll = spanTypeAll.querySelector('label')
+  expect(labelTypeAll).toBeVisible()
+  expect(labelTypeAll.textContent).toBe('すべて')
 
   const buttonLevel = getByRole('button', {
     name: '➕ レベル ― 0以上',

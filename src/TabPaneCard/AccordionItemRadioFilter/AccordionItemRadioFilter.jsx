@@ -12,6 +12,7 @@ import { isAccordionItemSelected } from 'react-bootstrap/esm/AccordionContext'
 
 function AccordionItemRadioFilter({
   eventKey,
+  testIdForButton0,
   title,
   state,
   handleChange,
@@ -41,18 +42,41 @@ function AccordionItemRadioFilter({
         {data.map((element) => {
           const id = `${name}-${element.value}`
           return (
-            <ToggleButton
+            <span
               key={id}
-              type="radio"
-              variant="outline-primary"
-              id={id}
-              name={name}
-              value={element.value}
-              onChange={handleChange}
-              checked={state === element.value}
+              {
+                /*
+                 * 0番ボタンのテキストはフィルタが異なっていても
+                 * 「すべて」「指定なし」と同じ文言を持っており、getByRole の
+                 * name により一意に取得することが難しいので、data-testid を
+                 * 設定する。実際のユーザは、これらのボタンがどのフィルタの
+                 * アコーディオンの配下にあるかを見て一意に識別できるため、
+                 * 視覚的なアクセシビリティとしては問題ないはずである。
+                 *
+                 * <ToggleButton> は <input type="button"> と <label> の組合せで
+                 * 実現されており、<ToggleButton> に付けた data-testid は
+                 * <input type="button"> ではなく <label> に付く。この <label> を
+                 * getByTestId しても、そこから兄にあたる <input type="button"> を
+                 * querySelector で取得することは困難なため、これらをラップする
+                 * <span> を用意してそれに data-testid をつけることにする。
+                 */
+                ...(element.value === 0
+                  ? { 'data-testid': testIdForButton0 }
+                  : {})
+              }
             >
-              {element.label}
-            </ToggleButton>
+              <ToggleButton
+                type="radio"
+                variant="outline-primary"
+                id={id}
+                name={name}
+                value={element.value}
+                onChange={handleChange}
+                checked={state === element.value}
+              >
+                {element.label}
+              </ToggleButton>
+            </span>
           )
         })}
       </AccordionBody>
