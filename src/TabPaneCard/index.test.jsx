@@ -1263,6 +1263,63 @@ test('プラスマイナスボタンの操作', async () => {
   expect(buttonSidePlus2).toBeEnabled()
 })
 
+test('虫眼鏡ボタンの操作', async () => {
+  const deckMain = new Map()
+  const deckSide = new Map()
+  const handleSetDeckMain = vi.fn()
+  const handleSetDeckSide = vi.fn()
+  const handleSetIdZoom = vi.fn()
+  const interruptSimulator = vi.fn()
+  const { rerender, getByTestId } = render(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+
+  expect(handleSetDeckMain.mock.calls.length).toBe(0)
+  expect(handleSetDeckSide.mock.calls.length).toBe(0)
+  expect(handleSetIdZoom.mock.calls.length).toBe(0)
+  expect(interruptSimulator.mock.calls.length).toBe(0)
+
+  // R-1 の虫眼鏡ボタンを押す
+  await userEvent.click(
+    getByTestId('table-row-R-1').querySelector('td:nth-child(2) button')
+  )
+  expect(handleSetDeckMain.mock.calls.length).toBe(0)
+  expect(handleSetDeckSide.mock.calls.length).toBe(0)
+  expect(handleSetIdZoom.mock.calls.length).toBe(1) // 呼ばれた
+  expect(handleSetIdZoom.mock.lastCall.length).toBe(1)
+  expect(handleSetIdZoom.mock.lastCall[0]).toBe('R-1')
+  expect(interruptSimulator.mock.calls.length).toBe(0)
+
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+
+  // R-2 の虫眼鏡ボタンを押す
+  await userEvent.click(
+    getByTestId('table-row-R-2').querySelector('td:nth-child(2) button')
+  )
+  expect(handleSetDeckMain.mock.calls.length).toBe(0)
+  expect(handleSetDeckSide.mock.calls.length).toBe(0)
+  expect(handleSetIdZoom.mock.calls.length).toBe(2) // 呼ばれた
+  expect(handleSetIdZoom.mock.lastCall.length).toBe(1)
+  expect(handleSetIdZoom.mock.lastCall[0]).toBe('R-2')
+  expect(interruptSimulator.mock.calls.length).toBe(0)
+})
+
 test('エキスパンションによるフィルタ', async () => {
   const deckMain = new Map()
   const deckSide = new Map()
