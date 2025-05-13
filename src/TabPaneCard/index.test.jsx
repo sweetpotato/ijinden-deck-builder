@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 
 import { afterEach, expect, test, vi } from 'vitest'
-import { cleanup, fireEvent, render } from '@testing-library/react'
+import { cleanup, fireEvent, getByRole, render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import TabPaneCard from '.'
@@ -4119,4 +4119,494 @@ test('色と種類とレベルによる複合フィルタ', async () => {
   expect(getByTestId('table-row-R-11')).toBeVisible() // ロイヤリティ (マホウ)
   expect(getByTestId('table-row-1-61')).toBeVisible() // レッドオーブ (マリョク)
   expect(getByTestId('table-row-1-75')).toBeVisible() // 衛青 (赤でない)
+})
+
+test('キーワードによるフィルタ', async () => {
+  const deckMain = new Map()
+  const deckSide = new Map()
+  const handleSetDeckMain = vi.fn()
+  const handleSetDeckSide = vi.fn()
+  const handleSetIdZoom = vi.fn()
+  const interruptSimulator = vi.fn()
+  const {
+    rerender,
+    getByPlaceholderText,
+    getByRole,
+    getByTestId,
+    queryByTestId,
+  } = render(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+
+  let textboxSearch = getByPlaceholderText('カード名やルールテキストで検索')
+  expect(textboxSearch).toHaveValue('')
+
+  expect(getByTestId('table-row-2-7')).toBeVisible() // 日野富子
+  expect(getByTestId('table-row-3-79')).toBeVisible() // ストーンマスク
+  expect(getByTestId('table-row-1-55')).toBeVisible() // ストーム
+  expect(getByTestId('table-row-2-26')).toBeVisible() // ハリエット・ビーチャー・ストウ
+
+  await userEvent.type(textboxSearch, 'すとーん')
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  textboxSearch = getByPlaceholderText('カード名やルールテキストで検索')
+  expect(textboxSearch).toHaveValue('すとーん')
+
+  // ひらがなで検索するとカード名の読み仮名でヒットする
+  expect(queryByTestId('table-row-2-7')).toBeNull() // 日野富子
+  expect(getByTestId('table-row-3-79')).toBeVisible() // ストーンマスク
+  expect(queryByTestId('table-row-1-55')).toBeNull() // ストーム
+  expect(queryByTestId('table-row-2-26')).toBeNull() // ハリエット・ビーチャー・ストウ
+
+  await userEvent.click(getByRole('button', { name: 'クリア' }))
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  textboxSearch = getByPlaceholderText('カード名やルールテキストで検索')
+  expect(textboxSearch).toHaveValue('')
+  await userEvent.type(textboxSearch, 'ストーン')
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  textboxSearch = getByPlaceholderText('カード名やルールテキストで検索')
+  expect(textboxSearch).toHaveValue('ストーン')
+
+  // ひらがな以外で検索するとカード名またはルールテキストで文字通りにヒットする
+  expect(getByTestId('table-row-2-7')).toBeVisible() // 日野富子
+  expect(getByTestId('table-row-3-79')).toBeVisible() // ストーンマスク
+  expect(queryByTestId('table-row-1-55')).toBeNull() // ストーム
+  expect(queryByTestId('table-row-2-26')).toBeNull() // ハリエット・ビーチャー・ストウ
+
+  await userEvent.click(getByRole('button', { name: 'クリア' }))
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  textboxSearch = getByPlaceholderText('カード名やルールテキストで検索')
+  expect(textboxSearch).toHaveValue('')
+  await userEvent.type(textboxSearch, 'ストー')
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  textboxSearch = getByPlaceholderText('カード名やルールテキストで検索')
+  expect(textboxSearch).toHaveValue('ストー')
+
+  // 部分文字列でも同様
+  expect(getByTestId('table-row-2-7')).toBeVisible() // 日野富子
+  expect(getByTestId('table-row-3-79')).toBeVisible() // ストーンマスク
+  expect(getByTestId('table-row-1-55')).toBeVisible() // ストーム
+  expect(queryByTestId('table-row-2-26')).toBeNull() // ハリエット・ビーチャー・ストウ
+
+  // クリアボタンを押す
+  await userEvent.click(getByRole('button', { name: 'クリア' }))
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  textboxSearch = getByPlaceholderText('カード名やルールテキストで検索')
+  expect(textboxSearch).toHaveValue('')
+
+  expect(getByTestId('table-row-2-7')).toBeVisible() // 日野富子
+  expect(getByTestId('table-row-3-79')).toBeVisible() // ストーンマスク
+  expect(getByTestId('table-row-1-55')).toBeVisible() // ストーム
+  expect(getByTestId('table-row-2-26')).toBeVisible() // ハリエット・ビーチャー・ストウ
+})
+
+test('複合キーワードによるフィルタ', async () => {
+  const deckMain = new Map()
+  const deckSide = new Map()
+  const handleSetDeckMain = vi.fn()
+  const handleSetDeckSide = vi.fn()
+  const handleSetIdZoom = vi.fn()
+  const interruptSimulator = vi.fn()
+  const {
+    rerender,
+    getByPlaceholderText,
+    getByRole,
+    getByTestId,
+    queryByTestId,
+  } = render(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+
+  let textboxSearch = getByPlaceholderText('カード名やルールテキストで検索')
+  expect(textboxSearch).toHaveValue('')
+
+  expect(getByTestId('table-row-2-46')).toBeVisible() // 孫夫人
+  expect(getByTestId('table-row-2-54')).toBeVisible() // 蒸気機関車
+  expect(getByTestId('table-row-3-76')).toBeVisible() // ダンダラ羽織
+  expect(getByTestId('table-row-R-2')).toBeVisible() // 源義経
+  expect(getByTestId('table-row-3-62')).toBeVisible() // パイロオーラ
+
+  await userEvent.type(textboxSearch, '即応 装備')
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  textboxSearch = getByPlaceholderText('カード名やルールテキストで検索')
+  expect(textboxSearch).toHaveValue('即応 装備')
+
+  // 複合キーワードはAND検索になる
+  expect(getByTestId('table-row-2-46')).toBeVisible() // 孫夫人
+  expect(getByTestId('table-row-2-54')).toBeVisible() // 蒸気機関車
+  expect(getByTestId('table-row-3-76')).toBeVisible() // ダンダラ羽織
+  expect(queryByTestId('table-row-R-2')).toBeNull() // 源義経
+  expect(queryByTestId('table-row-3-62')).toBeNull() // パイロオーラ
+
+  // クリアボタンを押す
+  await userEvent.click(getByRole('button', { name: 'クリア' }))
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  textboxSearch = getByPlaceholderText('カード名やルールテキストで検索')
+  expect(textboxSearch).toHaveValue('')
+
+  expect(getByTestId('table-row-2-46')).toBeVisible() // 孫夫人
+  expect(getByTestId('table-row-2-54')).toBeVisible() // 蒸気機関車
+  expect(getByTestId('table-row-3-76')).toBeVisible() // ダンダラ羽織
+  expect(getByTestId('table-row-R-2')).toBeVisible() // 源義経
+  expect(getByTestId('table-row-3-62')).toBeVisible() // パイロオーラ
+})
+
+test('特性と遺業能力を含めるか否か', async () => {
+  const deckMain = new Map()
+  const deckSide = new Map()
+  const handleSetDeckMain = vi.fn()
+  const handleSetDeckSide = vi.fn()
+  const handleSetIdZoom = vi.fn()
+  const interruptSimulator = vi.fn()
+  const {
+    rerender,
+    getByPlaceholderText,
+    getByRole,
+    getByTestId,
+    queryByTestId,
+  } = render(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+
+  expect(getByPlaceholderText('カード名やルールテキストで検索')).toHaveValue('')
+  expect(
+    getByRole('checkbox', {
+      name: '特性と遺業能力も検索する',
+    })
+  ).toBeChecked()
+
+  expect(getByTestId('table-row-2-37')).toBeVisible() // 姜維
+  expect(getByTestId('table-row-Y-1')).toBeVisible() // 諸葛亮
+  expect(getByTestId('table-row-Y-9')).toBeVisible() // 英傑集う大河
+
+  await userEvent.type(
+    getByPlaceholderText('カード名やルールテキストで検索'),
+    '反魂'
+  )
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  expect(getByPlaceholderText('カード名やルールテキストで検索')).toHaveValue(
+    '反魂'
+  )
+
+  expect(getByTestId('table-row-2-37')).toBeVisible() // 姜維
+  expect(getByTestId('table-row-Y-1')).toBeVisible() // 諸葛亮
+  expect(queryByTestId('table-row-Y-9')).toBeNull() // 英傑集う大河
+
+  await userEvent.click(
+    getByRole('checkbox', {
+      name: '特性と遺業能力も検索する',
+    })
+  )
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  expect(
+    getByRole('checkbox', {
+      name: '特性と遺業能力も検索する',
+    })
+  ).not.toBeChecked()
+
+  expect(getByTestId('table-row-2-37')).toBeVisible() // 姜維
+  expect(queryByTestId('table-row-Y-1')).toBeNull() // 諸葛亮
+  expect(queryByTestId('table-row-Y-9')).toBeNull() // 英傑集う大河
+
+  // クリアボタンを押す
+  await userEvent.click(getByRole('button', { name: 'クリア' }))
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  expect(getByPlaceholderText('カード名やルールテキストで検索')).toHaveValue('')
+
+  expect(getByTestId('table-row-2-37')).toBeVisible() // 姜維
+  expect(getByTestId('table-row-Y-1')).toBeVisible() // 諸葛亮
+  expect(getByTestId('table-row-Y-9')).toBeVisible() // 英傑集う大河
+})
+
+test('キーワードと色と種類の複合によるフィルタ', async () => {
+  const deckMain = new Map()
+  const deckSide = new Map()
+  const handleSetDeckMain = vi.fn()
+  const handleSetDeckSide = vi.fn()
+  const handleSetIdZoom = vi.fn()
+  const interruptSimulator = vi.fn()
+  const {
+    rerender,
+    getByPlaceholderText,
+    getByRole,
+    getByTestId,
+    queryByTestId,
+  } = render(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+
+  let textboxSearch = getByPlaceholderText('カード名やルールテキストで検索')
+  expect(textboxSearch).toHaveValue('')
+
+  // 色アコーディオンアイテムは既に開いている
+  expect(
+    getByRole('button', {
+      name: '➖ 色',
+      expanded: true,
+    })
+  ).toBeVisible()
+
+  // 種類アコーディオンアイテムは既に開いている
+  expect(
+    getByRole('button', {
+      name: '➖ 種類',
+      expanded: true,
+    })
+  ).toBeVisible()
+
+  expect(getByTestId('table-row-1-10')).toBeVisible() // 徳川家康
+  expect(getByTestId('table-row-1-75')).toBeVisible() // 衛青
+  expect(getByTestId('table-row-1-45')).toBeVisible() // 行基
+  expect(getByTestId('table-row-2-36')).toBeVisible() // 足利義政
+  expect(getByTestId('table-row-3-9')).toBeVisible() // 土方歳三
+  expect(getByTestId('table-row-2-50')).toBeVisible() // 安宅船
+  expect(getByTestId('table-row-2-59')).toBeVisible() // サモン
+  expect(getByTestId('table-row-4-67')).toBeVisible() // レッドサークル
+
+  await userEvent.type(
+    getByPlaceholderText('カード名やルールテキストで検索'),
+    'イジン召喚権'
+  )
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  expect(getByPlaceholderText('カード名やルールテキストで検索')).toHaveValue(
+    'イジン召喚権'
+  )
+
+  expect(getByTestId('table-row-1-10')).toBeVisible() // 徳川家康
+  expect(getByTestId('table-row-1-75')).toBeVisible() // 衛青
+  expect(getByTestId('table-row-1-45')).toBeVisible() // 行基
+  expect(getByTestId('table-row-2-36')).toBeVisible() // 足利義政
+  expect(getByTestId('table-row-3-9')).toBeVisible() // 土方歳三
+  expect(getByTestId('table-row-2-50')).toBeVisible() // 安宅船
+  expect(getByTestId('table-row-2-59')).toBeVisible() // サモン
+  expect(queryByTestId('table-row-4-67')).toBeNull() // レッドサークル
+
+  // 赤ボタンを押す
+  let buttonColorRed = getByRole('radio', { name: '赤' })
+  expect(buttonColorRed).toBeVisible()
+  expect(buttonColorRed).not.toBeChecked()
+  await userEvent.click(buttonColorRed)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  buttonColorRed = getByRole('radio', { name: '赤' })
+  expect(buttonColorRed).toBeVisible()
+  expect(buttonColorRed).toBeChecked()
+
+  expect(getByTestId('table-row-1-10')).toBeVisible() // 徳川家康
+  expect(queryByTestId('table-row-1-75')).toBeNull() // 衛青
+  expect(queryByTestId('table-row-1-45')).toBeNull() // 行基
+  expect(queryByTestId('table-row-2-36')).toBeNull() // 足利義政
+  expect(queryByTestId('table-row-3-9')).toBeNull() // 土方歳三
+  expect(getByTestId('table-row-2-50')).toBeVisible() // 安宅船
+  expect(getByTestId('table-row-2-59')).toBeVisible() // サモン
+  expect(queryByTestId('table-row-4-67')).toBeNull() // レッドサークル
+
+  // イジンボタンを押す
+  let buttonTypeIjin = getByRole('radio', { name: 'イジン' })
+  expect(buttonTypeIjin).toBeVisible()
+  expect(buttonTypeIjin).not.toBeChecked()
+  await userEvent.click(buttonTypeIjin)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  buttonTypeIjin = getByRole('radio', { name: 'イジン' })
+  expect(buttonTypeIjin).toBeVisible()
+  expect(buttonTypeIjin).toBeChecked()
+
+  expect(getByTestId('table-row-1-10')).toBeVisible() // 徳川家康
+  expect(queryByTestId('table-row-1-75')).toBeNull() // 衛青
+  expect(queryByTestId('table-row-1-45')).toBeNull() // 行基
+  expect(queryByTestId('table-row-2-36')).toBeNull() // 足利義政
+  expect(queryByTestId('table-row-3-9')).toBeNull() // 土方歳三
+  expect(queryByTestId('table-row-2-50')).toBeNull() // 安宅船
+  expect(queryByTestId('table-row-2-59')).toBeNull() // サモン
+  expect(queryByTestId('table-row-4-67')).toBeNull() // レッドサークル
+
+  // クリアボタンを押す
+  await userEvent.click(getByRole('button', { name: 'クリア' }))
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  // 条件すべてをリセットするボタンを押す
+  await userEvent.click(
+    getByRole('button', {
+      name: '条件すべてをリセットする',
+    })
+  )
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+
+  expect(getByTestId('table-row-1-10')).toBeVisible() // 徳川家康
+  expect(getByTestId('table-row-1-75')).toBeVisible() // 衛青
+  expect(getByTestId('table-row-1-45')).toBeVisible() // 行基
+  expect(getByTestId('table-row-2-36')).toBeVisible() // 足利義政
+  expect(getByTestId('table-row-3-9')).toBeVisible() // 土方歳三
+  expect(getByTestId('table-row-2-50')).toBeVisible() // 安宅船
+  expect(getByTestId('table-row-2-59')).toBeVisible() // サモン
+  expect(getByTestId('table-row-4-67')).toBeVisible() // レッドサークル
 })
