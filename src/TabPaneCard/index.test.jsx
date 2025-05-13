@@ -1345,3 +1345,364 @@ test('種類によるフィルタ', async () => {
   expect(getByTestId('table-row-B-11')).toBeVisible()
   expect(getByTestId('table-row-B-13')).toBeVisible()
 })
+
+// TODO レベルによるフィルタ
+
+test('特性によるフィルタ', async () => {
+  const deckMain = new Map()
+  const deckSide = new Map()
+  const handleSetDeckMain = vi.fn()
+  const handleSetDeckSide = vi.fn()
+  const handleSetIdZoom = vi.fn()
+  const interruptSimulator = vi.fn()
+  const { rerender, getByRole, getByTestId, queryByTestId } = render(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+
+  // 条件で絞り込むアコーディオンを開く
+  await userEvent.click(
+    getByRole('button', {
+      name: '条件で絞り込む',
+      expanded: false,
+    })
+  )
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  expect(
+    getByRole('button', {
+      name: '条件で絞り込む',
+      expanded: true,
+    })
+  ).toBeVisible()
+
+  // 特性アコーディオンアイテムを開く
+  const buttonTrait = getByRole('button', {
+    name: '➕ 特性 ― 指定なし',
+    expanded: false,
+  })
+  expect(buttonTrait).toBeVisible()
+  await userEvent.click(buttonTrait)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  expect(
+    getByRole('button', {
+      name: '➖ 特性',
+      expanded: true,
+    })
+  ).toBeVisible()
+
+  // 初期状態では指定なしボタンが選択されている
+  let buttonTraitUnspecified = getByTestId(
+    'button-trait-unspecified'
+  ).querySelector('input[type="radio"]')
+  expect(buttonTraitUnspecified).toBeVisible()
+  expect(buttonTraitUnspecified).toBeChecked()
+
+  expect(getByTestId('table-row-1-10')).toBeVisible() // 徳川家康 (剣術イジン)
+  expect(getByTestId('table-row-1-23')).toBeVisible() // ドナテッロ (美術イジン)
+  expect(getByTestId('table-row-1-39')).toBeVisible() // ヨハン・ゼバスティアン・バッハ (音楽イジン)
+  expect(getByTestId('table-row-3-21')).toBeVisible() // 木戸孝允 (思想イジン)
+  expect(getByTestId('table-row-3-44')).toBeVisible() // 本居宣長 (医術イジン)
+  expect(getByTestId('table-row-3-43')).toBeVisible() // 芹沢鴨 (志願イジン)
+  expect(getByTestId('table-row-B-9')).toBeVisible() // モナ・リザ (美術ハイケイ)
+  expect(getByTestId('table-row-1-51')).toBeVisible() // 冨嶽三十六景 (美術ハイケイ)
+  expect(getByTestId('table-row-3-57')).toBeVisible() // 風神雷神図 (美術ハイケイ)
+  expect(getByTestId('table-row-2-51')).toBeVisible() // リヴァイアサン (思想ハイケイ)
+  expect(getByTestId('table-row-4-44')).toBeVisible() // 落日の王宮 (美術・思想ハイケイ)
+  expect(getByTestId('table-row-G-3')).toBeVisible() // アテルイ (テキストに剣術を含むイジン)
+  expect(getByTestId('table-row-B-11')).toBeVisible() // フリート (テキストに航海を含むマホウ)
+  expect(getByTestId('table-row-B-11')).toBeVisible() // マザーグース (テキストに音楽を含むハイケイ)
+  expect(getByTestId('table-row-2-55')).toBeVisible() // 凱旋門 (テキストに思想を含むハイケイ)
+  expect(getByTestId('table-row-P-5')).toBeVisible() // 渡辺崋山 (テキストに医術を含む【美術】イジン)
+  expect(getByTestId('table-row-3-76')).toBeVisible() // ダンダラ羽織 (テキストに志願を含むマリョク)
+
+  // 剣術ボタンを押す
+  let buttonTraitSwordplay = getByRole('radio', { name: '剣術' })
+  expect(buttonTraitSwordplay).toBeVisible()
+  expect(buttonTraitSwordplay).not.toBeChecked()
+  await userEvent.click(buttonTraitSwordplay)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  buttonTraitSwordplay = getByRole('radio', { name: '剣術' })
+  expect(buttonTraitSwordplay).toBeVisible()
+  expect(buttonTraitSwordplay).toBeChecked()
+
+  expect(getByTestId('table-row-1-10')).toBeVisible() // 徳川家康 (剣術イジン)
+  expect(queryByTestId('table-row-1-23')).toBeNull() // ドナテッロ (美術イジン)
+  expect(queryByTestId('table-row-1-39')).toBeNull() // ヨハン・ゼバスティアン・バッハ (音楽イジン)
+  expect(queryByTestId('table-row-3-21')).toBeNull() // 木戸孝允 (思想イジン)
+  expect(queryByTestId('table-row-3-44')).toBeNull() // 本居宣長 (医術イジン)
+  expect(queryByTestId('table-row-3-43')).toBeNull() // 芹沢鴨 (志願イジン)
+  expect(queryByTestId('table-row-B-9')).toBeNull() // モナ・リザ (美術ハイケイ)
+  expect(queryByTestId('table-row-1-51')).toBeNull() // 冨嶽三十六景 (美術ハイケイ)
+  expect(queryByTestId('table-row-3-57')).toBeNull() // 風神雷神図 (美術ハイケイ)
+  expect(queryByTestId('table-row-2-51')).toBeNull() // リヴァイアサン (思想ハイケイ)
+  expect(queryByTestId('table-row-4-44')).toBeNull() // 落日の王宮 (美術・思想ハイケイ)
+  expect(queryByTestId('table-row-G-3')).toBeNull() // アテルイ (テキストに剣術を含むイジン)
+  expect(queryByTestId('table-row-B-11')).toBeNull() // フリート (テキストに航海を含むマホウ)
+  expect(queryByTestId('table-row-B-11')).toBeNull() // マザーグース (テキストに音楽を含むハイケイ)
+  expect(queryByTestId('table-row-2-55')).toBeNull() // 凱旋門 (テキストに思想を含むハイケイ)
+  expect(queryByTestId('table-row-P-5')).toBeNull() // 渡辺崋山 (テキストに医術を含む【美術】イジン)
+  expect(queryByTestId('table-row-3-76')).toBeNull() // ダンダラ羽織 (テキストに志願を含むマリョク)
+
+  // 美術ボタンを押す
+  let buttonTraitArt = getByRole('radio', { name: '美術' })
+  expect(buttonTraitArt).toBeVisible()
+  expect(buttonTraitArt).not.toBeChecked()
+  await userEvent.click(buttonTraitArt)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  buttonTraitArt = getByRole('radio', { name: '美術' })
+  expect(buttonTraitArt).toBeVisible()
+  expect(buttonTraitArt).toBeChecked()
+
+  expect(queryByTestId('table-row-1-10')).toBeNull() // 徳川家康 (剣術イジン)
+  expect(getByTestId('table-row-1-23')).toBeVisible() // ドナテッロ (美術イジン)
+  expect(queryByTestId('table-row-1-39')).toBeNull() // ヨハン・ゼバスティアン・バッハ (音楽イジン)
+  expect(queryByTestId('table-row-3-21')).toBeNull() // 木戸孝允 (思想イジン)
+  expect(queryByTestId('table-row-3-44')).toBeNull() // 本居宣長 (医術イジン)
+  expect(queryByTestId('table-row-3-43')).toBeNull() // 芹沢鴨 (志願イジン)
+  expect(getByTestId('table-row-B-9')).toBeVisible() // モナ・リザ (美術ハイケイ)
+  expect(getByTestId('table-row-1-51')).toBeVisible() // 冨嶽三十六景 (美術ハイケイ)
+  expect(getByTestId('table-row-3-57')).toBeVisible() // 風神雷神図 (美術ハイケイ)
+  expect(queryByTestId('table-row-2-51')).toBeNull() // リヴァイアサン (思想ハイケイ)
+  expect(getByTestId('table-row-4-44')).toBeVisible() // 落日の王宮 (美術・思想ハイケイ)
+  expect(queryByTestId('table-row-G-3')).toBeNull() // アテルイ (テキストに剣術を含むイジン)
+  expect(queryByTestId('table-row-B-11')).toBeNull() // フリート (テキストに航海を含むマホウ)
+  expect(queryByTestId('table-row-B-11')).toBeNull() // マザーグース (テキストに音楽を含むハイケイ)
+  expect(queryByTestId('table-row-2-55')).toBeNull() // 凱旋門 (テキストに思想を含むハイケイ)
+  expect(getByTestId('table-row-P-5')).toBeVisible() // 渡辺崋山 (テキストに医術を含む【美術】イジン)
+  expect(queryByTestId('table-row-3-76')).toBeNull() // ダンダラ羽織 (テキストに志願を含むマリョク)
+
+  // 音楽ボタンを押す
+  let buttonTraitMusic = getByRole('radio', { name: '音楽' })
+  expect(buttonTraitMusic).toBeVisible()
+  expect(buttonTraitMusic).not.toBeChecked()
+  await userEvent.click(buttonTraitMusic)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  buttonTraitMusic = getByRole('radio', { name: '音楽' })
+  expect(buttonTraitMusic).toBeVisible()
+  expect(buttonTraitMusic).toBeChecked()
+
+  expect(queryByTestId('table-row-1-10')).toBeNull() // 徳川家康 (剣術イジン)
+  expect(queryByTestId('table-row-1-23')).toBeNull() // ドナテッロ (美術イジン)
+  expect(getByTestId('table-row-1-39')).toBeVisible() // ヨハン・ゼバスティアン・バッハ (音楽イジン)
+  expect(queryByTestId('table-row-3-21')).toBeNull() // 木戸孝允 (思想イジン)
+  expect(queryByTestId('table-row-3-44')).toBeNull() // 本居宣長 (医術イジン)
+  expect(queryByTestId('table-row-3-43')).toBeNull() // 芹沢鴨 (志願イジン)
+  expect(queryByTestId('table-row-B-9')).toBeNull() // モナ・リザ (美術ハイケイ)
+  expect(queryByTestId('table-row-1-51')).toBeNull() // 冨嶽三十六景 (美術ハイケイ)
+  expect(queryByTestId('table-row-3-57')).toBeNull() // 風神雷神図 (美術ハイケイ)
+  expect(queryByTestId('table-row-2-51')).toBeNull() // リヴァイアサン (思想ハイケイ)
+  expect(queryByTestId('table-row-4-44')).toBeNull() // 落日の王宮 (美術・思想ハイケイ)
+  expect(queryByTestId('table-row-G-3')).toBeNull() // アテルイ (テキストに剣術を含むイジン)
+  expect(queryByTestId('table-row-B-11')).toBeNull() // フリート (テキストに航海を含むマホウ)
+  expect(queryByTestId('table-row-B-11')).toBeNull() // マザーグース (テキストに音楽を含むハイケイ)
+  expect(queryByTestId('table-row-2-55')).toBeNull() // 凱旋門 (テキストに思想を含むハイケイ)
+  expect(queryByTestId('table-row-P-5')).toBeNull() // 渡辺崋山 (テキストに医術を含む【美術】イジン)
+  expect(queryByTestId('table-row-3-76')).toBeNull() // ダンダラ羽織 (テキストに志願を含むマリョク)
+
+  // 思想ボタンを押す
+  let buttonTraitThought = getByRole('radio', { name: '思想' })
+  expect(buttonTraitThought).toBeVisible()
+  expect(buttonTraitThought).not.toBeChecked()
+  await userEvent.click(buttonTraitThought)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  buttonTraitThought = getByRole('radio', { name: '思想' })
+  expect(buttonTraitThought).toBeVisible()
+  expect(buttonTraitThought).toBeChecked()
+
+  expect(queryByTestId('table-row-1-10')).toBeNull() // 徳川家康 (剣術イジン)
+  expect(queryByTestId('table-row-1-23')).toBeNull() // ドナテッロ (美術イジン)
+  expect(queryByTestId('table-row-1-39')).toBeNull() // ヨハン・ゼバスティアン・バッハ (音楽イジン)
+  expect(getByTestId('table-row-3-21')).toBeVisible() // 木戸孝允 (思想イジン)
+  expect(queryByTestId('table-row-3-44')).toBeNull() // 本居宣長 (医術イジン)
+  expect(queryByTestId('table-row-3-43')).toBeNull() // 芹沢鴨 (志願イジン)
+  expect(queryByTestId('table-row-B-9')).toBeNull() // モナ・リザ (美術ハイケイ)
+  expect(queryByTestId('table-row-1-51')).toBeNull() // 冨嶽三十六景 (美術ハイケイ)
+  expect(queryByTestId('table-row-3-57')).toBeNull() // 風神雷神図 (美術ハイケイ)
+  expect(getByTestId('table-row-2-51')).toBeVisible() // リヴァイアサン (思想ハイケイ)
+  expect(getByTestId('table-row-4-44')).toBeVisible() // 落日の王宮 (美術・思想ハイケイ)
+  expect(queryByTestId('table-row-G-3')).toBeNull() // アテルイ (テキストに剣術を含むイジン)
+  expect(queryByTestId('table-row-B-11')).toBeNull() // フリート (テキストに航海を含むマホウ)
+  expect(queryByTestId('table-row-B-11')).toBeNull() // マザーグース (テキストに音楽を含むハイケイ)
+  expect(queryByTestId('table-row-2-55')).toBeNull() // 凱旋門 (テキストに思想を含むハイケイ)
+  expect(queryByTestId('table-row-P-5')).toBeNull() // 渡辺崋山 (テキストに医術を含む【美術】イジン)
+  expect(queryByTestId('table-row-3-76')).toBeNull() // ダンダラ羽織 (テキストに志願を含むマリョク)
+
+  // 医術ボタンを押す
+  let buttonTraitMedicine = getByRole('radio', { name: '医術' })
+  expect(buttonTraitMedicine).toBeVisible()
+  expect(buttonTraitMedicine).not.toBeChecked()
+  await userEvent.click(buttonTraitMedicine)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  buttonTraitMedicine = getByRole('radio', { name: '医術' })
+  expect(buttonTraitMedicine).toBeVisible()
+  expect(buttonTraitMedicine).toBeChecked()
+
+  expect(queryByTestId('table-row-1-10')).toBeNull() // 徳川家康 (剣術イジン)
+  expect(queryByTestId('table-row-1-23')).toBeNull() // ドナテッロ (美術イジン)
+  expect(queryByTestId('table-row-1-39')).toBeNull() // ヨハン・ゼバスティアン・バッハ (音楽イジン)
+  expect(queryByTestId('table-row-3-21')).toBeNull() // 木戸孝允 (思想イジン)
+  expect(getByTestId('table-row-3-44')).toBeVisible() // 本居宣長 (医術イジン)
+  expect(queryByTestId('table-row-3-43')).toBeNull() // 芹沢鴨 (志願イジン)
+  expect(queryByTestId('table-row-B-9')).toBeNull() // モナ・リザ (美術ハイケイ)
+  expect(queryByTestId('table-row-1-51')).toBeNull() // 冨嶽三十六景 (美術ハイケイ)
+  expect(queryByTestId('table-row-3-57')).toBeNull() // 風神雷神図 (美術ハイケイ)
+  expect(queryByTestId('table-row-2-51')).toBeNull() // リヴァイアサン (思想ハイケイ)
+  expect(queryByTestId('table-row-4-44')).toBeNull() // 落日の王宮 (美術・思想ハイケイ)
+  expect(queryByTestId('table-row-G-3')).toBeNull() // アテルイ (テキストに剣術を含むイジン)
+  expect(queryByTestId('table-row-B-11')).toBeNull() // フリート (テキストに航海を含むマホウ)
+  expect(queryByTestId('table-row-B-11')).toBeNull() // マザーグース (テキストに音楽を含むハイケイ)
+  expect(queryByTestId('table-row-2-55')).toBeNull() // 凱旋門 (テキストに思想を含むハイケイ)
+  expect(queryByTestId('table-row-P-5')).toBeNull() // 渡辺崋山 (テキストに医術を含む【美術】イジン)
+  expect(queryByTestId('table-row-3-76')).toBeNull() // ダンダラ羽織 (テキストに志願を含むマリョク)
+
+  // 志願ボタンを押す
+  let buttonTraitVolunteer = getByRole('radio', { name: '志願' })
+  expect(buttonTraitVolunteer).toBeVisible()
+  expect(buttonTraitVolunteer).not.toBeChecked()
+  await userEvent.click(buttonTraitVolunteer)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  buttonTraitVolunteer = getByRole('radio', { name: '志願' })
+  expect(buttonTraitVolunteer).toBeVisible()
+  expect(buttonTraitVolunteer).toBeChecked()
+
+  expect(queryByTestId('table-row-1-10')).toBeNull() // 徳川家康 (剣術イジン)
+  expect(queryByTestId('table-row-1-23')).toBeNull() // ドナテッロ (美術イジン)
+  expect(queryByTestId('table-row-1-39')).toBeNull() // ヨハン・ゼバスティアン・バッハ (音楽イジン)
+  expect(queryByTestId('table-row-3-21')).toBeNull() // 木戸孝允 (思想イジン)
+  expect(queryByTestId('table-row-3-44')).toBeNull() // 本居宣長 (医術イジン)
+  expect(getByTestId('table-row-3-43')).toBeVisible() // 芹沢鴨 (志願イジン)
+  expect(queryByTestId('table-row-B-9')).toBeNull() // モナ・リザ (美術ハイケイ)
+  expect(queryByTestId('table-row-1-51')).toBeNull() // 冨嶽三十六景 (美術ハイケイ)
+  expect(queryByTestId('table-row-3-57')).toBeNull() // 風神雷神図 (美術ハイケイ)
+  expect(queryByTestId('table-row-2-51')).toBeNull() // リヴァイアサン (思想ハイケイ)
+  expect(queryByTestId('table-row-4-44')).toBeNull() // 落日の王宮 (美術・思想ハイケイ)
+  expect(queryByTestId('table-row-G-3')).toBeNull() // アテルイ (テキストに剣術を含むイジン)
+  expect(queryByTestId('table-row-B-11')).toBeNull() // フリート (テキストに航海を含むマホウ)
+  expect(queryByTestId('table-row-B-11')).toBeNull() // マザーグース (テキストに音楽を含むハイケイ)
+  expect(queryByTestId('table-row-2-55')).toBeNull() // 凱旋門 (テキストに思想を含むハイケイ)
+  expect(queryByTestId('table-row-P-5')).toBeNull() // 渡辺崋山 (テキストに医術を含む【美術】イジン)
+  expect(queryByTestId('table-row-3-76')).toBeNull() // ダンダラ羽織 (テキストに志願を含むマリョク)
+
+  // 条件すべてをリセットするボタンを押す
+  buttonTraitUnspecified = getByTestId(
+    'button-trait-unspecified'
+  ).querySelector('input[type="radio"]')
+  expect(buttonTraitUnspecified).toBeVisible()
+  expect(buttonTraitUnspecified).not.toBeChecked()
+  const buttonResetAll = getByRole('button', {
+    name: '条件すべてをリセットする',
+  })
+  expect(buttonResetAll).toBeVisible()
+  await userEvent.click(buttonResetAll)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  buttonTraitUnspecified = getByTestId(
+    'button-trait-unspecified'
+  ).querySelector('input[type="radio"]')
+  expect(buttonTraitUnspecified).toBeVisible()
+  expect(buttonTraitUnspecified).toBeChecked()
+
+  expect(getByTestId('table-row-1-10')).toBeVisible() // 徳川家康 (剣術イジン)
+  expect(getByTestId('table-row-1-23')).toBeVisible() // ドナテッロ (美術イジン)
+  expect(getByTestId('table-row-1-39')).toBeVisible() // ヨハン・ゼバスティアン・バッハ (音楽イジン)
+  expect(getByTestId('table-row-3-21')).toBeVisible() // 木戸孝允 (思想イジン)
+  expect(getByTestId('table-row-3-44')).toBeVisible() // 本居宣長 (医術イジン)
+  expect(getByTestId('table-row-3-43')).toBeVisible() // 芹沢鴨 (志願イジン)
+  expect(getByTestId('table-row-B-9')).toBeVisible() // モナ・リザ (美術ハイケイ)
+  expect(getByTestId('table-row-1-51')).toBeVisible() // 冨嶽三十六景 (美術ハイケイ)
+  expect(getByTestId('table-row-3-57')).toBeVisible() // 風神雷神図 (美術ハイケイ)
+  expect(getByTestId('table-row-2-51')).toBeVisible() // リヴァイアサン (思想ハイケイ)
+  expect(getByTestId('table-row-4-44')).toBeVisible() // 落日の王宮 (美術・思想ハイケイ)
+  expect(getByTestId('table-row-G-3')).toBeVisible() // アテルイ (テキストに剣術を含むイジン)
+  expect(getByTestId('table-row-B-11')).toBeVisible() // フリート (テキストに航海を含むマホウ)
+  expect(getByTestId('table-row-B-11')).toBeVisible() // マザーグース (テキストに音楽を含むハイケイ)
+  expect(getByTestId('table-row-2-55')).toBeVisible() // 凱旋門 (テキストに思想を含むハイケイ)
+  expect(getByTestId('table-row-P-5')).toBeVisible() // 渡辺崋山 (テキストに医術を含む【美術】イジン)
+  expect(getByTestId('table-row-3-76')).toBeVisible() // ダンダラ羽織 (テキストに志願を含むマリョク)
+})
