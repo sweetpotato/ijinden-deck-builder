@@ -1883,3 +1883,318 @@ test('特性によるフィルタ', async () => {
   expect(getByTestId('table-row-P-5')).toBeVisible() // 渡辺崋山 (テキストに医術を含む【美術】イジン)
   expect(getByTestId('table-row-3-76')).toBeVisible() // ダンダラ羽織 (テキストに志願を含むマリョク)
 })
+
+test('能力語によるフィルタ', async () => {
+  const deckMain = new Map()
+  const deckSide = new Map()
+  const handleSetDeckMain = vi.fn()
+  const handleSetDeckSide = vi.fn()
+  const handleSetIdZoom = vi.fn()
+  const interruptSimulator = vi.fn()
+  const { rerender, getByRole, getByTestId, queryByTestId } = render(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+
+  // 条件で絞り込むアコーディオンを開く
+  await userEvent.click(
+    getByRole('button', {
+      name: '条件で絞り込む',
+      expanded: false,
+    })
+  )
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  expect(
+    getByRole('button', {
+      name: '条件で絞り込む',
+      expanded: true,
+    })
+  ).toBeVisible()
+
+  // 能力語アコーディオンアイテムを開く
+  const buttonTrait = getByRole('button', {
+    name: '➕ 能力語 ― 指定なし',
+    expanded: false,
+  })
+  expect(buttonTrait).toBeVisible()
+  await userEvent.click(buttonTrait)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  expect(
+    getByRole('button', {
+      name: '➖ 能力語',
+      expanded: true,
+    })
+  ).toBeVisible()
+
+  // 初期状態では指定なしボタンが選択されている
+  let buttonTermUnspecified = getByTestId(
+    'button-term-unspecified'
+  ).querySelector('input[type="radio"]')
+  expect(buttonTermUnspecified).toBeVisible()
+  expect(buttonTermUnspecified).toBeChecked()
+
+  expect(getByTestId('table-row-2-22')).toBeVisible() // 日蓮 (航海持ちハイケイ)
+  expect(getByTestId('table-row-2-39')).toBeVisible() // 陳寿 (執筆持ちハイケイ)
+  expect(getByTestId('table-row-3-56')).toBeVisible() // 志士の藩校 (執筆持ちハイケイ)
+  expect(getByTestId('table-row-2-9')).toBeVisible() // 石田三成 (決起持ちハイケイ)
+  expect(getByTestId('table-row-2-49')).toBeVisible() // 籠城戦 (決起持ちハイケイ)
+  expect(getByTestId('table-row-2-20')).toBeVisible() // 洪秀全 (徴募持ちハイケイ)
+  expect(getByTestId('table-row-4-61')).toBeVisible() // ソリッドビジョンα (赤魔導持ちマホウ)
+  expect(getByTestId('table-row-4-62')).toBeVisible() // ソリッドビジョンδ (青魔導持ちマホウ)
+  expect(getByTestId('table-row-4-63')).toBeVisible() // ソリッドビジョンΩ (緑魔導持ちマホウ)
+  expect(getByTestId('table-row-4-64')).toBeVisible() // ソリッドビジョンβ (黄魔導持ちマホウ)
+  expect(getByTestId('table-row-4-65')).toBeVisible() // ソリッドビジョンγ (紫魔導持ちマホウ)
+  expect(getByTestId('table-row-B-11')).toBeVisible() // フリート (テキストに航海を持つマホウ)
+  expect(getByTestId('table-row-1-68')).toBeVisible() // 万葉集 (テキストに執筆を持つマリョク)
+  expect(getByTestId('table-row-3-4')).toBeVisible() // 吉田松陰 (テキストに決起を持つイジン)
+  expect(getByTestId('table-row-2-55')).toBeVisible() // 凱旋門 (テキストに徴募を持つハイケイ)
+  expect(getByTestId('table-row-4-08')).toBeVisible() // アルキメデス (テキストに魔導を持つイジン)
+
+  // 航海ボタンを押す
+  let buttonTermSailing = getByRole('radio', { name: '航海' })
+  expect(buttonTermSailing).toBeVisible()
+  expect(buttonTermSailing).not.toBeChecked()
+  await userEvent.click(buttonTermSailing)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  buttonTermSailing = getByRole('radio', { name: '航海' })
+  expect(buttonTermSailing).toBeVisible()
+  expect(buttonTermSailing).toBeChecked()
+
+  expect(getByTestId('table-row-2-22')).toBeVisible() // 日蓮 (航海持ちハイケイ)
+  expect(queryByTestId('table-row-2-39')).toBeNull() // 陳寿 (執筆持ちハイケイ)
+  expect(queryByTestId('table-row-3-56')).toBeNull() // 志士の藩校 (執筆持ちハイケイ)
+  expect(queryByTestId('table-row-2-9')).toBeNull() // 石田三成 (決起持ちハイケイ)
+  expect(queryByTestId('table-row-2-49')).toBeNull() // 籠城戦 (決起持ちハイケイ)
+  expect(queryByTestId('table-row-2-20')).toBeNull() // 洪秀全 (徴募持ちハイケイ)
+  expect(queryByTestId('table-row-4-61')).toBeNull() // ソリッドビジョンα (赤魔導持ちマホウ)
+  expect(queryByTestId('table-row-4-62')).toBeNull() // ソリッドビジョンδ (青魔導持ちマホウ)
+  expect(queryByTestId('table-row-4-63')).toBeNull() // ソリッドビジョンΩ (緑魔導持ちマホウ)
+  expect(queryByTestId('table-row-4-64')).toBeNull() // ソリッドビジョンβ (黄魔導持ちマホウ)
+  expect(queryByTestId('table-row-4-65')).toBeNull() // ソリッドビジョンγ (紫魔導持ちマホウ)
+  expect(queryByTestId('table-row-B-11')).toBeNull() // フリート (テキストに航海を持つマホウ)
+  expect(queryByTestId('table-row-1-68')).toBeNull() // 万葉集 (テキストに執筆を持つマリョク)
+  expect(queryByTestId('table-row-3-4')).toBeNull() // 吉田松陰 (テキストに決起を持つイジン)
+  expect(queryByTestId('table-row-2-55')).toBeNull() // 凱旋門 (テキストに徴募を持つハイケイ)
+  expect(queryByTestId('table-row-4-08')).toBeNull() // アルキメデス (テキストに魔導を持つイジン)
+
+  // 執筆ボタンを押す
+  let buttonTermWriting = getByRole('radio', { name: '執筆' })
+  expect(buttonTermWriting).toBeVisible()
+  expect(buttonTermWriting).not.toBeChecked()
+  await userEvent.click(buttonTermWriting)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  buttonTermWriting = getByRole('radio', { name: '執筆' })
+  expect(buttonTermWriting).toBeVisible()
+  expect(buttonTermWriting).toBeChecked()
+
+  expect(queryByTestId('table-row-2-22')).toBeNull() // 日蓮 (航海持ちハイケイ)
+  expect(getByTestId('table-row-2-39')).toBeVisible() // 陳寿 (執筆持ちハイケイ)
+  expect(getByTestId('table-row-3-56')).toBeVisible() // 志士の藩校 (執筆持ちハイケイ)
+  expect(queryByTestId('table-row-2-9')).toBeNull() // 石田三成 (決起持ちハイケイ)
+  expect(queryByTestId('table-row-2-49')).toBeNull() // 籠城戦 (決起持ちハイケイ)
+  expect(queryByTestId('table-row-2-20')).toBeNull() // 洪秀全 (徴募持ちハイケイ)
+  expect(queryByTestId('table-row-4-61')).toBeNull() // ソリッドビジョンα (赤魔導持ちマホウ)
+  expect(queryByTestId('table-row-4-62')).toBeNull() // ソリッドビジョンδ (青魔導持ちマホウ)
+  expect(queryByTestId('table-row-4-63')).toBeNull() // ソリッドビジョンΩ (緑魔導持ちマホウ)
+  expect(queryByTestId('table-row-4-64')).toBeNull() // ソリッドビジョンβ (黄魔導持ちマホウ)
+  expect(queryByTestId('table-row-4-65')).toBeNull() // ソリッドビジョンγ (紫魔導持ちマホウ)
+  expect(queryByTestId('table-row-B-11')).toBeNull() // フリート (テキストに航海を持つマホウ)
+  expect(queryByTestId('table-row-1-68')).toBeNull() // 万葉集 (テキストに執筆を持つマリョク)
+  expect(queryByTestId('table-row-3-4')).toBeNull() // 吉田松陰 (テキストに決起を持つイジン)
+  expect(queryByTestId('table-row-2-55')).toBeNull() // 凱旋門 (テキストに徴募を持つハイケイ)
+  expect(queryByTestId('table-row-4-08')).toBeNull() // アルキメデス (テキストに魔導を持つイジン)
+
+  // 決起ボタンを押す
+  let buttonTermRising = getByRole('radio', { name: '決起' })
+  expect(buttonTermRising).toBeVisible()
+  expect(buttonTermRising).not.toBeChecked()
+  await userEvent.click(buttonTermRising)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  buttonTermRising = getByRole('radio', { name: '決起' })
+  expect(buttonTermRising).toBeVisible()
+  expect(buttonTermRising).toBeChecked()
+
+  expect(queryByTestId('table-row-2-22')).toBeNull() // 日蓮 (航海持ちハイケイ)
+  expect(queryByTestId('table-row-2-39')).toBeNull() // 陳寿 (執筆持ちハイケイ)
+  expect(queryByTestId('table-row-3-56')).toBeNull() // 志士の藩校 (執筆持ちハイケイ)
+  expect(getByTestId('table-row-2-9')).toBeVisible() // 石田三成 (決起持ちハイケイ)
+  expect(getByTestId('table-row-2-49')).toBeVisible() // 籠城戦 (決起持ちハイケイ)
+  expect(queryByTestId('table-row-2-20')).toBeNull() // 洪秀全 (徴募持ちハイケイ)
+  expect(queryByTestId('table-row-4-61')).toBeNull() // ソリッドビジョンα (赤魔導持ちマホウ)
+  expect(queryByTestId('table-row-4-62')).toBeNull() // ソリッドビジョンδ (青魔導持ちマホウ)
+  expect(queryByTestId('table-row-4-63')).toBeNull() // ソリッドビジョンΩ (緑魔導持ちマホウ)
+  expect(queryByTestId('table-row-4-64')).toBeNull() // ソリッドビジョンβ (黄魔導持ちマホウ)
+  expect(queryByTestId('table-row-4-65')).toBeNull() // ソリッドビジョンγ (紫魔導持ちマホウ)
+  expect(queryByTestId('table-row-B-11')).toBeNull() // フリート (テキストに航海を持つマホウ)
+  expect(queryByTestId('table-row-1-68')).toBeNull() // 万葉集 (テキストに執筆を持つマリョク)
+  expect(queryByTestId('table-row-3-4')).toBeNull() // 吉田松陰 (テキストに決起を持つイジン)
+  expect(queryByTestId('table-row-2-55')).toBeNull() // 凱旋門 (テキストに徴募を持つハイケイ)
+  expect(queryByTestId('table-row-4-08')).toBeNull() // アルキメデス (テキストに魔導を持つイジン)
+
+  // 徴募ボタンを押す
+  let buttonTermRecruitment = getByRole('radio', { name: '徴募' })
+  expect(buttonTermRecruitment).toBeVisible()
+  expect(buttonTermRecruitment).not.toBeChecked()
+  await userEvent.click(buttonTermRecruitment)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  buttonTermRecruitment = getByRole('radio', { name: '徴募' })
+  expect(buttonTermRecruitment).toBeVisible()
+  expect(buttonTermRecruitment).toBeChecked()
+
+  expect(queryByTestId('table-row-2-22')).toBeNull() // 日蓮 (航海持ちハイケイ)
+  expect(queryByTestId('table-row-2-39')).toBeNull() // 陳寿 (執筆持ちハイケイ)
+  expect(queryByTestId('table-row-3-56')).toBeNull() // 志士の藩校 (執筆持ちハイケイ)
+  expect(queryByTestId('table-row-2-9')).toBeNull() // 石田三成 (決起持ちハイケイ)
+  expect(queryByTestId('table-row-2-49')).toBeNull() // 籠城戦 (決起持ちハイケイ)
+  expect(getByTestId('table-row-2-20')).toBeVisible() // 洪秀全 (徴募持ちハイケイ)
+  expect(queryByTestId('table-row-4-61')).toBeNull() // ソリッドビジョンα (赤魔導持ちマホウ)
+  expect(queryByTestId('table-row-4-62')).toBeNull() // ソリッドビジョンδ (青魔導持ちマホウ)
+  expect(queryByTestId('table-row-4-63')).toBeNull() // ソリッドビジョンΩ (緑魔導持ちマホウ)
+  expect(queryByTestId('table-row-4-64')).toBeNull() // ソリッドビジョンβ (黄魔導持ちマホウ)
+  expect(queryByTestId('table-row-4-65')).toBeNull() // ソリッドビジョンγ (紫魔導持ちマホウ)
+  expect(queryByTestId('table-row-B-11')).toBeNull() // フリート (テキストに航海を持つマホウ)
+  expect(queryByTestId('table-row-1-68')).toBeNull() // 万葉集 (テキストに執筆を持つマリョク)
+  expect(queryByTestId('table-row-3-4')).toBeNull() // 吉田松陰 (テキストに決起を持つイジン)
+  expect(queryByTestId('table-row-2-55')).toBeNull() // 凱旋門 (テキストに徴募を持つハイケイ)
+  expect(queryByTestId('table-row-4-08')).toBeNull() // アルキメデス (テキストに魔導を持つイジン)
+
+  // 魔導ボタンを押す
+  let buttonTermChromagic = getByRole('radio', { name: '魔導' })
+  expect(buttonTermChromagic).toBeVisible()
+  expect(buttonTermChromagic).not.toBeChecked()
+  await userEvent.click(buttonTermChromagic)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  buttonTermChromagic = getByRole('radio', { name: '魔導' })
+  expect(buttonTermChromagic).toBeVisible()
+  expect(buttonTermChromagic).toBeChecked()
+
+  expect(queryByTestId('table-row-2-22')).toBeNull() // 日蓮 (航海持ちハイケイ)
+  expect(queryByTestId('table-row-2-39')).toBeNull() // 陳寿 (執筆持ちハイケイ)
+  expect(queryByTestId('table-row-3-56')).toBeNull() // 志士の藩校 (執筆持ちハイケイ)
+  expect(queryByTestId('table-row-2-9')).toBeNull() // 石田三成 (決起持ちハイケイ)
+  expect(queryByTestId('table-row-2-49')).toBeNull() // 籠城戦 (決起持ちハイケイ)
+  expect(queryByTestId('table-row-2-20')).toBeNull() // 洪秀全 (徴募持ちハイケイ)
+  expect(getByTestId('table-row-4-61')).toBeVisible() // ソリッドビジョンα (赤魔導持ちマホウ)
+  expect(getByTestId('table-row-4-62')).toBeVisible() // ソリッドビジョンδ (青魔導持ちマホウ)
+  expect(getByTestId('table-row-4-63')).toBeVisible() // ソリッドビジョンΩ (緑魔導持ちマホウ)
+  expect(getByTestId('table-row-4-64')).toBeVisible() // ソリッドビジョンβ (黄魔導持ちマホウ)
+  expect(getByTestId('table-row-4-65')).toBeVisible() // ソリッドビジョンγ (紫魔導持ちマホウ)
+  expect(queryByTestId('table-row-B-11')).toBeNull() // フリート (テキストに航海を持つマホウ)
+  expect(queryByTestId('table-row-1-68')).toBeNull() // 万葉集 (テキストに執筆を持つマリョク)
+  expect(queryByTestId('table-row-3-4')).toBeNull() // 吉田松陰 (テキストに決起を持つイジン)
+  expect(queryByTestId('table-row-2-55')).toBeNull() // 凱旋門 (テキストに徴募を持つハイケイ)
+  expect(queryByTestId('table-row-4-08')).toBeNull() // アルキメデス (テキストに魔導を持つイジン)
+
+  // 条件すべてをリセットするボタンを押す
+  buttonTermUnspecified = getByTestId('button-term-unspecified').querySelector(
+    'input[type="radio"]'
+  )
+  expect(buttonTermUnspecified).toBeVisible()
+  expect(buttonTermUnspecified).not.toBeChecked()
+  const buttonResetAll = getByRole('button', {
+    name: '条件すべてをリセットする',
+  })
+  expect(buttonResetAll).toBeVisible()
+  await userEvent.click(buttonResetAll)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  buttonTermUnspecified = getByTestId('button-term-unspecified').querySelector(
+    'input[type="radio"]'
+  )
+  expect(buttonTermUnspecified).toBeVisible()
+  expect(buttonTermUnspecified).toBeChecked()
+
+  expect(getByTestId('table-row-2-22')).toBeVisible() // 日蓮 (航海持ちハイケイ)
+  expect(getByTestId('table-row-2-39')).toBeVisible() // 陳寿 (執筆持ちハイケイ)
+  expect(getByTestId('table-row-3-56')).toBeVisible() // 志士の藩校 (執筆持ちハイケイ)
+  expect(getByTestId('table-row-2-9')).toBeVisible() // 石田三成 (決起持ちハイケイ)
+  expect(getByTestId('table-row-2-49')).toBeVisible() // 籠城戦 (決起持ちハイケイ)
+  expect(getByTestId('table-row-2-20')).toBeVisible() // 洪秀全 (徴募持ちハイケイ)
+  expect(getByTestId('table-row-4-61')).toBeVisible() // ソリッドビジョンα (赤魔導持ちマホウ)
+  expect(getByTestId('table-row-4-62')).toBeVisible() // ソリッドビジョンδ (青魔導持ちマホウ)
+  expect(getByTestId('table-row-4-63')).toBeVisible() // ソリッドビジョンΩ (緑魔導持ちマホウ)
+  expect(getByTestId('table-row-4-64')).toBeVisible() // ソリッドビジョンβ (黄魔導持ちマホウ)
+  expect(getByTestId('table-row-4-65')).toBeVisible() // ソリッドビジョンγ (紫魔導持ちマホウ)
+  expect(getByTestId('table-row-B-11')).toBeVisible() // フリート (テキストに航海を持つマホウ)
+  expect(getByTestId('table-row-1-68')).toBeVisible() // 万葉集 (テキストに執筆を持つマリョク)
+  expect(getByTestId('table-row-3-4')).toBeVisible() // 吉田松陰 (テキストに決起を持つイジン)
+  expect(getByTestId('table-row-2-55')).toBeVisible() // 凱旋門 (テキストに徴募を持つハイケイ)
+  expect(getByTestId('table-row-4-08')).toBeVisible() // アルキメデス (テキストに魔導を持つイジン)
+})
