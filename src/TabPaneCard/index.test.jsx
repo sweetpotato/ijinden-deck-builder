@@ -3952,3 +3952,171 @@ test('遺業能力によるフィルタ', async () => {
   expect(getByTestId('table-row-4-48')).toBeVisible() // 遠征軍 (山札の上か下に戻す)
   expect(getByTestId('table-row-3-59')).toBeVisible() // 森閑たる離宮 (ルールテキストに冥府発動を持つハイケイ)
 })
+
+test('色と種類とレベルによる複合フィルタ', async () => {
+  const deckMain = new Map()
+  const deckSide = new Map()
+  const handleSetDeckMain = vi.fn()
+  const handleSetDeckSide = vi.fn()
+  const handleSetIdZoom = vi.fn()
+  const interruptSimulator = vi.fn()
+  const { rerender, getByRole, getByTestId, queryByTestId } = render(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+
+  // 条件で絞り込むアコーディオンを開く
+  await userEvent.click(
+    getByRole('button', {
+      name: '条件で絞り込む',
+      expanded: false,
+    })
+  )
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  expect(
+    getByRole('button', {
+      name: '条件で絞り込む',
+      expanded: true,
+    })
+  ).toBeVisible()
+
+  // 色アコーディオンアイテムは既に開いている
+  expect(
+    getByRole('button', {
+      name: '➖ 色',
+      expanded: true,
+    })
+  ).toBeVisible()
+
+  // 種類アコーディオンアイテムは既に開いている
+  expect(
+    getByRole('button', {
+      name: '➖ 種類',
+      expanded: true,
+    })
+  ).toBeVisible()
+
+  // レベルアコーディオンアイテムを開く
+  await userEvent.click(
+    getByRole('button', { name: '➕ レベル ― 0以上', expanded: false })
+  )
+  expect(
+    getByRole('button', { name: '➖ レベル', expanded: true })
+  ).toBeVisible()
+
+  // 初期状態のチェック
+  expect(
+    getByTestId('button-color-all').querySelector('input[type="radio"]')
+  ).toBeChecked()
+  expect(
+    getByTestId('button-type-all').querySelector('input[type="radio"]')
+  ).toBeChecked()
+  expect(getByRole('slider')).toHaveValue('0')
+  expect(getByRole('radio', { name: '以上' })).toBeChecked()
+
+  // レベル5以下の赤のイジンを探す
+  expect(getByTestId('table-row-4-15')).toBeVisible() // ねね
+  expect(getByTestId('table-row-2-9')).toBeVisible() // 石田三成
+  expect(getByTestId('table-row-2-13')).toBeVisible() // 毛利輝元 (レベル6)
+  expect(getByTestId('table-row-3-52')).toBeVisible() // 天下分け目の主戦場	(ハイケイ)
+  expect(getByTestId('table-row-R-11')).toBeVisible() // ロイヤリティ (マホウ)
+  expect(getByTestId('table-row-1-61')).toBeVisible() // レッドオーブ (マリョク)
+  expect(getByTestId('table-row-1-75')).toBeVisible() // 衛青 (赤でない)
+
+  await userEvent.click(getByRole('radio', { name: '赤' }))
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  await userEvent.click(getByRole('radio', { name: 'イジン' }))
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  // userEvent は slider に未対応とのこと。
+  // See: https://github.com/testing-library/user-event/issues/871
+  fireEvent.change(getByRole('slider'), { target: { value: '5' } })
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  await userEvent.click(getByRole('radio', { name: '以下' }))
+  expect(getByRole('radio', { name: '赤' })).toBeChecked()
+  expect(getByRole('radio', { name: 'イジン' })).toBeChecked()
+  expect(getByRole('slider')).toHaveValue('5')
+  expect(getByRole('radio', { name: '以下' })).toBeChecked()
+
+  expect(getByTestId('table-row-4-15')).toBeVisible() // ねね
+  expect(getByTestId('table-row-2-9')).toBeVisible() // 石田三成
+  expect(queryByTestId('table-row-2-13')).toBeNull() // 毛利輝元 (レベル6)
+  expect(queryByTestId('table-row-3-52')).toBeNull() // 天下分け目の主戦場	(ハイケイ)
+  expect(queryByTestId('table-row-R-11')).toBeNull() // ロイヤリティ (マホウ)
+  expect(queryByTestId('table-row-1-61')).toBeNull() // レッドオーブ (マリョク)
+  expect(queryByTestId('table-row-1-75')).toBeNull() // 衛青 (赤でない)
+
+  // 条件すべてをリセットするボタンを押す
+  await userEvent.click(
+    getByRole('button', {
+      name: '条件すべてをリセットする',
+    })
+  )
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  expect(
+    getByTestId('button-color-all').querySelector('input[type="radio"]')
+  ).toBeChecked()
+  expect(
+    getByTestId('button-type-all').querySelector('input[type="radio"]')
+  ).toBeChecked()
+  expect(getByRole('slider')).toHaveValue('0')
+  expect(getByRole('radio', { name: '以上' })).toBeChecked()
+
+  expect(getByTestId('table-row-4-15')).toBeVisible() // ねね
+  expect(getByTestId('table-row-2-9')).toBeVisible() // 石田三成
+  expect(getByTestId('table-row-2-13')).toBeVisible() // 毛利輝元 (レベル6)
+  expect(getByTestId('table-row-3-52')).toBeVisible() // 天下分け目の主戦場	(ハイケイ)
+  expect(getByTestId('table-row-R-11')).toBeVisible() // ロイヤリティ (マホウ)
+  expect(getByTestId('table-row-1-61')).toBeVisible() // レッドオーブ (マリョク)
+  expect(getByTestId('table-row-1-75')).toBeVisible() // 衛青 (赤でない)
+})
