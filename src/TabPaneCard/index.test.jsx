@@ -419,8 +419,8 @@ test('初期状態', async () => {
 })
 
 test('エキスパンションによるフィルタ', async () => {
-  let deckMain = new Map()
-  let deckSide = new Map()
+  const deckMain = new Map()
+  const deckSide = new Map()
   const handleSetDeckMain = vi.fn()
   const handleSetDeckSide = vi.fn()
   const handleSetIdZoom = vi.fn()
@@ -435,18 +435,14 @@ test('エキスパンションによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  expect(handleSetDeckMain.mock.calls.length).toBe(0)
-  expect(handleSetDeckSide.mock.calls.length).toBe(0)
-  expect(handleSetIdZoom.mock.calls.length).toBe(0)
-  expect(interruptSimulator.mock.calls.length).toBe(0)
 
   // 条件で絞り込むアコーディオンを開く
-  const buttonFilterTop = getByRole('button', {
-    name: '条件で絞り込む',
-    expanded: false,
-  })
-  expect(buttonFilterTop).toBeVisible()
-  await userEvent.click(buttonFilterTop)
+  await userEvent.click(
+    getByRole('button', {
+      name: '条件で絞り込む',
+      expanded: false,
+    })
+  )
   rerender(
     <TabPaneCard
       deckMain={deckMain}
@@ -457,6 +453,12 @@ test('エキスパンションによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
+  expect(
+    getByRole('button', {
+      name: '条件で絞り込む',
+      expanded: true,
+    })
+  ).toBeVisible()
 
   // エキスパンションアコーディオンアイテムを開く
   const buttonExpansion = getByRole('button', {
@@ -475,6 +477,20 @@ test('エキスパンションによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
+  expect(
+    getByRole('button', {
+      name: '➖ エキスパンション',
+      expanded: true,
+    })
+  ).toBeVisible()
+
+  // 初期状態ではすべてボタンが選択されている
+  let buttonExpansionAll = getByTestId('button-expansion-all').querySelector(
+    'input[type="radio"]'
+  )
+  expect(buttonExpansionAll).toBeVisible()
+  expect(buttonExpansionAll).toBeChecked()
+
   expect(getByTestId('table-row-R-1')).toBeVisible()
   expect(getByTestId('table-row-B-1')).toBeVisible()
   expect(getByTestId('table-row-G-1')).toBeVisible()
@@ -486,7 +502,7 @@ test('エキスパンションによるフィルタ', async () => {
   expect(getByTestId('table-row-4-01')).toBeVisible()
 
   // 伝説の武将ボタンを押す
-  const buttonExpansionRed = getByRole('radio', { name: '伝説の武将' })
+  let buttonExpansionRed = getByRole('radio', { name: '伝説の武将' })
   expect(buttonExpansionRed).toBeVisible()
   expect(buttonExpansionRed).not.toBeChecked()
   await userEvent.click(buttonExpansionRed)
@@ -500,6 +516,10 @@ test('エキスパンションによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
+  buttonExpansionRed = getByRole('radio', { name: '伝説の武将' })
+  expect(buttonExpansionRed).toBeVisible()
+  expect(buttonExpansionRed).toBeChecked()
+
   expect(getByTestId('table-row-R-1')).toBeVisible()
   expect(queryByTestId('table-row-B-1')).toBeNull()
   expect(queryByTestId('table-row-G-1')).toBeNull()
@@ -511,7 +531,7 @@ test('エキスパンションによるフィルタ', async () => {
   expect(queryByTestId('table-row-4-01')).toBeNull()
 
   // 美と知の革命ボタンを押す
-  const buttonExpansionBlue = getByRole('radio', { name: '美と知の革命' })
+  let buttonExpansionBlue = getByRole('radio', { name: '美と知の革命' })
   expect(buttonExpansionBlue).toBeVisible()
   expect(buttonExpansionBlue).not.toBeChecked()
   await userEvent.click(buttonExpansionBlue)
@@ -525,6 +545,10 @@ test('エキスパンションによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
+  buttonExpansionBlue = getByRole('radio', { name: '美と知の革命' })
+  expect(buttonExpansionBlue).toBeVisible()
+  expect(buttonExpansionBlue).toBeChecked()
+
   expect(queryByTestId('table-row-R-1')).toBeNull()
   expect(getByTestId('table-row-B-1')).toBeVisible()
   expect(queryByTestId('table-row-G-1')).toBeNull()
@@ -536,7 +560,7 @@ test('エキスパンションによるフィルタ', async () => {
   expect(queryByTestId('table-row-4-01')).toBeNull()
 
   // 日本の大天才ボタンを押す
-  const buttonExpansionGreen = getByRole('radio', { name: '日本の大天才' })
+  let buttonExpansionGreen = getByRole('radio', { name: '日本の大天才' })
   expect(buttonExpansionGreen).toBeVisible()
   expect(buttonExpansionGreen).not.toBeChecked()
   await userEvent.click(buttonExpansionGreen)
@@ -550,6 +574,10 @@ test('エキスパンションによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
+  buttonExpansionGreen = getByRole('radio', { name: '日本の大天才' })
+  expect(buttonExpansionGreen).toBeVisible()
+  expect(buttonExpansionGreen).toBeChecked()
+
   expect(queryByTestId('table-row-R-1')).toBeNull()
   expect(queryByTestId('table-row-B-1')).toBeNull()
   expect(getByTestId('table-row-G-1')).toBeVisible()
@@ -561,7 +589,7 @@ test('エキスパンションによるフィルタ', async () => {
   expect(queryByTestId('table-row-4-01')).toBeNull()
 
   // 第１弾ブースターボタンを押す
-  const buttonExpansionFirst = getByRole('radio', { name: '第１弾ブースター' })
+  let buttonExpansionFirst = getByRole('radio', { name: '第１弾ブースター' })
   expect(buttonExpansionFirst).toBeVisible()
   expect(buttonExpansionFirst).not.toBeChecked()
   await userEvent.click(buttonExpansionFirst)
@@ -575,6 +603,10 @@ test('エキスパンションによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
+  buttonExpansionFirst = getByRole('radio', { name: '第１弾ブースター' })
+  expect(buttonExpansionFirst).toBeVisible()
+  expect(buttonExpansionFirst).toBeChecked()
+
   expect(queryByTestId('table-row-R-1')).toBeNull()
   expect(queryByTestId('table-row-B-1')).toBeNull()
   expect(queryByTestId('table-row-G-1')).toBeNull()
@@ -586,7 +618,7 @@ test('エキスパンションによるフィルタ', async () => {
   expect(queryByTestId('table-row-4-01')).toBeNull()
 
   // 三国の英傑ボタンを押す
-  const buttonExpansionYellow = getByRole('radio', { name: '三国の英傑' })
+  let buttonExpansionYellow = getByRole('radio', { name: '三国の英傑' })
   expect(buttonExpansionYellow).toBeVisible()
   expect(buttonExpansionYellow).not.toBeChecked()
   await userEvent.click(buttonExpansionYellow)
@@ -600,6 +632,10 @@ test('エキスパンションによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
+  buttonExpansionYellow = getByRole('radio', { name: '三国の英傑' })
+  expect(buttonExpansionYellow).toBeVisible()
+  expect(buttonExpansionYellow).toBeChecked()
+
   expect(queryByTestId('table-row-R-1')).toBeNull()
   expect(queryByTestId('table-row-B-1')).toBeNull()
   expect(queryByTestId('table-row-G-1')).toBeNull()
@@ -611,7 +647,7 @@ test('エキスパンションによるフィルタ', async () => {
   expect(queryByTestId('table-row-4-01')).toBeNull()
 
   // 第２弾ブースターボタンを押す
-  const buttonExpansionSecond = getByRole('radio', { name: '第２弾ブースター' })
+  let buttonExpansionSecond = getByRole('radio', { name: '第２弾ブースター' })
   expect(buttonExpansionSecond).toBeVisible()
   expect(buttonExpansionSecond).not.toBeChecked()
   await userEvent.click(buttonExpansionSecond)
@@ -625,6 +661,10 @@ test('エキスパンションによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
+  buttonExpansionSecond = getByRole('radio', { name: '第２弾ブースター' })
+  expect(buttonExpansionSecond).toBeVisible()
+  expect(buttonExpansionSecond).toBeChecked()
+
   expect(queryByTestId('table-row-R-1')).toBeNull()
   expect(queryByTestId('table-row-B-1')).toBeNull()
   expect(queryByTestId('table-row-G-1')).toBeNull()
@@ -636,7 +676,7 @@ test('エキスパンションによるフィルタ', async () => {
   expect(queryByTestId('table-row-4-01')).toBeNull()
 
   // 発展する医学ボタンを押す
-  const buttonExpansionPurple = getByRole('radio', { name: '発展する医学' })
+  let buttonExpansionPurple = getByRole('radio', { name: '発展する医学' })
   expect(buttonExpansionPurple).toBeVisible()
   expect(buttonExpansionPurple).not.toBeChecked()
   await userEvent.click(buttonExpansionPurple)
@@ -650,6 +690,10 @@ test('エキスパンションによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
+  buttonExpansionPurple = getByRole('radio', { name: '発展する医学' })
+  expect(buttonExpansionPurple).toBeVisible()
+  expect(buttonExpansionPurple).toBeChecked()
+
   expect(queryByTestId('table-row-R-1')).toBeNull()
   expect(queryByTestId('table-row-B-1')).toBeNull()
   expect(queryByTestId('table-row-G-1')).toBeNull()
@@ -661,7 +705,7 @@ test('エキスパンションによるフィルタ', async () => {
   expect(queryByTestId('table-row-4-01')).toBeNull()
 
   // 第３弾ブースターボタンを押す
-  const buttonExpansionThird = getByRole('radio', { name: '第３弾ブースター' })
+  let buttonExpansionThird = getByRole('radio', { name: '第３弾ブースター' })
   expect(buttonExpansionThird).toBeVisible()
   expect(buttonExpansionThird).not.toBeChecked()
   await userEvent.click(buttonExpansionThird)
@@ -675,6 +719,10 @@ test('エキスパンションによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
+  buttonExpansionThird = getByRole('radio', { name: '第３弾ブースター' })
+  expect(buttonExpansionThird).toBeVisible()
+  expect(buttonExpansionThird).toBeChecked()
+
   expect(queryByTestId('table-row-R-1')).toBeNull()
   expect(queryByTestId('table-row-B-1')).toBeNull()
   expect(queryByTestId('table-row-G-1')).toBeNull()
@@ -686,7 +734,7 @@ test('エキスパンションによるフィルタ', async () => {
   expect(queryByTestId('table-row-4-01')).toBeNull()
 
   // 第４弾ブースターボタンを押す
-  const buttonExpansionFourth = getByRole('radio', { name: '第４弾ブースター' })
+  let buttonExpansionFourth = getByRole('radio', { name: '第４弾ブースター' })
   expect(buttonExpansionFourth).toBeVisible()
   expect(buttonExpansionFourth).not.toBeChecked()
   await userEvent.click(buttonExpansionFourth)
@@ -700,6 +748,10 @@ test('エキスパンションによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
+  buttonExpansionFourth = getByRole('radio', { name: '第４弾ブースター' })
+  expect(buttonExpansionFourth).toBeVisible()
+  expect(buttonExpansionFourth).toBeChecked()
+
   expect(queryByTestId('table-row-R-1')).toBeNull()
   expect(queryByTestId('table-row-B-1')).toBeNull()
   expect(queryByTestId('table-row-G-1')).toBeNull()
@@ -711,12 +763,16 @@ test('エキスパンションによるフィルタ', async () => {
   expect(getByTestId('table-row-4-01')).toBeVisible()
 
   // 条件すべてをリセットするボタンを押す
-  const buttonResetAll = getByRole('button', {
-    name: '条件すべてをリセットする',
-  })
-  expect(buttonResetAll).toBeVisible()
-  expect(buttonResetAll).not.toBeChecked()
-  await userEvent.click(buttonResetAll)
+  buttonExpansionAll = getByTestId('button-expansion-all').querySelector(
+    'input[type="radio"]'
+  )
+  expect(buttonExpansionAll).toBeVisible()
+  expect(buttonExpansionAll).not.toBeChecked()
+  await userEvent.click(
+    getByRole('button', {
+      name: '条件すべてをリセットする',
+    })
+  )
   rerender(
     <TabPaneCard
       deckMain={deckMain}
@@ -727,11 +783,12 @@ test('エキスパンションによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  const buttonExpansionAll = getByTestId('button-expansion-all').querySelector(
+  buttonExpansionAll = getByTestId('button-expansion-all').querySelector(
     'input[type="radio"]'
   )
   expect(buttonExpansionAll).toBeVisible()
   expect(buttonExpansionAll).toBeChecked()
+
   expect(getByTestId('table-row-R-1')).toBeVisible()
   expect(getByTestId('table-row-B-1')).toBeVisible()
   expect(getByTestId('table-row-G-1')).toBeVisible()
@@ -744,8 +801,8 @@ test('エキスパンションによるフィルタ', async () => {
 })
 
 test('レアリティによるフィルタ', async () => {
-  let deckMain = new Map()
-  let deckSide = new Map()
+  const deckMain = new Map()
+  const deckSide = new Map()
   const handleSetDeckMain = vi.fn()
   const handleSetDeckSide = vi.fn()
   const handleSetIdZoom = vi.fn()
@@ -760,18 +817,14 @@ test('レアリティによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  expect(handleSetDeckMain.mock.calls.length).toBe(0)
-  expect(handleSetDeckSide.mock.calls.length).toBe(0)
-  expect(handleSetIdZoom.mock.calls.length).toBe(0)
-  expect(interruptSimulator.mock.calls.length).toBe(0)
 
   // 条件で絞り込むアコーディオンを開く
-  const buttonFilterTop = getByRole('button', {
-    name: '条件で絞り込む',
-    expanded: false,
-  })
-  expect(buttonFilterTop).toBeVisible()
-  await userEvent.click(buttonFilterTop)
+  await userEvent.click(
+    getByRole('button', {
+      name: '条件で絞り込む',
+      expanded: false,
+    })
+  )
   rerender(
     <TabPaneCard
       deckMain={deckMain}
@@ -782,6 +835,12 @@ test('レアリティによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
+  expect(
+    getByRole('button', {
+      name: '条件で絞り込む',
+      expanded: true,
+    })
+  ).toBeVisible()
 
   // レアリティアコーディオンアイテムを開く
   const buttonRarity = getByRole('button', {
@@ -800,12 +859,28 @@ test('レアリティによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
+  expect(
+    getByRole('button', {
+      name: '➖ レアリティ',
+      expanded: true,
+    })
+  ).toBeVisible()
+
+  // 初期状態ではすべてボタンが選択されている
+  let buttonRarityAll = getByTestId('button-rarity-all').querySelector(
+    'input[type="radio"]'
+  )
+  expect(buttonRarityAll).toBeVisible()
+  expect(buttonRarityAll).toBeChecked()
+
   expect(getByTestId('table-row-1-1')).toBeVisible() // 織田信長 (SR)
   expect(getByTestId('table-row-1-15')).toBeVisible() // 中臣鎌足 (R)
   expect(getByTestId('table-row-1-17')).toBeVisible() // 藤原道長 (N)
 
   // Nのみボタンを押す
-  const buttonRarityN = getByRole('radio', { name: 'Nのみ' })
+  let buttonRarityN = getByRole('radio', { name: 'Nのみ' })
+  expect(buttonRarityN).toBeVisible()
+  expect(buttonRarityN).not.toBeChecked()
   await userEvent.click(buttonRarityN)
   rerender(
     <TabPaneCard
@@ -817,12 +892,18 @@ test('レアリティによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
+  buttonRarityN = getByRole('radio', { name: 'Nのみ' })
+  expect(buttonRarityN).toBeVisible()
+  expect(buttonRarityN).toBeChecked()
+
   expect(queryByTestId('table-row-1-1')).toBeNull()
   expect(queryByTestId('table-row-1-15')).toBeNull()
   expect(getByTestId('table-row-1-17')).toBeVisible()
 
   // NとRボタンを押す
-  const buttonRarityNandR = getByRole('radio', { name: 'NとR' })
+  let buttonRarityNandR = getByRole('radio', { name: 'NとR' })
+  expect(buttonRarityNandR).toBeVisible()
+  expect(buttonRarityNandR).not.toBeChecked()
   await userEvent.click(buttonRarityNandR)
   rerender(
     <TabPaneCard
@@ -834,12 +915,18 @@ test('レアリティによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
+  buttonRarityNandR = getByRole('radio', { name: 'NとR' })
+  expect(buttonRarityNandR).toBeVisible()
+  expect(buttonRarityNandR).toBeChecked()
   expect(queryByTestId('table-row-1-1')).toBeNull()
+
   expect(getByTestId('table-row-1-15')).toBeVisible()
   expect(getByTestId('table-row-1-17')).toBeVisible()
 
   // Rのみボタンを押す
-  const buttonRarityR = getByRole('radio', { name: 'Rのみ' })
+  let buttonRarityR = getByRole('radio', { name: 'Rのみ' })
+  expect(buttonRarityR).toBeVisible()
+  expect(buttonRarityR).not.toBeChecked()
   await userEvent.click(buttonRarityR)
   rerender(
     <TabPaneCard
@@ -851,12 +938,18 @@ test('レアリティによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
+  buttonRarityR = getByRole('radio', { name: 'Rのみ' })
+  expect(buttonRarityR).toBeVisible()
+  expect(buttonRarityR).toBeChecked()
+
   expect(queryByTestId('table-row-1-1')).toBeNull()
   expect(getByTestId('table-row-1-15')).toBeVisible()
   expect(queryByTestId('table-row-1-17')).toBeNull()
 
   // RとSRボタンを押す
-  const buttonRarityRandSR = getByRole('radio', { name: 'RとSR' })
+  let buttonRarityRandSR = getByRole('radio', { name: 'RとSR' })
+  expect(buttonRarityRandSR).toBeVisible()
+  expect(buttonRarityRandSR).not.toBeChecked()
   await userEvent.click(buttonRarityRandSR)
   rerender(
     <TabPaneCard
@@ -868,12 +961,18 @@ test('レアリティによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
+  buttonRarityRandSR = getByRole('radio', { name: 'RとSR' })
+  expect(buttonRarityRandSR).toBeVisible()
+  expect(buttonRarityRandSR).toBeChecked()
+
   expect(getByTestId('table-row-1-1')).toBeVisible()
   expect(getByTestId('table-row-1-15')).toBeVisible()
   expect(queryByTestId('table-row-1-17')).toBeNull()
 
   // SRのみボタンを押す
-  const buttonRaritySR = getByRole('radio', { name: 'SRのみ' })
+  let buttonRaritySR = getByRole('radio', { name: 'SRのみ' })
+  expect(buttonRaritySR).toBeVisible()
+  expect(buttonRaritySR).not.toBeChecked()
   await userEvent.click(buttonRaritySR)
   rerender(
     <TabPaneCard
@@ -885,17 +984,25 @@ test('レアリティによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
+  buttonRaritySR = getByRole('radio', { name: 'SRのみ' })
+  expect(buttonRaritySR).toBeVisible()
+  expect(buttonRaritySR).toBeChecked()
+
   expect(getByTestId('table-row-1-1')).toBeVisible()
   expect(queryByTestId('table-row-1-15')).toBeNull()
   expect(queryByTestId('table-row-1-17')).toBeNull()
 
   // 条件すべてをリセットするボタンを押す
-  const buttonResetAll = getByRole('button', {
-    name: '条件すべてをリセットする',
-  })
-  expect(buttonResetAll).toBeVisible()
-  expect(buttonResetAll).not.toBeChecked()
-  await userEvent.click(buttonResetAll)
+  buttonRarityAll = getByTestId('button-rarity-all').querySelector(
+    'input[type="radio"]'
+  )
+  expect(buttonRarityAll).toBeVisible()
+  expect(buttonRarityAll).not.toBeChecked()
+  await userEvent.click(
+    getByRole('button', {
+      name: '条件すべてをリセットする',
+    })
+  )
   rerender(
     <TabPaneCard
       deckMain={deckMain}
@@ -906,7 +1013,7 @@ test('レアリティによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  const buttonRarityAll = getByTestId('button-rarity-all').querySelector(
+  buttonRarityAll = getByTestId('button-rarity-all').querySelector(
     'input[type="radio"]'
   )
   expect(buttonRarityAll).toBeVisible()
@@ -918,8 +1025,8 @@ test('レアリティによるフィルタ', async () => {
 })
 
 test('色によるフィルタ', async () => {
-  let deckMain = new Map()
-  let deckSide = new Map()
+  const deckMain = new Map()
+  const deckSide = new Map()
   const handleSetDeckMain = vi.fn()
   const handleSetDeckSide = vi.fn()
   const handleSetIdZoom = vi.fn()
@@ -934,18 +1041,14 @@ test('色によるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  expect(handleSetDeckMain.mock.calls.length).toBe(0)
-  expect(handleSetDeckSide.mock.calls.length).toBe(0)
-  expect(handleSetIdZoom.mock.calls.length).toBe(0)
-  expect(interruptSimulator.mock.calls.length).toBe(0)
 
   // 条件で絞り込むアコーディオンを開く
-  const buttonFilterTop = getByRole('button', {
-    name: '条件で絞り込む',
-    expanded: false,
-  })
-  expect(buttonFilterTop).toBeVisible()
-  await userEvent.click(buttonFilterTop)
+  await userEvent.click(
+    getByRole('button', {
+      name: '条件で絞り込む',
+      expanded: false,
+    })
+  )
   rerender(
     <TabPaneCard
       deckMain={deckMain}
@@ -956,6 +1059,12 @@ test('色によるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
+  expect(
+    getByRole('button', {
+      name: '条件で絞り込む',
+      expanded: true,
+    })
+  ).toBeVisible()
 
   // 色アコーディオンアイテムは既に開いている
   expect(
@@ -964,6 +1073,13 @@ test('色によるフィルタ', async () => {
       expanded: true,
     })
   ).toBeVisible()
+
+  // 初期状態ではすべてボタンが選択されている
+  let buttonColorAll = getByTestId('button-color-all').querySelector(
+    'input[type="radio"]'
+  )
+  expect(buttonColorAll).toBeVisible()
+  expect(buttonColorAll).toBeChecked()
 
   expect(getByTestId('table-row-2-78')).toBeVisible() // RYマーブルオーブ (赤黄)
   expect(getByTestId('table-row-2-79')).toBeVisible() // RYマーブルオーブ (青黄)
@@ -976,7 +1092,7 @@ test('色によるフィルタ', async () => {
   expect(getByTestId('table-row-3-80')).toBeVisible() // オブシディアン (無色)
 
   // 赤ボタンを押す
-  const buttonColorRed = getByRole('radio', { name: '赤' })
+  let buttonColorRed = getByRole('radio', { name: '赤' })
   expect(buttonColorRed).toBeVisible()
   expect(buttonColorRed).not.toBeChecked()
   await userEvent.click(buttonColorRed)
@@ -990,6 +1106,10 @@ test('色によるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
+  buttonColorRed = getByRole('radio', { name: '赤' })
+  expect(buttonColorRed).toBeVisible()
+  expect(buttonColorRed).toBeChecked()
+
   expect(getByTestId('table-row-2-78')).toBeVisible() // RYマーブルオーブ (赤黄)
   expect(queryByTestId('table-row-2-79')).toBeNull() // RYマーブルオーブ (青黄)
   expect(queryByTestId('table-row-2-80')).toBeNull() // RYマーブルオーブ (緑黄)
@@ -1001,7 +1121,7 @@ test('色によるフィルタ', async () => {
   expect(queryByTestId('table-row-3-80')).toBeNull() // オブシディアン (無色)
 
   // 青ボタンを押す
-  const buttonColorBlue = getByRole('radio', { name: '青' })
+  let buttonColorBlue = getByRole('radio', { name: '青' })
   expect(buttonColorBlue).toBeVisible()
   expect(buttonColorBlue).not.toBeChecked()
   await userEvent.click(buttonColorBlue)
@@ -1015,6 +1135,10 @@ test('色によるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
+  buttonColorBlue = getByRole('radio', { name: '青' })
+  expect(buttonColorBlue).toBeVisible()
+  expect(buttonColorBlue).toBeChecked()
+
   expect(queryByTestId('table-row-2-78')).toBeNull() // RYマーブルオーブ (赤黄)
   expect(getByTestId('table-row-2-79')).toBeVisible() // RYマーブルオーブ (青黄)
   expect(queryByTestId('table-row-2-80')).toBeNull() // RYマーブルオーブ (緑黄)
@@ -1026,7 +1150,7 @@ test('色によるフィルタ', async () => {
   expect(queryByTestId('table-row-3-80')).toBeNull() // オブシディアン (無色)
 
   // 緑ボタンを押す
-  const buttonColorGreen = getByRole('radio', { name: '緑' })
+  let buttonColorGreen = getByRole('radio', { name: '緑' })
   expect(buttonColorGreen).toBeVisible()
   expect(buttonColorGreen).not.toBeChecked()
   await userEvent.click(buttonColorGreen)
@@ -1040,6 +1164,10 @@ test('色によるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
+  buttonColorGreen = getByRole('radio', { name: '緑' })
+  expect(buttonColorGreen).toBeVisible()
+  expect(buttonColorGreen).toBeChecked()
+
   expect(queryByTestId('table-row-2-78')).toBeNull() // RYマーブルオーブ (赤黄)
   expect(queryByTestId('table-row-2-79')).toBeNull() // RYマーブルオーブ (青黄)
   expect(getByTestId('table-row-2-80')).toBeVisible() // RYマーブルオーブ (緑黄)
@@ -1051,7 +1179,7 @@ test('色によるフィルタ', async () => {
   expect(queryByTestId('table-row-3-80')).toBeNull() // オブシディアン (無色)
 
   // 黄ボタンを押す
-  const buttonColorYellow = getByRole('radio', { name: '黄' })
+  let buttonColorYellow = getByRole('radio', { name: '黄' })
   expect(buttonColorYellow).toBeVisible()
   expect(buttonColorYellow).not.toBeChecked()
   await userEvent.click(buttonColorYellow)
@@ -1065,6 +1193,10 @@ test('色によるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
+  buttonColorYellow = getByRole('radio', { name: '黄' })
+  expect(buttonColorYellow).toBeVisible()
+  expect(buttonColorYellow).toBeChecked()
+
   expect(getByTestId('table-row-2-78')).toBeVisible() // RYマーブルオーブ (赤黄)
   expect(getByTestId('table-row-2-79')).toBeVisible() // RYマーブルオーブ (青黄)
   expect(getByTestId('table-row-2-80')).toBeVisible() // RYマーブルオーブ (緑黄)
@@ -1076,7 +1208,7 @@ test('色によるフィルタ', async () => {
   expect(queryByTestId('table-row-3-80')).toBeNull() // オブシディアン (無色)
 
   // 紫ボタンを押す
-  const buttonColorPurple = getByRole('radio', { name: '紫' })
+  let buttonColorPurple = getByRole('radio', { name: '紫' })
   expect(buttonColorPurple).toBeVisible()
   expect(buttonColorPurple).not.toBeChecked()
   await userEvent.click(buttonColorPurple)
@@ -1090,6 +1222,10 @@ test('色によるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
+  buttonColorPurple = getByRole('radio', { name: '紫' })
+  expect(buttonColorPurple).toBeVisible()
+  expect(buttonColorPurple).toBeChecked()
+
   expect(queryByTestId('table-row-2-78')).toBeNull() // RYマーブルオーブ (赤黄)
   expect(queryByTestId('table-row-2-79')).toBeNull() // RYマーブルオーブ (青黄)
   expect(queryByTestId('table-row-2-80')).toBeNull() // RYマーブルオーブ (緑黄)
@@ -1101,7 +1237,7 @@ test('色によるフィルタ', async () => {
   expect(queryByTestId('table-row-3-80')).toBeNull() // オブシディアン (無色)
 
   // 多色ボタンを押す
-  const buttonColorMulticolor = getByRole('radio', { name: '多色' })
+  let buttonColorMulticolor = getByRole('radio', { name: '多色' })
   expect(buttonColorMulticolor).toBeVisible()
   expect(buttonColorMulticolor).not.toBeChecked()
   await userEvent.click(buttonColorMulticolor)
@@ -1115,6 +1251,10 @@ test('色によるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
+  buttonColorMulticolor = getByRole('radio', { name: '多色' })
+  expect(buttonColorMulticolor).toBeVisible()
+  expect(buttonColorMulticolor).toBeChecked()
+
   expect(getByTestId('table-row-2-78')).toBeVisible() // RYマーブルオーブ (赤黄)
   expect(getByTestId('table-row-2-79')).toBeVisible() // RYマーブルオーブ (青黄)
   expect(getByTestId('table-row-2-80')).toBeVisible() // RYマーブルオーブ (緑黄)
@@ -1126,7 +1266,7 @@ test('色によるフィルタ', async () => {
   expect(queryByTestId('table-row-3-80')).toBeNull() // オブシディアン (無色)
 
   // 無色ボタンを押す
-  const buttonColorColorless = getByRole('radio', { name: '無色' })
+  let buttonColorColorless = getByRole('radio', { name: '無色' })
   expect(buttonColorColorless).toBeVisible()
   expect(buttonColorColorless).not.toBeChecked()
   await userEvent.click(buttonColorColorless)
@@ -1140,6 +1280,10 @@ test('色によるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
+  buttonColorColorless = getByRole('radio', { name: '無色' })
+  expect(buttonColorColorless).toBeVisible()
+  expect(buttonColorColorless).toBeChecked()
+
   expect(queryByTestId('table-row-2-78')).toBeNull() // RYマーブルオーブ (赤黄)
   expect(queryByTestId('table-row-2-79')).toBeNull() // RYマーブルオーブ (青黄)
   expect(queryByTestId('table-row-2-80')).toBeNull() // RYマーブルオーブ (緑黄)
@@ -1151,12 +1295,16 @@ test('色によるフィルタ', async () => {
   expect(getByTestId('table-row-3-80')).toBeVisible() // オブシディアン (無色)
 
   // 条件すべてをリセットするボタンを押す
-  const buttonResetAll = getByRole('button', {
-    name: '条件すべてをリセットする',
-  })
-  expect(buttonResetAll).toBeVisible()
-  expect(buttonResetAll).not.toBeChecked()
-  await userEvent.click(buttonResetAll)
+  buttonColorAll = getByTestId('button-color-all').querySelector(
+    'input[type="radio"]'
+  )
+  expect(buttonColorAll).toBeVisible()
+  expect(buttonColorAll).not.toBeChecked()
+  await userEvent.click(
+    getByRole('button', {
+      name: '条件すべてをリセットする',
+    })
+  )
   rerender(
     <TabPaneCard
       deckMain={deckMain}
@@ -1167,7 +1315,7 @@ test('色によるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  const buttonColorAll = getByTestId('button-color-all').querySelector(
+  buttonColorAll = getByTestId('button-color-all').querySelector(
     'input[type="radio"]'
   )
   expect(buttonColorAll).toBeVisible()
@@ -1185,8 +1333,8 @@ test('色によるフィルタ', async () => {
 })
 
 test('種類によるフィルタ', async () => {
-  let deckMain = new Map()
-  let deckSide = new Map()
+  const deckMain = new Map()
+  const deckSide = new Map()
   const handleSetDeckMain = vi.fn()
   const handleSetDeckSide = vi.fn()
   const handleSetIdZoom = vi.fn()
@@ -1201,18 +1349,14 @@ test('種類によるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  expect(handleSetDeckMain.mock.calls.length).toBe(0)
-  expect(handleSetDeckSide.mock.calls.length).toBe(0)
-  expect(handleSetIdZoom.mock.calls.length).toBe(0)
-  expect(interruptSimulator.mock.calls.length).toBe(0)
 
   // 条件で絞り込むアコーディオンを開く
-  const buttonFilterTop = getByRole('button', {
-    name: '条件で絞り込む',
-    expanded: false,
-  })
-  expect(buttonFilterTop).toBeVisible()
-  await userEvent.click(buttonFilterTop)
+  await userEvent.click(
+    getByRole('button', {
+      name: '条件で絞り込む',
+      expanded: false,
+    })
+  )
   rerender(
     <TabPaneCard
       deckMain={deckMain}
@@ -1223,6 +1367,12 @@ test('種類によるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
+  expect(
+    getByRole('button', {
+      name: '条件で絞り込む',
+      expanded: true,
+    })
+  ).toBeVisible()
 
   // 種類アコーディオンアイテムは既に開いている
   expect(
@@ -1232,13 +1382,20 @@ test('種類によるフィルタ', async () => {
     })
   ).toBeVisible()
 
+  // 初期状態ではすべてボタンが選択されている
+  let buttonTypeAll = getByTestId('button-type-all').querySelector(
+    'input[type="radio"]'
+  )
+  expect(buttonTypeAll).toBeVisible()
+  expect(buttonTypeAll).toBeChecked()
+
   expect(getByTestId('table-row-B-2')).toBeVisible() // ヴァスコ・ダ・ガマ
   expect(getByTestId('table-row-B-9')).toBeVisible() // モナ・リザ
   expect(getByTestId('table-row-B-11')).toBeVisible() // フリート
   expect(getByTestId('table-row-B-13')).toBeVisible() // ブルーストーン
 
   // イジンボタンを押す
-  const buttonTypeIjin = getByRole('radio', { name: 'イジン' })
+  let buttonTypeIjin = getByRole('radio', { name: 'イジン' })
   expect(buttonTypeIjin).toBeVisible()
   expect(buttonTypeIjin).not.toBeChecked()
   await userEvent.click(buttonTypeIjin)
@@ -1252,13 +1409,17 @@ test('種類によるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
+  buttonTypeIjin = getByRole('radio', { name: 'イジン' })
+  expect(buttonTypeIjin).toBeVisible()
+  expect(buttonTypeIjin).toBeChecked()
+
   expect(getByTestId('table-row-B-2')).toBeVisible()
   expect(queryByTestId('table-row-B-9')).toBeNull()
   expect(queryByTestId('table-row-B-11')).toBeNull()
   expect(queryByTestId('table-row-B-13')).toBeNull()
 
   // ハイケイボタンを押す
-  const buttonTypeHaikei = getByRole('radio', { name: 'ハイケイ' })
+  let buttonTypeHaikei = getByRole('radio', { name: 'ハイケイ' })
   expect(buttonTypeHaikei).toBeVisible()
   expect(buttonTypeHaikei).not.toBeChecked()
   await userEvent.click(buttonTypeHaikei)
@@ -1272,13 +1433,17 @@ test('種類によるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
+  buttonTypeHaikei = getByRole('radio', { name: 'ハイケイ' })
+  expect(buttonTypeHaikei).toBeVisible()
+  expect(buttonTypeHaikei).toBeChecked()
+
   expect(queryByTestId('table-row-B-2')).toBeNull()
   expect(getByTestId('table-row-B-9')).toBeVisible()
   expect(queryByTestId('table-row-B-11')).toBeNull()
   expect(queryByTestId('table-row-B-13')).toBeNull()
 
   // マホウボタンを押す
-  const buttonTypeMahou = getByRole('radio', { name: 'マホウ' })
+  let buttonTypeMahou = getByRole('radio', { name: 'マホウ' })
   expect(buttonTypeMahou).toBeVisible()
   expect(buttonTypeMahou).not.toBeChecked()
   await userEvent.click(buttonTypeMahou)
@@ -1292,13 +1457,17 @@ test('種類によるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
+  buttonTypeMahou = getByRole('radio', { name: 'マホウ' })
+  expect(buttonTypeMahou).toBeVisible()
+  expect(buttonTypeMahou).toBeChecked()
+
   expect(queryByTestId('table-row-B-2')).toBeNull()
   expect(queryByTestId('table-row-B-9')).toBeNull()
   expect(getByTestId('table-row-B-11')).toBeVisible()
   expect(queryByTestId('table-row-B-13')).toBeNull()
 
   // マリョクボタンを押す
-  const buttonTypeMaryoku = getByRole('radio', { name: 'マリョク' })
+  let buttonTypeMaryoku = getByRole('radio', { name: 'マリョク' })
   expect(buttonTypeMaryoku).toBeVisible()
   expect(buttonTypeMaryoku).not.toBeChecked()
   await userEvent.click(buttonTypeMaryoku)
@@ -1312,18 +1481,26 @@ test('種類によるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
+  buttonTypeMaryoku = getByRole('radio', { name: 'マリョク' })
+  expect(buttonTypeMaryoku).toBeVisible()
+  expect(buttonTypeMaryoku).toBeChecked()
+
   expect(queryByTestId('table-row-B-2')).toBeNull()
   expect(queryByTestId('table-row-B-9')).toBeNull()
   expect(queryByTestId('table-row-B-11')).toBeNull()
   expect(getByTestId('table-row-B-13')).toBeVisible()
 
   // 条件すべてをリセットするボタンを押す
-  const buttonResetAll = getByRole('button', {
-    name: '条件すべてをリセットする',
-  })
-  expect(buttonResetAll).toBeVisible()
-  expect(buttonResetAll).not.toBeChecked()
-  await userEvent.click(buttonResetAll)
+  buttonTypeAll = getByTestId('button-type-all').querySelector(
+    'input[type="radio"]'
+  )
+  expect(buttonTypeAll).toBeVisible()
+  expect(buttonTypeAll).not.toBeChecked()
+  await userEvent.click(
+    getByRole('button', {
+      name: '条件すべてをリセットする',
+    })
+  )
   rerender(
     <TabPaneCard
       deckMain={deckMain}
@@ -1334,11 +1511,11 @@ test('種類によるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  const buttonColorAll = getByTestId('button-color-all').querySelector(
+  buttonTypeAll = getByTestId('button-type-all').querySelector(
     'input[type="radio"]'
   )
-  expect(buttonColorAll).toBeVisible()
-  expect(buttonColorAll).toBeChecked()
+  expect(buttonTypeAll).toBeVisible()
+  expect(buttonTypeAll).toBeChecked()
 
   expect(getByTestId('table-row-B-2')).toBeVisible()
   expect(getByTestId('table-row-B-9')).toBeVisible()
