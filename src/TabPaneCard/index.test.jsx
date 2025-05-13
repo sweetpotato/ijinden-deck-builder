@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 
 import { afterEach, expect, test, vi } from 'vitest'
-import { cleanup, render } from '@testing-library/react'
+import { cleanup, fireEvent, render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import TabPaneCard from '.'
@@ -270,6 +270,9 @@ test('初期状態', async () => {
     />
   )
 
+  const sliderLevel = getByRole('slider')
+  expect(sliderLevel).toBeVisible()
+  expect(sliderLevel).toHaveValue('0')
   const buttonLevelGE = getByRole('radio', { name: '以上' })
   expect(buttonLevelGE).toBeVisible()
   expect(buttonLevelGE).toBeChecked()
@@ -1523,7 +1526,466 @@ test('種類によるフィルタ', async () => {
   expect(getByTestId('table-row-B-13')).toBeVisible()
 })
 
-// TODO レベルによるフィルタ
+test('レベルによるフィルタ', async () => {
+  const deckMain = new Map()
+  const deckSide = new Map()
+  const handleSetDeckMain = vi.fn()
+  const handleSetDeckSide = vi.fn()
+  const handleSetIdZoom = vi.fn()
+  const interruptSimulator = vi.fn()
+  const { rerender, getByRole, getByTestId, queryByTestId } = render(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+
+  // 条件で絞り込むアコーディオンを開く
+  await userEvent.click(
+    getByRole('button', {
+      name: '条件で絞り込む',
+      expanded: false,
+    })
+  )
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  expect(
+    getByRole('button', {
+      name: '条件で絞り込む',
+      expanded: true,
+    })
+  ).toBeVisible()
+
+  // レベルアコーディオンアイテムを開く
+  const buttonLevel = getByRole('button', {
+    name: '➕ レベル ― 0以上',
+    expanded: false,
+  })
+  expect(buttonLevel).toBeVisible()
+  await userEvent.click(buttonLevel)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  expect(
+    getByRole('button', {
+      name: '➖ レベル',
+      expanded: true,
+    })
+  ).toBeVisible()
+
+  // 初期状態では値は0で以上ボタンが選択されている
+  let sliderLevel = getByRole('slider')
+  expect(sliderLevel).toBeVisible()
+  expect(sliderLevel).toHaveValue('0')
+  let buttonLevelGE = getByRole('radio', { name: '以上' })
+  expect(buttonLevelGE).toBeVisible()
+  expect(buttonLevelGE).toBeChecked()
+
+  expect(getByTestId('table-row-3-77')).toBeVisible() // 遁甲盤 (レベル0)
+  expect(getByTestId('table-row-2-10')).toBeVisible() // 栄西 (レベル1)
+  expect(getByTestId('table-row-2-14')).toBeVisible() // 北条時政 (レベル5)
+  expect(getByTestId('table-row-2-12')).toBeVisible() // 足利義昭 (レベル9)
+  expect(getByTestId('table-row-3-63')).toBeVisible() // アイオン (レベル10)
+  expect(getByTestId('table-row-4-46')).toBeVisible() // 大日本沿海輿地全図 (レベル17)
+
+  // 0以下
+  let buttonLevelLE = getByRole('radio', { name: '以下' })
+  expect(buttonLevelLE).toBeVisible()
+  expect(buttonLevelLE).not.toBeChecked()
+  await userEvent.click(buttonLevelLE)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  buttonLevelLE = getByRole('radio', { name: '以下' })
+  expect(buttonLevelLE).toBeVisible()
+  expect(buttonLevelLE).toBeChecked()
+
+  expect(getByTestId('table-row-3-77')).toBeVisible() // 遁甲盤 (レベル0)
+  expect(queryByTestId('table-row-2-10')).toBeNull() // 栄西 (レベル1)
+  expect(queryByTestId('table-row-2-14')).toBeNull() // 北条時政 (レベル5)
+  expect(queryByTestId('table-row-2-12')).toBeNull() // 足利義昭 (レベル9)
+  expect(queryByTestId('table-row-3-63')).toBeNull() // アイオン (レベル10)
+  expect(queryByTestId('table-row-4-46')).toBeNull() // 大日本沿海輿地全図 (レベル17)
+
+  // 0に等しい
+  let buttonLevelEQ = getByRole('radio', { name: '等しい' })
+  expect(buttonLevelEQ).toBeVisible()
+  expect(buttonLevelEQ).not.toBeChecked()
+  await userEvent.click(buttonLevelEQ)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  buttonLevelEQ = getByRole('radio', { name: '等しい' })
+  expect(buttonLevelEQ).toBeVisible()
+  expect(buttonLevelEQ).toBeChecked()
+
+  expect(getByTestId('table-row-3-77')).toBeVisible() // 遁甲盤 (レベル0)
+  expect(queryByTestId('table-row-2-10')).toBeNull() // 栄西 (レベル1)
+  expect(queryByTestId('table-row-2-14')).toBeNull() // 北条時政 (レベル5)
+  expect(queryByTestId('table-row-2-12')).toBeNull() // 足利義昭 (レベル9)
+  expect(queryByTestId('table-row-3-63')).toBeNull() // アイオン (レベル10)
+  expect(queryByTestId('table-row-4-46')).toBeNull() // 大日本沿海輿地全図 (レベル17)
+
+  // 5以上
+  sliderLevel = getByRole('slider')
+  expect(sliderLevel).toBeVisible()
+  expect(sliderLevel).toHaveValue('0')
+  // userEvent は slider に未対応とのこと。
+  // See: https://github.com/testing-library/user-event/issues/871
+  fireEvent.change(sliderLevel, { target: { value: '5' } })
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  sliderLevel = getByRole('slider')
+  expect(sliderLevel).toBeVisible()
+  expect(sliderLevel).toHaveValue('5')
+  buttonLevelGE = getByRole('radio', { name: '以上' })
+  expect(buttonLevelGE).toBeVisible()
+  expect(buttonLevelGE).not.toBeChecked()
+  await userEvent.click(buttonLevelGE)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  buttonLevelGE = getByRole('radio', { name: '以上' })
+  expect(buttonLevelGE).toBeVisible()
+  expect(buttonLevelGE).toBeChecked()
+
+  expect(queryByTestId('table-row-3-77')).toBeNull() // 遁甲盤 (レベル0)
+  expect(queryByTestId('table-row-2-10')).toBeNull() // 栄西 (レベル1)
+  expect(getByTestId('table-row-2-14')).toBeVisible() // 北条時政 (レベル5)
+  expect(getByTestId('table-row-2-12')).toBeVisible() // 足利義昭 (レベル9)
+  expect(getByTestId('table-row-3-63')).toBeVisible() // アイオン (レベル10)
+  expect(getByTestId('table-row-4-46')).toBeVisible() // 大日本沿海輿地全図 (レベル17)
+
+  // 5以下
+  buttonLevelLE = getByRole('radio', { name: '以下' })
+  expect(buttonLevelLE).toBeVisible()
+  expect(buttonLevelLE).not.toBeChecked()
+  await userEvent.click(buttonLevelLE)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  buttonLevelLE = getByRole('radio', { name: '以下' })
+  expect(buttonLevelLE).toBeVisible()
+  expect(buttonLevelLE).toBeChecked()
+
+  expect(getByTestId('table-row-3-77')).toBeVisible() // 遁甲盤 (レベル0)
+  expect(getByTestId('table-row-2-10')).toBeVisible() // 栄西 (レベル1)
+  expect(getByTestId('table-row-2-14')).toBeVisible() // 北条時政 (レベル5)
+  expect(queryByTestId('table-row-2-12')).toBeNull() // 足利義昭 (レベル9)
+  expect(queryByTestId('table-row-3-63')).toBeNull() // アイオン (レベル10)
+  expect(queryByTestId('table-row-4-46')).toBeNull() // 大日本沿海輿地全図 (レベル17)
+
+  // 5に等しい
+  buttonLevelEQ = getByRole('radio', { name: '等しい' })
+  expect(buttonLevelEQ).toBeVisible()
+  expect(buttonLevelEQ).not.toBeChecked()
+  await userEvent.click(buttonLevelEQ)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  buttonLevelEQ = getByRole('radio', { name: '等しい' })
+  expect(buttonLevelEQ).toBeVisible()
+  expect(buttonLevelEQ).toBeChecked()
+
+  expect(queryByTestId('table-row-3-77')).toBeNull() // 遁甲盤 (レベル0)
+  expect(queryByTestId('table-row-2-10')).toBeNull() // 栄西 (レベル1)
+  expect(getByTestId('table-row-2-14')).toBeVisible() // 北条時政 (レベル5)
+  expect(queryByTestId('table-row-2-12')).toBeNull() // 足利義昭 (レベル9)
+  expect(queryByTestId('table-row-3-63')).toBeNull() // アイオン (レベル10)
+  expect(queryByTestId('table-row-4-46')).toBeNull() // 大日本沿海輿地全図 (レベル17)
+
+  // 10以上
+  sliderLevel = getByRole('slider')
+  expect(sliderLevel).toBeVisible()
+  expect(sliderLevel).toHaveValue('5')
+  // userEvent は slider に未対応とのこと。
+  // See: https://github.com/testing-library/user-event/issues/871
+  fireEvent.change(sliderLevel, { target: { value: '10' } })
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  sliderLevel = getByRole('slider')
+  expect(sliderLevel).toBeVisible()
+  expect(sliderLevel).toHaveValue('10')
+  buttonLevelGE = getByRole('radio', { name: '以上' })
+  expect(buttonLevelGE).toBeVisible()
+  expect(buttonLevelGE).not.toBeChecked()
+  await userEvent.click(buttonLevelGE)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  buttonLevelGE = getByRole('radio', { name: '以上' })
+  expect(buttonLevelGE).toBeVisible()
+  expect(buttonLevelGE).toBeChecked()
+
+  expect(queryByTestId('table-row-3-77')).toBeNull() // 遁甲盤 (レベル0)
+  expect(queryByTestId('table-row-2-10')).toBeNull() // 栄西 (レベル1)
+  expect(queryByTestId('table-row-2-14')).toBeNull() // 北条時政 (レベル5)
+  expect(queryByTestId('table-row-2-12')).toBeNull() // 足利義昭 (レベル9)
+  expect(getByTestId('table-row-3-63')).toBeVisible() // アイオン (レベル10)
+  expect(getByTestId('table-row-4-46')).toBeVisible() // 大日本沿海輿地全図 (レベル17)
+
+  // 10以下
+  buttonLevelLE = getByRole('radio', { name: '以下' })
+  expect(buttonLevelLE).toBeVisible()
+  expect(buttonLevelLE).not.toBeChecked()
+  await userEvent.click(buttonLevelLE)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  buttonLevelLE = getByRole('radio', { name: '以下' })
+  expect(buttonLevelLE).toBeVisible()
+  expect(buttonLevelLE).toBeChecked()
+
+  expect(getByTestId('table-row-3-77')).toBeVisible() // 遁甲盤 (レベル0)
+  expect(getByTestId('table-row-2-10')).toBeVisible() // 栄西 (レベル1)
+  expect(getByTestId('table-row-2-14')).toBeVisible() // 北条時政 (レベル5)
+  expect(getByTestId('table-row-2-12')).toBeVisible() // 足利義昭 (レベル9)
+  expect(getByTestId('table-row-3-63')).toBeVisible() // アイオン (レベル10)
+  expect(queryByTestId('table-row-4-46')).toBeNull() // 大日本沿海輿地全図 (レベル17)
+
+  // 10に等しい
+  buttonLevelEQ = getByRole('radio', { name: '等しい' })
+  expect(buttonLevelEQ).toBeVisible()
+  expect(buttonLevelEQ).not.toBeChecked()
+  await userEvent.click(buttonLevelEQ)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  buttonLevelEQ = getByRole('radio', { name: '等しい' })
+  expect(buttonLevelEQ).toBeVisible()
+  expect(buttonLevelEQ).toBeChecked()
+
+  expect(queryByTestId('table-row-3-77')).toBeNull() // 遁甲盤 (レベル0)
+  expect(queryByTestId('table-row-2-10')).toBeNull() // 栄西 (レベル1)
+  expect(queryByTestId('table-row-2-14')).toBeNull() // 北条時政 (レベル5)
+  expect(queryByTestId('table-row-2-12')).toBeNull() // 足利義昭 (レベル9)
+  expect(getByTestId('table-row-3-63')).toBeVisible() // アイオン (レベル10)
+  expect(queryByTestId('table-row-4-46')).toBeNull() // 大日本沿海輿地全図 (レベル17)
+
+  // 17以上
+  sliderLevel = getByRole('slider')
+  expect(sliderLevel).toBeVisible()
+  expect(sliderLevel).toHaveValue('10')
+  // userEvent は slider に未対応とのこと。
+  // See: https://github.com/testing-library/user-event/issues/871
+  fireEvent.change(sliderLevel, { target: { value: '17' } })
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  sliderLevel = getByRole('slider')
+  expect(sliderLevel).toBeVisible()
+  expect(sliderLevel).toHaveValue('17')
+  buttonLevelGE = getByRole('radio', { name: '以上' })
+  expect(buttonLevelGE).toBeVisible()
+  expect(buttonLevelGE).not.toBeChecked()
+  await userEvent.click(buttonLevelGE)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  buttonLevelGE = getByRole('radio', { name: '以上' })
+  expect(buttonLevelGE).toBeVisible()
+  expect(buttonLevelGE).toBeChecked()
+
+  expect(queryByTestId('table-row-3-77')).toBeNull() // 遁甲盤 (レベル0)
+  expect(queryByTestId('table-row-2-10')).toBeNull() // 栄西 (レベル1)
+  expect(queryByTestId('table-row-2-14')).toBeNull() // 北条時政 (レベル5)
+  expect(queryByTestId('table-row-2-12')).toBeNull() // 足利義昭 (レベル9)
+  expect(queryByTestId('table-row-3-63')).toBeNull() // アイオン (レベル10)
+  expect(getByTestId('table-row-4-46')).toBeVisible() // 大日本沿海輿地全図 (レベル17)
+
+  // 17以下
+  buttonLevelLE = getByRole('radio', { name: '以下' })
+  expect(buttonLevelLE).toBeVisible()
+  expect(buttonLevelLE).not.toBeChecked()
+  await userEvent.click(buttonLevelLE)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  buttonLevelLE = getByRole('radio', { name: '以下' })
+  expect(buttonLevelLE).toBeVisible()
+  expect(buttonLevelLE).toBeChecked()
+
+  expect(getByTestId('table-row-3-77')).toBeVisible() // 遁甲盤 (レベル0)
+  expect(getByTestId('table-row-2-10')).toBeVisible() // 栄西 (レベル1)
+  expect(getByTestId('table-row-2-14')).toBeVisible() // 北条時政 (レベル5)
+  expect(getByTestId('table-row-2-12')).toBeVisible() // 足利義昭 (レベル9)
+  expect(getByTestId('table-row-3-63')).toBeVisible() // アイオン (レベル10)
+  expect(getByTestId('table-row-4-46')).toBeVisible() // 大日本沿海輿地全図 (レベル17)
+
+  // 17に等しい
+  buttonLevelEQ = getByRole('radio', { name: '等しい' })
+  expect(buttonLevelEQ).toBeVisible()
+  expect(buttonLevelEQ).not.toBeChecked()
+  await userEvent.click(buttonLevelEQ)
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  buttonLevelEQ = getByRole('radio', { name: '等しい' })
+  expect(buttonLevelEQ).toBeVisible()
+  expect(buttonLevelEQ).toBeChecked()
+
+  expect(queryByTestId('table-row-3-77')).toBeNull() // 遁甲盤 (レベル0)
+  expect(queryByTestId('table-row-2-10')).toBeNull() // 栄西 (レベル1)
+  expect(queryByTestId('table-row-2-14')).toBeNull() // 北条時政 (レベル5)
+  expect(queryByTestId('table-row-2-12')).toBeNull() // 足利義昭 (レベル9)
+  expect(queryByTestId('table-row-3-63')).toBeNull() // アイオン (レベル10)
+  expect(getByTestId('table-row-4-46')).toBeVisible() // 大日本沿海輿地全図 (レベル17)
+
+  // 条件すべてをリセットするボタンを押す
+  sliderLevel = getByRole('slider')
+  expect(sliderLevel).toBeVisible()
+  expect(sliderLevel).toHaveValue('17')
+  buttonLevelGE = getByRole('radio', { name: '以上' })
+  expect(buttonLevelGE).toBeVisible()
+  expect(buttonLevelGE).not.toBeChecked()
+  await userEvent.click(
+    getByRole('button', {
+      name: '条件すべてをリセットする',
+    })
+  )
+  rerender(
+    <TabPaneCard
+      deckMain={deckMain}
+      deckSide={deckSide}
+      handleSetDeckMain={handleSetDeckMain}
+      handleSetDeckSide={handleSetDeckSide}
+      handleSetIdZoom={handleSetIdZoom}
+      interruptSimulator={interruptSimulator}
+    />
+  )
+  sliderLevel = getByRole('slider')
+  expect(sliderLevel).toBeVisible()
+  expect(sliderLevel).toHaveValue('0')
+  buttonLevelGE = getByRole('radio', { name: '以上' })
+  expect(buttonLevelGE).toBeVisible()
+  expect(buttonLevelGE).toBeChecked()
+
+  expect(getByTestId('table-row-3-77')).toBeVisible() // 遁甲盤 (レベル0)
+  expect(getByTestId('table-row-2-10')).toBeVisible() // 栄西 (レベル1)
+  expect(getByTestId('table-row-2-14')).toBeVisible() // 北条時政 (レベル5)
+  expect(getByTestId('table-row-2-12')).toBeVisible() // 足利義昭 (レベル9)
+  expect(getByTestId('table-row-3-63')).toBeVisible() // アイオン (レベル10)
+  expect(getByTestId('table-row-4-46')).toBeVisible() // 大日本沿海輿地全図 (レベル17)
+})
 
 test('特性によるフィルタ', async () => {
   const deckMain = new Map()
