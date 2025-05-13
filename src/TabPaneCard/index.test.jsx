@@ -8,9 +8,9 @@ import TabPaneCard from '.'
 
 afterEach(cleanup)
 
-test('初期状態', async () => {
-  let deckMain = new Map()
-  let deckSide = new Map()
+test('フィルタの初期状態', async () => {
+  const deckMain = new Map()
+  const deckSide = new Map()
   const handleSetDeckMain = vi.fn()
   const handleSetDeckSide = vi.fn()
   const handleSetIdZoom = vi.fn()
@@ -46,8 +46,6 @@ test('初期状態', async () => {
   })
   expect(buttonFilterTop).toBeVisible()
 
-  // TBD カードリストの初期状態のテスト
-
   // 条件で絞り込むボタンを押す
   await userEvent.click(buttonFilterTop)
 
@@ -62,23 +60,26 @@ test('初期状態', async () => {
     />
   )
 
-  let buttonExpansion = getByRole('button', {
-    name: '➕ エキスパンション ― すべて',
-    expanded: false,
-  })
-  expect(buttonExpansion).toBeVisible()
+  expect(
+    getByRole('button', {
+      name: '➕ エキスパンション ― すべて',
+      expanded: false,
+    })
+  ).toBeVisible()
 
-  const buttonRarity = getByRole('button', {
-    name: '➕ レアリティ ― すべて',
-    expanded: false,
-  })
-  expect(buttonRarity).toBeVisible()
+  expect(
+    getByRole('button', {
+      name: '➕ レアリティ ― すべて',
+      expanded: false,
+    })
+  ).toBeVisible()
 
-  const buttonColor = getByRole('button', {
-    name: '➖ 色',
-    expanded: true,
-  })
-  expect(buttonColor).toBeVisible()
+  expect(
+    getByRole('button', {
+      name: '➖ 色',
+      expanded: true,
+    })
+  ).toBeVisible()
 
   const spanColorAll = getByTestId('button-color-all')
   expect(spanColorAll).toBeVisible()
@@ -111,11 +112,12 @@ test('初期状態', async () => {
   expect(buttonColorless).toBeVisible()
   expect(buttonColorless).not.toBeChecked()
 
-  const buttonType = getByRole('button', {
-    name: '➖ 種類',
-    expanded: true,
-  })
-  expect(buttonType).toBeVisible()
+  expect(
+    getByRole('button', {
+      name: '➖ 種類',
+      expanded: true,
+    })
+  ).toBeVisible()
 
   const spanTypeAll = getByTestId('button-color-all')
   expect(spanTypeAll).toBeVisible()
@@ -139,32 +141,41 @@ test('初期状態', async () => {
   expect(buttonTypeMaryoku).toBeVisible()
   expect(buttonTypeMaryoku).not.toBeChecked()
 
-  const buttonLevel = getByRole('button', {
-    name: '➕ レベル ― 0以上',
-    expanded: false,
-  })
-  expect(buttonLevel).toBeVisible()
+  expect(
+    getByRole('button', {
+      name: '➕ レベル ― 0以上',
+      expanded: false,
+    })
+  ).toBeVisible()
 
-  const buttonTrait = getByRole('button', {
-    name: '➕ 特性 ― 指定なし',
-    expanded: false,
-  })
-  expect(buttonTrait).toBeVisible()
+  expect(
+    getByRole('button', {
+      name: '➕ 特性 ― 指定なし',
+      expanded: false,
+    })
+  ).toBeVisible()
 
-  const buttonTerm = getByRole('button', {
-    name: '➕ 能力語 ― 指定なし',
-    expanded: false,
-  })
-  expect(buttonTerm).toBeVisible()
+  expect(
+    getByRole('button', {
+      name: '➕ 能力語 ― 指定なし',
+      expanded: false,
+    })
+  ).toBeVisible()
 
-  const buttonLegacy = getByRole('button', {
-    name: '➕ 遺業能力 ― 指定なし',
-    expanded: false,
-  })
-  expect(buttonLegacy).toBeVisible()
+  expect(
+    getByRole('button', {
+      name: '➕ 遺業能力 ― 指定なし',
+      expanded: false,
+    })
+  ).toBeVisible()
 
   // エキスパンションを開く
-  await userEvent.click(buttonExpansion)
+  await userEvent.click(
+    getByRole('button', {
+      name: '➕ エキスパンション ― すべて',
+      expanded: false,
+    })
+  )
   rerender(
     <TabPaneCard
       deckMain={deckMain}
@@ -175,12 +186,12 @@ test('初期状態', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-
-  buttonExpansion = getByRole('button', {
-    name: '➖ エキスパンション',
-    expanded: true,
-  })
-  expect(buttonExpansion).toBeVisible()
+  expect(
+    getByRole('button', {
+      name: '➖ エキスパンション',
+      expanded: true,
+    })
+  ).toBeVisible()
 
   const spanExpansionAll = getByTestId('button-expansion-all')
   expect(spanExpansionAll).toBeVisible()
@@ -220,7 +231,12 @@ test('初期状態', async () => {
   expect(buttonExpansionFourth).not.toBeChecked()
 
   // レアリティを開く
-  await userEvent.click(buttonRarity)
+  await userEvent.click(
+    getByRole('button', {
+      name: '➕ レアリティ ― すべて',
+      expanded: false,
+    })
+  )
   rerender(
     <TabPaneCard
       deckMain={deckMain}
@@ -231,6 +247,12 @@ test('初期状態', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
+  expect(
+    getByRole('button', {
+      name: '➖ レアリティ',
+      expanded: true,
+    })
+  ).toBeVisible()
 
   const spanRarityAll = getByTestId('button-expansion-all')
   expect(spanRarityAll).toBeVisible()
@@ -258,7 +280,12 @@ test('初期状態', async () => {
   expect(buttonRaritySR).not.toBeChecked()
 
   // レベルを開く
-  await userEvent.click(buttonLevel)
+  await userEvent.click(
+    getByRole('button', {
+      name: '➕ レベル ― 0以上',
+      expanded: false,
+    })
+  )
   rerender(
     <TabPaneCard
       deckMain={deckMain}
@@ -269,6 +296,12 @@ test('初期状態', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
+  expect(
+    getByRole('button', {
+      name: '➖ レベル',
+      expanded: true,
+    })
+  ).toBeVisible()
 
   const sliderLevel = getByRole('slider')
   expect(sliderLevel).toBeVisible()
@@ -284,7 +317,12 @@ test('初期状態', async () => {
   expect(buttonLevelEQ).not.toBeChecked()
 
   // 特性を開く
-  await userEvent.click(buttonTrait)
+  await userEvent.click(
+    getByRole('button', {
+      name: '➕ 特性 ― 指定なし',
+      expanded: false,
+    })
+  )
   rerender(
     <TabPaneCard
       deckMain={deckMain}
@@ -295,6 +333,12 @@ test('初期状態', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
+  expect(
+    getByRole('button', {
+      name: '➖ 特性',
+      expanded: true,
+    })
+  ).toBeVisible()
 
   const spanTraitUnspecified = getByTestId('button-trait-unspecified')
   expect(spanTraitUnspecified).toBeVisible()
@@ -327,7 +371,12 @@ test('初期状態', async () => {
   expect(buttonTraitVolunteer).not.toBeChecked()
 
   // 能力語を開く
-  await userEvent.click(buttonTerm)
+  await userEvent.click(
+    getByRole('button', {
+      name: '➕ 能力語 ― 指定なし',
+      expanded: false,
+    })
+  )
   rerender(
     <TabPaneCard
       deckMain={deckMain}
@@ -338,6 +387,12 @@ test('初期状態', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
+  expect(
+    getByRole('button', {
+      name: '➖ 能力語',
+      expanded: true,
+    })
+  ).toBeVisible()
 
   const spanTermUnspecified = getByTestId('button-term-unspecified')
   expect(spanTermUnspecified).toBeVisible()
@@ -367,7 +422,12 @@ test('初期状態', async () => {
   expect(buttonTermChromagic).not.toBeChecked()
 
   // 遺業能力を開く
-  await userEvent.click(buttonLegacy)
+  await userEvent.click(
+    getByRole('button', {
+      name: '➕ 遺業能力 ― 指定なし',
+      expanded: false,
+    })
+  )
   rerender(
     <TabPaneCard
       deckMain={deckMain}
@@ -378,6 +438,12 @@ test('初期状態', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
+  expect(
+    getByRole('button', {
+      name: '➖ 遺業能力',
+      expanded: true,
+    })
+  ).toBeVisible()
 
   const spanLegacyUnspecified = getByTestId('button-legacy-unspecified')
   expect(spanLegacyUnspecified).toBeVisible()
