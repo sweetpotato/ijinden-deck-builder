@@ -2,13 +2,13 @@
 
 import { useState } from 'react'
 
-import AccordionItemRadioFilter from './AccordionItemRadioFilter'
+import AccordionItemGenericFilter from './AccordionItemGenericFilter'
 
-function useAccordionItemRadioFilter(testIdForButton0, title, data) {
+function useAccordionItemGenericFilter(testIdForButton0, title, data) {
   const [state, setState] = useState(0)
   const resetState = () => setState(0)
   const render = (eventKey) => (
-    <AccordionItemRadioFilter
+    <AccordionItemGenericFilter
       eventKey={eventKey}
       testIdForButton0={testIdForButton0}
       title={title}
@@ -20,4 +20,4 @@ function useAccordionItemRadioFilter(testIdForButton0, title, data) {
   return [state, resetState, render]
 }
 
-export default useAccordionItemRadioFilter
+export default useAccordionItemGenericFilter

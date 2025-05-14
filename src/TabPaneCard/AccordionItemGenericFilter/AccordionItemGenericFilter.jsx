@@ -10,7 +10,7 @@ import {
 } from 'react-bootstrap'
 import { isAccordionItemSelected } from 'react-bootstrap/esm/AccordionContext'
 
-function AccordionItemRadioFilter({
+function AccordionItemGenericFilter({
   eventKey,
   testIdForButton0,
   title,
@@ -84,4 +84,4 @@ function AccordionItemRadioFilter({
   )
 }
 
-export default AccordionItemRadioFilter
+export default AccordionItemGenericFilter

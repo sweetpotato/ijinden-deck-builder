@@ -6,7 +6,7 @@ import { afterEach, expect, test } from 'vitest'
 import { cleanup, render, renderHook } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import useAccordionItemRadioFilter from '.'
+import useAccordionItemGenericFilter from '.'
 
 afterEach(cleanup)
 
@@ -31,7 +31,7 @@ const dataColors = [
 
 test('種類のようにビットセットでないフィルタ', async () => {
   const { result } = renderHook(() =>
-    useAccordionItemRadioFilter('button-type-all', '種類', dataTypes)
+    useAccordionItemGenericFilter('button-type-all', '種類', dataTypes)
   )
   let [state, resetState, renderAccordionItem] = result.current
   expect(state).toBe(0)
@@ -174,7 +174,7 @@ test('種類のようにビットセットでないフィルタ', async () => {
 
 test('色のようにビットセットであるフィルタ', async () => {
   const { result } = renderHook(() =>
-    useAccordionItemRadioFilter('button-color-all', '色', dataColors)
+    useAccordionItemGenericFilter('button-color-all', '色', dataColors)
   )
   let [state, resetState, renderAccordionItem] = result.current
   expect(state).toBe(0)

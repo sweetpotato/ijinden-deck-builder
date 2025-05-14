@@ -17,7 +17,7 @@ import FormRange from 'react-bootstrap/esm/FormRange'
 import { dataCardsArrayForTable as dataCards } from '../commons/dataCards'
 import enumColor from './enumColor'
 import enumTerm from './enumTerm'
-import useAccordionItemRadioFilter from './AccordionItemRadioFilter'
+import useAccordionItemGenericFilter from './AccordionItemGenericFilter'
 import useContainerTextSearch from './ContainerTextSearch'
 import TableRowCard from './TableRowCard'
 
@@ -117,39 +117,39 @@ function TabPaneCard({
   interruptSimulator,
 }) {
   const [expansion, resetExpansion, renderExpansion] =
-    useAccordionItemRadioFilter(
+    useAccordionItemGenericFilter(
       'button-expansion-all',
       'エキスパンション',
       dataExpansions
     )
-  const [rarity, resetRarity, renderRarity] = useAccordionItemRadioFilter(
+  const [rarity, resetRarity, renderRarity] = useAccordionItemGenericFilter(
     'button-rarity-all',
     'レアリティ',
     dataRarities
   )
-  const [color, resetColor, renderColor] = useAccordionItemRadioFilter(
+  const [color, resetColor, renderColor] = useAccordionItemGenericFilter(
     'button-color-all',
     '色',
     dataColors
   )
-  const [type, resetType, renderType] = useAccordionItemRadioFilter(
+  const [type, resetType, renderType] = useAccordionItemGenericFilter(
     'button-type-all',
     '種類',
     dataTypes
   )
   const [levelValue, setLevelValue] = useState(LEVEL_VALUE_MIN)
   const [levelComparator, setLevelComparator] = useState(LEVEL_COMPARATOR_GE)
-  const [trait, resetTrait, renderTrait] = useAccordionItemRadioFilter(
+  const [trait, resetTrait, renderTrait] = useAccordionItemGenericFilter(
     'button-trait-unspecified',
     '特性',
     dataTraits
   )
-  const [term, resetTerm, renderTerm] = useAccordionItemRadioFilter(
+  const [term, resetTerm, renderTerm] = useAccordionItemGenericFilter(
     'button-term-unspecified',
     '能力語',
     dataTerms
   )
-  const [legacy, resetLegacy, renderLegacy] = useAccordionItemRadioFilter(
+  const [legacy, resetLegacy, renderLegacy] = useAccordionItemGenericFilter(
     'button-legacy-unspecified',
     '遺業能力',
     dataLegacies
