@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: MIT
 
-import { useState } from 'react'
 import {
   Accordion,
   AccordionBody,
@@ -15,7 +14,7 @@ import enumColor from './enumColor'
 import enumComparator from './enumComparator'
 import enumTerm from './enumTerm'
 import useAccordionItemGenericFilter from './AccordionItemGenericFilter'
-import AccordionItemLevelFilter from './AccordionItemLevelFilter/AccordionItemLevelFilter'
+import useAccordionItemLevelFilter from './AccordionItemLevelFilter'
 import useContainerTextSearch from './ContainerTextSearch'
 import TableRowCard from './TableRowCard'
 
@@ -60,15 +59,6 @@ const dataTypes = [
   { value: 2, label: 'ハイケイ' },
   { value: 3, label: 'マホウ' },
   { value: 4, label: 'マリョク' },
-]
-
-// TODO 二重定義
-const LEVEL_VALUE_MIN = 0
-const LEVEL_VALUE_MAX = 17
-const dataLevelComparators = [
-  { value: enumComparator.GE, label: '以上' },
-  { value: enumComparator.LE, label: '以下' },
-  { value: enumComparator.EQ, label: '等しい' },
 ]
 
 const dataTerms = [
@@ -133,8 +123,8 @@ function TabPaneCard({
     '種類',
     dataTypes
   )
-  const [levelValue, setLevelValue] = useState(LEVEL_VALUE_MIN)
-  const [levelComparator, setLevelComparator] = useState(enumComparator.GE)
+  const [levelValue, levelComparator, resetLevel, renderLevel] =
+    useAccordionItemLevelFilter()
   const [trait, resetTrait, renderTrait] = useAccordionItemGenericFilter(
     'button-trait-unspecified',
     '特性',
@@ -158,29 +148,10 @@ function TabPaneCard({
     resetRarity()
     resetColor()
     resetType()
-    setLevelValue(LEVEL_VALUE_MIN)
-    setLevelComparator(enumComparator.GE)
+    resetLevel()
     resetTrait()
     resetTerm()
     resetLegacy()
-  }
-
-  function handleChangeLevelValue(e) {
-    const currentValue = Number(e.currentTarget.value)
-    // レベル11から16までのカードは存在しないため、
-    // その値に設定してもあまり有益ではない。
-    // 代わりに、レベル10または17の近い方に四捨五入的に寄せる。
-    if (10 <= currentValue && currentValue < LEVEL_VALUE_MAX) {
-      setLevelValue(
-        currentValue < (10 + LEVEL_VALUE_MAX) / 2 ? 10 : LEVEL_VALUE_MAX
-      )
-    } else {
-      setLevelValue(currentValue)
-    }
-  }
-
-  function handleChangeLevelComparator(e) {
-    setLevelComparator(e.currentTarget.value)
   }
 
   function filterCard(card) {
@@ -235,16 +206,7 @@ function TabPaneCard({
               {renderRarity('1')}
               {renderColor('2')}
               {renderType('3')}
-              <AccordionItemLevelFilter
-                eventKey="4"
-                title="レベル"
-                nameComparator="level-comparator"
-                stateValue={levelValue}
-                stateComparator={levelComparator}
-                handleChangeValue={handleChangeLevelValue}
-                handleChangeComparator={handleChangeLevelComparator}
-                data={dataLevelComparators}
-              />
+              {renderLevel('4')}
               {renderTrait('5')}
               {renderTerm('6')}
               {renderLegacy('7')}

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-import { useContext } from 'react'
+import { useContext, useId } from 'react'
 import {
   AccordionBody,
   AccordionContext,
@@ -16,17 +16,20 @@ import enumComparator from '../enumComparator'
 // TODO 二重定義
 const LEVEL_VALUE_MIN = 0
 const LEVEL_VALUE_MAX = 17
+const dataLevelComparators = [
+  { value: enumComparator.GE, label: '以上' },
+  { value: enumComparator.LE, label: '以下' },
+  { value: enumComparator.EQ, label: '等しい' },
+]
 
 function AccordionItemLevelFilter({
   eventKey,
-  title,
-  nameComparator,
   stateValue,
   stateComparator,
   handleChangeValue,
   handleChangeComparator,
-  data,
 }) {
+  const name = useId()
   const { activeEventKey } = useContext(AccordionContext)
   const expanded = isAccordionItemSelected(activeEventKey, eventKey)
   const label =
@@ -41,12 +44,12 @@ function AccordionItemLevelFilter({
     <AccordionItem eventKey={eventKey}>
       <AccordionHeader as="h3">
         {expanded ? (
-          `➖ ${title}`
+          `➖ レベル`
         ) : !enphasized ? (
-          `➕ ${title} ― ${label}`
+          `➕ レベル ― ${label}`
         ) : (
           <>
-            ➕ {title}
+            {`➕ レベル`}
             &nbsp;―&nbsp;
             <b>{label}</b>
           </>
@@ -63,15 +66,15 @@ function AccordionItemLevelFilter({
           />
         </div>
         <div className="container-button">
-          {data.map((element) => {
-            const id = `${nameComparator}-${element.value}`
+          {dataLevelComparators.map((element) => {
+            const id = `${name}-${element.value}`
             return (
               <ToggleButton
                 key={id}
                 type="radio"
                 variant="outline-primary"
                 id={id}
-                name={nameComparator}
+                name={name}
                 value={element.value}
                 onChange={handleChangeComparator}
                 checked={stateComparator === element.value}
