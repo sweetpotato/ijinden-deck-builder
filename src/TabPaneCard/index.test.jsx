@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 
 import { afterEach, expect, test, vi } from 'vitest'
-import { cleanup, fireEvent, getByRole, render } from '@testing-library/react'
+import { cleanup, fireEvent, render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import TabPaneCard from '.'
@@ -1401,7 +1401,7 @@ test('エキスパンションによるフィルタ', async () => {
   expect(getByTestId('table-row-2-1')).toBeVisible()
   expect(getByTestId('table-row-P-1')).toBeVisible()
   expect(getByTestId('table-row-3-1')).toBeVisible()
-  expect(getByTestId('table-row-4-01')).toBeVisible()
+  expect(getByTestId('table-row-4-1')).toBeVisible()
 
   // 伝説の武将ボタンを押す
   let buttonExpansionRed = getByRole('radio', { name: '伝説の武将' })
@@ -1430,7 +1430,7 @@ test('エキスパンションによるフィルタ', async () => {
   expect(queryByTestId('table-row-2-1')).toBeNull()
   expect(queryByTestId('table-row-P-1')).toBeNull()
   expect(queryByTestId('table-row-3-1')).toBeNull()
-  expect(queryByTestId('table-row-4-01')).toBeNull()
+  expect(queryByTestId('table-row-4-1')).toBeNull()
 
   // 美と知の革命ボタンを押す
   let buttonExpansionBlue = getByRole('radio', { name: '美と知の革命' })
@@ -1459,7 +1459,7 @@ test('エキスパンションによるフィルタ', async () => {
   expect(queryByTestId('table-row-2-1')).toBeNull()
   expect(queryByTestId('table-row-P-1')).toBeNull()
   expect(queryByTestId('table-row-3-1')).toBeNull()
-  expect(queryByTestId('table-row-4-01')).toBeNull()
+  expect(queryByTestId('table-row-4-1')).toBeNull()
 
   // 日本の大天才ボタンを押す
   let buttonExpansionGreen = getByRole('radio', { name: '日本の大天才' })
@@ -1488,7 +1488,7 @@ test('エキスパンションによるフィルタ', async () => {
   expect(queryByTestId('table-row-2-1')).toBeNull()
   expect(queryByTestId('table-row-P-1')).toBeNull()
   expect(queryByTestId('table-row-3-1')).toBeNull()
-  expect(queryByTestId('table-row-4-01')).toBeNull()
+  expect(queryByTestId('table-row-4-1')).toBeNull()
 
   // 第１弾ブースターボタンを押す
   let buttonExpansionFirst = getByRole('radio', { name: '第１弾ブースター' })
@@ -1517,7 +1517,7 @@ test('エキスパンションによるフィルタ', async () => {
   expect(queryByTestId('table-row-2-1')).toBeNull()
   expect(queryByTestId('table-row-P-1')).toBeNull()
   expect(queryByTestId('table-row-3-1')).toBeNull()
-  expect(queryByTestId('table-row-4-01')).toBeNull()
+  expect(queryByTestId('table-row-4-1')).toBeNull()
 
   // 三国の英傑ボタンを押す
   let buttonExpansionYellow = getByRole('radio', { name: '三国の英傑' })
@@ -1546,7 +1546,7 @@ test('エキスパンションによるフィルタ', async () => {
   expect(queryByTestId('table-row-2-1')).toBeNull()
   expect(queryByTestId('table-row-P-1')).toBeNull()
   expect(queryByTestId('table-row-3-1')).toBeNull()
-  expect(queryByTestId('table-row-4-01')).toBeNull()
+  expect(queryByTestId('table-row-4-1')).toBeNull()
 
   // 第２弾ブースターボタンを押す
   let buttonExpansionSecond = getByRole('radio', { name: '第２弾ブースター' })
@@ -1575,7 +1575,7 @@ test('エキスパンションによるフィルタ', async () => {
   expect(getByTestId('table-row-2-1')).toBeVisible()
   expect(queryByTestId('table-row-P-1')).toBeNull()
   expect(queryByTestId('table-row-3-1')).toBeNull()
-  expect(queryByTestId('table-row-4-01')).toBeNull()
+  expect(queryByTestId('table-row-4-1')).toBeNull()
 
   // 発展する医学ボタンを押す
   let buttonExpansionPurple = getByRole('radio', { name: '発展する医学' })
@@ -1604,7 +1604,7 @@ test('エキスパンションによるフィルタ', async () => {
   expect(queryByTestId('table-row-2-1')).toBeNull()
   expect(getByTestId('table-row-P-1')).toBeVisible()
   expect(queryByTestId('table-row-3-1')).toBeNull()
-  expect(queryByTestId('table-row-4-01')).toBeNull()
+  expect(queryByTestId('table-row-4-1')).toBeNull()
 
   // 第３弾ブースターボタンを押す
   let buttonExpansionThird = getByRole('radio', { name: '第３弾ブースター' })
@@ -1633,7 +1633,7 @@ test('エキスパンションによるフィルタ', async () => {
   expect(queryByTestId('table-row-2-1')).toBeNull()
   expect(queryByTestId('table-row-P-1')).toBeNull()
   expect(getByTestId('table-row-3-1')).toBeVisible()
-  expect(queryByTestId('table-row-4-01')).toBeNull()
+  expect(queryByTestId('table-row-4-1')).toBeNull()
 
   // 第４弾ブースターボタンを押す
   let buttonExpansionFourth = getByRole('radio', { name: '第４弾ブースター' })
@@ -1662,7 +1662,7 @@ test('エキスパンションによるフィルタ', async () => {
   expect(queryByTestId('table-row-2-1')).toBeNull()
   expect(queryByTestId('table-row-P-1')).toBeNull()
   expect(queryByTestId('table-row-3-1')).toBeNull()
-  expect(getByTestId('table-row-4-01')).toBeVisible()
+  expect(getByTestId('table-row-4-1')).toBeVisible()
 
   // 条件すべてをリセットするボタンを押す
   buttonExpansionAll = getByTestId('button-expansion-all').querySelector(
@@ -1699,7 +1699,7 @@ test('エキスパンションによるフィルタ', async () => {
   expect(getByTestId('table-row-2-1')).toBeVisible()
   expect(getByTestId('table-row-P-1')).toBeVisible()
   expect(getByTestId('table-row-3-1')).toBeVisible()
-  expect(getByTestId('table-row-4-01')).toBeVisible()
+  expect(getByTestId('table-row-4-1')).toBeVisible()
 })
 
 test('レアリティによるフィルタ', async () => {
@@ -3333,7 +3333,7 @@ test('能力語によるフィルタ', async () => {
   expect(getByTestId('table-row-1-68')).toBeVisible() // 万葉集 (テキストに執筆を持つマリョク)
   expect(getByTestId('table-row-3-4')).toBeVisible() // 吉田松陰 (テキストに決起を持つイジン)
   expect(getByTestId('table-row-2-55')).toBeVisible() // 凱旋門 (テキストに徴募を持つハイケイ)
-  expect(getByTestId('table-row-4-08')).toBeVisible() // アルキメデス (テキストに魔導を持つイジン)
+  expect(getByTestId('table-row-4-8')).toBeVisible() // アルキメデス (テキストに魔導を持つイジン)
 
   // 航海ボタンを押す
   let buttonTermSailing = getByRole('radio', { name: '航海' })
@@ -3369,7 +3369,7 @@ test('能力語によるフィルタ', async () => {
   expect(queryByTestId('table-row-1-68')).toBeNull() // 万葉集 (テキストに執筆を持つマリョク)
   expect(queryByTestId('table-row-3-4')).toBeNull() // 吉田松陰 (テキストに決起を持つイジン)
   expect(queryByTestId('table-row-2-55')).toBeNull() // 凱旋門 (テキストに徴募を持つハイケイ)
-  expect(queryByTestId('table-row-4-08')).toBeNull() // アルキメデス (テキストに魔導を持つイジン)
+  expect(queryByTestId('table-row-4-8')).toBeNull() // アルキメデス (テキストに魔導を持つイジン)
 
   // 執筆ボタンを押す
   let buttonTermWriting = getByRole('radio', { name: '執筆' })
@@ -3405,7 +3405,7 @@ test('能力語によるフィルタ', async () => {
   expect(queryByTestId('table-row-1-68')).toBeNull() // 万葉集 (テキストに執筆を持つマリョク)
   expect(queryByTestId('table-row-3-4')).toBeNull() // 吉田松陰 (テキストに決起を持つイジン)
   expect(queryByTestId('table-row-2-55')).toBeNull() // 凱旋門 (テキストに徴募を持つハイケイ)
-  expect(queryByTestId('table-row-4-08')).toBeNull() // アルキメデス (テキストに魔導を持つイジン)
+  expect(queryByTestId('table-row-4-8')).toBeNull() // アルキメデス (テキストに魔導を持つイジン)
 
   // 決起ボタンを押す
   let buttonTermRising = getByRole('radio', { name: '決起' })
@@ -3441,7 +3441,7 @@ test('能力語によるフィルタ', async () => {
   expect(queryByTestId('table-row-1-68')).toBeNull() // 万葉集 (テキストに執筆を持つマリョク)
   expect(queryByTestId('table-row-3-4')).toBeNull() // 吉田松陰 (テキストに決起を持つイジン)
   expect(queryByTestId('table-row-2-55')).toBeNull() // 凱旋門 (テキストに徴募を持つハイケイ)
-  expect(queryByTestId('table-row-4-08')).toBeNull() // アルキメデス (テキストに魔導を持つイジン)
+  expect(queryByTestId('table-row-4-8')).toBeNull() // アルキメデス (テキストに魔導を持つイジン)
 
   // 徴募ボタンを押す
   let buttonTermRecruitment = getByRole('radio', { name: '徴募' })
@@ -3477,7 +3477,7 @@ test('能力語によるフィルタ', async () => {
   expect(queryByTestId('table-row-1-68')).toBeNull() // 万葉集 (テキストに執筆を持つマリョク)
   expect(queryByTestId('table-row-3-4')).toBeNull() // 吉田松陰 (テキストに決起を持つイジン)
   expect(queryByTestId('table-row-2-55')).toBeNull() // 凱旋門 (テキストに徴募を持つハイケイ)
-  expect(queryByTestId('table-row-4-08')).toBeNull() // アルキメデス (テキストに魔導を持つイジン)
+  expect(queryByTestId('table-row-4-8')).toBeNull() // アルキメデス (テキストに魔導を持つイジン)
 
   // 魔導ボタンを押す
   let buttonTermChromagic = getByRole('radio', { name: '魔導' })
@@ -3513,7 +3513,7 @@ test('能力語によるフィルタ', async () => {
   expect(queryByTestId('table-row-1-68')).toBeNull() // 万葉集 (テキストに執筆を持つマリョク)
   expect(queryByTestId('table-row-3-4')).toBeNull() // 吉田松陰 (テキストに決起を持つイジン)
   expect(queryByTestId('table-row-2-55')).toBeNull() // 凱旋門 (テキストに徴募を持つハイケイ)
-  expect(queryByTestId('table-row-4-08')).toBeNull() // アルキメデス (テキストに魔導を持つイジン)
+  expect(queryByTestId('table-row-4-8')).toBeNull() // アルキメデス (テキストに魔導を持つイジン)
 
   // 条件すべてをリセットするボタンを押す
   buttonTermUnspecified = getByTestId('button-term-unspecified').querySelector(
@@ -3557,7 +3557,7 @@ test('能力語によるフィルタ', async () => {
   expect(getByTestId('table-row-1-68')).toBeVisible() // 万葉集 (テキストに執筆を持つマリョク)
   expect(getByTestId('table-row-3-4')).toBeVisible() // 吉田松陰 (テキストに決起を持つイジン)
   expect(getByTestId('table-row-2-55')).toBeVisible() // 凱旋門 (テキストに徴募を持つハイケイ)
-  expect(getByTestId('table-row-4-08')).toBeVisible() // アルキメデス (テキストに魔導を持つイジン)
+  expect(getByTestId('table-row-4-8')).toBeVisible() // アルキメデス (テキストに魔導を持つイジン)
 })
 
 test('遺業能力によるフィルタ', async () => {
