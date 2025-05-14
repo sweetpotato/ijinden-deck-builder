@@ -1,23 +1,21 @@
 // SPDX-License-Identifier: MIT
 
-import { useContext, useState } from 'react'
 import {
   Accordion,
   AccordionBody,
-  AccordionContext,
   AccordionHeader,
   AccordionItem,
   Button,
   Table,
-  ToggleButton,
 } from 'react-bootstrap'
-import { isAccordionItemSelected } from 'react-bootstrap/esm/AccordionContext'
-import FormRange from 'react-bootstrap/esm/FormRange'
 
 import { dataCardsArrayForTable as dataCards } from '../commons/dataCards'
 import enumColor from './enumColor'
+import enumComparator from './enumComparator'
 import enumTerm from './enumTerm'
-import useAccordionItemRadioFilter from './AccordionItemRadioFilter'
+import useAccordionItemGenericFilter from './AccordionItemGenericFilter'
+import useAccordionItemLevelFilter from './AccordionItemLevelFilter'
+import useAccordionItemTypeFilter from './AccordionItemTypeFilter'
 import useContainerTextSearch from './ContainerTextSearch'
 import TableRowCard from './TableRowCard'
 
@@ -54,25 +52,6 @@ const dataColors = [
   { value: enumColor.PURPLE, label: '紫' },
   { value: enumColor.MULTICOLOR, label: '多色' },
   { value: enumColor.COLORLESS, label: '無色' },
-]
-
-const dataTypes = [
-  { value: 0, label: 'すべて' },
-  { value: 1, label: 'イジン' },
-  { value: 2, label: 'ハイケイ' },
-  { value: 3, label: 'マホウ' },
-  { value: 4, label: 'マリョク' },
-]
-
-const LEVEL_VALUE_MIN = 0
-const LEVEL_VALUE_MAX = 17
-const LEVEL_COMPARATOR_GE = 'ge'
-const LEVEL_COMPARATOR_LE = 'le'
-const LEVEL_COMPARATOR_EQ = 'eq'
-const dataLevelComparators = [
-  { value: LEVEL_COMPARATOR_GE, label: '以上' },
-  { value: LEVEL_COMPARATOR_LE, label: '以下' },
-  { value: LEVEL_COMPARATOR_EQ, label: '等しい' },
 ]
 
 const dataTerms = [
@@ -117,39 +96,35 @@ function TabPaneCard({
   interruptSimulator,
 }) {
   const [expansion, resetExpansion, renderExpansion] =
-    useAccordionItemRadioFilter(
+    useAccordionItemGenericFilter(
       'button-expansion-all',
       'エキスパンション',
       dataExpansions
     )
-  const [rarity, resetRarity, renderRarity] = useAccordionItemRadioFilter(
+  const [rarity, resetRarity, renderRarity] = useAccordionItemGenericFilter(
     'button-rarity-all',
     'レアリティ',
     dataRarities
   )
-  const [color, resetColor, renderColor] = useAccordionItemRadioFilter(
+  const [color, resetColor, renderColor] = useAccordionItemGenericFilter(
     'button-color-all',
     '色',
     dataColors
   )
-  const [type, resetType, renderType] = useAccordionItemRadioFilter(
-    'button-type-all',
-    '種類',
-    dataTypes
-  )
-  const [levelValue, setLevelValue] = useState(LEVEL_VALUE_MIN)
-  const [levelComparator, setLevelComparator] = useState(LEVEL_COMPARATOR_GE)
-  const [trait, resetTrait, renderTrait] = useAccordionItemRadioFilter(
+  const [type, resetType, renderType] = useAccordionItemTypeFilter()
+  const [level, levelComparator, resetLevel, renderLevel] =
+    useAccordionItemLevelFilter()
+  const [trait, resetTrait, renderTrait] = useAccordionItemGenericFilter(
     'button-trait-unspecified',
     '特性',
     dataTraits
   )
-  const [term, resetTerm, renderTerm] = useAccordionItemRadioFilter(
+  const [term, resetTerm, renderTerm] = useAccordionItemGenericFilter(
     'button-term-unspecified',
     '能力語',
     dataTerms
   )
-  const [legacy, resetLegacy, renderLegacy] = useAccordionItemRadioFilter(
+  const [legacy, resetLegacy, renderLegacy] = useAccordionItemGenericFilter(
     'button-legacy-unspecified',
     '遺業能力',
     dataLegacies
@@ -162,38 +137,19 @@ function TabPaneCard({
     resetRarity()
     resetColor()
     resetType()
-    setLevelValue(LEVEL_VALUE_MIN)
-    setLevelComparator(LEVEL_COMPARATOR_GE)
+    resetLevel()
     resetTrait()
     resetTerm()
     resetLegacy()
   }
 
-  function handleChangeLevelValue(e) {
-    const currentValue = Number(e.currentTarget.value)
-    // レベル11から16までのカードは存在しないため、
-    // その値に設定してもあまり有益ではない。
-    // 代わりに、レベル10または17の近い方に四捨五入的に寄せる。
-    if (10 <= currentValue && currentValue < LEVEL_VALUE_MAX) {
-      setLevelValue(
-        currentValue < (10 + LEVEL_VALUE_MAX) / 2 ? 10 : LEVEL_VALUE_MAX
-      )
-    } else {
-      setLevelValue(currentValue)
-    }
-  }
-
-  function handleChangeLevelComparator(e) {
-    setLevelComparator(e.currentTarget.value)
-  }
-
   function filterCard(card) {
     const levelMatched =
-      levelComparator === LEVEL_COMPARATOR_GE
-        ? card.level >= levelValue
-        : levelComparator === LEVEL_COMPARATOR_LE
-        ? card.level <= levelValue
-        : card.level === levelValue
+      levelComparator === enumComparator.GE
+        ? card.level >= level
+        : levelComparator === enumComparator.LE
+        ? card.level <= level
+        : card.level === level
     let allText = card.name + '§' + card.kana
     allText +=
       includesTraitAndLegacy && card.traitText ? '§' + card.traitText : ''
@@ -239,16 +195,7 @@ function TabPaneCard({
               {renderRarity('1')}
               {renderColor('2')}
               {renderType('3')}
-              <AccordionItemLevelFilter
-                eventKey="4"
-                title="レベル"
-                nameComparator="level-comparator"
-                stateValue={levelValue}
-                stateComparator={levelComparator}
-                handleChangeValue={handleChangeLevelValue}
-                handleChangeComparator={handleChangeLevelComparator}
-                data={dataLevelComparators}
-              />
+              {renderLevel('4')}
               {renderTrait('5')}
               {renderTerm('6')}
               {renderLegacy('7')}
@@ -288,75 +235,6 @@ function TabPaneCard({
         </tbody>
       </Table>
     </>
-  )
-}
-
-function AccordionItemLevelFilter({
-  eventKey,
-  title,
-  nameComparator,
-  stateValue,
-  stateComparator,
-  handleChangeValue,
-  handleChangeComparator,
-  data,
-}) {
-  const { activeEventKey } = useContext(AccordionContext)
-  const expanded = isAccordionItemSelected(activeEventKey, eventKey)
-  const label =
-    stateComparator === LEVEL_COMPARATOR_GE
-      ? `${stateValue}以上`
-      : stateComparator === LEVEL_COMPARATOR_LE
-      ? `${stateValue}以下`
-      : `${stateValue}に等しい`
-  const enphasized = stateValue !== 0 || stateComparator != LEVEL_COMPARATOR_GE
-
-  return (
-    <AccordionItem eventKey={eventKey}>
-      <AccordionHeader as="h3">
-        {expanded ? (
-          `➖ ${title}`
-        ) : !enphasized ? (
-          `➕ ${title} ― ${label}`
-        ) : (
-          <>
-            ➕ {title}
-            &nbsp;―&nbsp;
-            <b>{label}</b>
-          </>
-        )}
-      </AccordionHeader>
-      <AccordionBody>
-        <div>
-          <div>{stateValue}</div>
-          <FormRange
-            min={LEVEL_VALUE_MIN}
-            max={LEVEL_VALUE_MAX}
-            value={stateValue}
-            onChange={handleChangeValue}
-          />
-        </div>
-        <div className="container-button">
-          {data.map((element) => {
-            const id = `${nameComparator}-${element.value}`
-            return (
-              <ToggleButton
-                key={id}
-                type="radio"
-                variant="outline-primary"
-                id={id}
-                name={nameComparator}
-                value={element.value}
-                onChange={handleChangeComparator}
-                checked={stateComparator === element.value}
-              >
-                {element.label}
-              </ToggleButton>
-            )
-          })}
-        </div>
-      </AccordionBody>
-    </AccordionItem>
   )
 }
 

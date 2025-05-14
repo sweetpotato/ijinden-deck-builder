@@ -10,12 +10,12 @@ import {
 } from 'react-bootstrap'
 import { isAccordionItemSelected } from 'react-bootstrap/esm/AccordionContext'
 
-function AccordionItemRadioFilter({
+function AccordionItemGenericFilter({
   eventKey,
   testIdForButton0,
   title,
   state,
-  handleChange,
+  handleChangeState,
   data,
 }) {
   const name = useId()
@@ -71,7 +71,7 @@ function AccordionItemRadioFilter({
                 id={id}
                 name={name}
                 value={element.value}
-                onChange={handleChange}
+                onChange={handleChangeState}
                 checked={state === element.value}
               >
                 {element.label}
@@ -84,4 +84,4 @@ function AccordionItemRadioFilter({
   )
 }
 
-export default AccordionItemRadioFilter
+export default AccordionItemGenericFilter

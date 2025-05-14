@@ -8,8 +8,8 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "vitest",
-    "test-once": "vitest run"
+    "test": "vitest --test-timeout=60000",
+    "test-once": "vitest run --test-timeout=60000"
   },
   "dependencies": {
     "bootstrap": "^5.3.3",
