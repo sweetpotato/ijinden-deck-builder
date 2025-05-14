@@ -13,6 +13,7 @@ import { dataCardsArrayForTable as dataCards } from '../commons/dataCards'
 import enumColor from './enumColor'
 import enumComparator from './enumComparator'
 import enumTerm from './enumTerm'
+import enumType from './enumType'
 import useAccordionItemGenericFilter from './AccordionItemGenericFilter'
 import useAccordionItemLevelFilter from './AccordionItemLevelFilter'
 import useContainerTextSearch from './ContainerTextSearch'
@@ -55,10 +56,10 @@ const dataColors = [
 
 const dataTypes = [
   { value: 0, label: 'すべて' },
-  { value: 1, label: 'イジン' },
-  { value: 2, label: 'ハイケイ' },
-  { value: 3, label: 'マホウ' },
-  { value: 4, label: 'マリョク' },
+  { value: enumType.IJIN, label: 'イジン' },
+  { value: enumType.HAIKEI, label: 'ハイケイ' },
+  { value: enumType.MAHOU, label: 'マホウ' },
+  { value: enumType.MARYOKU, label: 'マリョク' },
 ]
 
 const dataTerms = [
