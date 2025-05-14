@@ -10,7 +10,6 @@ function useAccordionItemTypeFilter() {
   const render = (eventKey) => (
     <AccordionItemTypeFilter
       eventKey={eventKey}
-      testIdForButton0="button-type-all"
       state={state}
       handleChange={(e) => setState(Number(e.currentTarget.value))}
     />

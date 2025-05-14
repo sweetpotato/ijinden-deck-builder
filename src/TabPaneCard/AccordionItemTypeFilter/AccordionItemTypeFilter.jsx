@@ -12,24 +12,29 @@ import { isAccordionItemSelected } from 'react-bootstrap/esm/AccordionContext'
 
 import enumType from '../enumType'
 
-const dataTypes = [
-  { value: 0, label: 'すべて' },
-  { value: enumType.IJIN, label: 'イジン' },
-  { value: enumType.HAIKEI, label: 'ハイケイ' },
-  { value: enumType.MAHOU, label: 'マホウ' },
-  { value: enumType.MARYOKU, label: 'マリョク' },
-]
+function makeLabel(state) {
+  switch (state) {
+    case enumType.IJIN: {
+      return 'イジン'
+    }
+    case enumType.HAIKEI: {
+      return 'ハイケイ'
+    }
+    case enumType.MAHOU: {
+      return 'マホウ'
+    }
+    case enumType.MARYOKU: {
+      return 'マリョク'
+    }
+  }
+  return 'すべて'
+}
 
-function AccordionItemTypeFilter({
-  eventKey,
-  testIdForButton0,
-  state,
-  handleChange,
-}) {
+function AccordionItemTypeFilter({ eventKey, state, handleChange }) {
   const name = useId()
   const { activeEventKey } = useContext(AccordionContext)
   const expanded = isAccordionItemSelected(activeEventKey, eventKey)
-  const label = new Map(dataTypes.map((e) => [e.value, e.label])).get(state)
+  const label = makeLabel(state)
 
   return (
     <AccordionItem eventKey={eventKey}>
@@ -47,46 +52,71 @@ function AccordionItemTypeFilter({
         )}
       </AccordionHeader>
       <AccordionBody className="container-button">
-        {dataTypes.map((element) => {
-          const id = `${name}-${element.value}`
-          return (
-            <span
-              key={id}
-              {
-                /*
-                 * 0番ボタンのテキストはフィルタが異なっていても
-                 * 「すべて」「指定なし」と同じ文言を持っており、getByRole の
-                 * name により一意に取得することが難しいので、data-testid を
-                 * 設定する。実際のユーザは、これらのボタンがどのフィルタの
-                 * アコーディオンの配下にあるかを見て一意に識別できるため、
-                 * 視覚的なアクセシビリティとしては問題ないはずである。
-                 *
-                 * <ToggleButton> は <input type="button"> と <label> の組合せで
-                 * 実現されており、<ToggleButton> に付けた data-testid は
-                 * <input type="button"> ではなく <label> に付く。この <label> を
-                 * getByTestId しても、そこから兄にあたる <input type="button"> を
-                 * querySelector で取得することは困難なため、これらをラップする
-                 * <span> を用意してそれに data-testid をつけることにする。
-                 */
-                ...(element.value === 0
-                  ? { 'data-testid': testIdForButton0 }
-                  : {})
-              }
-            >
-              <ToggleButton
-                type="radio"
-                variant="outline-primary"
-                id={id}
-                name={name}
-                value={element.value}
-                onChange={handleChange}
-                checked={state === element.value}
-              >
-                {element.label}
-              </ToggleButton>
-            </span>
-          )
-        })}
+        <span data-testid="button-type-all">
+          <ToggleButton
+            type="radio"
+            variant="outline-primary"
+            id={`${name}-0`}
+            name={name}
+            value={0}
+            onChange={handleChange}
+            checked={state === 0}
+          >
+            すべて
+          </ToggleButton>
+        </span>
+        <span>
+          <ToggleButton
+            type="radio"
+            variant="outline-primary"
+            id={`${name}-${enumType.IJIN}`}
+            name={name}
+            value={enumType.IJIN}
+            onChange={handleChange}
+            checked={state === enumType.IJIN}
+          >
+            イジン
+          </ToggleButton>
+        </span>
+        <span>
+          <ToggleButton
+            type="radio"
+            variant="outline-primary"
+            id={`${name}-${enumType.HAIKEI}`}
+            name={name}
+            value={enumType.HAIKEI}
+            onChange={handleChange}
+            checked={state === enumType.HAIKEI}
+          >
+            ハイケイ
+          </ToggleButton>
+        </span>
+        <span>
+          <ToggleButton
+            type="radio"
+            variant="outline-primary"
+            id={`${name}-${enumType.MAHOU}`}
+            name={name}
+            value={enumType.MAHOU}
+            onChange={handleChange}
+            checked={state === enumType.MAHOU}
+          >
+            マホウ
+          </ToggleButton>
+        </span>
+        <span>
+          <ToggleButton
+            type="radio"
+            variant="outline-primary"
+            id={`${name}-${enumType.MARYOKU}`}
+            name={name}
+            value={enumType.MARYOKU}
+            onChange={handleChange}
+            checked={state === enumType.MARYOKU}
+          >
+            マリョク
+          </ToggleButton>
+        </span>
       </AccordionBody>
     </AccordionItem>
   )
