@@ -16,6 +16,7 @@ import FormRange from 'react-bootstrap/esm/FormRange'
 
 import { dataCardsArrayForTable as dataCards } from '../commons/dataCards'
 import enumColor from './enumColor'
+import enumComparator from './enumComparator'
 import enumTerm from './enumTerm'
 import useAccordionItemGenericFilter from './AccordionItemGenericFilter'
 import useContainerTextSearch from './ContainerTextSearch'
@@ -66,13 +67,10 @@ const dataTypes = [
 
 const LEVEL_VALUE_MIN = 0
 const LEVEL_VALUE_MAX = 17
-const LEVEL_COMPARATOR_GE = 'ge'
-const LEVEL_COMPARATOR_LE = 'le'
-const LEVEL_COMPARATOR_EQ = 'eq'
 const dataLevelComparators = [
-  { value: LEVEL_COMPARATOR_GE, label: '以上' },
-  { value: LEVEL_COMPARATOR_LE, label: '以下' },
-  { value: LEVEL_COMPARATOR_EQ, label: '等しい' },
+  { value: enumComparator.GE, label: '以上' },
+  { value: enumComparator.LE, label: '以下' },
+  { value: enumComparator.EQ, label: '等しい' },
 ]
 
 const dataTerms = [
@@ -138,7 +136,7 @@ function TabPaneCard({
     dataTypes
   )
   const [levelValue, setLevelValue] = useState(LEVEL_VALUE_MIN)
-  const [levelComparator, setLevelComparator] = useState(LEVEL_COMPARATOR_GE)
+  const [levelComparator, setLevelComparator] = useState(enumComparator.GE)
   const [trait, resetTrait, renderTrait] = useAccordionItemGenericFilter(
     'button-trait-unspecified',
     '特性',
@@ -163,7 +161,7 @@ function TabPaneCard({
     resetColor()
     resetType()
     setLevelValue(LEVEL_VALUE_MIN)
-    setLevelComparator(LEVEL_COMPARATOR_GE)
+    setLevelComparator(enumComparator.GE)
     resetTrait()
     resetTerm()
     resetLegacy()
@@ -189,9 +187,9 @@ function TabPaneCard({
 
   function filterCard(card) {
     const levelMatched =
-      levelComparator === LEVEL_COMPARATOR_GE
+      levelComparator === enumComparator.GE
         ? card.level >= levelValue
-        : levelComparator === LEVEL_COMPARATOR_LE
+        : levelComparator === enumComparator.LE
         ? card.level <= levelValue
         : card.level === levelValue
     let allText = card.name + '§' + card.kana
@@ -304,12 +302,12 @@ function AccordionItemLevelFilter({
   const { activeEventKey } = useContext(AccordionContext)
   const expanded = isAccordionItemSelected(activeEventKey, eventKey)
   const label =
-    stateComparator === LEVEL_COMPARATOR_GE
+    stateComparator === enumComparator.GE
       ? `${stateValue}以上`
-      : stateComparator === LEVEL_COMPARATOR_LE
+      : stateComparator === enumComparator.LE
       ? `${stateValue}以下`
       : `${stateValue}に等しい`
-  const enphasized = stateValue !== 0 || stateComparator != LEVEL_COMPARATOR_GE
+  const enphasized = stateValue !== 0 || stateComparator != enumComparator.GE
 
   return (
     <AccordionItem eventKey={eventKey}>
