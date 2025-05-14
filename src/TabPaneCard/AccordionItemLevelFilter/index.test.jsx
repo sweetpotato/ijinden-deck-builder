@@ -261,3 +261,62 @@ test('スライダーの選択', async () => {
   expect(buttonEQ).toBeVisible()
   expect(buttonEQ).not.toBeChecked()
 })
+
+test('getByTestId() による選択', async () => {
+  const { result } = renderHook(() => useAccordionItemLevelFilter())
+  let [levelValue, levelComparator, resetLevel, renderLevel] = result.current
+  expect(levelValue).toBe(0)
+  expect(levelComparator).toBe(enumComparator.GE)
+  const { rerender, getByTestId } = render(
+    <Accordion alwaysOpen>{renderLevel('0')}</Accordion>
+  )
+
+  expect(getByTestId('slider-level')).toHaveValue('0')
+  const spanGE = getByTestId('button-level-ge')
+  expect(spanGE.querySelector('input[type="radio"]')).toBeChecked()
+  expect(spanGE.querySelector('label')).toHaveTextContent('以上')
+  const spanLE = getByTestId('button-level-le')
+  expect(spanLE.querySelector('input[type="radio"]')).not.toBeChecked()
+  expect(spanLE.querySelector('label')).toHaveTextContent('以下')
+  const spanEQ = getByTestId('button-level-eq')
+  expect(spanEQ.querySelector('input[type="radio"]')).not.toBeChecked()
+  expect(spanEQ.querySelector('label')).toHaveTextContent('等しい')
+
+  // userEvent は slider に未対応とのこと。
+  // See: https://github.com/testing-library/user-event/issues/871
+  fireEvent.change(getByTestId('slider-level'), { target: { value: '5' } })
+  ;[levelValue, levelComparator, resetLevel, renderLevel] = result.current
+  expect(levelValue).toBe(5)
+  rerender(<Accordion alwaysOpen>{renderLevel('0')}</Accordion>)
+  expect(getByTestId('slider-level')).toHaveValue('5')
+
+  await userEvent.click(
+    getByTestId('button-level-le').querySelector('input[type="radio"]')
+  )
+  ;[levelValue, levelComparator, resetLevel, renderLevel] = result.current
+  expect(levelComparator).toBe(enumComparator.LE)
+  rerender(<Accordion alwaysOpen>{renderLevel('0')}</Accordion>)
+  expect(
+    getByTestId('button-level-le').querySelector('input[type="radio"]')
+  ).toBeChecked()
+
+  await userEvent.click(
+    getByTestId('button-level-eq').querySelector('input[type="radio"]')
+  )
+  ;[levelValue, levelComparator, resetLevel, renderLevel] = result.current
+  expect(levelComparator).toBe(enumComparator.EQ)
+  rerender(<Accordion alwaysOpen>{renderLevel('0')}</Accordion>)
+  expect(
+    getByTestId('button-level-eq').querySelector('input[type="radio"]')
+  ).toBeChecked()
+
+  act(() => resetLevel())
+  ;[levelValue, levelComparator, resetLevel, renderLevel] = result.current
+  expect(levelValue).toBe(0)
+  expect(levelComparator).toBe(enumComparator.GE)
+  rerender(<Accordion alwaysOpen>{renderLevel('0')}</Accordion>)
+  expect(getByTestId('slider-level')).toHaveValue('0')
+  expect(
+    getByTestId('button-level-ge').querySelector('input[type="radio"]')
+  ).toBeChecked()
+})
