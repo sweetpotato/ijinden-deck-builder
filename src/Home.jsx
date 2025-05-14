@@ -126,7 +126,15 @@ function App() {
           <Alert variant="warning">
             iPhone の Safari ではインテリジェントトラッキング防止機能 (ITP)
             が有効かつアプリに7日間アクセスがないとマイデッキのデータがクリアされてしまうことにご注意ください。これは
-            ITP の仕様によるものです。
+            ITP
+            の仕様によるものです。7日間以上データを保存したい場合、このアプリを
+            iPhone のホーム画面に追加して、Safari
+            からではなくホーム画面からご利用ください。詳しくは Apple
+            公式サイトの「
+            <a href="https://support.apple.com/ja-jp/guide/iphone/iph42ab2f3a7/ios">
+              iPhoneのSafariでWebサイトをブックマークに登録する
+            </a>
+            」 → 「ホーム画面にWebサイトのアイコンを追加する」を参照ください。
           </Alert>
           <Alert variant="warning">
             マイデッキは「サイトデータ」として端末のブラウザに保存しているため、Safari
