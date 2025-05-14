@@ -1,24 +1,21 @@
 // SPDX-License-Identifier: MIT
 
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import {
   Accordion,
   AccordionBody,
-  AccordionContext,
   AccordionHeader,
   AccordionItem,
   Button,
   Table,
-  ToggleButton,
 } from 'react-bootstrap'
-import { isAccordionItemSelected } from 'react-bootstrap/esm/AccordionContext'
-import FormRange from 'react-bootstrap/esm/FormRange'
 
 import { dataCardsArrayForTable as dataCards } from '../commons/dataCards'
 import enumColor from './enumColor'
 import enumComparator from './enumComparator'
 import enumTerm from './enumTerm'
 import useAccordionItemGenericFilter from './AccordionItemGenericFilter'
+import AccordionItemLevelFilter from './AccordionItemLevelFilter/AccordionItemLevelFilter'
 import useContainerTextSearch from './ContainerTextSearch'
 import TableRowCard from './TableRowCard'
 
@@ -65,6 +62,7 @@ const dataTypes = [
   { value: 4, label: 'マリョク' },
 ]
 
+// TODO 二重定義
 const LEVEL_VALUE_MIN = 0
 const LEVEL_VALUE_MAX = 17
 const dataLevelComparators = [
@@ -286,75 +284,6 @@ function TabPaneCard({
         </tbody>
       </Table>
     </>
-  )
-}
-
-function AccordionItemLevelFilter({
-  eventKey,
-  title,
-  nameComparator,
-  stateValue,
-  stateComparator,
-  handleChangeValue,
-  handleChangeComparator,
-  data,
-}) {
-  const { activeEventKey } = useContext(AccordionContext)
-  const expanded = isAccordionItemSelected(activeEventKey, eventKey)
-  const label =
-    stateComparator === enumComparator.GE
-      ? `${stateValue}以上`
-      : stateComparator === enumComparator.LE
-      ? `${stateValue}以下`
-      : `${stateValue}に等しい`
-  const enphasized = stateValue !== 0 || stateComparator != enumComparator.GE
-
-  return (
-    <AccordionItem eventKey={eventKey}>
-      <AccordionHeader as="h3">
-        {expanded ? (
-          `➖ ${title}`
-        ) : !enphasized ? (
-          `➕ ${title} ― ${label}`
-        ) : (
-          <>
-            ➕ {title}
-            &nbsp;―&nbsp;
-            <b>{label}</b>
-          </>
-        )}
-      </AccordionHeader>
-      <AccordionBody>
-        <div>
-          <div>{stateValue}</div>
-          <FormRange
-            min={LEVEL_VALUE_MIN}
-            max={LEVEL_VALUE_MAX}
-            value={stateValue}
-            onChange={handleChangeValue}
-          />
-        </div>
-        <div className="container-button">
-          {data.map((element) => {
-            const id = `${nameComparator}-${element.value}`
-            return (
-              <ToggleButton
-                key={id}
-                type="radio"
-                variant="outline-primary"
-                id={id}
-                name={nameComparator}
-                value={element.value}
-                onChange={handleChangeComparator}
-                checked={stateComparator === element.value}
-              >
-                {element.label}
-              </ToggleButton>
-            )
-          })}
-        </div>
-      </AccordionBody>
-    </AccordionItem>
   )
 }
 
