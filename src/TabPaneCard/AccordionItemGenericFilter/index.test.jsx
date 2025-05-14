@@ -10,6 +10,15 @@ import useAccordionItemGenericFilter from '.'
 
 afterEach(cleanup)
 
+const dataExpansionsForTest = [
+  { value: 0, label: 'すべて' },
+  { value: 10, label: '伝説の武将' },
+  { value: 11, label: '美と知の革命' },
+  { value: 12, label: '日本の大天才' },
+  { value: 20, label: '三国の英傑' },
+  { value: 30, label: '発展する医学' },
+]
+
 const dataTypes = [
   { value: 0, label: 'すべて' },
   { value: 1, label: 'イジン' },
@@ -28,6 +37,197 @@ const dataColors = [
   { value: 32, label: '多色' },
   { value: 64, label: '無色' },
 ]
+
+test('エキスパンションのようにビットセットでないフィルタ', async () => {
+  const { result } = renderHook(() =>
+    useAccordionItemGenericFilter(
+      'button-expansion-all',
+      '種類',
+      dataExpansionsForTest
+    )
+  )
+  let [state, resetState, renderAccordionItem] = result.current
+  expect(state).toBe(0)
+  const { rerender, getByRole } = render(
+    <Accordion alwaysOpen>{renderAccordionItem('0')}</Accordion>
+  )
+
+  let buttonExpansionAll = getByRole('radio', { name: 'すべて' })
+  expect(buttonExpansionAll).toBeVisible()
+  // すべてが選択されている
+  expect(buttonExpansionAll).toBeChecked()
+  let buttonExpansionRed = getByRole('radio', { name: '伝説の武将' })
+  expect(buttonExpansionRed).toBeVisible()
+  expect(buttonExpansionRed).not.toBeChecked()
+  let buttonExpansionBlue = getByRole('radio', { name: '美と知の革命' })
+  expect(buttonExpansionBlue).toBeVisible()
+  expect(buttonExpansionBlue).not.toBeChecked()
+  let buttonExpansionGreen = getByRole('radio', { name: '日本の大天才' })
+  expect(buttonExpansionGreen).toBeVisible()
+  expect(buttonExpansionGreen).not.toBeChecked()
+  let buttonExpansionYellow = getByRole('radio', { name: '三国の英傑' })
+  expect(buttonExpansionYellow).toBeVisible()
+  expect(buttonExpansionYellow).not.toBeChecked()
+  let buttonExpansionPurple = getByRole('radio', { name: '発展する医学' })
+  expect(buttonExpansionPurple).toBeVisible()
+  expect(buttonExpansionPurple).not.toBeChecked()
+
+  // 伝説の武将を選択する
+  await userEvent.click(buttonExpansionRed)
+  ;[state, resetState, renderAccordionItem] = result.current
+  expect(state).toBe(10) // 伝説の武将
+  rerender(<Accordion alwaysOpen>{renderAccordionItem('0')}</Accordion>)
+
+  buttonExpansionAll = getByRole('radio', { name: 'すべて' })
+  expect(buttonExpansionAll).toBeVisible()
+  expect(buttonExpansionAll).not.toBeChecked()
+  buttonExpansionRed = getByRole('radio', { name: '伝説の武将' })
+  expect(buttonExpansionRed).toBeVisible()
+  // 伝説の武将が選択されている
+  expect(buttonExpansionRed).toBeChecked()
+  buttonExpansionBlue = getByRole('radio', { name: '美と知の革命' })
+  expect(buttonExpansionBlue).toBeVisible()
+  expect(buttonExpansionBlue).not.toBeChecked()
+  buttonExpansionGreen = getByRole('radio', { name: '日本の大天才' })
+  expect(buttonExpansionGreen).toBeVisible()
+  expect(buttonExpansionGreen).not.toBeChecked()
+  buttonExpansionYellow = getByRole('radio', { name: '三国の英傑' })
+  expect(buttonExpansionYellow).toBeVisible()
+  expect(buttonExpansionYellow).not.toBeChecked()
+  buttonExpansionPurple = getByRole('radio', { name: '発展する医学' })
+  expect(buttonExpansionPurple).toBeVisible()
+  expect(buttonExpansionPurple).not.toBeChecked()
+
+  // 美と知の革命を選択する
+  await userEvent.click(buttonExpansionBlue)
+  ;[state, resetState, renderAccordionItem] = result.current
+  expect(state).toBe(11) // 伝説の武将
+  rerender(<Accordion alwaysOpen>{renderAccordionItem('0')}</Accordion>)
+
+  buttonExpansionAll = getByRole('radio', { name: 'すべて' })
+  expect(buttonExpansionAll).toBeVisible()
+  expect(buttonExpansionAll).not.toBeChecked()
+  buttonExpansionRed = getByRole('radio', { name: '伝説の武将' })
+  expect(buttonExpansionRed).toBeVisible()
+  expect(buttonExpansionRed).not.toBeChecked()
+  buttonExpansionBlue = getByRole('radio', { name: '美と知の革命' })
+  expect(buttonExpansionBlue).toBeVisible()
+  // 美と知の革命が選択されている
+  expect(buttonExpansionBlue).toBeChecked()
+  buttonExpansionGreen = getByRole('radio', { name: '日本の大天才' })
+  expect(buttonExpansionGreen).toBeVisible()
+  expect(buttonExpansionGreen).not.toBeChecked()
+  buttonExpansionYellow = getByRole('radio', { name: '三国の英傑' })
+  expect(buttonExpansionYellow).toBeVisible()
+  expect(buttonExpansionYellow).not.toBeChecked()
+  buttonExpansionPurple = getByRole('radio', { name: '発展する医学' })
+  expect(buttonExpansionPurple).toBeVisible()
+  expect(buttonExpansionPurple).not.toBeChecked()
+
+  // 日本の大天才を選択する
+  await userEvent.click(buttonExpansionGreen)
+  ;[state, resetState, renderAccordionItem] = result.current
+  expect(state).toBe(12) // 伝説の武将
+  rerender(<Accordion alwaysOpen>{renderAccordionItem('0')}</Accordion>)
+
+  buttonExpansionAll = getByRole('radio', { name: 'すべて' })
+  expect(buttonExpansionAll).toBeVisible()
+  expect(buttonExpansionAll).not.toBeChecked()
+  buttonExpansionRed = getByRole('radio', { name: '伝説の武将' })
+  expect(buttonExpansionRed).toBeVisible()
+  expect(buttonExpansionRed).not.toBeChecked()
+  buttonExpansionBlue = getByRole('radio', { name: '美と知の革命' })
+  expect(buttonExpansionBlue).toBeVisible()
+  expect(buttonExpansionBlue).not.toBeChecked()
+  buttonExpansionGreen = getByRole('radio', { name: '日本の大天才' })
+  expect(buttonExpansionGreen).toBeVisible()
+  // 日本の大天才が選択されている
+  expect(buttonExpansionGreen).toBeChecked()
+  buttonExpansionYellow = getByRole('radio', { name: '三国の英傑' })
+  expect(buttonExpansionYellow).toBeVisible()
+  expect(buttonExpansionYellow).not.toBeChecked()
+  buttonExpansionPurple = getByRole('radio', { name: '発展する医学' })
+  expect(buttonExpansionPurple).toBeVisible()
+  expect(buttonExpansionPurple).not.toBeChecked()
+
+  // 三国の英傑を選択する
+  await userEvent.click(buttonExpansionYellow)
+  ;[state, resetState, renderAccordionItem] = result.current
+  expect(state).toBe(20) // 三国の英傑
+  rerender(<Accordion alwaysOpen>{renderAccordionItem('0')}</Accordion>)
+
+  buttonExpansionAll = getByRole('radio', { name: 'すべて' })
+  expect(buttonExpansionAll).toBeVisible()
+  expect(buttonExpansionAll).not.toBeChecked()
+  buttonExpansionRed = getByRole('radio', { name: '伝説の武将' })
+  expect(buttonExpansionRed).toBeVisible()
+  expect(buttonExpansionRed).not.toBeChecked()
+  buttonExpansionBlue = getByRole('radio', { name: '美と知の革命' })
+  expect(buttonExpansionBlue).toBeVisible()
+  expect(buttonExpansionBlue).not.toBeChecked()
+  buttonExpansionGreen = getByRole('radio', { name: '日本の大天才' })
+  expect(buttonExpansionGreen).toBeVisible()
+  expect(buttonExpansionGreen).not.toBeChecked()
+  buttonExpansionYellow = getByRole('radio', { name: '三国の英傑' })
+  expect(buttonExpansionYellow).toBeVisible()
+  // 三国の英傑が選択されている
+  expect(buttonExpansionYellow).toBeChecked()
+  buttonExpansionPurple = getByRole('radio', { name: '発展する医学' })
+  expect(buttonExpansionPurple).toBeVisible()
+  expect(buttonExpansionPurple).not.toBeChecked()
+
+  // 発展する医学を選択する
+  await userEvent.click(buttonExpansionPurple)
+  ;[state, resetState, renderAccordionItem] = result.current
+  expect(state).toBe(30) // 発展する医学
+  rerender(<Accordion alwaysOpen>{renderAccordionItem('0')}</Accordion>)
+
+  buttonExpansionAll = getByRole('radio', { name: 'すべて' })
+  expect(buttonExpansionAll).toBeVisible()
+  expect(buttonExpansionAll).not.toBeChecked()
+  buttonExpansionRed = getByRole('radio', { name: '伝説の武将' })
+  expect(buttonExpansionRed).toBeVisible()
+  expect(buttonExpansionRed).not.toBeChecked()
+  buttonExpansionBlue = getByRole('radio', { name: '美と知の革命' })
+  expect(buttonExpansionBlue).toBeVisible()
+  expect(buttonExpansionBlue).not.toBeChecked()
+  buttonExpansionGreen = getByRole('radio', { name: '日本の大天才' })
+  expect(buttonExpansionGreen).toBeVisible()
+  expect(buttonExpansionGreen).not.toBeChecked()
+  buttonExpansionYellow = getByRole('radio', { name: '三国の英傑' })
+  expect(buttonExpansionYellow).toBeVisible()
+  expect(buttonExpansionYellow).not.toBeChecked()
+  buttonExpansionPurple = getByRole('radio', { name: '発展する医学' })
+  expect(buttonExpansionPurple).toBeVisible()
+  // 発展する医学が選択されている
+  expect(buttonExpansionPurple).toBeChecked()
+
+  // 状態をリセットする
+  act(() => resetState())
+  ;[state, resetState, renderAccordionItem] = result.current
+  expect(state).toBe(0) // すべて
+  rerender(<Accordion alwaysOpen>{renderAccordionItem('0')}</Accordion>)
+
+  buttonExpansionAll = getByRole('radio', { name: 'すべて' })
+  expect(buttonExpansionAll).toBeVisible()
+  // すべてが選択されている
+  expect(buttonExpansionAll).toBeChecked()
+  buttonExpansionRed = getByRole('radio', { name: '伝説の武将' })
+  expect(buttonExpansionRed).toBeVisible()
+  expect(buttonExpansionRed).not.toBeChecked()
+  buttonExpansionBlue = getByRole('radio', { name: '美と知の革命' })
+  expect(buttonExpansionBlue).toBeVisible()
+  expect(buttonExpansionBlue).not.toBeChecked()
+  buttonExpansionGreen = getByRole('radio', { name: '日本の大天才' })
+  expect(buttonExpansionGreen).toBeVisible()
+  expect(buttonExpansionGreen).not.toBeChecked()
+  buttonExpansionYellow = getByRole('radio', { name: '三国の英傑' })
+  expect(buttonExpansionYellow).toBeVisible()
+  expect(buttonExpansionYellow).not.toBeChecked()
+  buttonExpansionPurple = getByRole('radio', { name: '発展する医学' })
+  expect(buttonExpansionPurple).toBeVisible()
+  expect(buttonExpansionPurple).not.toBeChecked()
+})
 
 test('種類のようにビットセットでないフィルタ', async () => {
   const { result } = renderHook(() =>
