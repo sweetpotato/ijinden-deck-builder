@@ -16,21 +16,21 @@ import enumComparator from '../enumComparator'
 
 function AccordionItemLevelFilter({
   eventKey,
-  stateValue,
-  stateComparator,
-  handleChangeValue,
+  level,
+  comparator,
+  handleChangeLevel,
   handleChangeComparator,
 }) {
   const name = useId()
   const { activeEventKey } = useContext(AccordionContext)
   const expanded = isAccordionItemSelected(activeEventKey, eventKey)
   const label =
-    stateComparator === enumComparator.GE
-      ? `${stateValue}以上`
-      : stateComparator === enumComparator.LE
-      ? `${stateValue}以下`
-      : `${stateValue}に等しい`
-  const enphasized = stateValue !== 0 || stateComparator != enumComparator.GE
+    comparator === enumComparator.GE
+      ? `${level}以上`
+      : comparator === enumComparator.LE
+      ? `${level}以下`
+      : `${level}に等しい`
+  const enphasized = level !== 0 || comparator != enumComparator.GE
 
   return (
     <AccordionItem eventKey={eventKey}>
@@ -49,13 +49,13 @@ function AccordionItemLevelFilter({
       </AccordionHeader>
       <AccordionBody>
         <div>
-          <div>{stateValue}</div>
+          <div>{level}</div>
           <FormRange
             data-testid="slider-level"
             min={constLevel.MIN}
             max={constLevel.MAX}
-            value={stateValue}
-            onChange={handleChangeValue}
+            value={level}
+            onChange={handleChangeLevel}
           />
         </div>
         <div className="container-button">
@@ -67,7 +67,7 @@ function AccordionItemLevelFilter({
               name={name}
               value={enumComparator.GE}
               onChange={handleChangeComparator}
-              checked={stateComparator === enumComparator.GE}
+              checked={comparator === enumComparator.GE}
             >
               以上
             </ToggleButton>
@@ -80,7 +80,7 @@ function AccordionItemLevelFilter({
               name={name}
               value={enumComparator.LE}
               onChange={handleChangeComparator}
-              checked={stateComparator === enumComparator.LE}
+              checked={comparator === enumComparator.LE}
             >
               以下
             </ToggleButton>
@@ -93,7 +93,7 @@ function AccordionItemLevelFilter({
               name={name}
               value={enumComparator.EQ}
               onChange={handleChangeComparator}
-              checked={stateComparator === enumComparator.EQ}
+              checked={comparator === enumComparator.EQ}
             >
               等しい
             </ToggleButton>

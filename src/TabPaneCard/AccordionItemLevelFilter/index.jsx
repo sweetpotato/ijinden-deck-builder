@@ -1,50 +1,49 @@
 // SPDX-License-Identifier: MIT
 
 import { useState } from 'react'
-import AccordionItemLevelFilter from './AccordionItemLevelFilter'
+
 import constLevel from '../constLevel'
 import enumComparator from '../enumComparator'
+import AccordionItemLevelFilter from './AccordionItemLevelFilter'
 
 function useAccordionItemLevelFilter() {
-  const [levelValue, setLevelValue] = useState(constLevel.MIN)
-  const [levelComparator, setLevelComparator] = useState(enumComparator.GE)
+  const [level, setLevel] = useState(constLevel.MIN)
+  const [comparator, setComparator] = useState(enumComparator.GE)
 
-  function handleChangeLevelValue(e) {
+  function handleChangeLevel(e) {
     const currentValue = Number(e.currentTarget.value)
     // レベル11から16までのカードは存在しないため、
     // その値に設定してもあまり有益ではない。
     // 代わりに、レベル10または17の近い方に四捨五入的に寄せる。
     if (10 <= currentValue && currentValue < constLevel.MAX) {
-      setLevelValue(
-        currentValue < (10 + constLevel.MAX) / 2 ? 10 : constLevel.MAX
-      )
+      setLevel(currentValue < (10 + constLevel.MAX) / 2 ? 10 : constLevel.MAX)
     } else {
-      setLevelValue(currentValue)
+      setLevel(currentValue)
     }
   }
 
-  function handleChangeLevelComparator(e) {
-    setLevelComparator(e.currentTarget.value)
+  function handleChangeComparator(e) {
+    setComparator(e.currentTarget.value)
   }
 
-  const resetLevel = () => {
-    setLevelValue(constLevel.MIN)
-    setLevelComparator(enumComparator.GE)
+  const reset = () => {
+    setLevel(constLevel.MIN)
+    setComparator(enumComparator.GE)
   }
 
   const render = (eventKey) => {
     return (
       <AccordionItemLevelFilter
         eventKey={eventKey}
-        stateValue={levelValue}
-        stateComparator={levelComparator}
-        handleChangeValue={handleChangeLevelValue}
-        handleChangeComparator={handleChangeLevelComparator}
+        level={level}
+        comparator={comparator}
+        handleChangeLevel={handleChangeLevel}
+        handleChangeComparator={handleChangeComparator}
       />
     )
   }
 
-  return [levelValue, levelComparator, resetLevel, render]
+  return [level, comparator, reset, render]
 }
 
 export default useAccordionItemLevelFilter

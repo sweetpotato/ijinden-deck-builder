@@ -83,7 +83,7 @@ test('フィルタの初期状態', async () => {
 
   const spanColorAll = getByTestId('button-color-all')
   expect(spanColorAll).toBeVisible()
-  const buttonColorAll = spanColorAll.querySelector('input[type="radio"]')
+  const buttonColorAll = spanColorAll.querySelector('input')
   expect(buttonColorAll).toBeVisible()
   expect(buttonColorAll).toBeChecked()
   const labelColorAll = spanColorAll.querySelector('label')
@@ -121,7 +121,7 @@ test('フィルタの初期状態', async () => {
 
   const spanTypeAll = getByTestId('button-color-all')
   expect(spanTypeAll).toBeVisible()
-  const buttonTypeAll = spanTypeAll.querySelector('input[type="radio"]')
+  const buttonTypeAll = spanTypeAll.querySelector('input')
   expect(buttonTypeAll).toBeVisible()
   expect(buttonTypeAll).toBeChecked()
   const labelTypeAll = spanTypeAll.querySelector('label')
@@ -195,7 +195,7 @@ test('フィルタの初期状態', async () => {
 
   const spanExpansionAll = getByTestId('button-expansion-all')
   expect(spanExpansionAll).toBeVisible()
-  const buttonExpansionAll = spanTypeAll.querySelector('input[type="radio"]')
+  const buttonExpansionAll = spanTypeAll.querySelector('input')
   expect(buttonExpansionAll).toBeVisible()
   expect(buttonExpansionAll).toBeChecked()
   const labelExpansionAll = spanTypeAll.querySelector('label')
@@ -256,7 +256,7 @@ test('フィルタの初期状態', async () => {
 
   const spanRarityAll = getByTestId('button-expansion-all')
   expect(spanRarityAll).toBeVisible()
-  const buttonRarityAll = spanTypeAll.querySelector('input[type="radio"]')
+  const buttonRarityAll = spanTypeAll.querySelector('input')
   expect(buttonRarityAll).toBeVisible()
   expect(buttonRarityAll).toBeChecked()
   const labelRarityAll = spanTypeAll.querySelector('label')
@@ -342,9 +342,7 @@ test('フィルタの初期状態', async () => {
 
   const spanTraitUnspecified = getByTestId('button-trait-unspecified')
   expect(spanTraitUnspecified).toBeVisible()
-  const buttonTraitUnspecified = spanTraitUnspecified.querySelector(
-    'input[type="radio"]'
-  )
+  const buttonTraitUnspecified = spanTraitUnspecified.querySelector('input')
   expect(buttonTraitUnspecified).toBeVisible()
   expect(buttonTraitUnspecified).toBeChecked()
   const labelTraitUnspecified = spanTraitUnspecified.querySelector('label')
@@ -396,9 +394,7 @@ test('フィルタの初期状態', async () => {
 
   const spanTermUnspecified = getByTestId('button-term-unspecified')
   expect(spanTermUnspecified).toBeVisible()
-  const buttonTermUnspecified = spanTermUnspecified.querySelector(
-    'input[type="radio"]'
-  )
+  const buttonTermUnspecified = spanTermUnspecified.querySelector('input')
   expect(buttonTermUnspecified).toBeVisible()
   expect(buttonTermUnspecified).toBeChecked()
   const labelTermUnspecified = spanTermUnspecified.querySelector('label')
@@ -447,9 +443,7 @@ test('フィルタの初期状態', async () => {
 
   const spanLegacyUnspecified = getByTestId('button-legacy-unspecified')
   expect(spanLegacyUnspecified).toBeVisible()
-  const buttonLegacyUnspecified = spanLegacyUnspecified.querySelector(
-    'input[type="radio"]'
-  )
+  const buttonLegacyUnspecified = spanLegacyUnspecified.querySelector('input')
   expect(buttonLegacyUnspecified).toBeVisible()
   expect(buttonLegacyUnspecified).toBeChecked()
   const labelLegacyUnspecified = spanLegacyUnspecified.querySelector('label')
@@ -1388,7 +1382,7 @@ test('エキスパンションによるフィルタ', async () => {
 
   // 初期状態ではすべてボタンが選択されている
   let buttonExpansionAll = getByTestId('button-expansion-all').querySelector(
-    'input[type="radio"]'
+    'input'
   )
   expect(buttonExpansionAll).toBeVisible()
   expect(buttonExpansionAll).toBeChecked()
@@ -1666,7 +1660,7 @@ test('エキスパンションによるフィルタ', async () => {
 
   // 条件すべてをリセットするボタンを押す
   buttonExpansionAll = getByTestId('button-expansion-all').querySelector(
-    'input[type="radio"]'
+    'input'
   )
   expect(buttonExpansionAll).toBeVisible()
   expect(buttonExpansionAll).not.toBeChecked()
@@ -1686,7 +1680,7 @@ test('エキスパンションによるフィルタ', async () => {
     />
   )
   buttonExpansionAll = getByTestId('button-expansion-all').querySelector(
-    'input[type="radio"]'
+    'input'
   )
   expect(buttonExpansionAll).toBeVisible()
   expect(buttonExpansionAll).toBeChecked()
@@ -1769,9 +1763,7 @@ test('レアリティによるフィルタ', async () => {
   ).toBeVisible()
 
   // 初期状態ではすべてボタンが選択されている
-  let buttonRarityAll = getByTestId('button-rarity-all').querySelector(
-    'input[type="radio"]'
-  )
+  let buttonRarityAll = getByTestId('button-rarity-all').querySelector('input')
   expect(buttonRarityAll).toBeVisible()
   expect(buttonRarityAll).toBeChecked()
 
@@ -1895,9 +1887,7 @@ test('レアリティによるフィルタ', async () => {
   expect(queryByTestId('table-row-1-17')).toBeNull()
 
   // 条件すべてをリセットするボタンを押す
-  buttonRarityAll = getByTestId('button-rarity-all').querySelector(
-    'input[type="radio"]'
-  )
+  buttonRarityAll = getByTestId('button-rarity-all').querySelector('input')
   expect(buttonRarityAll).toBeVisible()
   expect(buttonRarityAll).not.toBeChecked()
   await userEvent.click(
@@ -1915,9 +1905,7 @@ test('レアリティによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  buttonRarityAll = getByTestId('button-rarity-all').querySelector(
-    'input[type="radio"]'
-  )
+  buttonRarityAll = getByTestId('button-rarity-all').querySelector('input')
   expect(buttonRarityAll).toBeVisible()
   expect(buttonRarityAll).toBeChecked()
 
@@ -1977,9 +1965,7 @@ test('色によるフィルタ', async () => {
   ).toBeVisible()
 
   // 初期状態ではすべてボタンが選択されている
-  let buttonColorAll = getByTestId('button-color-all').querySelector(
-    'input[type="radio"]'
-  )
+  let buttonColorAll = getByTestId('button-color-all').querySelector('input')
   expect(buttonColorAll).toBeVisible()
   expect(buttonColorAll).toBeChecked()
 
@@ -2197,9 +2183,7 @@ test('色によるフィルタ', async () => {
   expect(getByTestId('table-row-3-80')).toBeVisible() // オブシディアン (無色)
 
   // 条件すべてをリセットするボタンを押す
-  buttonColorAll = getByTestId('button-color-all').querySelector(
-    'input[type="radio"]'
-  )
+  buttonColorAll = getByTestId('button-color-all').querySelector('input')
   expect(buttonColorAll).toBeVisible()
   expect(buttonColorAll).not.toBeChecked()
   await userEvent.click(
@@ -2217,9 +2201,7 @@ test('色によるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  buttonColorAll = getByTestId('button-color-all').querySelector(
-    'input[type="radio"]'
-  )
+  buttonColorAll = getByTestId('button-color-all').querySelector('input')
   expect(buttonColorAll).toBeVisible()
   expect(buttonColorAll).toBeChecked()
 
@@ -2285,9 +2267,7 @@ test('種類によるフィルタ', async () => {
   ).toBeVisible()
 
   // 初期状態ではすべてボタンが選択されている
-  let buttonTypeAll = getByTestId('button-type-all').querySelector(
-    'input[type="radio"]'
-  )
+  let buttonTypeAll = getByTestId('button-type-all').querySelector('input')
   expect(buttonTypeAll).toBeVisible()
   expect(buttonTypeAll).toBeChecked()
 
@@ -2393,9 +2373,7 @@ test('種類によるフィルタ', async () => {
   expect(getByTestId('table-row-B-13')).toBeVisible()
 
   // 条件すべてをリセットするボタンを押す
-  buttonTypeAll = getByTestId('button-type-all').querySelector(
-    'input[type="radio"]'
-  )
+  buttonTypeAll = getByTestId('button-type-all').querySelector('input')
   expect(buttonTypeAll).toBeVisible()
   expect(buttonTypeAll).not.toBeChecked()
   await userEvent.click(
@@ -2413,9 +2391,7 @@ test('種類によるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  buttonTypeAll = getByTestId('button-type-all').querySelector(
-    'input[type="radio"]'
-  )
+  buttonTypeAll = getByTestId('button-type-all').querySelector('input')
   expect(buttonTypeAll).toBeVisible()
   expect(buttonTypeAll).toBeChecked()
 
@@ -2955,7 +2931,7 @@ test('特性によるフィルタ', async () => {
   // 初期状態では指定なしボタンが選択されている
   let buttonTraitUnspecified = getByTestId(
     'button-trait-unspecified'
-  ).querySelector('input[type="radio"]')
+  ).querySelector('input')
   expect(buttonTraitUnspecified).toBeVisible()
   expect(buttonTraitUnspecified).toBeChecked()
 
@@ -3202,7 +3178,7 @@ test('特性によるフィルタ', async () => {
   // 条件すべてをリセットするボタンを押す
   buttonTraitUnspecified = getByTestId(
     'button-trait-unspecified'
-  ).querySelector('input[type="radio"]')
+  ).querySelector('input')
   expect(buttonTraitUnspecified).toBeVisible()
   expect(buttonTraitUnspecified).not.toBeChecked()
   const buttonResetAll = getByRole('button', {
@@ -3222,7 +3198,7 @@ test('特性によるフィルタ', async () => {
   )
   buttonTraitUnspecified = getByTestId(
     'button-trait-unspecified'
-  ).querySelector('input[type="radio"]')
+  ).querySelector('input')
   expect(buttonTraitUnspecified).toBeVisible()
   expect(buttonTraitUnspecified).toBeChecked()
 
@@ -3314,7 +3290,7 @@ test('能力語によるフィルタ', async () => {
   // 初期状態では指定なしボタンが選択されている
   let buttonTermUnspecified = getByTestId(
     'button-term-unspecified'
-  ).querySelector('input[type="radio"]')
+  ).querySelector('input')
   expect(buttonTermUnspecified).toBeVisible()
   expect(buttonTermUnspecified).toBeChecked()
 
@@ -3517,7 +3493,7 @@ test('能力語によるフィルタ', async () => {
 
   // 条件すべてをリセットするボタンを押す
   buttonTermUnspecified = getByTestId('button-term-unspecified').querySelector(
-    'input[type="radio"]'
+    'input'
   )
   expect(buttonTermUnspecified).toBeVisible()
   expect(buttonTermUnspecified).not.toBeChecked()
@@ -3537,7 +3513,7 @@ test('能力語によるフィルタ', async () => {
     />
   )
   buttonTermUnspecified = getByTestId('button-term-unspecified').querySelector(
-    'input[type="radio"]'
+    'input'
   )
   expect(buttonTermUnspecified).toBeVisible()
   expect(buttonTermUnspecified).toBeChecked()
@@ -3629,7 +3605,7 @@ test('遺業能力によるフィルタ', async () => {
   // 初期状態では指定なしボタンが選択されている
   let buttonLegacyUnspecified = getByTestId(
     'button-legacy-unspecified'
-  ).querySelector('input[type="radio"]')
+  ).querySelector('input')
   expect(buttonLegacyUnspecified).toBeVisible()
   expect(buttonLegacyUnspecified).toBeChecked()
 
@@ -3917,7 +3893,7 @@ test('遺業能力によるフィルタ', async () => {
   // 条件すべてをリセットするボタンを押す
   buttonLegacyUnspecified = getByTestId(
     'button-legacy-unspecified'
-  ).querySelector('input[type="radio"]')
+  ).querySelector('input')
   expect(buttonLegacyUnspecified).toBeVisible()
   expect(buttonLegacyUnspecified).not.toBeChecked()
   await userEvent.click(
@@ -3937,7 +3913,7 @@ test('遺業能力によるフィルタ', async () => {
   )
   buttonLegacyUnspecified = getByTestId(
     'button-legacy-unspecified'
-  ).querySelector('input[type="radio"]')
+  ).querySelector('input')
   expect(buttonLegacyUnspecified).toBeVisible()
   expect(buttonLegacyUnspecified).toBeChecked()
 
@@ -4020,12 +3996,8 @@ test('色と種類とレベルによる複合フィルタ', async () => {
   ).toBeVisible()
 
   // 初期状態のチェック
-  expect(
-    getByTestId('button-color-all').querySelector('input[type="radio"]')
-  ).toBeChecked()
-  expect(
-    getByTestId('button-type-all').querySelector('input[type="radio"]')
-  ).toBeChecked()
+  expect(getByTestId('button-color-all').querySelector('input')).toBeChecked()
+  expect(getByTestId('button-type-all').querySelector('input')).toBeChecked()
   expect(getByRole('slider')).toHaveValue('0')
   expect(getByRole('radio', { name: '以上' })).toBeChecked()
 
@@ -4103,12 +4075,8 @@ test('色と種類とレベルによる複合フィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  expect(
-    getByTestId('button-color-all').querySelector('input[type="radio"]')
-  ).toBeChecked()
-  expect(
-    getByTestId('button-type-all').querySelector('input[type="radio"]')
-  ).toBeChecked()
+  expect(getByTestId('button-color-all').querySelector('input')).toBeChecked()
+  expect(getByTestId('button-type-all').querySelector('input')).toBeChecked()
   expect(getByRole('slider')).toHaveValue('0')
   expect(getByRole('radio', { name: '以上' })).toBeChecked()
 

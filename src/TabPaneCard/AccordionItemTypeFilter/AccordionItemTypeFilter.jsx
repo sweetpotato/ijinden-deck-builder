@@ -12,8 +12,8 @@ import { isAccordionItemSelected } from 'react-bootstrap/esm/AccordionContext'
 
 import enumType from '../enumType'
 
-function makeLabel(state) {
-  switch (state) {
+function makeLabel(type) {
+  switch (type) {
     case enumType.IJIN: {
       return 'イジン'
     }
@@ -30,18 +30,18 @@ function makeLabel(state) {
   return 'すべて'
 }
 
-function AccordionItemTypeFilter({ eventKey, state, handleChange }) {
+function AccordionItemTypeFilter({ eventKey, type, handleChangeType }) {
   const name = useId()
   const { activeEventKey } = useContext(AccordionContext)
   const expanded = isAccordionItemSelected(activeEventKey, eventKey)
-  const label = makeLabel(state)
+  const label = makeLabel(type)
 
   return (
     <AccordionItem eventKey={eventKey}>
       <AccordionHeader as="h3">
         {expanded ? (
           `➖ 種類`
-        ) : state === 0 ? (
+        ) : type === 0 ? (
           `➕ 種類 ― ${label}`
         ) : (
           <>
@@ -59,8 +59,8 @@ function AccordionItemTypeFilter({ eventKey, state, handleChange }) {
             id={`${name}-0`}
             name={name}
             value={0}
-            onChange={handleChange}
-            checked={state === 0}
+            onChange={handleChangeType}
+            checked={type === 0}
           >
             すべて
           </ToggleButton>
@@ -72,8 +72,8 @@ function AccordionItemTypeFilter({ eventKey, state, handleChange }) {
             id={`${name}-${enumType.IJIN}`}
             name={name}
             value={enumType.IJIN}
-            onChange={handleChange}
-            checked={state === enumType.IJIN}
+            onChange={handleChangeType}
+            checked={type === enumType.IJIN}
           >
             イジン
           </ToggleButton>
@@ -85,8 +85,8 @@ function AccordionItemTypeFilter({ eventKey, state, handleChange }) {
             id={`${name}-${enumType.HAIKEI}`}
             name={name}
             value={enumType.HAIKEI}
-            onChange={handleChange}
-            checked={state === enumType.HAIKEI}
+            onChange={handleChangeType}
+            checked={type === enumType.HAIKEI}
           >
             ハイケイ
           </ToggleButton>
@@ -98,8 +98,8 @@ function AccordionItemTypeFilter({ eventKey, state, handleChange }) {
             id={`${name}-${enumType.MAHOU}`}
             name={name}
             value={enumType.MAHOU}
-            onChange={handleChange}
-            checked={state === enumType.MAHOU}
+            onChange={handleChangeType}
+            checked={type === enumType.MAHOU}
           >
             マホウ
           </ToggleButton>
@@ -111,8 +111,8 @@ function AccordionItemTypeFilter({ eventKey, state, handleChange }) {
             id={`${name}-${enumType.MARYOKU}`}
             name={name}
             value={enumType.MARYOKU}
-            onChange={handleChange}
-            checked={state === enumType.MARYOKU}
+            onChange={handleChangeType}
+            checked={type === enumType.MARYOKU}
           >
             マリョク
           </ToggleButton>

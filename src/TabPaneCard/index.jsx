@@ -112,7 +112,7 @@ function TabPaneCard({
     dataColors
   )
   const [type, resetType, renderType] = useAccordionItemTypeFilter()
-  const [levelValue, levelComparator, resetLevel, renderLevel] =
+  const [level, levelComparator, resetLevel, renderLevel] =
     useAccordionItemLevelFilter()
   const [trait, resetTrait, renderTrait] = useAccordionItemGenericFilter(
     'button-trait-unspecified',
@@ -146,10 +146,10 @@ function TabPaneCard({
   function filterCard(card) {
     const levelMatched =
       levelComparator === enumComparator.GE
-        ? card.level >= levelValue
+        ? card.level >= level
         : levelComparator === enumComparator.LE
-        ? card.level <= levelValue
-        : card.level === levelValue
+        ? card.level <= level
+        : card.level === level
     let allText = card.name + '§' + card.kana
     allText +=
       includesTraitAndLegacy && card.traitText ? '§' + card.traitText : ''

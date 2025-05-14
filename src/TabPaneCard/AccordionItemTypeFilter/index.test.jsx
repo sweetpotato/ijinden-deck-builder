@@ -11,16 +11,15 @@ afterEach(cleanup)
 
 test('レンダリングとインタラクション', async () => {
   const { result } = renderHook(() => useAccordionItemTypeFilter())
-  let [state, resetState, renderAccordionItem] = result.current
-  expect(state).toBe(0)
+  let [type, reset, renderItem] = result.current
+  expect(type).toBe(0) // すべて
   const { rerender, getByRole } = render(
-    <Accordion alwaysOpen>{renderAccordionItem('0')}</Accordion>
+    <Accordion alwaysOpen>{renderItem('0')}</Accordion>
   )
 
   let buttonAll = getByRole('radio', { name: 'すべて' })
   expect(buttonAll).toBeVisible()
-  // すべてが選択されている
-  expect(buttonAll).toBeChecked()
+  expect(buttonAll).toBeChecked() // すべてが選択されている
   let buttonIjin = getByRole('radio', { name: 'イジン' })
   expect(buttonIjin).toBeVisible()
   expect(buttonIjin).not.toBeChecked()
@@ -36,17 +35,16 @@ test('レンダリングとインタラクション', async () => {
 
   // イジンを選択する
   await userEvent.click(buttonIjin)
-  ;[state, resetState, renderAccordionItem] = result.current
-  expect(state).toBe(enumType.IJIN)
-  rerender(<Accordion alwaysOpen>{renderAccordionItem('0')}</Accordion>)
+  ;[type, reset, renderItem] = result.current
+  expect(type).toBe(enumType.IJIN)
+  rerender(<Accordion alwaysOpen>{renderItem('0')}</Accordion>)
 
   buttonAll = getByRole('radio', { name: 'すべて' })
   expect(buttonAll).toBeVisible()
   expect(buttonAll).not.toBeChecked()
   buttonIjin = getByRole('radio', { name: 'イジン' })
   expect(buttonIjin).toBeVisible()
-  // イジンが選択されている
-  expect(buttonIjin).toBeChecked()
+  expect(buttonIjin).toBeChecked() // 選択されている
   buttonHaikei = getByRole('radio', { name: 'ハイケイ' })
   expect(buttonHaikei).toBeVisible()
   expect(buttonHaikei).not.toBeChecked()
@@ -59,9 +57,9 @@ test('レンダリングとインタラクション', async () => {
 
   // ハイケイを選択する
   await userEvent.click(buttonHaikei)
-  ;[state, resetState, renderAccordionItem] = result.current
-  expect(state).toBe(enumType.HAIKEI)
-  rerender(<Accordion alwaysOpen>{renderAccordionItem('0')}</Accordion>)
+  ;[type, reset, renderItem] = result.current
+  expect(type).toBe(enumType.HAIKEI)
+  rerender(<Accordion alwaysOpen>{renderItem('0')}</Accordion>)
 
   buttonAll = getByRole('radio', { name: 'すべて' })
   expect(buttonAll).toBeVisible()
@@ -70,9 +68,8 @@ test('レンダリングとインタラクション', async () => {
   expect(buttonIjin).toBeVisible()
   expect(buttonIjin).not.toBeChecked()
   buttonHaikei = getByRole('radio', { name: 'ハイケイ' })
-  // ハイケイが選択されている
   expect(buttonHaikei).toBeVisible()
-  expect(buttonHaikei).toBeChecked()
+  expect(buttonHaikei).toBeChecked() // 選択されている
   buttonMahou = getByRole('radio', { name: 'マホウ' })
   expect(buttonMahou).toBeVisible()
   expect(buttonMahou).not.toBeChecked()
@@ -82,9 +79,9 @@ test('レンダリングとインタラクション', async () => {
 
   // マホウを選択する
   await userEvent.click(buttonMahou)
-  ;[state, resetState, renderAccordionItem] = result.current
-  expect(state).toBe(enumType.MAHOU)
-  rerender(<Accordion alwaysOpen>{renderAccordionItem('0')}</Accordion>)
+  ;[type, reset, renderItem] = result.current
+  expect(type).toBe(enumType.MAHOU)
+  rerender(<Accordion alwaysOpen>{renderItem('0')}</Accordion>)
 
   buttonAll = getByRole('radio', { name: 'すべて' })
   expect(buttonAll).toBeVisible()
@@ -97,17 +94,16 @@ test('レンダリングとインタラクション', async () => {
   expect(buttonHaikei).not.toBeChecked()
   buttonMahou = getByRole('radio', { name: 'マホウ' })
   expect(buttonMahou).toBeVisible()
-  // マホウが選択されている
-  expect(buttonMahou).toBeChecked()
+  expect(buttonMahou).toBeChecked() // 選択されている
   buttonMaryoku = getByRole('radio', { name: 'マリョク' })
   expect(buttonMaryoku).toBeVisible()
   expect(buttonMaryoku).not.toBeChecked()
 
   // マリョクを選択する
   await userEvent.click(buttonMaryoku)
-  ;[state, resetState, renderAccordionItem] = result.current
-  expect(state).toBe(enumType.MARYOKU)
-  rerender(<Accordion alwaysOpen>{renderAccordionItem('0')}</Accordion>)
+  ;[type, reset, renderItem] = result.current
+  expect(type).toBe(enumType.MARYOKU)
+  rerender(<Accordion alwaysOpen>{renderItem('0')}</Accordion>)
 
   buttonAll = getByRole('radio', { name: 'すべて' })
   expect(buttonAll).toBeVisible()
@@ -123,19 +119,17 @@ test('レンダリングとインタラクション', async () => {
   expect(buttonMahou).not.toBeChecked()
   buttonMaryoku = getByRole('radio', { name: 'マリョク' })
   expect(buttonMaryoku).toBeVisible()
-  // マリョクが選択されている
-  expect(buttonMaryoku).toBeChecked()
+  expect(buttonMaryoku).toBeChecked() // 選択されている
 
   // 状態をリセットする
-  act(() => resetState())
-  ;[state, resetState, renderAccordionItem] = result.current
-  expect(state).toBe(0) // すべて
-  rerender(<Accordion alwaysOpen>{renderAccordionItem('0')}</Accordion>)
+  await act(() => reset())
+  ;[type, reset, renderItem] = result.current
+  expect(type).toBe(0) // すべて
+  rerender(<Accordion alwaysOpen>{renderItem('0')}</Accordion>)
 
   buttonAll = getByRole('radio', { name: 'すべて' })
   expect(buttonAll).toBeVisible()
-  // すべてが選択されている
-  expect(buttonAll).toBeChecked()
+  expect(buttonAll).toBeChecked() // 選択されている
   buttonIjin = getByRole('radio', { name: 'イジン' })
   expect(buttonIjin).toBeVisible()
   expect(buttonIjin).not.toBeChecked()

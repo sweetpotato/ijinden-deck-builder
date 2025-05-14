@@ -15,7 +15,7 @@ function AccordionItemGenericFilter({
   testIdForButton0,
   title,
   state,
-  handleChange,
+  handleChangeState,
   data,
 }) {
   const name = useId()
@@ -71,7 +71,7 @@ function AccordionItemGenericFilter({
                 id={id}
                 name={name}
                 value={element.value}
-                onChange={handleChange}
+                onChange={handleChangeState}
                 checked={state === element.value}
               >
                 {element.label}
