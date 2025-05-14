@@ -20,6 +20,7 @@ import useContainerTextSearch from './ContainerTextSearch'
 import TableRowCard from './TableRowCard'
 
 import './index.css'
+import enumType from './enumType'
 
 const dataExpansions = [
   { value: 0, label: 'すべて' },
@@ -111,7 +112,8 @@ function TabPaneCard({
     '色',
     dataColors
   )
-  const [type, resetType, renderType] = useAccordionItemTypeFilter()
+  const [type, power, powerComparator, resetType, renderType] =
+    useAccordionItemTypeFilter()
   const [level, levelComparator, resetLevel, renderLevel] =
     useAccordionItemLevelFilter()
   const [trait, resetTrait, renderTrait] = useAccordionItemGenericFilter(
@@ -144,6 +146,12 @@ function TabPaneCard({
   }
 
   function filterCard(card) {
+    const powerMatched =
+      powerComparator === enumComparator.GE
+        ? card.power >= power
+        : powerComparator === enumComparator.LE
+        ? card.power <= power
+        : card.power === power
     const levelMatched =
       levelComparator === enumComparator.GE
         ? card.level >= level
@@ -161,6 +169,7 @@ function TabPaneCard({
       (rarity === 0 || (card.rarity & rarity) === card.rarity) &&
       (color === 0 || (card.color & color) === color) &&
       (type === 0 || card.type === type) &&
+      (card.type !== enumType.IJIN || powerMatched) &&
       levelMatched &&
       (term === 0 || (card.term & term) === term) &&
       (trait === 0 || (card.trait & trait) === trait) &&
