@@ -11,11 +11,9 @@ import {
 import { isAccordionItemSelected } from 'react-bootstrap/esm/AccordionContext'
 import FormRange from 'react-bootstrap/esm/FormRange'
 
+import constLevel from '../constLevel'
 import enumComparator from '../enumComparator'
 
-// TODO 二重定義
-const LEVEL_VALUE_MIN = 0
-const LEVEL_VALUE_MAX = 17
 const dataLevelComparators = [
   { value: enumComparator.GE, label: '以上' },
   { value: enumComparator.LE, label: '以下' },
@@ -59,8 +57,8 @@ function AccordionItemLevelFilter({
         <div>
           <div>{stateValue}</div>
           <FormRange
-            min={LEVEL_VALUE_MIN}
-            max={LEVEL_VALUE_MAX}
+            min={constLevel.MIN}
+            max={constLevel.MAX}
             value={stateValue}
             onChange={handleChangeValue}
           />
