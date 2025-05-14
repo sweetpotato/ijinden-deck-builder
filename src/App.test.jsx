@@ -251,7 +251,7 @@ test('カードペインからレシピペインへの作用', async () => {
   expect(paneDeck).toBeVisible()
   expect(imageSide).not.toBeVisible()
   expect(imageSide).not.toBeVisible()
-}, 30000)
+})
 
 test('レシピペインからカードペインへの作用', async () => {
   defaultRender()
@@ -427,7 +427,7 @@ test('レシピペインからカードペインへの作用', async () => {
   expect(paneCard).toBeVisible()
   expect(inputMain.value).toBe('0')
   expect(inputSide.value).toBe('0')
-}, 30000)
+})
 
 test('保存したデッキを読み込んでレシピペインに表示する', async () => {
   const decksSaved = [
@@ -658,7 +658,7 @@ test('シミュレータがカードペインの操作でアボートする', as
   expect(buttonStart).toBeDisabled()
   expect(buttonMulligan).toBeEnabled()
   expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0)
-}, 30000)
+})
 
 test('シミュレータがレシピペインの操作でアボートする', async () => {
   defaultRender()
@@ -920,7 +920,7 @@ test('シミュレータがレシピペインの操作でアボートする', as
   expect(alert.textContent).toBe(
     'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
   )
-}, 30000)
+})
 
 test('シミュレータがマイデッキペインの操作でアボートする', async () => {
   const decksSaved = [{ timestamp: new Date(), main: [['R-1', 10]], side: [] }]
