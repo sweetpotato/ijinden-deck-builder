@@ -14,12 +14,6 @@ import FormRange from 'react-bootstrap/esm/FormRange'
 import constLevel from '../constLevel'
 import enumComparator from '../enumComparator'
 
-const dataLevelComparators = [
-  { value: enumComparator.GE, label: '以上' },
-  { value: enumComparator.LE, label: '以下' },
-  { value: enumComparator.EQ, label: '等しい' },
-]
-
 function AccordionItemLevelFilter({
   eventKey,
   stateValue,
@@ -64,23 +58,39 @@ function AccordionItemLevelFilter({
           />
         </div>
         <div className="container-button">
-          {dataLevelComparators.map((element) => {
-            const id = `${name}-${element.value}`
-            return (
-              <ToggleButton
-                key={id}
-                type="radio"
-                variant="outline-primary"
-                id={id}
-                name={name}
-                value={element.value}
-                onChange={handleChangeComparator}
-                checked={stateComparator === element.value}
-              >
-                {element.label}
-              </ToggleButton>
-            )
-          })}
+          <ToggleButton
+            type="radio"
+            variant="outline-primary"
+            id={`${name}-${enumComparator.GE}`}
+            name={name}
+            value={enumComparator.GE}
+            onChange={handleChangeComparator}
+            checked={stateComparator === enumComparator.GE}
+          >
+            以上
+          </ToggleButton>
+          <ToggleButton
+            type="radio"
+            variant="outline-primary"
+            id={`${name}-${enumComparator.LE}`}
+            name={name}
+            value={enumComparator.LE}
+            onChange={handleChangeComparator}
+            checked={stateComparator === enumComparator.LE}
+          >
+            以下
+          </ToggleButton>
+          <ToggleButton
+            type="radio"
+            variant="outline-primary"
+            id={`${name}-${enumComparator.EQ}`}
+            name={name}
+            value={enumComparator.EQ}
+            onChange={handleChangeComparator}
+            checked={stateComparator === enumComparator.EQ}
+          >
+            等しい
+          </ToggleButton>
         </div>
       </AccordionBody>
     </AccordionItem>
