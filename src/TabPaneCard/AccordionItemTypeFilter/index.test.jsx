@@ -1,18 +1,21 @@
 import { act } from 'react'
 import { Accordion } from 'react-bootstrap'
 import { afterEach, expect, test } from 'vitest'
-import { cleanup, render, renderHook } from '@testing-library/react'
+import { cleanup, fireEvent, render, renderHook } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
+import enumComparator from '../enumComparator'
 import enumType from '../enumType'
 import useAccordionItemTypeFilter from '.'
 
 afterEach(cleanup)
 
-test('レンダリングとインタラクション', async () => {
+test('イジン以外選択時のレンダリングとインタラクション', async () => {
   const { result } = renderHook(() => useAccordionItemTypeFilter())
-  let [type, reset, renderItem] = result.current
-  expect(type).toBe(0) // すべて
+  let [type, power, comparator, reset, renderItem] = result.current
+  expect(type).toBe(0)
+  expect(power).toBe(0)
+  expect(comparator).toBe(enumComparator.GE)
   const { rerender, getByRole } = render(
     <Accordion alwaysOpen>{renderItem('0')}</Accordion>
   )
@@ -32,33 +35,25 @@ test('レンダリングとインタラクション', async () => {
   let buttonMaryoku = getByRole('radio', { name: 'マリョク' })
   expect(buttonMaryoku).toBeVisible()
   expect(buttonMaryoku).not.toBeChecked()
-
-  // イジンを選択する
-  await userEvent.click(buttonIjin)
-  ;[type, reset, renderItem] = result.current
-  expect(type).toBe(enumType.IJIN)
-  rerender(<Accordion alwaysOpen>{renderItem('0')}</Accordion>)
-
-  buttonAll = getByRole('radio', { name: 'すべて' })
-  expect(buttonAll).toBeVisible()
-  expect(buttonAll).not.toBeChecked()
-  buttonIjin = getByRole('radio', { name: 'イジン' })
-  expect(buttonIjin).toBeVisible()
-  expect(buttonIjin).toBeChecked() // 選択されている
-  buttonHaikei = getByRole('radio', { name: 'ハイケイ' })
-  expect(buttonHaikei).toBeVisible()
-  expect(buttonHaikei).not.toBeChecked()
-  buttonMahou = getByRole('radio', { name: 'マホウ' })
-  expect(buttonMahou).toBeVisible()
-  expect(buttonMahou).not.toBeChecked()
-  buttonMaryoku = getByRole('radio', { name: 'マリョク' })
-  expect(buttonMaryoku).toBeVisible()
-  expect(buttonMaryoku).not.toBeChecked()
+  let slider = getByRole('slider')
+  expect(slider).toBeVisible()
+  expect(slider).not.toBeEnabled()
+  let buttonGE = getByRole('radio', { name: '以上' })
+  expect(buttonGE).toBeVisible()
+  expect(buttonGE).not.toBeEnabled()
+  let buttonLE = getByRole('radio', { name: '以下' })
+  expect(buttonLE).toBeVisible()
+  expect(buttonLE).not.toBeEnabled()
+  let buttonEQ = getByRole('radio', { name: '等しい' })
+  expect(buttonEQ).toBeVisible()
+  expect(buttonEQ).not.toBeEnabled()
 
   // ハイケイを選択する
   await userEvent.click(buttonHaikei)
-  ;[type, reset, renderItem] = result.current
+  ;[type, power, comparator, reset, renderItem] = result.current
   expect(type).toBe(enumType.HAIKEI)
+  expect(power).toBe(0)
+  expect(comparator).toBe(enumComparator.GE)
   rerender(<Accordion alwaysOpen>{renderItem('0')}</Accordion>)
 
   buttonAll = getByRole('radio', { name: 'すべて' })
@@ -76,11 +71,25 @@ test('レンダリングとインタラクション', async () => {
   buttonMaryoku = getByRole('radio', { name: 'マリョク' })
   expect(buttonMaryoku).toBeVisible()
   expect(buttonMaryoku).not.toBeChecked()
+  slider = getByRole('slider')
+  expect(slider).toBeVisible()
+  expect(slider).not.toBeEnabled()
+  buttonGE = getByRole('radio', { name: '以上' })
+  expect(buttonGE).toBeVisible()
+  expect(buttonGE).not.toBeEnabled()
+  buttonLE = getByRole('radio', { name: '以下' })
+  expect(buttonLE).toBeVisible()
+  expect(buttonLE).not.toBeEnabled()
+  buttonEQ = getByRole('radio', { name: '等しい' })
+  expect(buttonEQ).toBeVisible()
+  expect(buttonEQ).not.toBeEnabled()
 
   // マホウを選択する
   await userEvent.click(buttonMahou)
-  ;[type, reset, renderItem] = result.current
+  ;[type, power, comparator, reset, renderItem] = result.current
   expect(type).toBe(enumType.MAHOU)
+  expect(power).toBe(0)
+  expect(comparator).toBe(enumComparator.GE)
   rerender(<Accordion alwaysOpen>{renderItem('0')}</Accordion>)
 
   buttonAll = getByRole('radio', { name: 'すべて' })
@@ -98,11 +107,25 @@ test('レンダリングとインタラクション', async () => {
   buttonMaryoku = getByRole('radio', { name: 'マリョク' })
   expect(buttonMaryoku).toBeVisible()
   expect(buttonMaryoku).not.toBeChecked()
+  slider = getByRole('slider')
+  expect(slider).toBeVisible()
+  expect(slider).not.toBeEnabled()
+  buttonGE = getByRole('radio', { name: '以上' })
+  expect(buttonGE).toBeVisible()
+  expect(buttonGE).not.toBeEnabled()
+  buttonLE = getByRole('radio', { name: '以下' })
+  expect(buttonLE).toBeVisible()
+  expect(buttonLE).not.toBeEnabled()
+  buttonEQ = getByRole('radio', { name: '等しい' })
+  expect(buttonEQ).toBeVisible()
+  expect(buttonEQ).not.toBeEnabled()
 
   // マリョクを選択する
   await userEvent.click(buttonMaryoku)
-  ;[type, reset, renderItem] = result.current
+  ;[type, power, comparator, reset, renderItem] = result.current
   expect(type).toBe(enumType.MARYOKU)
+  expect(power).toBe(0)
+  expect(comparator).toBe(enumComparator.GE)
   rerender(<Accordion alwaysOpen>{renderItem('0')}</Accordion>)
 
   buttonAll = getByRole('radio', { name: 'すべて' })
@@ -119,12 +142,27 @@ test('レンダリングとインタラクション', async () => {
   expect(buttonMahou).not.toBeChecked()
   buttonMaryoku = getByRole('radio', { name: 'マリョク' })
   expect(buttonMaryoku).toBeVisible()
-  expect(buttonMaryoku).toBeChecked() // 選択されている
+  // マリョクが選択されている
+  expect(buttonMaryoku).toBeChecked()
+  slider = getByRole('slider')
+  expect(slider).toBeVisible()
+  expect(slider).not.toBeEnabled()
+  buttonGE = getByRole('radio', { name: '以上' })
+  expect(buttonGE).toBeVisible()
+  expect(buttonGE).not.toBeEnabled()
+  buttonLE = getByRole('radio', { name: '以下' })
+  expect(buttonLE).toBeVisible()
+  expect(buttonLE).not.toBeEnabled()
+  buttonEQ = getByRole('radio', { name: '等しい' })
+  expect(buttonEQ).toBeVisible()
+  expect(buttonEQ).not.toBeEnabled()
 
   // 状態をリセットする
-  await act(() => reset())
-  ;[type, reset, renderItem] = result.current
+  act(() => reset())
+  ;[type, power, comparator, reset, renderItem] = result.current
   expect(type).toBe(0) // すべて
+  expect(power).toBe(0)
+  expect(comparator).toBe(enumComparator.GE)
   rerender(<Accordion alwaysOpen>{renderItem('0')}</Accordion>)
 
   buttonAll = getByRole('radio', { name: 'すべて' })
@@ -142,4 +180,296 @@ test('レンダリングとインタラクション', async () => {
   buttonMaryoku = getByRole('radio', { name: 'マリョク' })
   expect(buttonMaryoku).toBeVisible()
   expect(buttonMaryoku).not.toBeChecked()
+  slider = getByRole('slider')
+  expect(slider).toBeVisible()
+  expect(slider).not.toBeEnabled()
+  buttonGE = getByRole('radio', { name: '以上' })
+  expect(buttonGE).toBeVisible()
+  expect(buttonGE).not.toBeEnabled()
+  buttonLE = getByRole('radio', { name: '以下' })
+  expect(buttonLE).toBeVisible()
+  expect(buttonLE).not.toBeEnabled()
+  buttonEQ = getByRole('radio', { name: '等しい' })
+  expect(buttonEQ).toBeVisible()
+  expect(buttonEQ).not.toBeEnabled()
+})
+
+test('イジン選択時のレンダリングとインタラクション', async () => {
+  const { result } = renderHook(() => useAccordionItemTypeFilter())
+  let [type, power, comparator, resetState, renderAccordionItem] =
+    result.current
+  expect(type).toBe(0)
+  expect(power).toBe(0)
+  expect(comparator).toBe(enumComparator.GE)
+  const { rerender, getByRole } = render(
+    <Accordion alwaysOpen>{renderAccordionItem('0')}</Accordion>
+  )
+
+  let buttonAll = getByRole('radio', { name: 'すべて' })
+  expect(buttonAll).toBeVisible()
+  // すべてが選択されている
+  expect(buttonAll).toBeChecked()
+  let buttonIjin = getByRole('radio', { name: 'イジン' })
+  expect(buttonIjin).toBeVisible()
+  expect(buttonIjin).not.toBeChecked()
+  let buttonHaikei = getByRole('radio', { name: 'ハイケイ' })
+  expect(buttonHaikei).toBeVisible()
+  expect(buttonHaikei).not.toBeChecked()
+  let buttonMahou = getByRole('radio', { name: 'マホウ' })
+  expect(buttonMahou).toBeVisible()
+  expect(buttonMahou).not.toBeChecked()
+  let buttonMaryoku = getByRole('radio', { name: 'マリョク' })
+  expect(buttonMaryoku).toBeVisible()
+  expect(buttonMaryoku).not.toBeChecked()
+  let slider = getByRole('slider')
+  expect(slider).toBeVisible()
+  expect(slider).not.toBeEnabled()
+  let buttonGE = getByRole('radio', { name: '以上' })
+  expect(buttonGE).toBeVisible()
+  expect(buttonGE).not.toBeEnabled()
+  let buttonLE = getByRole('radio', { name: '以下' })
+  expect(buttonLE).toBeVisible()
+  expect(buttonLE).not.toBeEnabled()
+  let buttonEQ = getByRole('radio', { name: '等しい' })
+  expect(buttonEQ).toBeVisible()
+  expect(buttonEQ).not.toBeEnabled()
+
+  // イジンを選択する
+  await userEvent.click(buttonIjin)
+  ;[type, power, comparator, resetState, renderAccordionItem] = result.current
+  expect(type).toBe(enumType.IJIN)
+  expect(power).toBe(0)
+  expect(comparator).toBe(enumComparator.GE)
+  rerender(<Accordion alwaysOpen>{renderAccordionItem('0')}</Accordion>)
+
+  buttonAll = getByRole('radio', { name: 'すべて' })
+  expect(buttonAll).toBeVisible()
+  expect(buttonAll).not.toBeChecked()
+  buttonIjin = getByRole('radio', { name: 'イジン' })
+  expect(buttonIjin).toBeVisible()
+  // イジンが選択されている
+  expect(buttonIjin).toBeChecked()
+  buttonHaikei = getByRole('radio', { name: 'ハイケイ' })
+  expect(buttonHaikei).toBeVisible()
+  expect(buttonHaikei).not.toBeChecked()
+  buttonMahou = getByRole('radio', { name: 'マホウ' })
+  expect(buttonMahou).toBeVisible()
+  expect(buttonMahou).not.toBeChecked()
+  buttonMaryoku = getByRole('radio', { name: 'マリョク' })
+  expect(buttonMaryoku).toBeVisible()
+  expect(buttonMaryoku).not.toBeChecked()
+  slider = getByRole('slider')
+  expect(slider).toBeVisible()
+  // スライダーが有効になっている
+  expect(slider).toBeEnabled()
+  buttonGE = getByRole('radio', { name: '以上' })
+  expect(buttonGE).toBeVisible()
+  // 以上ボタンが有効になっていてかつチェックされている
+  expect(buttonGE).toBeEnabled()
+  expect(buttonGE).toBeChecked()
+  buttonLE = getByRole('radio', { name: '以下' })
+  expect(buttonLE).toBeVisible()
+  // 以下ボタンが有効になっている
+  expect(buttonLE).toBeEnabled()
+  expect(buttonLE).not.toBeChecked()
+  buttonEQ = getByRole('radio', { name: '等しい' })
+  expect(buttonEQ).toBeVisible()
+  // 等しいボタンが有効になっている
+  expect(buttonEQ).toBeEnabled()
+  expect(buttonEQ).not.toBeChecked()
+
+  // スライダーを500にする
+  fireEvent.change(slider, { target: { value: '500' } })
+  ;[type, power, comparator, resetState, renderAccordionItem] = result.current
+  expect(type).toBe(enumType.IJIN)
+  expect(power).toBe(500)
+  expect(comparator).toBe(enumComparator.GE)
+  rerender(<Accordion alwaysOpen>{renderAccordionItem('0')}</Accordion>)
+
+  buttonAll = getByRole('radio', { name: 'すべて' })
+  expect(buttonAll).toBeVisible()
+  expect(buttonAll).not.toBeChecked()
+  buttonIjin = getByRole('radio', { name: 'イジン' })
+  expect(buttonIjin).toBeVisible()
+  expect(buttonIjin).toBeChecked()
+  buttonHaikei = getByRole('radio', { name: 'ハイケイ' })
+  expect(buttonHaikei).toBeVisible()
+  expect(buttonHaikei).not.toBeChecked()
+  buttonMahou = getByRole('radio', { name: 'マホウ' })
+  expect(buttonMahou).toBeVisible()
+  expect(buttonMahou).not.toBeChecked()
+  buttonMaryoku = getByRole('radio', { name: 'マリョク' })
+  expect(buttonMaryoku).toBeVisible()
+  expect(buttonMaryoku).not.toBeChecked()
+  slider = getByRole('slider')
+  expect(slider).toBeVisible()
+  expect(slider).toBeEnabled()
+  buttonGE = getByRole('radio', { name: '以上' })
+  expect(buttonGE).toBeVisible()
+  expect(buttonGE).toBeEnabled()
+  expect(buttonGE).toBeChecked()
+  buttonLE = getByRole('radio', { name: '以下' })
+  expect(buttonLE).toBeVisible()
+  expect(buttonLE).toBeEnabled()
+  expect(buttonLE).not.toBeChecked()
+  buttonEQ = getByRole('radio', { name: '等しい' })
+  expect(buttonEQ).toBeVisible()
+  expect(buttonEQ).toBeEnabled()
+  expect(buttonEQ).not.toBeChecked()
+
+  // スライダーを10000にする
+  fireEvent.change(slider, { target: { value: '10000' } })
+  ;[type, power, comparator, resetState, renderAccordionItem] = result.current
+  expect(type).toBe(enumType.IJIN)
+  expect(power).toBe(10000)
+  expect(comparator).toBe(enumComparator.GE)
+  rerender(<Accordion alwaysOpen>{renderAccordionItem('0')}</Accordion>)
+
+  buttonAll = getByRole('radio', { name: 'すべて' })
+  expect(buttonAll).toBeVisible()
+  expect(buttonAll).not.toBeChecked()
+  buttonIjin = getByRole('radio', { name: 'イジン' })
+  expect(buttonIjin).toBeVisible()
+  expect(buttonIjin).toBeChecked()
+  buttonHaikei = getByRole('radio', { name: 'ハイケイ' })
+  expect(buttonHaikei).toBeVisible()
+  expect(buttonHaikei).not.toBeChecked()
+  buttonMahou = getByRole('radio', { name: 'マホウ' })
+  expect(buttonMahou).toBeVisible()
+  expect(buttonMahou).not.toBeChecked()
+  buttonMaryoku = getByRole('radio', { name: 'マリョク' })
+  expect(buttonMaryoku).toBeVisible()
+  expect(buttonMaryoku).not.toBeChecked()
+  slider = getByRole('slider')
+  expect(slider).toBeVisible()
+  expect(slider).toBeEnabled()
+  buttonGE = getByRole('radio', { name: '以上' })
+  expect(buttonGE).toBeVisible()
+  expect(buttonGE).toBeEnabled()
+  expect(buttonGE).toBeChecked()
+  buttonLE = getByRole('radio', { name: '以下' })
+  expect(buttonLE).toBeVisible()
+  expect(buttonLE).toBeEnabled()
+  expect(buttonLE).not.toBeChecked()
+  buttonEQ = getByRole('radio', { name: '等しい' })
+  expect(buttonEQ).toBeVisible()
+  expect(buttonEQ).toBeEnabled()
+  expect(buttonEQ).not.toBeChecked()
+
+  // 以下ボタンを押す
+  await userEvent.click(buttonLE)
+  ;[type, power, comparator, resetState, renderAccordionItem] = result.current
+  expect(type).toBe(enumType.IJIN)
+  expect(power).toBe(10000)
+  expect(comparator).toBe(enumComparator.LE)
+  rerender(<Accordion alwaysOpen>{renderAccordionItem('0')}</Accordion>)
+
+  buttonAll = getByRole('radio', { name: 'すべて' })
+  expect(buttonAll).toBeVisible()
+  expect(buttonAll).not.toBeChecked()
+  buttonIjin = getByRole('radio', { name: 'イジン' })
+  expect(buttonIjin).toBeVisible()
+  expect(buttonIjin).toBeChecked()
+  buttonHaikei = getByRole('radio', { name: 'ハイケイ' })
+  expect(buttonHaikei).toBeVisible()
+  expect(buttonHaikei).not.toBeChecked()
+  buttonMahou = getByRole('radio', { name: 'マホウ' })
+  expect(buttonMahou).toBeVisible()
+  expect(buttonMahou).not.toBeChecked()
+  buttonMaryoku = getByRole('radio', { name: 'マリョク' })
+  expect(buttonMaryoku).toBeVisible()
+  expect(buttonMaryoku).not.toBeChecked()
+  slider = getByRole('slider')
+  expect(slider).toBeVisible()
+  expect(slider).toBeEnabled()
+  buttonGE = getByRole('radio', { name: '以上' })
+  expect(buttonGE).toBeVisible()
+  expect(buttonGE).toBeEnabled()
+  expect(buttonGE).not.toBeChecked()
+  buttonLE = getByRole('radio', { name: '以下' })
+  expect(buttonLE).toBeVisible()
+  expect(buttonLE).toBeEnabled()
+  // 以下が選択されている
+  expect(buttonLE).toBeChecked()
+  buttonEQ = getByRole('radio', { name: '等しい' })
+  expect(buttonEQ).toBeVisible()
+  expect(buttonEQ).toBeEnabled()
+  expect(buttonEQ).not.toBeChecked()
+
+  // 等しいボタンを押す
+  await userEvent.click(buttonEQ)
+  ;[type, power, comparator, resetState, renderAccordionItem] = result.current
+  expect(type).toBe(enumType.IJIN)
+  expect(power).toBe(10000)
+  expect(comparator).toBe(enumComparator.EQ)
+  rerender(<Accordion alwaysOpen>{renderAccordionItem('0')}</Accordion>)
+
+  buttonAll = getByRole('radio', { name: 'すべて' })
+  expect(buttonAll).toBeVisible()
+  expect(buttonAll).not.toBeChecked()
+  buttonIjin = getByRole('radio', { name: 'イジン' })
+  expect(buttonIjin).toBeVisible()
+  expect(buttonIjin).toBeChecked()
+  buttonHaikei = getByRole('radio', { name: 'ハイケイ' })
+  expect(buttonHaikei).toBeVisible()
+  expect(buttonHaikei).not.toBeChecked()
+  buttonMahou = getByRole('radio', { name: 'マホウ' })
+  expect(buttonMahou).toBeVisible()
+  expect(buttonMahou).not.toBeChecked()
+  buttonMaryoku = getByRole('radio', { name: 'マリョク' })
+  expect(buttonMaryoku).toBeVisible()
+  expect(buttonMaryoku).not.toBeChecked()
+  slider = getByRole('slider')
+  expect(slider).toBeVisible()
+  expect(slider).toBeEnabled()
+  buttonGE = getByRole('radio', { name: '以上' })
+  expect(buttonGE).toBeVisible()
+  expect(buttonGE).toBeEnabled()
+  expect(buttonGE).not.toBeChecked()
+  buttonLE = getByRole('radio', { name: '以下' })
+  expect(buttonLE).toBeVisible()
+  expect(buttonLE).toBeEnabled()
+  expect(buttonLE).not.toBeChecked()
+  buttonEQ = getByRole('radio', { name: '等しい' })
+  expect(buttonEQ).toBeVisible()
+  expect(buttonEQ).toBeEnabled()
+  // 等しいが選択されている
+  expect(buttonEQ).toBeChecked()
+
+  // 状態をリセットする
+  act(() => resetState())
+  ;[type, power, comparator, resetState, renderAccordionItem] = result.current
+  expect(type).toBe(0) // すべて
+  expect(power).toBe(0)
+  expect(comparator).toBe(enumComparator.GE)
+  rerender(<Accordion alwaysOpen>{renderAccordionItem('0')}</Accordion>)
+
+  buttonAll = getByRole('radio', { name: 'すべて' })
+  expect(buttonAll).toBeVisible()
+  // すべてが選択されている
+  expect(buttonAll).toBeChecked()
+  buttonIjin = getByRole('radio', { name: 'イジン' })
+  expect(buttonIjin).toBeVisible()
+  expect(buttonIjin).not.toBeChecked()
+  buttonHaikei = getByRole('radio', { name: 'ハイケイ' })
+  expect(buttonHaikei).toBeVisible()
+  expect(buttonHaikei).not.toBeChecked()
+  buttonMahou = getByRole('radio', { name: 'マホウ' })
+  expect(buttonMahou).toBeVisible()
+  expect(buttonMahou).not.toBeChecked()
+  buttonMaryoku = getByRole('radio', { name: 'マリョク' })
+  expect(buttonMaryoku).toBeVisible()
+  expect(buttonMaryoku).not.toBeChecked()
+  slider = getByRole('slider')
+  expect(slider).toBeVisible()
+  expect(slider).not.toBeEnabled()
+  buttonGE = getByRole('radio', { name: '以上' })
+  expect(buttonGE).toBeVisible()
+  expect(buttonGE).not.toBeEnabled()
+  buttonLE = getByRole('radio', { name: '以下' })
+  expect(buttonLE).toBeVisible()
+  expect(buttonLE).not.toBeEnabled()
+  buttonEQ = getByRole('radio', { name: '等しい' })
+  expect(buttonEQ).toBeVisible()
+  expect(buttonEQ).not.toBeEnabled()
 })
