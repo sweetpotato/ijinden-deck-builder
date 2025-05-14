@@ -13,9 +13,9 @@ import { dataCardsArrayForTable as dataCards } from '../commons/dataCards'
 import enumColor from './enumColor'
 import enumComparator from './enumComparator'
 import enumTerm from './enumTerm'
-import enumType from './enumType'
 import useAccordionItemGenericFilter from './AccordionItemGenericFilter'
 import useAccordionItemLevelFilter from './AccordionItemLevelFilter'
+import useAccordionItemTypeFilter from './AccordionItemTypeFilter'
 import useContainerTextSearch from './ContainerTextSearch'
 import TableRowCard from './TableRowCard'
 
@@ -52,14 +52,6 @@ const dataColors = [
   { value: enumColor.PURPLE, label: '紫' },
   { value: enumColor.MULTICOLOR, label: '多色' },
   { value: enumColor.COLORLESS, label: '無色' },
-]
-
-const dataTypes = [
-  { value: 0, label: 'すべて' },
-  { value: enumType.IJIN, label: 'イジン' },
-  { value: enumType.HAIKEI, label: 'ハイケイ' },
-  { value: enumType.MAHOU, label: 'マホウ' },
-  { value: enumType.MARYOKU, label: 'マリョク' },
 ]
 
 const dataTerms = [
@@ -119,11 +111,7 @@ function TabPaneCard({
     '色',
     dataColors
   )
-  const [type, resetType, renderType] = useAccordionItemGenericFilter(
-    'button-type-all',
-    '種類',
-    dataTypes
-  )
+  const [type, resetType, renderType] = useAccordionItemTypeFilter()
   const [levelValue, levelComparator, resetLevel, renderLevel] =
     useAccordionItemLevelFilter()
   const [trait, resetTrait, renderTrait] = useAccordionItemGenericFilter(
