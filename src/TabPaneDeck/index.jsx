@@ -24,6 +24,8 @@ import ImageCard from '../components/ImageCard'
 import ContainerDeckShare from './ContainerDeckShare'
 import ContainerDeckExport from './ContainerDeckExport'
 
+import './index.css'
+
 function TabPaneDeck({
   code,
   showCodeError,
