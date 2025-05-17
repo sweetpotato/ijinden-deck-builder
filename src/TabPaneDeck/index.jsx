@@ -43,6 +43,33 @@ function TabPaneDeck({
 }) {
   const [showModalEmpty, setShowModalEmpty] = useState(false)
 
+  const dispatchDeck = {
+    decrementMain: (argId) => {
+      handleClickDecrement(argId, deckMain, handleSetDeckMain)
+    },
+    incrementMain: (argId) => {
+      handleClickIncrement(argId, deckMain, handleSetDeckMain)
+    },
+    moveOutMain: (argId) => {
+      handleClickDecrement(argId, deckMain, handleSetDeckMain)
+      handleClickIncrement(argId, deckSide, handleSetDeckSide)
+    },
+    decrementSide: (argId) => {
+      handleClickDecrement(argId, deckSide, handleSetDeckSide)
+    },
+    incrementSide: (argId) => {
+      handleClickIncrement(argId, deckSide, handleSetDeckSide)
+    },
+    moveOutSide: (argId) => {
+      handleClickDecrement(argId, deckSide, handleSetDeckSide)
+      handleClickIncrement(argId, deckMain, handleSetDeckMain)
+    },
+    clear: () => {
+      handleSetDeckMain(new Map())
+      handleSetDeckSide(new Map())
+    },
+  }
+
   function handleChangeDeckTitle(event) {
     handleSetDeckTitle(event.target.value)
   }
@@ -72,8 +99,7 @@ function TabPaneDeck({
 
   function handleClickClear() {
     handleSetDeckTitle('')
-    handleSetDeckMain(new Map())
-    handleSetDeckSide(new Map())
+    dispatchDeck.clear()
     interruptSimulator()
   }
 
@@ -125,18 +151,18 @@ function TabPaneDeck({
       <ContainerDeckPart
         title="メインデッキ"
         deckThis={deckMain}
-        handleSetDeckThis={handleSetDeckMain}
-        deckThat={deckSide}
-        handleSetDeckThat={handleSetDeckSide}
+        dispatchDecrement={dispatchDeck.decrementMain}
+        dispatchIncrement={dispatchDeck.incrementMain}
+        dispatchMoveOut={dispatchDeck.moveOutMain}
         handleSetIdZoom={handleSetIdZoom}
         interruptSimulator={interruptSimulator}
       />
       <ContainerDeckPart
         title="サイドデッキ"
         deckThis={deckSide}
-        handleSetDeckThis={handleSetDeckSide}
-        deckThat={deckMain}
-        handleSetDeckThat={handleSetDeckMain}
+        dispatchDecrement={dispatchDeck.decrementSide}
+        dispatchIncrement={dispatchDeck.incrementSide}
+        dispatchMoveOut={dispatchDeck.moveOutSide}
         handleSetIdZoom={handleSetIdZoom}
         interruptSimulator={interruptSimulator}
         isSide
@@ -151,27 +177,14 @@ function TabPaneDeck({
 function ContainerDeckPart({
   title,
   deckThis,
-  handleSetDeckThis,
-  deckThat,
-  handleSetDeckThat,
+  dispatchDecrement,
+  dispatchIncrement,
+  dispatchMoveOut,
   handleSetIdZoom,
   interruptSimulator,
   isSide = false,
 }) {
   const numCards = sum(deckThis.values())
-
-  function dispatchDecrement(argId) {
-    handleClickDecrement(argId, deckThis, handleSetDeckThis)
-  }
-
-  function dispatchIncrement(argId) {
-    handleClickIncrement(argId, deckThis, handleSetDeckThis)
-  }
-
-  function dispatchMoveOut(argId) {
-    handleClickDecrement(argId, deckThis, handleSetDeckThis)
-    handleClickIncrement(argId, deckThat, handleSetDeckThat)
-  }
 
   return (
     <>
