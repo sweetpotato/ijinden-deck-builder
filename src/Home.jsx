@@ -18,6 +18,10 @@ import TabPaneLoad from './TabPaneLoad'
 import useTabPaneSimulator from './TabPaneSimulator'
 import { dataCardsMap, decodeDeck } from './commons/dataCards'
 import enumTabPane from './commons/enumTabPane'
+import {
+  handleClickDecrement,
+  handleClickIncrement,
+} from './commons/handleClick'
 
 function App() {
   // デッキコード関連
@@ -70,6 +74,21 @@ function App() {
     setActiveDeckSaved(newActiveDeckSaved)
   }
 
+  const dispatchDeck = {
+    decrementMain: (argId) => {
+      handleClickDecrement(argId, deckMain, handleSetDeckMain)
+    },
+    incrementMain: (argId) => {
+      handleClickIncrement(argId, deckMain, handleSetDeckMain)
+    },
+    decrementSide: (argId) => {
+      handleClickDecrement(argId, deckSide, handleSetDeckSide)
+    },
+    incrementSide: (argId) => {
+      handleClickIncrement(argId, deckSide, handleSetDeckSide)
+    },
+  }
+
   return (
     <>
       <h1 className="m-2">イジンデン デッキ作成</h1>
@@ -82,9 +101,8 @@ function App() {
           <TabPaneCard
             handleSetIdZoom={handleSetIdZoom}
             deckMain={deckMain}
-            handleSetDeckMain={handleSetDeckMain}
             deckSide={deckSide}
-            handleSetDeckSide={handleSetDeckSide}
+            dispatchDeck={dispatchDeck}
             interruptSimulator={interruptSimulator}
           />
         </Tab>
