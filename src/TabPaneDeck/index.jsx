@@ -160,6 +160,19 @@ function ContainerDeckPart({
 }) {
   const numCards = sum(deckThis.values())
 
+  function dispatchDecrement(argId) {
+    handleClickDecrement(argId, deckThis, handleSetDeckThis)
+  }
+
+  function dispatchIncrement(argId) {
+    handleClickIncrement(argId, deckThis, handleSetDeckThis)
+  }
+
+  function dispatchMoveOut(argId) {
+    handleClickDecrement(argId, deckThis, handleSetDeckThis)
+    handleClickIncrement(argId, deckThat, handleSetDeckThat)
+  }
+
   return (
     <>
       <h3 className="m-2">{`${title} (${numCards}枚)`}</h3>
@@ -169,9 +182,9 @@ function ContainerDeckPart({
             {...element}
             key={element.id}
             deckThis={deckThis}
-            handleSetDeckThis={handleSetDeckThis}
-            deckThat={deckThat}
-            handleSetDeckThat={handleSetDeckThat}
+            dispatchDecrement={dispatchDecrement}
+            dispatchIncrement={dispatchIncrement}
+            dispatchMoveOut={dispatchMoveOut}
             handleSetIdZoom={handleSetIdZoom}
             interruptSimulator={interruptSimulator}
             isSide={isSide}
@@ -187,17 +200,13 @@ function ContainerDeckCard({
   imageUrl,
   name,
   deckThis,
-  handleSetDeckThis,
-  deckThat,
-  handleSetDeckThat,
+  dispatchDecrement,
+  dispatchIncrement,
+  dispatchMoveOut,
   handleSetIdZoom,
   interruptSimulator,
   isSide = false,
 }) {
-  function dispatchDecrement(argId) {
-    handleClickDecrement(argId, deckThis, handleSetDeckThis)
-  }
-
   function handleClickMinus() {
     dispatchDecrement(id)
     if (!isSide) {
@@ -205,20 +214,11 @@ function ContainerDeckCard({
     }
   }
 
-  function dispatchIncrement(argId) {
-    handleClickIncrement(argId, deckThis, handleSetDeckThis)
-  }
-
   function handleClickPlus() {
     dispatchIncrement(id)
     if (!isSide) {
       interruptSimulator()
     }
-  }
-
-  function dispatchMoveOut(argId) {
-    handleClickDecrement(argId, deckThis, handleSetDeckThis)
-    handleClickIncrement(argId, deckThat, handleSetDeckThat)
   }
 
   function handleClickMove() {
