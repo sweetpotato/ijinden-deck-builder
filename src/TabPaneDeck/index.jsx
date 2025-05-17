@@ -162,7 +162,7 @@ function ContainerDeckPart({
           <ContainerDeckCard
             {...element}
             key={element.id}
-            deck={deck}
+            numCopies={deck.has(element.id) ? deck.get(element.id) : 0}
             dispatchDecrement={dispatchDecrement}
             dispatchIncrement={dispatchIncrement}
             dispatchMoveOut={dispatchMoveOut}
@@ -180,7 +180,7 @@ function ContainerDeckCard({
   id,
   imageUrl,
   name,
-  deck,
+  numCopies,
   dispatchDecrement,
   dispatchIncrement,
   dispatchMoveOut,
@@ -211,7 +211,6 @@ function ContainerDeckCard({
     handleSetIdZoom(id)
   }
 
-  const numCopies = deck.has(id) ? deck.get(id) : 0
   const moveText = isSide ? '^' : 'v'
   return (
     numCopies > 0 && (
