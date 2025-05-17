@@ -44,6 +44,11 @@ function TabPaneLoad({
   const [showModalClear, setShowModalClear] = useState(false)
   const decksSaved = useLiveQuery(async () => await dbQueryDecks())
 
+  function dispatchSetFromEntries(entriesMain, entriesSide) {
+    handleSetDeckMain(new Map(entriesMain))
+    handleSetDeckSide(new Map(entriesSide))
+  }
+
   function handleSelectAccordion(eventKey) {
     handleSetActiveDeckSaved(eventKey)
   }
@@ -85,8 +90,7 @@ function TabPaneLoad({
                   <ContainerDeckSaved
                     aDeckSaved={aDeckSaved}
                     handleSetDeckTitle={handleSetDeckTitle}
-                    handleSetDeckMain={handleSetDeckMain}
-                    handleSetDeckSide={handleSetDeckSide}
+                    dispatchSetFromEntries={dispatchSetFromEntries}
                     handleSetActiveTab={handleSetActiveTab}
                     interruptSimulator={interruptSimulator}
                   />
@@ -129,16 +133,10 @@ function TabPaneLoad({
 function ContainerDeckSaved({
   aDeckSaved,
   handleSetDeckTitle,
-  handleSetDeckMain,
-  handleSetDeckSide,
+  dispatchSetFromEntries,
   handleSetActiveTab,
   interruptSimulator,
 }) {
-  function dispatchSetFromEntries(entriesMain, entriesSide) {
-    handleSetDeckMain(new Map(entriesMain))
-    handleSetDeckSide(new Map(entriesSide))
-  }
-
   function handleClickLoad() {
     handleSetDeckTitle(aDeckSaved.title || '') // There may not be a title
     dispatchSetFromEntries(aDeckSaved.main, aDeckSaved.side)
