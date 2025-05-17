@@ -118,7 +118,7 @@ function TabPaneDeck({
       </Modal>
       <ContainerDeckPart
         title="メインデッキ"
-        deckThis={deckMain}
+        deck={deckMain}
         dispatchDecrement={dispatchDeck.decrementMain}
         dispatchIncrement={dispatchDeck.incrementMain}
         dispatchMoveOut={dispatchDeck.moveOutMain}
@@ -127,7 +127,7 @@ function TabPaneDeck({
       />
       <ContainerDeckPart
         title="サイドデッキ"
-        deckThis={deckSide}
+        deck={deckSide}
         dispatchDecrement={dispatchDeck.decrementSide}
         dispatchIncrement={dispatchDeck.incrementSide}
         dispatchMoveOut={dispatchDeck.moveOutSide}
@@ -144,7 +144,7 @@ function TabPaneDeck({
 
 function ContainerDeckPart({
   title,
-  deckThis,
+  deck,
   dispatchDecrement,
   dispatchIncrement,
   dispatchMoveOut,
@@ -152,7 +152,7 @@ function ContainerDeckPart({
   interruptSimulator,
   isSide = false,
 }) {
-  const numCards = sum(deckThis.values())
+  const numCards = sum(deck.values())
 
   return (
     <>
@@ -162,7 +162,7 @@ function ContainerDeckPart({
           <ContainerDeckCard
             {...element}
             key={element.id}
-            deckThis={deckThis}
+            deck={deck}
             dispatchDecrement={dispatchDecrement}
             dispatchIncrement={dispatchIncrement}
             dispatchMoveOut={dispatchMoveOut}
@@ -180,7 +180,7 @@ function ContainerDeckCard({
   id,
   imageUrl,
   name,
-  deckThis,
+  deck,
   dispatchDecrement,
   dispatchIncrement,
   dispatchMoveOut,
@@ -211,7 +211,7 @@ function ContainerDeckCard({
     handleSetIdZoom(id)
   }
 
-  const numCopies = deckThis.has(id) ? deckThis.get(id) : 0
+  const numCopies = deck.has(id) ? deck.get(id) : 0
   const moveText = isSide ? '^' : 'v'
   return (
     numCopies > 0 && (
