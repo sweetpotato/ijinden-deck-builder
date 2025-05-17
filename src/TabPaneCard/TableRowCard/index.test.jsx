@@ -19,8 +19,6 @@ const TERM_CHROMAGIC_PURPLE = enumTerm.CHROMAGIC | enumChromagic.PURPLE
 afterEach(cleanup)
 
 test('インタラクション', async () => {
-  let deckMain = new Map()
-  let deckSide = new Map()
   const decrementMain = vi.fn()
   const incrementMain = vi.fn()
   const decrementSide = vi.fn()
@@ -42,8 +40,8 @@ test('インタラクション', async () => {
           name="織田信長"
           term={0}
           color={enumColor.RED}
-          deckMain={deckMain}
-          deckSide={deckSide}
+          counterMain={0}
+          counterSide={0}
           dispatchDeck={dispatchDeck}
           handleSetIdZoom={handleSetIdZoom}
           interruptSimulator={interruptSimulator}
@@ -88,7 +86,6 @@ test('インタラクション', async () => {
   expect(incrementMain.mock.calls.length).toBe(1) // 呼ばれた
   expect(incrementMain.mock.lastCall.length).toBe(1)
   expect(incrementMain.mock.lastCall[0]).toBe('1-1')
-  deckMain = new Map([['1-1', 1]])
   expect(decrementSide.mock.calls.length).toBe(0)
   expect(incrementSide.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(1) // 呼ばれた
@@ -103,8 +100,8 @@ test('インタラクション', async () => {
           name="織田信長"
           term={0}
           color={enumColor.RED}
-          deckMain={deckMain}
-          deckSide={deckSide}
+          counterMain={1}
+          counterSide={0}
           dispatchDeck={dispatchDeck}
           handleSetIdZoom={handleSetIdZoom}
           interruptSimulator={interruptSimulator}
@@ -143,7 +140,6 @@ test('インタラクション', async () => {
   expect(incrementSide.mock.calls.length).toBe(1) // 呼ばれた
   expect(incrementSide.mock.lastCall.length).toBe(1)
   expect(incrementSide.mock.lastCall[0]).toBe('1-1')
-  deckSide = new Map([['1-1', 1]])
   expect(interruptSimulator.mock.calls.length).toBe(1)
   expect(handleSetIdZoom.mock.calls.length).toBe(0)
 
@@ -156,8 +152,8 @@ test('インタラクション', async () => {
           name="織田信長"
           term={0}
           color={enumColor.RED}
-          deckMain={deckMain}
-          deckSide={deckSide}
+          counterMain={1}
+          counterSide={1}
           dispatchDeck={dispatchDeck}
           handleSetIdZoom={handleSetIdZoom}
           interruptSimulator={interruptSimulator}
@@ -193,7 +189,6 @@ test('インタラクション', async () => {
   expect(decrementMain.mock.calls.length).toBe(1) // 呼ばれた
   expect(decrementMain.mock.lastCall.length).toBe(1)
   expect(decrementMain.mock.lastCall[0]).toBe('1-1')
-  deckMain = new Map()
   expect(incrementMain.mock.calls.length).toBe(1)
   expect(decrementSide.mock.calls.length).toBe(0)
   expect(incrementSide.mock.calls.length).toBe(1)
@@ -209,8 +204,8 @@ test('インタラクション', async () => {
           name="織田信長"
           term={0}
           color={enumColor.RED}
-          deckMain={deckMain}
-          deckSide={deckSide}
+          counterMain={0}
+          counterSide={1}
           dispatchDeck={dispatchDeck}
           handleSetIdZoom={handleSetIdZoom}
           interruptSimulator={interruptSimulator}
@@ -248,7 +243,6 @@ test('インタラクション', async () => {
   expect(decrementSide.mock.calls.length).toBe(1) // 呼ばれた
   expect(decrementSide.mock.lastCall.length).toBe(1)
   expect(decrementSide.mock.lastCall[0]).toBe('1-1')
-  deckSide = new Map()
   expect(incrementSide.mock.calls.length).toBe(1)
   expect(interruptSimulator.mock.calls.length).toBe(2) // 呼ばれていない
   expect(handleSetIdZoom.mock.calls.length).toBe(0)
@@ -262,8 +256,8 @@ test('インタラクション', async () => {
           name="織田信長"
           term={0}
           color={enumColor.RED}
-          deckMain={deckMain}
-          deckSide={deckSide}
+          counterMain={0}
+          counterSide={0}
           dispatchDeck={dispatchDeck}
           handleSetIdZoom={handleSetIdZoom}
           interruptSimulator={interruptSimulator}
@@ -314,8 +308,8 @@ test('レンダリング赤', async () => {
           name="上杉謙信"
           term={0}
           color={enumColor.RED}
-          deckMain={new Map()}
-          deckSide={new Map()}
+          counterMain={0}
+          counterSide={0}
           dispatchDeck={{
             decrementMain: vi.fn(),
             incrementMain: vi.fn(),
@@ -347,8 +341,8 @@ test('レンダリング青', async () => {
           name="レオナルド・ダ・ヴィンチ"
           term={0}
           color={enumColor.BLUE}
-          deckMain={new Map()}
-          deckSide={new Map()}
+          counterMain={0}
+          counterSide={0}
           dispatchDeck={{
             decrementMain: vi.fn(),
             incrementMain: vi.fn(),
@@ -378,8 +372,8 @@ test('レンダリング緑', async () => {
           name="出雲の阿国"
           term={0}
           color={enumColor.GREEN}
-          deckMain={new Map()}
-          deckSide={new Map()}
+          counterMain={0}
+          counterSide={0}
           dispatchDeck={{
             decrementMain: vi.fn(),
             incrementMain: vi.fn(),
@@ -409,8 +403,8 @@ test('レンダリング黄', async () => {
           name="諸葛亮"
           term={0}
           color={enumColor.YELLOW}
-          deckMain={new Map()}
-          deckSide={new Map()}
+          counterMain={0}
+          counterSide={0}
           dispatchDeck={{
             decrementMain: vi.fn(),
             incrementMain: vi.fn(),
@@ -440,8 +434,8 @@ test('レンダリング紫', async () => {
           name="マリ・キュリー"
           term={0}
           color={enumColor.PURPLE}
-          deckMain={new Map()}
-          deckSide={new Map()}
+          counterMain={0}
+          counterSide={0}
           dispatchDeck={{
             decrementMain: vi.fn(),
             incrementMain: vi.fn(),
@@ -471,8 +465,8 @@ test('レンダリング赤黄', async () => {
           name="RYマーブルオーブ"
           term={0}
           color={enumColor.RED_YELLOW}
-          deckMain={new Map()}
-          deckSide={new Map()}
+          counterMain={0}
+          counterSide={0}
           dispatchDeck={{
             decrementMain: vi.fn(),
             incrementMain: vi.fn(),
@@ -502,8 +496,8 @@ test('レンダリング青黄', async () => {
           name="BYマーブルオーブ"
           term={0}
           color={enumColor.BLUE_YELLOW}
-          deckMain={new Map()}
-          deckSide={new Map()}
+          counterMain={0}
+          counterSide={0}
           dispatchDeck={{
             decrementMain: vi.fn(),
             incrementMain: vi.fn(),
@@ -533,8 +527,8 @@ test('レンダリング青黄', async () => {
           name="GYマーブルオーブ"
           term={0}
           color={enumColor.GREEN_YELLOW}
-          deckMain={new Map()}
-          deckSide={new Map()}
+          counterMain={0}
+          counterSide={0}
           dispatchDeck={{
             decrementMain: vi.fn(),
             incrementMain: vi.fn(),
@@ -564,8 +558,8 @@ test('レンダリング赤の黄魔導', async () => {
           name="スペクター"
           term={TERM_CHROMAGIC_YELLOW}
           color={enumColor.RED}
-          deckMain={new Map()}
-          deckSide={new Map()}
+          counterMain={0}
+          counterSide={0}
           dispatchDeck={{
             decrementMain: vi.fn(),
             incrementMain: vi.fn(),
@@ -595,8 +589,8 @@ test('レンダリング黄の赤魔導', async () => {
           name="スカーレット"
           term={TERM_CHROMAGIC_RED}
           color={enumColor.YELLOW}
-          deckMain={new Map()}
-          deckSide={new Map()}
+          counterMain={0}
+          counterSide={0}
           dispatchDeck={{
             decrementMain: vi.fn(),
             incrementMain: vi.fn(),
@@ -626,8 +620,8 @@ test('レンダリング黄の青魔導', async () => {
           name="ピーコック"
           term={TERM_CHROMAGIC_BLUE}
           color={enumColor.YELLOW}
-          deckMain={new Map()}
-          deckSide={new Map()}
+          counterMain={0}
+          counterSide={0}
           dispatchDeck={{
             decrementMain: vi.fn(),
             incrementMain: vi.fn(),
@@ -657,8 +651,8 @@ test('レンダリング黄の緑魔導', async () => {
           name="シャトルーズ"
           term={TERM_CHROMAGIC_GREEN}
           color={enumColor.YELLOW}
-          deckMain={new Map()}
-          deckSide={new Map()}
+          counterMain={0}
+          counterSide={0}
           dispatchDeck={{
             decrementMain: vi.fn(),
             incrementMain: vi.fn(),
@@ -688,8 +682,8 @@ test('レンダリング無色の赤魔導', async () => {
           name="ソリッドビジョンα"
           term={TERM_CHROMAGIC_RED}
           color={enumColor.COLORLESS}
-          deckMain={new Map()}
-          deckSide={new Map()}
+          counterMain={0}
+          counterSide={0}
           dispatchDeck={{
             decrementMain: vi.fn(),
             incrementMain: vi.fn(),
@@ -719,8 +713,8 @@ test('レンダリング無色の青魔導', async () => {
           name="ソリッドビジョンδ"
           term={TERM_CHROMAGIC_BLUE}
           color={enumColor.COLORLESS}
-          deckMain={new Map()}
-          deckSide={new Map()}
+          counterMain={0}
+          counterSide={0}
           dispatchDeck={{
             decrementMain: vi.fn(),
             incrementMain: vi.fn(),
@@ -750,8 +744,8 @@ test('レンダリング無色の緑魔導', async () => {
           name="ソリッドビジョンΩ"
           term={TERM_CHROMAGIC_GREEN}
           color={enumColor.COLORLESS}
-          deckMain={new Map()}
-          deckSide={new Map()}
+          counterMain={0}
+          counterSide={0}
           dispatchDeck={{
             decrementMain: vi.fn(),
             incrementMain: vi.fn(),
@@ -781,8 +775,8 @@ test('レンダリング無色の黄魔導', async () => {
           name="ソリッドビジョンβ"
           term={TERM_CHROMAGIC_YELLOW}
           color={enumColor.COLORLESS}
-          deckMain={new Map()}
-          deckSide={new Map()}
+          counterMain={0}
+          counterSide={0}
           dispatchDeck={{
             decrementMain: vi.fn(),
             incrementMain: vi.fn(),
@@ -812,8 +806,8 @@ test('レンダリング無色の紫魔導', async () => {
           name="ソリッドビジョンγ"
           term={TERM_CHROMAGIC_PURPLE}
           color={enumColor.COLORLESS}
-          deckMain={new Map()}
-          deckSide={new Map()}
+          counterMain={0}
+          counterSide={0}
           dispatchDeck={{
             decrementMain: vi.fn(),
             incrementMain: vi.fn(),

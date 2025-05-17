@@ -81,14 +81,12 @@ function TableRowCard({
   name,
   color,
   term,
-  deckMain,
-  deckSide,
+  counterMain,
+  counterSide,
   dispatchDeck,
   handleSetIdZoom,
   interruptSimulator,
 }) {
-  const counterMain = deckMain.has(id) ? deckMain.get(id) : 0
-  const counterSide = deckSide.has(id) ? deckSide.get(id) : 0
   let classesColor
   if ((term & enumTerm.CHROMAGIC) === enumTerm.CHROMAGIC) {
     classesColor = classNames(
