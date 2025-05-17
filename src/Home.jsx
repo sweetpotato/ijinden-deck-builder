@@ -81,11 +81,23 @@ function App() {
     incrementMain: (argId) => {
       handleClickIncrement(argId, deckMain, handleSetDeckMain)
     },
+    moveOutMain: (argId) => {
+      handleClickDecrement(argId, deckMain, handleSetDeckMain)
+      handleClickIncrement(argId, deckSide, handleSetDeckSide)
+    },
     decrementSide: (argId) => {
       handleClickDecrement(argId, deckSide, handleSetDeckSide)
     },
     incrementSide: (argId) => {
       handleClickIncrement(argId, deckSide, handleSetDeckSide)
+    },
+    moveOutSide: (argId) => {
+      handleClickDecrement(argId, deckSide, handleSetDeckSide)
+      handleClickIncrement(argId, deckMain, handleSetDeckMain)
+    },
+    clear: () => {
+      handleSetDeckMain(new Map())
+      handleSetDeckSide(new Map())
     },
   }
 
@@ -115,9 +127,8 @@ function App() {
             deckTitle={deckTitle}
             handleSetDeckTitle={handleSetDeckTitle}
             deckMain={deckMain}
-            handleSetDeckMain={handleSetDeckMain}
             deckSide={deckSide}
-            handleSetDeckSide={handleSetDeckSide}
+            dispatchDeck={dispatchDeck}
             handleSetActiveDeckSaved={handleSetActiveDeckSaved}
             handleSetActiveTab={handleSetActiveTab}
             interruptSimulator={interruptSimulator}

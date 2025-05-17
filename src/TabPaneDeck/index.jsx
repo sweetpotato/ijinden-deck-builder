@@ -15,10 +15,6 @@ import {
 import { dataCardsArrayForDeck as dataCardsArray } from '../commons/dataCards'
 import { dbAddDeck } from '../commons/db'
 import enumTabPane from '../commons/enumTabPane'
-import {
-  handleClickDecrement,
-  handleClickIncrement,
-} from '../commons/handleClick'
 import { sum } from '../commons/utils'
 import ImageCard from '../components/ImageCard'
 import ContainerDeckShare from './ContainerDeckShare'
@@ -34,41 +30,13 @@ function TabPaneDeck({
   deckTitle,
   handleSetDeckTitle,
   deckMain,
-  handleSetDeckMain,
   deckSide,
-  handleSetDeckSide,
+  dispatchDeck,
   handleSetActiveDeckSaved,
   handleSetActiveTab,
   interruptSimulator,
 }) {
   const [showModalEmpty, setShowModalEmpty] = useState(false)
-
-  const dispatchDeck = {
-    decrementMain: (argId) => {
-      handleClickDecrement(argId, deckMain, handleSetDeckMain)
-    },
-    incrementMain: (argId) => {
-      handleClickIncrement(argId, deckMain, handleSetDeckMain)
-    },
-    moveOutMain: (argId) => {
-      handleClickDecrement(argId, deckMain, handleSetDeckMain)
-      handleClickIncrement(argId, deckSide, handleSetDeckSide)
-    },
-    decrementSide: (argId) => {
-      handleClickDecrement(argId, deckSide, handleSetDeckSide)
-    },
-    incrementSide: (argId) => {
-      handleClickIncrement(argId, deckSide, handleSetDeckSide)
-    },
-    moveOutSide: (argId) => {
-      handleClickDecrement(argId, deckSide, handleSetDeckSide)
-      handleClickIncrement(argId, deckMain, handleSetDeckMain)
-    },
-    clear: () => {
-      handleSetDeckMain(new Map())
-      handleSetDeckSide(new Map())
-    },
-  }
 
   function handleChangeDeckTitle(event) {
     handleSetDeckTitle(event.target.value)
