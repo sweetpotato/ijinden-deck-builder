@@ -18,6 +18,7 @@ import TabPaneLoad from './TabPaneLoad'
 import useTabPaneSimulator from './TabPaneSimulator'
 import { dataCardsMap, decodeDeck } from './commons/dataCards'
 import enumTabPane from './commons/enumTabPane'
+import useDeck from './hooks/useDeck'
 
 function App() {
   // デッキコード関連
@@ -33,8 +34,7 @@ function App() {
 
   const [idZoom, setIdZoom] = useState(null)
   const [deckTitle, setDeckTitle] = useState('')
-  const [deckMain, setDeckMain] = useState(new Map(entriesMain))
-  const [deckSide, setDeckSide] = useState(new Map(entriesSide))
+  const [deckMain, deckSide, dispatchDeck] = useDeck(entriesMain, entriesSide)
   const [activeDeckSaved, setActiveDeckSaved] = useState([])
   const [interruptSimulator, renderTabPaneSimulator] = useTabPaneSimulator()
 
@@ -52,14 +52,6 @@ function App() {
 
   function handleSetDeckTitle(newDeckTitle) {
     setDeckTitle(newDeckTitle)
-  }
-
-  function handleSetDeckMain(newDeckMain) {
-    setDeckMain(newDeckMain)
-  }
-
-  function handleSetDeckSide(newDeckSide) {
-    setDeckSide(newDeckSide)
   }
 
   function handleSetActiveTab(newActiveTab) {
@@ -82,9 +74,8 @@ function App() {
           <TabPaneCard
             handleSetIdZoom={handleSetIdZoom}
             deckMain={deckMain}
-            handleSetDeckMain={handleSetDeckMain}
             deckSide={deckSide}
-            handleSetDeckSide={handleSetDeckSide}
+            dispatchDeck={dispatchDeck}
             interruptSimulator={interruptSimulator}
           />
         </Tab>
@@ -97,9 +88,8 @@ function App() {
             deckTitle={deckTitle}
             handleSetDeckTitle={handleSetDeckTitle}
             deckMain={deckMain}
-            handleSetDeckMain={handleSetDeckMain}
             deckSide={deckSide}
-            handleSetDeckSide={handleSetDeckSide}
+            dispatchDeck={dispatchDeck}
             handleSetActiveDeckSaved={handleSetActiveDeckSaved}
             handleSetActiveTab={handleSetActiveTab}
             interruptSimulator={interruptSimulator}
@@ -108,8 +98,7 @@ function App() {
         <Tab eventKey={enumTabPane.SAVE_AND_LOAD} title="マイデッキ">
           <TabPaneLoad
             handleSetDeckTitle={handleSetDeckTitle}
-            handleSetDeckMain={handleSetDeckMain}
-            handleSetDeckSide={handleSetDeckSide}
+            dispatchSetFromEntries={dispatchDeck.setFromEntries}
             activeDeckSaved={activeDeckSaved}
             handleSetActiveDeckSaved={handleSetActiveDeckSaved}
             handleSetActiveTab={handleSetActiveTab}

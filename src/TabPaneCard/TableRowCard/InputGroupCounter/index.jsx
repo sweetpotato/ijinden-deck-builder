@@ -2,29 +2,24 @@
 
 import { Button, FormControl, InputGroup } from 'react-bootstrap'
 
-import {
-  handleClickDecrement,
-  handleClickIncrement,
-} from '../../../commons/handleClick'
-
 function InputGroupCounter({
   id,
-  deck,
-  handleSetDeck,
+  counter,
+  dispatchDecrement,
+  dispatchIncrement,
   interruptSimulator = undefined,
 }) {
   function handleClickMinus() {
-    handleClickDecrement(id, deck, handleSetDeck)
+    dispatchDecrement(id)
     interruptSimulator?.()
   }
 
   function handleClickPlus() {
-    handleClickIncrement(id, deck, handleSetDeck)
+    dispatchIncrement(id)
     interruptSimulator?.()
   }
 
   const name = (interruptSimulator !== undefined ? 'main-' : 'side-') + id
-  const counter = deck.has(id) ? deck.get(id) : 0
   return (
     <InputGroup>
       <Button

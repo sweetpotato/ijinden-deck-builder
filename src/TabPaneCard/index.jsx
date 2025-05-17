@@ -91,9 +91,8 @@ const dataLegacies = [
 function TabPaneCard({
   handleSetIdZoom,
   deckMain,
-  handleSetDeckMain,
   deckSide,
-  handleSetDeckSide,
+  dispatchDeck,
   interruptSimulator,
 }) {
   const [expansion, resetExpansion, renderExpansion] =
@@ -231,10 +230,13 @@ function TabPaneCard({
                   name={element.name}
                   color={element.color}
                   term={element.term}
-                  deckMain={deckMain}
-                  deckSide={deckSide}
-                  handleSetDeckMain={handleSetDeckMain}
-                  handleSetDeckSide={handleSetDeckSide}
+                  counterMain={
+                    deckMain.has(element.id) ? deckMain.get(element.id) : 0
+                  }
+                  counterSide={
+                    deckSide.has(element.id) ? deckSide.get(element.id) : 0
+                  }
+                  dispatchDeck={dispatchDeck}
                   handleSetIdZoom={handleSetIdZoom}
                   interruptSimulator={interruptSimulator}
                 />

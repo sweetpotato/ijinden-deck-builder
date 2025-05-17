@@ -9,14 +9,15 @@ import InputGroupCounter from '.'
 afterEach(cleanup)
 
 test('メインデッキのカウンターを0から1に増やす', async () => {
-  const deck = new Map()
-  const handleSetDeck = vi.fn()
+  const dispatchDecrement = vi.fn()
+  const dispatchIncrement = vi.fn()
   const interruptSimulator = vi.fn()
   const { findByRole } = render(
     <InputGroupCounter
       id="R-1"
-      deck={deck}
-      handleSetDeck={handleSetDeck}
+      counter={0}
+      dispatchDecrement={dispatchDecrement}
+      dispatchIncrement={dispatchIncrement}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -38,11 +39,10 @@ test('メインデッキのカウンターを0から1に増やす', async () => 
   await userEvent.click(buttonPlus)
 
   // 新しいデッキのチェック
-  expect(handleSetDeck.mock.calls.length).toBe(1)
-  const newDeck = handleSetDeck.mock.lastCall[0]
-  expect(newDeck.size).toBe(1)
-  expect(newDeck.has('R-1')).toBeTruthy()
-  expect(newDeck.get('R-1')).toBe(1)
+  expect(dispatchDecrement.mock.calls.length).toBe(0)
+  expect(dispatchIncrement.mock.calls.length).toBe(1)
+  expect(dispatchIncrement.mock.lastCall.length).toBe(1)
+  expect(dispatchIncrement.mock.lastCall[0]).toBe('R-1')
 
   // シミュレータに通知が送られる
   expect(interruptSimulator.mock.calls.length).toBe(1)
@@ -50,14 +50,15 @@ test('メインデッキのカウンターを0から1に増やす', async () => 
 })
 
 test('メインデッキのカウンターを1から0に減らす', async () => {
-  const deck = new Map([['B-1', 1]])
-  const handleSetDeck = vi.fn()
+  const dispatchDecrement = vi.fn()
+  const dispatchIncrement = vi.fn()
   const interruptSimulator = vi.fn()
   const { findByRole } = render(
     <InputGroupCounter
       id="B-1"
-      deck={deck}
-      handleSetDeck={handleSetDeck}
+      counter={1}
+      dispatchDecrement={dispatchDecrement}
+      dispatchIncrement={dispatchIncrement}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -78,9 +79,10 @@ test('メインデッキのカウンターを1から0に減らす', async () => 
   await userEvent.click(buttonMinus)
 
   // 新しいデッキのチェック
-  expect(handleSetDeck.mock.calls.length).toBe(1)
-  const newDeck = handleSetDeck.mock.lastCall[0]
-  expect(newDeck.size).toBe(0)
+  expect(dispatchDecrement.mock.calls.length).toBe(1)
+  expect(dispatchDecrement.mock.lastCall.length).toBe(1)
+  expect(dispatchDecrement.mock.lastCall[0]).toBe('B-1')
+  expect(dispatchIncrement.mock.calls.length).toBe(0)
 
   // シミュレータに通知が送られる
   expect(interruptSimulator.mock.calls.length).toBe(1)
@@ -88,14 +90,15 @@ test('メインデッキのカウンターを1から0に減らす', async () => 
 })
 
 test('メインデッキのカウンターを1から2に増やす', async () => {
-  const deck = new Map([['G-1', 1]])
-  const handleSetDeck = vi.fn()
+  const dispatchDecrement = vi.fn()
+  const dispatchIncrement = vi.fn()
   const interruptSimulator = vi.fn()
   const { findByRole } = render(
     <InputGroupCounter
       id="G-1"
-      deck={deck}
-      handleSetDeck={handleSetDeck}
+      counter={1}
+      dispatchDecrement={dispatchDecrement}
+      dispatchIncrement={dispatchIncrement}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -116,11 +119,10 @@ test('メインデッキのカウンターを1から2に増やす', async () => 
   await userEvent.click(buttonPlus)
 
   // 新しいデッキのチェック
-  expect(handleSetDeck.mock.calls.length).toBe(1)
-  const newDeck = handleSetDeck.mock.lastCall[0]
-  expect(newDeck.size).toBe(1)
-  expect(newDeck.has('G-1')).toBeTruthy()
-  expect(newDeck.get('G-1')).toBe(2)
+  expect(dispatchDecrement.mock.calls.length).toBe(0)
+  expect(dispatchIncrement.mock.calls.length).toBe(1)
+  expect(dispatchIncrement.mock.lastCall.length).toBe(1)
+  expect(dispatchIncrement.mock.lastCall[0]).toBe('G-1')
 
   // シミュレータに通知が送られる
   expect(interruptSimulator.mock.calls.length).toBe(1)
@@ -128,10 +130,15 @@ test('メインデッキのカウンターを1から2に増やす', async () => 
 })
 
 test('サイドデッキのカウンターを0から1に増やす', async () => {
-  const deck = new Map([['Y-1', 3]])
-  const handleSetDeck = vi.fn()
+  const dispatchDecrement = vi.fn()
+  const dispatchIncrement = vi.fn()
   const { findByRole } = render(
-    <InputGroupCounter id="Y-2" deck={deck} handleSetDeck={handleSetDeck} />
+    <InputGroupCounter
+      id="Y-2"
+      counter={0}
+      dispatchDecrement={dispatchDecrement}
+      dispatchIncrement={dispatchIncrement}
+    />
   )
 
   // 初期状態のチェック
@@ -151,23 +158,22 @@ test('サイドデッキのカウンターを0から1に増やす', async () => 
   await userEvent.click(buttonPlus)
 
   // 新しいデッキのチェック
-  expect(handleSetDeck.mock.calls.length).toBe(1)
-  const newDeck = handleSetDeck.mock.lastCall[0]
-  expect(newDeck.size).toBe(2)
-  expect(newDeck.has('Y-1')).toBeTruthy()
-  expect(newDeck.get('Y-1')).toBe(3)
-  expect(newDeck.has('Y-2')).toBeTruthy()
-  expect(newDeck.get('Y-2')).toBe(1)
+  expect(dispatchDecrement.mock.calls.length).toBe(0)
+  expect(dispatchIncrement.mock.calls.length).toBe(1)
+  expect(dispatchIncrement.mock.lastCall.length).toBe(1)
+  expect(dispatchIncrement.mock.lastCall[0]).toBe('Y-2')
 })
 
 test('サイドデッキのカウンターを1から0に減らす', async () => {
-  const deck = new Map([
-    ['P-1', 4],
-    ['P-2', 1],
-  ])
-  const handleSetDeck = vi.fn()
+  const dispatchDecrement = vi.fn()
+  const dispatchIncrement = vi.fn()
   const { findByRole } = render(
-    <InputGroupCounter id="P-2" deck={deck} handleSetDeck={handleSetDeck} />
+    <InputGroupCounter
+      id="P-2"
+      counter={1}
+      dispatchDecrement={dispatchDecrement}
+      dispatchIncrement={dispatchIncrement}
+    />
   )
 
   // 初期状態のチェック
@@ -186,21 +192,22 @@ test('サイドデッキのカウンターを1から0に減らす', async () => 
   await userEvent.click(buttonMinus)
 
   // 新しいデッキのチェック
-  expect(handleSetDeck.mock.calls.length).toBe(1)
-  const newDeck = handleSetDeck.mock.lastCall[0]
-  expect(newDeck.size).toBe(1)
-  expect(newDeck.has('P-1')).toBeTruthy()
-  expect(newDeck.get('P-1')).toBe(4)
+  expect(dispatchDecrement.mock.calls.length).toBe(1)
+  expect(dispatchDecrement.mock.lastCall.length).toBe(1)
+  expect(dispatchDecrement.mock.lastCall[0]).toBe('P-2')
+  expect(dispatchIncrement.mock.calls.length).toBe(0)
 })
 
 test('サイドデッキのカウンターを1から2に増やす', async () => {
-  const deck = new Map([
-    ['1-1', 5],
-    ['1-2', 1],
-  ])
-  const handleSetDeck = vi.fn()
+  const dispatchDecrement = vi.fn()
+  const dispatchIncrement = vi.fn()
   const { findByRole } = render(
-    <InputGroupCounter id="1-2" deck={deck} handleSetDeck={handleSetDeck} />
+    <InputGroupCounter
+      id="1-2"
+      counter={1}
+      dispatchDecrement={dispatchDecrement}
+      dispatchIncrement={dispatchIncrement}
+    />
   )
 
   // 初期状態のチェック
@@ -219,11 +226,8 @@ test('サイドデッキのカウンターを1から2に増やす', async () => 
   await userEvent.click(buttonPlus)
 
   // 新しいデッキのチェック
-  expect(handleSetDeck.mock.calls.length).toBe(1)
-  const newDeck = handleSetDeck.mock.lastCall[0]
-  expect(newDeck.size).toBe(2)
-  expect(newDeck.has('1-1')).toBeTruthy()
-  expect(newDeck.get('1-1')).toBe(5)
-  expect(newDeck.has('1-2')).toBeTruthy()
-  expect(newDeck.get('1-2')).toBe(2)
+  expect(dispatchDecrement.mock.calls.length).toBe(0)
+  expect(dispatchIncrement.mock.calls.length).toBe(1)
+  expect(dispatchIncrement.mock.lastCall.length).toBe(1)
+  expect(dispatchIncrement.mock.lastCall[0]).toBe('1-2')
 })

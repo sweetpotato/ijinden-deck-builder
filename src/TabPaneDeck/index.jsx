@@ -15,10 +15,6 @@ import {
 import { dataCardsArrayForDeck as dataCardsArray } from '../commons/dataCards'
 import { dbAddDeck } from '../commons/db'
 import enumTabPane from '../commons/enumTabPane'
-import {
-  handleClickDecrement,
-  handleClickIncrement,
-} from '../commons/handleClick'
 import { sum } from '../commons/utils'
 import ImageCard from '../components/ImageCard'
 import ContainerDeckShare from './ContainerDeckShare'
@@ -34,9 +30,8 @@ function TabPaneDeck({
   deckTitle,
   handleSetDeckTitle,
   deckMain,
-  handleSetDeckMain,
   deckSide,
-  handleSetDeckSide,
+  dispatchDeck,
   handleSetActiveDeckSaved,
   handleSetActiveTab,
   interruptSimulator,
@@ -72,8 +67,7 @@ function TabPaneDeck({
 
   function handleClickClear() {
     handleSetDeckTitle('')
-    handleSetDeckMain(new Map())
-    handleSetDeckSide(new Map())
+    dispatchDeck.clear()
     interruptSimulator()
   }
 
@@ -124,19 +118,19 @@ function TabPaneDeck({
       </Modal>
       <ContainerDeckPart
         title="メインデッキ"
-        deckThis={deckMain}
-        handleSetDeckThis={handleSetDeckMain}
-        deckThat={deckSide}
-        handleSetDeckThat={handleSetDeckSide}
+        deck={deckMain}
+        dispatchDecrement={dispatchDeck.decrementMain}
+        dispatchIncrement={dispatchDeck.incrementMain}
+        dispatchMoveOut={dispatchDeck.moveOutMain}
         handleSetIdZoom={handleSetIdZoom}
         interruptSimulator={interruptSimulator}
       />
       <ContainerDeckPart
         title="サイドデッキ"
-        deckThis={deckSide}
-        handleSetDeckThis={handleSetDeckSide}
-        deckThat={deckMain}
-        handleSetDeckThat={handleSetDeckMain}
+        deck={deckSide}
+        dispatchDecrement={dispatchDeck.decrementSide}
+        dispatchIncrement={dispatchDeck.incrementSide}
+        dispatchMoveOut={dispatchDeck.moveOutSide}
         handleSetIdZoom={handleSetIdZoom}
         interruptSimulator={interruptSimulator}
         isSide
@@ -150,15 +144,15 @@ function TabPaneDeck({
 
 function ContainerDeckPart({
   title,
-  deckThis,
-  handleSetDeckThis,
-  deckThat,
-  handleSetDeckThat,
+  deck,
+  dispatchDecrement,
+  dispatchIncrement,
+  dispatchMoveOut,
   handleSetIdZoom,
   interruptSimulator,
   isSide = false,
 }) {
-  const numCards = sum(deckThis.values())
+  const numCards = sum(deck.values())
 
   return (
     <>
@@ -168,10 +162,10 @@ function ContainerDeckPart({
           <ContainerDeckCard
             {...element}
             key={element.id}
-            deckThis={deckThis}
-            handleSetDeckThis={handleSetDeckThis}
-            deckThat={deckThat}
-            handleSetDeckThat={handleSetDeckThat}
+            numCopies={deck.has(element.id) ? deck.get(element.id) : 0}
+            dispatchDecrement={dispatchDecrement}
+            dispatchIncrement={dispatchIncrement}
+            dispatchMoveOut={dispatchMoveOut}
             handleSetIdZoom={handleSetIdZoom}
             interruptSimulator={interruptSimulator}
             isSide={isSide}
@@ -186,31 +180,30 @@ function ContainerDeckCard({
   id,
   imageUrl,
   name,
-  deckThis,
-  handleSetDeckThis,
-  deckThat,
-  handleSetDeckThat,
+  numCopies,
+  dispatchDecrement,
+  dispatchIncrement,
+  dispatchMoveOut,
   handleSetIdZoom,
   interruptSimulator,
   isSide = false,
 }) {
   function handleClickMinus() {
-    handleClickDecrement(id, deckThis, handleSetDeckThis)
+    dispatchDecrement(id)
     if (!isSide) {
       interruptSimulator()
     }
   }
 
   function handleClickPlus() {
-    handleClickIncrement(id, deckThis, handleSetDeckThis)
+    dispatchIncrement(id)
     if (!isSide) {
       interruptSimulator()
     }
   }
 
   function handleClickMove() {
-    handleClickDecrement(id, deckThis, handleSetDeckThis)
-    handleClickIncrement(id, deckThat, handleSetDeckThat)
+    dispatchMoveOut(id)
     interruptSimulator()
   }
 
@@ -218,7 +211,6 @@ function ContainerDeckCard({
     handleSetIdZoom(id)
   }
 
-  const numCopies = deckThis.has(id) ? deckThis.get(id) : 0
   const moveText = isSide ? '^' : 'v'
   return (
     numCopies > 0 && (

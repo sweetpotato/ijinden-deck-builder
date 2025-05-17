@@ -11,22 +11,31 @@ afterEach(cleanup)
 test('フィルタの初期状態', async () => {
   const deckMain = new Map()
   const deckSide = new Map()
-  const handleSetDeckMain = vi.fn()
-  const handleSetDeckSide = vi.fn()
+  const decrementMain = vi.fn()
+  const incrementMain = vi.fn()
+  const decrementSide = vi.fn()
+  const incrementSide = vi.fn()
+  const dispatchDeck = {
+    decrementMain,
+    incrementMain,
+    decrementSide,
+    incrementSide,
+  }
   const handleSetIdZoom = vi.fn()
   const interruptSimulator = vi.fn()
   const { rerender, getByPlaceholderText, getByRole, getByTestId } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
   )
-  expect(handleSetDeckMain.mock.calls.length).toBe(0)
-  expect(handleSetDeckSide.mock.calls.length).toBe(0)
+  expect(decrementMain.mock.calls.length).toBe(0)
+  expect(incrementMain.mock.calls.length).toBe(0)
+  expect(decrementSide.mock.calls.length).toBe(0)
+  expect(incrementSide.mock.calls.length).toBe(0)
   expect(handleSetIdZoom.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(0)
 
@@ -53,8 +62,7 @@ test('フィルタの初期状態', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -193,8 +201,7 @@ test('フィルタの初期状態', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -254,8 +261,7 @@ test('フィルタの初期状態', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -303,8 +309,7 @@ test('フィルタの初期状態', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -340,8 +345,7 @@ test('フィルタの初期状態', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -392,8 +396,7 @@ test('フィルタの初期状態', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -441,8 +444,7 @@ test('フィルタの初期状態', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -497,22 +499,31 @@ test('フィルタの初期状態', async () => {
 test('プラスマイナスボタンの操作', async () => {
   let deckMain = new Map()
   let deckSide = new Map()
-  const handleSetDeckMain = vi.fn()
-  const handleSetDeckSide = vi.fn()
+  const decrementMain = vi.fn()
+  const incrementMain = vi.fn()
+  const decrementSide = vi.fn()
+  const incrementSide = vi.fn()
+  const dispatchDeck = {
+    decrementMain,
+    incrementMain,
+    decrementSide,
+    incrementSide,
+  }
   const handleSetIdZoom = vi.fn()
   const interruptSimulator = vi.fn()
   const { rerender, getByTestId } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
   )
-  expect(handleSetDeckMain.mock.calls.length).toBe(0)
-  expect(handleSetDeckSide.mock.calls.length).toBe(0)
+  expect(decrementMain.mock.calls.length).toBe(0)
+  expect(incrementMain.mock.calls.length).toBe(0)
+  expect(decrementSide.mock.calls.length).toBe(0)
+  expect(incrementSide.mock.calls.length).toBe(0)
   expect(handleSetIdZoom.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(0)
 
@@ -583,21 +594,20 @@ test('プラスマイナスボタンの操作', async () => {
 
   // R-1 メインのプラスボタンを押す
   await userEvent.click(buttonMainPlus1)
-  expect(handleSetDeckMain.mock.calls.length).toBe(1) // 実行された
-  expect(handleSetDeckMain.mock.lastCall.length).toBe(1)
-  expect(handleSetDeckMain.mock.lastCall[0].has('R-1')).toBe(true)
-  expect(handleSetDeckMain.mock.lastCall[0].get('R-1')).toBe(1)
-  expect(handleSetDeckMain.mock.lastCall[0].has('R-2')).toBe(false)
-  expect(handleSetDeckSide.mock.calls.length).toBe(0)
+  expect(decrementMain.mock.calls.length).toBe(0)
+  expect(incrementMain.mock.calls.length).toBe(1) // 実行された
+  expect(incrementMain.mock.lastCall.length).toBe(1)
+  expect(incrementMain.mock.lastCall[0]).toBe('R-1')
+  deckMain = new Map([['R-1', 1]])
+  expect(decrementSide.mock.calls.length).toBe(0)
+  expect(incrementSide.mock.calls.length).toBe(0)
   expect(handleSetIdZoom.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(1) // 実行された
-  deckMain = handleSetDeckMain.mock.lastCall[0]
   rerender(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -669,21 +679,20 @@ test('プラスマイナスボタンの操作', async () => {
 
   // R-1 サイドのプラスボタンを押す
   await userEvent.click(buttonSidePlus1)
-  expect(handleSetDeckMain.mock.calls.length).toBe(1)
-  expect(handleSetDeckSide.mock.calls.length).toBe(1) // 実行された
-  expect(handleSetDeckSide.mock.lastCall.length).toBe(1)
-  expect(handleSetDeckSide.mock.lastCall[0].has('R-1')).toBe(true)
-  expect(handleSetDeckSide.mock.lastCall[0].get('R-1')).toBe(1)
-  expect(handleSetDeckSide.mock.lastCall[0].has('R-2')).toBe(false)
+  expect(decrementMain.mock.calls.length).toBe(0)
+  expect(incrementMain.mock.calls.length).toBe(1)
+  expect(decrementSide.mock.calls.length).toBe(0)
+  expect(incrementSide.mock.calls.length).toBe(1) // 実行された
+  expect(incrementSide.mock.lastCall.length).toBe(1)
+  expect(incrementSide.mock.lastCall[0]).toBe('R-1')
+  deckSide = new Map([['R-1', 1]])
   expect(handleSetIdZoom.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(1)
-  deckSide = handleSetDeckSide.mock.lastCall[0]
   rerender(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -755,22 +764,23 @@ test('プラスマイナスボタンの操作', async () => {
 
   // R-2 メインのプラスボタンを押す
   await userEvent.click(buttonMainPlus2)
-  expect(handleSetDeckMain.mock.calls.length).toBe(2) // 実行された
-  expect(handleSetDeckMain.mock.lastCall.length).toBe(1)
-  expect(handleSetDeckMain.mock.lastCall[0].has('R-1')).toBe(true)
-  expect(handleSetDeckMain.mock.lastCall[0].get('R-1')).toBe(1)
-  expect(handleSetDeckMain.mock.lastCall[0].has('R-2')).toBe(true)
-  expect(handleSetDeckMain.mock.lastCall[0].get('R-2')).toBe(1)
-  expect(handleSetDeckSide.mock.calls.length).toBe(1)
+  expect(decrementMain.mock.calls.length).toBe(0)
+  expect(incrementMain.mock.calls.length).toBe(2) // 実行された
+  expect(incrementMain.mock.lastCall.length).toBe(1)
+  expect(incrementMain.mock.lastCall[0]).toBe('R-2')
+  deckMain = new Map([
+    ['R-1', 1],
+    ['R-2', 1],
+  ])
+  expect(decrementSide.mock.calls.length).toBe(0)
+  expect(incrementSide.mock.calls.length).toBe(1)
   expect(handleSetIdZoom.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(2) // 実行された
-  deckMain = handleSetDeckMain.mock.lastCall[0]
   rerender(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -842,22 +852,23 @@ test('プラスマイナスボタンの操作', async () => {
 
   // R-2 サイドのプラスボタンを押す
   await userEvent.click(buttonSidePlus2)
-  expect(handleSetDeckMain.mock.calls.length).toBe(2)
-  expect(handleSetDeckSide.mock.calls.length).toBe(2) // 実行された
-  expect(handleSetDeckSide.mock.lastCall.length).toBe(1)
-  expect(handleSetDeckSide.mock.lastCall[0].has('R-1')).toBe(true)
-  expect(handleSetDeckSide.mock.lastCall[0].get('R-1')).toBe(1)
-  expect(handleSetDeckSide.mock.lastCall[0].has('R-2')).toBe(true)
-  expect(handleSetDeckSide.mock.lastCall[0].get('R-2')).toBe(1)
+  expect(decrementMain.mock.calls.length).toBe(0)
+  expect(incrementMain.mock.calls.length).toBe(2)
+  expect(decrementSide.mock.calls.length).toBe(0)
+  expect(incrementSide.mock.calls.length).toBe(2) // 実行された
+  expect(incrementMain.mock.lastCall.length).toBe(1)
+  expect(incrementMain.mock.lastCall[0]).toBe('R-2')
+  deckSide = new Map([
+    ['R-1', 1],
+    ['R-2', 1],
+  ])
   expect(handleSetIdZoom.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(2)
-  deckSide = handleSetDeckSide.mock.lastCall[0]
   rerender(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -929,21 +940,20 @@ test('プラスマイナスボタンの操作', async () => {
 
   // R-1 メインのマイナスボタンを押す
   await userEvent.click(buttonMainMinus1)
-  expect(handleSetDeckMain.mock.calls.length).toBe(3) // 実行された
-  expect(handleSetDeckMain.mock.lastCall.length).toBe(1)
-  expect(handleSetDeckMain.mock.lastCall[0].has('R-1')).toBe(false)
-  expect(handleSetDeckMain.mock.lastCall[0].has('R-2')).toBe(true)
-  expect(handleSetDeckMain.mock.lastCall[0].get('R-2')).toBe(1)
-  expect(handleSetDeckSide.mock.calls.length).toBe(2)
+  expect(decrementMain.mock.calls.length).toBe(1) // 実行された
+  expect(decrementMain.mock.lastCall.length).toBe(1)
+  expect(decrementMain.mock.lastCall[0]).toBe('R-1')
+  deckMain = new Map([['R-2', 1]])
+  expect(incrementMain.mock.calls.length).toBe(2)
+  expect(decrementSide.mock.calls.length).toBe(0)
+  expect(incrementSide.mock.calls.length).toBe(2)
   expect(handleSetIdZoom.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(3) // 実行された
-  deckMain = handleSetDeckMain.mock.lastCall[0]
   rerender(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -1015,21 +1025,20 @@ test('プラスマイナスボタンの操作', async () => {
 
   // R-1 サイドのマイナスボタンを押す
   await userEvent.click(buttonSideMinus1)
-  expect(handleSetDeckMain.mock.calls.length).toBe(3)
-  expect(handleSetDeckSide.mock.calls.length).toBe(3) // 実行された
-  expect(handleSetDeckSide.mock.lastCall.length).toBe(1)
-  expect(handleSetDeckSide.mock.lastCall[0].has('R-1')).toBe(false)
-  expect(handleSetDeckSide.mock.lastCall[0].has('R-2')).toBe(true)
-  expect(handleSetDeckSide.mock.lastCall[0].get('R-2')).toBe(1)
+  expect(decrementMain.mock.calls.length).toBe(1)
+  expect(incrementMain.mock.calls.length).toBe(2)
+  expect(decrementSide.mock.calls.length).toBe(1) // 実行された
+  expect(decrementSide.mock.lastCall.length).toBe(1)
+  expect(decrementSide.mock.lastCall[0]).toBe('R-1')
+  expect(incrementSide.mock.calls.length).toBe(2)
+  deckSide = new Map([['R-2', 1]])
   expect(handleSetIdZoom.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(3)
-  deckSide = handleSetDeckSide.mock.lastCall[0]
   rerender(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -1101,20 +1110,20 @@ test('プラスマイナスボタンの操作', async () => {
 
   // R-2 メインのマイナスボタンを押す
   await userEvent.click(buttonMainMinus2)
-  expect(handleSetDeckMain.mock.calls.length).toBe(4) // 実行された
-  expect(handleSetDeckMain.mock.lastCall.length).toBe(1)
-  expect(handleSetDeckMain.mock.lastCall[0].has('R-1')).toBe(false)
-  expect(handleSetDeckMain.mock.lastCall[0].has('R-2')).toBe(false)
-  expect(handleSetDeckSide.mock.calls.length).toBe(3)
+  expect(decrementMain.mock.calls.length).toBe(2) // 実行された
+  expect(decrementMain.mock.lastCall.length).toBe(1)
+  expect(decrementMain.mock.lastCall[0]).toBe('R-2')
+  deckMain = new Map()
+  expect(incrementMain.mock.calls.length).toBe(2)
+  expect(decrementSide.mock.calls.length).toBe(1)
+  expect(incrementSide.mock.calls.length).toBe(2)
   expect(handleSetIdZoom.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(4) // 実行された
-  deckMain = handleSetDeckMain.mock.lastCall[0]
   rerender(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -1186,20 +1195,20 @@ test('プラスマイナスボタンの操作', async () => {
 
   // R-2 サイドのマイナスボタンを押す
   await userEvent.click(buttonSideMinus2)
-  expect(handleSetDeckMain.mock.calls.length).toBe(4)
-  expect(handleSetDeckSide.mock.calls.length).toBe(4) // 実行された
-  expect(handleSetDeckSide.mock.lastCall.length).toBe(1)
-  expect(handleSetDeckSide.mock.lastCall[0].has('R-1')).toBe(false)
-  expect(handleSetDeckSide.mock.lastCall[0].has('R-2')).toBe(false)
+  expect(decrementMain.mock.calls.length).toBe(2)
+  expect(incrementMain.mock.calls.length).toBe(2)
+  expect(decrementSide.mock.calls.length).toBe(2) // 実行された
+  expect(decrementMain.mock.lastCall.length).toBe(1)
+  expect(decrementMain.mock.lastCall[0]).toBe('R-2')
+  deckSide = new Map()
+  expect(incrementSide.mock.calls.length).toBe(2)
   expect(handleSetIdZoom.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(4) // 実行された
-  deckSide = handleSetDeckSide.mock.lastCall[0]
   rerender(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -1273,23 +1282,32 @@ test('プラスマイナスボタンの操作', async () => {
 test('虫眼鏡ボタンの操作', async () => {
   const deckMain = new Map()
   const deckSide = new Map()
-  const handleSetDeckMain = vi.fn()
-  const handleSetDeckSide = vi.fn()
+  const decrementMain = vi.fn()
+  const incrementMain = vi.fn()
+  const decrementSide = vi.fn()
+  const incrementSide = vi.fn()
+  const dispatchDeck = {
+    decrementMain,
+    incrementMain,
+    decrementSide,
+    incrementSide,
+  }
   const handleSetIdZoom = vi.fn()
   const interruptSimulator = vi.fn()
   const { rerender, getByTestId } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
   )
 
-  expect(handleSetDeckMain.mock.calls.length).toBe(0)
-  expect(handleSetDeckSide.mock.calls.length).toBe(0)
+  expect(decrementMain.mock.calls.length).toBe(0)
+  expect(incrementMain.mock.calls.length).toBe(0)
+  expect(decrementSide.mock.calls.length).toBe(0)
+  expect(incrementSide.mock.calls.length).toBe(0)
   expect(handleSetIdZoom.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(0)
 
@@ -1297,8 +1315,10 @@ test('虫眼鏡ボタンの操作', async () => {
   await userEvent.click(
     getByTestId('table-row-R-1').querySelector('td:nth-child(2) button')
   )
-  expect(handleSetDeckMain.mock.calls.length).toBe(0)
-  expect(handleSetDeckSide.mock.calls.length).toBe(0)
+  expect(decrementMain.mock.calls.length).toBe(0)
+  expect(incrementMain.mock.calls.length).toBe(0)
+  expect(decrementSide.mock.calls.length).toBe(0)
+  expect(incrementSide.mock.calls.length).toBe(0)
   expect(handleSetIdZoom.mock.calls.length).toBe(1) // 呼ばれた
   expect(handleSetIdZoom.mock.lastCall.length).toBe(1)
   expect(handleSetIdZoom.mock.lastCall[0]).toBe('R-1')
@@ -1308,8 +1328,7 @@ test('虫眼鏡ボタンの操作', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -1319,8 +1338,10 @@ test('虫眼鏡ボタンの操作', async () => {
   await userEvent.click(
     getByTestId('table-row-R-2').querySelector('td:nth-child(2) button')
   )
-  expect(handleSetDeckMain.mock.calls.length).toBe(0)
-  expect(handleSetDeckSide.mock.calls.length).toBe(0)
+  expect(decrementMain.mock.calls.length).toBe(0)
+  expect(incrementMain.mock.calls.length).toBe(0)
+  expect(decrementSide.mock.calls.length).toBe(0)
+  expect(incrementSide.mock.calls.length).toBe(0)
   expect(handleSetIdZoom.mock.calls.length).toBe(2) // 呼ばれた
   expect(handleSetIdZoom.mock.lastCall.length).toBe(1)
   expect(handleSetIdZoom.mock.lastCall[0]).toBe('R-2')
@@ -1330,16 +1351,23 @@ test('虫眼鏡ボタンの操作', async () => {
 test('エキスパンションによるフィルタ', async () => {
   const deckMain = new Map()
   const deckSide = new Map()
-  const handleSetDeckMain = vi.fn()
-  const handleSetDeckSide = vi.fn()
+  const decrementMain = vi.fn()
+  const incrementMain = vi.fn()
+  const decrementSide = vi.fn()
+  const incrementSide = vi.fn()
+  const dispatchDeck = {
+    decrementMain,
+    incrementMain,
+    decrementSide,
+    incrementSide,
+  }
   const handleSetIdZoom = vi.fn()
   const interruptSimulator = vi.fn()
   const { rerender, getByRole, getByTestId, queryByTestId } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -1356,8 +1384,7 @@ test('エキスパンションによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -1380,8 +1407,7 @@ test('エキスパンションによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -1419,8 +1445,7 @@ test('エキスパンションによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -1448,8 +1473,7 @@ test('エキスパンションによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -1477,8 +1501,7 @@ test('エキスパンションによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -1506,8 +1529,7 @@ test('エキスパンションによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -1535,8 +1557,7 @@ test('エキスパンションによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -1564,8 +1585,7 @@ test('エキスパンションによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -1593,8 +1613,7 @@ test('エキスパンションによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -1622,8 +1641,7 @@ test('エキスパンションによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -1651,8 +1669,7 @@ test('エキスパンションによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -1686,8 +1703,7 @@ test('エキスパンションによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -1712,16 +1728,23 @@ test('エキスパンションによるフィルタ', async () => {
 test('レアリティによるフィルタ', async () => {
   const deckMain = new Map()
   const deckSide = new Map()
-  const handleSetDeckMain = vi.fn()
-  const handleSetDeckSide = vi.fn()
+  const decrementMain = vi.fn()
+  const incrementMain = vi.fn()
+  const decrementSide = vi.fn()
+  const incrementSide = vi.fn()
+  const dispatchDeck = {
+    decrementMain,
+    incrementMain,
+    decrementSide,
+    incrementSide,
+  }
   const handleSetIdZoom = vi.fn()
   const interruptSimulator = vi.fn()
   const { rerender, getByRole, getByTestId, queryByTestId } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -1738,8 +1761,7 @@ test('レアリティによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -1762,8 +1784,7 @@ test('レアリティによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -1793,8 +1814,7 @@ test('レアリティによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -1816,8 +1836,7 @@ test('レアリティによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -1839,8 +1858,7 @@ test('レアリティによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -1862,8 +1880,7 @@ test('レアリティによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -1885,8 +1902,7 @@ test('レアリティによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -1912,8 +1928,7 @@ test('レアリティによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -1930,16 +1945,23 @@ test('レアリティによるフィルタ', async () => {
 test('色によるフィルタ', async () => {
   const deckMain = new Map()
   const deckSide = new Map()
-  const handleSetDeckMain = vi.fn()
-  const handleSetDeckSide = vi.fn()
+  const decrementMain = vi.fn()
+  const incrementMain = vi.fn()
+  const decrementSide = vi.fn()
+  const incrementSide = vi.fn()
+  const dispatchDeck = {
+    decrementMain,
+    incrementMain,
+    decrementSide,
+    incrementSide,
+  }
   const handleSetIdZoom = vi.fn()
   const interruptSimulator = vi.fn()
   const { rerender, getByRole, getByTestId, queryByTestId } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -1956,8 +1978,7 @@ test('色によるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -2001,8 +2022,7 @@ test('色によるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -2030,8 +2050,7 @@ test('色によるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -2059,8 +2078,7 @@ test('色によるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -2088,8 +2106,7 @@ test('色によるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -2117,8 +2134,7 @@ test('色によるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -2146,8 +2162,7 @@ test('色によるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -2175,8 +2190,7 @@ test('色によるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -2208,8 +2222,7 @@ test('色によるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -2232,16 +2245,23 @@ test('色によるフィルタ', async () => {
 test('種類によるフィルタ', async () => {
   const deckMain = new Map()
   const deckSide = new Map()
-  const handleSetDeckMain = vi.fn()
-  const handleSetDeckSide = vi.fn()
+  const decrementMain = vi.fn()
+  const incrementMain = vi.fn()
+  const decrementSide = vi.fn()
+  const incrementSide = vi.fn()
+  const dispatchDeck = {
+    decrementMain,
+    incrementMain,
+    decrementSide,
+    incrementSide,
+  }
   const handleSetIdZoom = vi.fn()
   const interruptSimulator = vi.fn()
   const { rerender, getByRole, getByTestId, queryByTestId } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -2258,8 +2278,7 @@ test('種類によるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -2298,8 +2317,7 @@ test('種類によるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -2322,8 +2340,7 @@ test('種類によるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -2346,8 +2363,7 @@ test('種類によるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -2370,8 +2386,7 @@ test('種類によるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -2398,8 +2413,7 @@ test('種類によるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -2417,16 +2431,23 @@ test('種類によるフィルタ', async () => {
 test('イジンのパワーによるフィルタ', async () => {
   const deckMain = new Map()
   const deckSide = new Map()
-  const handleSetDeckMain = vi.fn()
-  const handleSetDeckSide = vi.fn()
+  const decrementMain = vi.fn()
+  const incrementMain = vi.fn()
+  const decrementSide = vi.fn()
+  const incrementSide = vi.fn()
+  const dispatchDeck = {
+    decrementMain,
+    incrementMain,
+    decrementSide,
+    incrementSide,
+  }
   const handleSetIdZoom = vi.fn()
   const interruptSimulator = vi.fn()
   const { rerender, getByRole, getByTestId, queryByTestId } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -2443,8 +2464,7 @@ test('イジンのパワーによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -2490,8 +2510,7 @@ test('イジンのパワーによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -2526,8 +2545,7 @@ test('イジンのパワーによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -2545,8 +2563,7 @@ test('イジンのパワーによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -2559,8 +2576,7 @@ test('イジンのパワーによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -2571,8 +2587,7 @@ test('イジンのパワーによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -2590,8 +2605,7 @@ test('イジンのパワーによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -2609,8 +2623,7 @@ test('イジンのパワーによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -2628,8 +2641,7 @@ test('イジンのパワーによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -2640,8 +2652,7 @@ test('イジンのパワーによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -2659,8 +2670,7 @@ test('イジンのパワーによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -2678,8 +2688,7 @@ test('イジンのパワーによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -2697,8 +2706,7 @@ test('イジンのパワーによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -2709,8 +2717,7 @@ test('イジンのパワーによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -2728,8 +2735,7 @@ test('イジンのパワーによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -2747,8 +2753,7 @@ test('イジンのパワーによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -2770,8 +2775,7 @@ test('イジンのパワーによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -2798,16 +2802,23 @@ test('イジンのパワーによるフィルタ', async () => {
 test('レベルによるフィルタ', async () => {
   const deckMain = new Map()
   const deckSide = new Map()
-  const handleSetDeckMain = vi.fn()
-  const handleSetDeckSide = vi.fn()
+  const decrementMain = vi.fn()
+  const incrementMain = vi.fn()
+  const decrementSide = vi.fn()
+  const incrementSide = vi.fn()
+  const dispatchDeck = {
+    decrementMain,
+    incrementMain,
+    decrementSide,
+    incrementSide,
+  }
   const handleSetIdZoom = vi.fn()
   const interruptSimulator = vi.fn()
   const { rerender, getByRole, getByTestId, queryByTestId } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -2824,8 +2835,7 @@ test('レベルによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -2848,8 +2858,7 @@ test('レベルによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -2885,8 +2894,7 @@ test('レベルによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -2911,8 +2919,7 @@ test('レベルによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -2939,8 +2946,7 @@ test('レベルによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -2956,8 +2962,7 @@ test('レベルによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -2982,8 +2987,7 @@ test('レベルによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -3008,8 +3012,7 @@ test('レベルによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -3036,8 +3039,7 @@ test('レベルによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -3053,8 +3055,7 @@ test('レベルによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -3079,8 +3080,7 @@ test('レベルによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -3105,8 +3105,7 @@ test('レベルによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -3133,8 +3132,7 @@ test('レベルによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -3150,8 +3148,7 @@ test('レベルによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -3176,8 +3173,7 @@ test('レベルによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -3202,8 +3198,7 @@ test('レベルによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -3235,8 +3230,7 @@ test('レベルによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -3259,16 +3253,23 @@ test('レベルによるフィルタ', async () => {
 test('特性によるフィルタ', async () => {
   const deckMain = new Map()
   const deckSide = new Map()
-  const handleSetDeckMain = vi.fn()
-  const handleSetDeckSide = vi.fn()
+  const decrementMain = vi.fn()
+  const incrementMain = vi.fn()
+  const decrementSide = vi.fn()
+  const incrementSide = vi.fn()
+  const dispatchDeck = {
+    decrementMain,
+    incrementMain,
+    decrementSide,
+    incrementSide,
+  }
   const handleSetIdZoom = vi.fn()
   const interruptSimulator = vi.fn()
   const { rerender, getByRole, getByTestId, queryByTestId } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -3285,8 +3286,7 @@ test('特性によるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -3309,8 +3309,7 @@ test('特性によるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -3356,8 +3355,7 @@ test('特性によるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -3393,8 +3391,7 @@ test('特性によるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -3430,8 +3427,7 @@ test('特性によるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -3467,8 +3463,7 @@ test('特性によるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -3504,8 +3499,7 @@ test('特性によるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -3541,8 +3535,7 @@ test('特性によるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -3584,8 +3577,7 @@ test('特性によるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -3618,16 +3610,23 @@ test('特性によるフィルタ', async () => {
 test('能力語によるフィルタ', async () => {
   const deckMain = new Map()
   const deckSide = new Map()
-  const handleSetDeckMain = vi.fn()
-  const handleSetDeckSide = vi.fn()
+  const decrementMain = vi.fn()
+  const incrementMain = vi.fn()
+  const decrementSide = vi.fn()
+  const incrementSide = vi.fn()
+  const dispatchDeck = {
+    decrementMain,
+    incrementMain,
+    decrementSide,
+    incrementSide,
+  }
   const handleSetIdZoom = vi.fn()
   const interruptSimulator = vi.fn()
   const { rerender, getByRole, getByTestId, queryByTestId } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -3644,8 +3643,7 @@ test('能力語によるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -3668,8 +3666,7 @@ test('能力語によるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -3714,8 +3711,7 @@ test('能力語によるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -3750,8 +3746,7 @@ test('能力語によるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -3786,8 +3781,7 @@ test('能力語によるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -3822,8 +3816,7 @@ test('能力語によるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -3858,8 +3851,7 @@ test('能力語によるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -3900,8 +3892,7 @@ test('能力語によるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -3933,16 +3924,23 @@ test('能力語によるフィルタ', async () => {
 test('遺業能力によるフィルタ', async () => {
   const deckMain = new Map()
   const deckSide = new Map()
-  const handleSetDeckMain = vi.fn()
-  const handleSetDeckSide = vi.fn()
+  const decrementMain = vi.fn()
+  const incrementMain = vi.fn()
+  const decrementSide = vi.fn()
+  const incrementSide = vi.fn()
+  const dispatchDeck = {
+    decrementMain,
+    incrementMain,
+    decrementSide,
+    incrementSide,
+  }
   const handleSetIdZoom = vi.fn()
   const interruptSimulator = vi.fn()
   const { rerender, getByRole, getByTestId, queryByTestId } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -3959,8 +3957,7 @@ test('遺業能力によるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -3983,8 +3980,7 @@ test('遺業能力によるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -4023,8 +4019,7 @@ test('遺業能力によるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -4053,8 +4048,7 @@ test('遺業能力によるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -4083,8 +4077,7 @@ test('遺業能力によるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -4113,8 +4106,7 @@ test('遺業能力によるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -4143,8 +4135,7 @@ test('遺業能力によるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -4173,8 +4164,7 @@ test('遺業能力によるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -4203,8 +4193,7 @@ test('遺業能力によるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -4233,8 +4222,7 @@ test('遺業能力によるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -4263,8 +4251,7 @@ test('遺業能力によるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -4299,8 +4286,7 @@ test('遺業能力によるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -4326,16 +4312,23 @@ test('遺業能力によるフィルタ', async () => {
 test('色と種類とレベルによる複合フィルタ', async () => {
   const deckMain = new Map()
   const deckSide = new Map()
-  const handleSetDeckMain = vi.fn()
-  const handleSetDeckSide = vi.fn()
+  const decrementMain = vi.fn()
+  const incrementMain = vi.fn()
+  const decrementSide = vi.fn()
+  const incrementSide = vi.fn()
+  const dispatchDeck = {
+    decrementMain,
+    incrementMain,
+    decrementSide,
+    incrementSide,
+  }
   const handleSetIdZoom = vi.fn()
   const interruptSimulator = vi.fn()
   const { rerender, getByRole, getByTestId, queryByTestId } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -4352,8 +4345,7 @@ test('色と種類とレベルによる複合フィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -4409,8 +4401,7 @@ test('色と種類とレベルによる複合フィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -4420,8 +4411,7 @@ test('色と種類とレベルによる複合フィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -4433,8 +4423,7 @@ test('色と種類とレベルによる複合フィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -4463,8 +4452,7 @@ test('色と種類とレベルによる複合フィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -4486,8 +4474,16 @@ test('色と種類とレベルによる複合フィルタ', async () => {
 test('キーワードによるフィルタ', async () => {
   const deckMain = new Map()
   const deckSide = new Map()
-  const handleSetDeckMain = vi.fn()
-  const handleSetDeckSide = vi.fn()
+  const decrementMain = vi.fn()
+  const incrementMain = vi.fn()
+  const decrementSide = vi.fn()
+  const incrementSide = vi.fn()
+  const dispatchDeck = {
+    decrementMain,
+    incrementMain,
+    decrementSide,
+    incrementSide,
+  }
   const handleSetIdZoom = vi.fn()
   const interruptSimulator = vi.fn()
   const {
@@ -4500,8 +4496,7 @@ test('キーワードによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -4520,8 +4515,7 @@ test('キーワードによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -4540,8 +4534,7 @@ test('キーワードによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -4553,8 +4546,7 @@ test('キーワードによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -4573,8 +4565,7 @@ test('キーワードによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -4586,8 +4577,7 @@ test('キーワードによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -4607,8 +4597,7 @@ test('キーワードによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -4625,8 +4614,16 @@ test('キーワードによるフィルタ', async () => {
 test('複合キーワードによるフィルタ', async () => {
   const deckMain = new Map()
   const deckSide = new Map()
-  const handleSetDeckMain = vi.fn()
-  const handleSetDeckSide = vi.fn()
+  const decrementMain = vi.fn()
+  const incrementMain = vi.fn()
+  const decrementSide = vi.fn()
+  const incrementSide = vi.fn()
+  const dispatchDeck = {
+    decrementMain,
+    incrementMain,
+    decrementSide,
+    incrementSide,
+  }
   const handleSetIdZoom = vi.fn()
   const interruptSimulator = vi.fn()
   const {
@@ -4639,8 +4636,7 @@ test('複合キーワードによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -4660,8 +4656,7 @@ test('複合キーワードによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -4682,8 +4677,7 @@ test('複合キーワードによるフィルタ', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -4701,8 +4695,16 @@ test('複合キーワードによるフィルタ', async () => {
 test('特性と遺業能力を含めるか否か', async () => {
   const deckMain = new Map()
   const deckSide = new Map()
-  const handleSetDeckMain = vi.fn()
-  const handleSetDeckSide = vi.fn()
+  const decrementMain = vi.fn()
+  const incrementMain = vi.fn()
+  const decrementSide = vi.fn()
+  const incrementSide = vi.fn()
+  const dispatchDeck = {
+    decrementMain,
+    incrementMain,
+    decrementSide,
+    incrementSide,
+  }
   const handleSetIdZoom = vi.fn()
   const interruptSimulator = vi.fn()
   const {
@@ -4715,8 +4717,7 @@ test('特性と遺業能力を含めるか否か', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -4741,8 +4742,7 @@ test('特性と遺業能力を含めるか否か', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -4764,8 +4764,7 @@ test('特性と遺業能力を含めるか否か', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -4786,8 +4785,7 @@ test('特性と遺業能力を含めるか否か', async () => {
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -4802,8 +4800,16 @@ test('特性と遺業能力を含めるか否か', async () => {
 test('キーワードと色と種類の複合によるフィルタ', async () => {
   const deckMain = new Map()
   const deckSide = new Map()
-  const handleSetDeckMain = vi.fn()
-  const handleSetDeckSide = vi.fn()
+  const decrementMain = vi.fn()
+  const incrementMain = vi.fn()
+  const decrementSide = vi.fn()
+  const incrementSide = vi.fn()
+  const dispatchDeck = {
+    decrementMain,
+    incrementMain,
+    decrementSide,
+    incrementSide,
+  }
   const handleSetIdZoom = vi.fn()
   const interruptSimulator = vi.fn()
   const {
@@ -4816,8 +4822,7 @@ test('キーワードと色と種類の複合によるフィルタ', async () =>
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -4859,8 +4864,7 @@ test('キーワードと色と種類の複合によるフィルタ', async () =>
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -4887,8 +4891,7 @@ test('キーワードと色と種類の複合によるフィルタ', async () =>
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -4915,8 +4918,7 @@ test('キーワードと色と種類の複合によるフィルタ', async () =>
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -4940,8 +4942,7 @@ test('キーワードと色と種類の複合によるフィルタ', async () =>
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />
@@ -4956,8 +4957,7 @@ test('キーワードと色と種類の複合によるフィルタ', async () =>
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
-      handleSetDeckMain={handleSetDeckMain}
-      handleSetDeckSide={handleSetDeckSide}
+      dispatchDeck={dispatchDeck}
       handleSetIdZoom={handleSetIdZoom}
       interruptSimulator={interruptSimulator}
     />

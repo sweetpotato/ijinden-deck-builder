@@ -34,8 +34,7 @@ const DTF = new Intl.DateTimeFormat([], {
 
 function TabPaneLoad({
   handleSetDeckTitle,
-  handleSetDeckMain,
-  handleSetDeckSide,
+  dispatchSetFromEntries,
   activeDeckSaved,
   handleSetActiveDeckSaved,
   handleSetActiveTab,
@@ -85,8 +84,7 @@ function TabPaneLoad({
                   <ContainerDeckSaved
                     aDeckSaved={aDeckSaved}
                     handleSetDeckTitle={handleSetDeckTitle}
-                    handleSetDeckMain={handleSetDeckMain}
-                    handleSetDeckSide={handleSetDeckSide}
+                    dispatchSetFromEntries={dispatchSetFromEntries}
                     handleSetActiveTab={handleSetActiveTab}
                     interruptSimulator={interruptSimulator}
                   />
@@ -129,15 +127,13 @@ function TabPaneLoad({
 function ContainerDeckSaved({
   aDeckSaved,
   handleSetDeckTitle,
-  handleSetDeckMain,
-  handleSetDeckSide,
+  dispatchSetFromEntries,
   handleSetActiveTab,
   interruptSimulator,
 }) {
   function handleClickLoad() {
     handleSetDeckTitle(aDeckSaved.title || '') // There may not be a title
-    handleSetDeckMain(new Map(aDeckSaved.main))
-    handleSetDeckSide(new Map(aDeckSaved.side))
+    dispatchSetFromEntries(aDeckSaved.main, aDeckSaved.side)
     interruptSimulator()
     handleSetActiveTab(enumTabPane.DECK)
   }

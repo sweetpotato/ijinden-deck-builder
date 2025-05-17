@@ -81,10 +81,9 @@ function TableRowCard({
   name,
   color,
   term,
-  deckMain,
-  deckSide,
-  handleSetDeckMain,
-  handleSetDeckSide,
+  counterMain,
+  counterSide,
+  dispatchDeck,
   handleSetIdZoom,
   interruptSimulator,
 }) {
@@ -127,16 +126,18 @@ function TableRowCard({
       <td>
         <InputGroupCounter
           id={id}
-          deck={deckMain}
-          handleSetDeck={handleSetDeckMain}
+          counter={counterMain}
+          dispatchDecrement={dispatchDeck.decrementMain}
+          dispatchIncrement={dispatchDeck.incrementMain}
           interruptSimulator={interruptSimulator}
         />
       </td>
       <td>
         <InputGroupCounter
           id={id}
-          deck={deckSide}
-          handleSetDeck={handleSetDeckSide}
+          counter={counterSide}
+          dispatchDecrement={dispatchDeck.decrementSide}
+          dispatchIncrement={dispatchDeck.incrementSide}
         />
       </td>
     </tr>
