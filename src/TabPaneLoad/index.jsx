@@ -34,8 +34,7 @@ const DTF = new Intl.DateTimeFormat([], {
 
 function TabPaneLoad({
   handleSetDeckTitle,
-  handleSetDeckMain,
-  handleSetDeckSide,
+  dispatchSetFromEntries,
   activeDeckSaved,
   handleSetActiveDeckSaved,
   handleSetActiveTab,
@@ -43,11 +42,6 @@ function TabPaneLoad({
 }) {
   const [showModalClear, setShowModalClear] = useState(false)
   const decksSaved = useLiveQuery(async () => await dbQueryDecks())
-
-  function dispatchSetFromEntries(entriesMain, entriesSide) {
-    handleSetDeckMain(new Map(entriesMain))
-    handleSetDeckSide(new Map(entriesSide))
-  }
 
   function handleSelectAccordion(eventKey) {
     handleSetActiveDeckSaved(eventKey)

@@ -95,6 +95,10 @@ function App() {
       handleClickDecrement(argId, deckSide, handleSetDeckSide)
       handleClickIncrement(argId, deckMain, handleSetDeckMain)
     },
+    setFromEntries: (entriesMain, entriesSide) => {
+      handleSetDeckMain(new Map(entriesMain))
+      handleSetDeckSide(new Map(entriesSide))
+    },
     clear: () => {
       handleSetDeckMain(new Map())
       handleSetDeckSide(new Map())
@@ -137,8 +141,7 @@ function App() {
         <Tab eventKey={enumTabPane.SAVE_AND_LOAD} title="マイデッキ">
           <TabPaneLoad
             handleSetDeckTitle={handleSetDeckTitle}
-            handleSetDeckMain={handleSetDeckMain}
-            handleSetDeckSide={handleSetDeckSide}
+            dispatchSetFromEntries={dispatchDeck.setFromEntries}
             activeDeckSaved={activeDeckSaved}
             handleSetActiveDeckSaved={handleSetActiveDeckSaved}
             handleSetActiveTab={handleSetActiveTab}
