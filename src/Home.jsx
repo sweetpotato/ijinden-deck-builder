@@ -18,10 +18,7 @@ import TabPaneLoad from './TabPaneLoad'
 import useTabPaneSimulator from './TabPaneSimulator'
 import { dataCardsMap, decodeDeck } from './commons/dataCards'
 import enumTabPane from './commons/enumTabPane'
-import {
-  handleClickDecrement,
-  handleClickIncrement,
-} from './commons/handleClick'
+import useDeck from './hooks/useDeck'
 
 function App() {
   // デッキコード関連
@@ -37,8 +34,7 @@ function App() {
 
   const [idZoom, setIdZoom] = useState(null)
   const [deckTitle, setDeckTitle] = useState('')
-  const [deckMain, setDeckMain] = useState(new Map(entriesMain))
-  const [deckSide, setDeckSide] = useState(new Map(entriesSide))
+  const [deckMain, deckSide, dispatchDeck] = useDeck(entriesMain, entriesSide)
   const [activeDeckSaved, setActiveDeckSaved] = useState([])
   const [interruptSimulator, renderTabPaneSimulator] = useTabPaneSimulator()
 
@@ -58,51 +54,12 @@ function App() {
     setDeckTitle(newDeckTitle)
   }
 
-  function handleSetDeckMain(newDeckMain) {
-    setDeckMain(newDeckMain)
-  }
-
-  function handleSetDeckSide(newDeckSide) {
-    setDeckSide(newDeckSide)
-  }
-
   function handleSetActiveTab(newActiveTab) {
     setActiveTab(newActiveTab)
   }
 
   function handleSetActiveDeckSaved(newActiveDeckSaved) {
     setActiveDeckSaved(newActiveDeckSaved)
-  }
-
-  const dispatchDeck = {
-    decrementMain: (argId) => {
-      handleClickDecrement(argId, deckMain, handleSetDeckMain)
-    },
-    incrementMain: (argId) => {
-      handleClickIncrement(argId, deckMain, handleSetDeckMain)
-    },
-    moveOutMain: (argId) => {
-      handleClickDecrement(argId, deckMain, handleSetDeckMain)
-      handleClickIncrement(argId, deckSide, handleSetDeckSide)
-    },
-    decrementSide: (argId) => {
-      handleClickDecrement(argId, deckSide, handleSetDeckSide)
-    },
-    incrementSide: (argId) => {
-      handleClickIncrement(argId, deckSide, handleSetDeckSide)
-    },
-    moveOutSide: (argId) => {
-      handleClickDecrement(argId, deckSide, handleSetDeckSide)
-      handleClickIncrement(argId, deckMain, handleSetDeckMain)
-    },
-    setFromEntries: (entriesMain, entriesSide) => {
-      handleSetDeckMain(new Map(entriesMain))
-      handleSetDeckSide(new Map(entriesSide))
-    },
-    clear: () => {
-      handleSetDeckMain(new Map())
-      handleSetDeckSide(new Map())
-    },
   }
 
   return (
