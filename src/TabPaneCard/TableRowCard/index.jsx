@@ -3,6 +3,10 @@
 import classNames from 'classnames'
 import { Button } from 'react-bootstrap'
 
+import {
+  handleClickDecrement,
+  handleClickIncrement,
+} from '../../commons/handleClick'
 import enumChromagic from '../enumChromagic'
 import enumColor from '../enumColor'
 import enumTerm from '../enumTerm'
@@ -88,6 +92,21 @@ function TableRowCard({
   handleSetIdZoom,
   interruptSimulator,
 }) {
+  const dispatchDeck = {
+    decrementMain: (argId) => {
+      handleClickDecrement(argId, deckMain, handleSetDeckMain)
+    },
+    incrementMain: (argId) => {
+      handleClickIncrement(argId, deckMain, handleSetDeckMain)
+    },
+    decrementSide: (argId) => {
+      handleClickDecrement(argId, deckSide, handleSetDeckSide)
+    },
+    incrementSide: (argId) => {
+      handleClickIncrement(argId, deckSide, handleSetDeckSide)
+    },
+  }
+
   let classesColor
   if ((term & enumTerm.CHROMAGIC) === enumTerm.CHROMAGIC) {
     classesColor = classNames(
@@ -128,7 +147,8 @@ function TableRowCard({
         <InputGroupCounter
           id={id}
           deck={deckMain}
-          handleSetDeck={handleSetDeckMain}
+          dispatchDecrement={dispatchDeck.decrementMain}
+          dispatchIncrement={dispatchDeck.incrementMain}
           interruptSimulator={interruptSimulator}
         />
       </td>
@@ -136,7 +156,8 @@ function TableRowCard({
         <InputGroupCounter
           id={id}
           deck={deckSide}
-          handleSetDeck={handleSetDeckSide}
+          dispatchDecrement={dispatchDeck.decrementSide}
+          dispatchIncrement={dispatchDeck.incrementSide}
         />
       </td>
     </tr>
