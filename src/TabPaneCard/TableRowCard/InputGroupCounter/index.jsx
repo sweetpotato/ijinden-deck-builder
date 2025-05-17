@@ -4,7 +4,7 @@ import { Button, FormControl, InputGroup } from 'react-bootstrap'
 
 function InputGroupCounter({
   id,
-  deck,
+  counter,
   dispatchDecrement,
   dispatchIncrement,
   interruptSimulator = undefined,
@@ -20,7 +20,6 @@ function InputGroupCounter({
   }
 
   const name = (interruptSimulator !== undefined ? 'main-' : 'side-') + id
-  const counter = deck.has(id) ? deck.get(id) : 0
   return (
     <InputGroup>
       <Button

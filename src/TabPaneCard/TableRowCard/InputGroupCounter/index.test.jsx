@@ -9,14 +9,13 @@ import InputGroupCounter from '.'
 afterEach(cleanup)
 
 test('メインデッキのカウンターを0から1に増やす', async () => {
-  const deck = new Map()
   const dispatchDecrement = vi.fn()
   const dispatchIncrement = vi.fn()
   const interruptSimulator = vi.fn()
   const { findByRole } = render(
     <InputGroupCounter
       id="R-1"
-      deck={deck}
+      counter={0}
       dispatchDecrement={dispatchDecrement}
       dispatchIncrement={dispatchIncrement}
       interruptSimulator={interruptSimulator}
@@ -51,14 +50,13 @@ test('メインデッキのカウンターを0から1に増やす', async () => 
 })
 
 test('メインデッキのカウンターを1から0に減らす', async () => {
-  const deck = new Map([['B-1', 1]])
   const dispatchDecrement = vi.fn()
   const dispatchIncrement = vi.fn()
   const interruptSimulator = vi.fn()
   const { findByRole } = render(
     <InputGroupCounter
       id="B-1"
-      deck={deck}
+      counter={1}
       dispatchDecrement={dispatchDecrement}
       dispatchIncrement={dispatchIncrement}
       interruptSimulator={interruptSimulator}
@@ -92,14 +90,13 @@ test('メインデッキのカウンターを1から0に減らす', async () => 
 })
 
 test('メインデッキのカウンターを1から2に増やす', async () => {
-  const deck = new Map([['G-1', 1]])
   const dispatchDecrement = vi.fn()
   const dispatchIncrement = vi.fn()
   const interruptSimulator = vi.fn()
   const { findByRole } = render(
     <InputGroupCounter
       id="G-1"
-      deck={deck}
+      counter={1}
       dispatchDecrement={dispatchDecrement}
       dispatchIncrement={dispatchIncrement}
       interruptSimulator={interruptSimulator}
@@ -133,13 +130,12 @@ test('メインデッキのカウンターを1から2に増やす', async () => 
 })
 
 test('サイドデッキのカウンターを0から1に増やす', async () => {
-  const deck = new Map([['Y-1', 3]])
   const dispatchDecrement = vi.fn()
   const dispatchIncrement = vi.fn()
   const { findByRole } = render(
     <InputGroupCounter
       id="Y-2"
-      deck={deck}
+      counter={0}
       dispatchDecrement={dispatchDecrement}
       dispatchIncrement={dispatchIncrement}
     />
@@ -169,16 +165,12 @@ test('サイドデッキのカウンターを0から1に増やす', async () => 
 })
 
 test('サイドデッキのカウンターを1から0に減らす', async () => {
-  const deck = new Map([
-    ['P-1', 4],
-    ['P-2', 1],
-  ])
   const dispatchDecrement = vi.fn()
   const dispatchIncrement = vi.fn()
   const { findByRole } = render(
     <InputGroupCounter
       id="P-2"
-      deck={deck}
+      counter={1}
       dispatchDecrement={dispatchDecrement}
       dispatchIncrement={dispatchIncrement}
     />
@@ -207,16 +199,12 @@ test('サイドデッキのカウンターを1から0に減らす', async () => 
 })
 
 test('サイドデッキのカウンターを1から2に増やす', async () => {
-  const deck = new Map([
-    ['1-1', 5],
-    ['1-2', 1],
-  ])
   const dispatchDecrement = vi.fn()
   const dispatchIncrement = vi.fn()
   const { findByRole } = render(
     <InputGroupCounter
       id="1-2"
-      deck={deck}
+      counter={1}
       dispatchDecrement={dispatchDecrement}
       dispatchIncrement={dispatchIncrement}
     />
