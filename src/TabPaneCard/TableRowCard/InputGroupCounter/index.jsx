@@ -13,13 +13,21 @@ function InputGroupCounter({
   handleSetDeck,
   interruptSimulator = undefined,
 }) {
+  function dispatchDecrement(argId) {
+    handleClickDecrement(argId, deck, handleSetDeck)
+  }
+
   function handleClickMinus() {
-    handleClickDecrement(id, deck, handleSetDeck)
+    dispatchDecrement(id)
     interruptSimulator?.()
   }
 
+  function dispatchIncrement(argId) {
+    handleClickIncrement(argId, deck, handleSetDeck)
+  }
+
   function handleClickPlus() {
-    handleClickIncrement(id, deck, handleSetDeck)
+    dispatchIncrement(id)
     interruptSimulator?.()
   }
 
