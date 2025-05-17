@@ -194,23 +194,35 @@ function ContainerDeckCard({
   interruptSimulator,
   isSide = false,
 }) {
+  function dispatchDecrement(argId) {
+    handleClickDecrement(argId, deckThis, handleSetDeckThis)
+  }
+
   function handleClickMinus() {
-    handleClickDecrement(id, deckThis, handleSetDeckThis)
+    dispatchDecrement(id)
     if (!isSide) {
       interruptSimulator()
     }
+  }
+
+  function dispatchIncrement(argId) {
+    handleClickIncrement(argId, deckThis, handleSetDeckThis)
   }
 
   function handleClickPlus() {
-    handleClickIncrement(id, deckThis, handleSetDeckThis)
+    dispatchIncrement(id)
     if (!isSide) {
       interruptSimulator()
     }
   }
 
+  function dispatchMoveOut(argId) {
+    handleClickDecrement(argId, deckThis, handleSetDeckThis)
+    handleClickIncrement(argId, deckThat, handleSetDeckThat)
+  }
+
   function handleClickMove() {
-    handleClickDecrement(id, deckThis, handleSetDeckThis)
-    handleClickIncrement(id, deckThat, handleSetDeckThat)
+    dispatchMoveOut(id)
     interruptSimulator()
   }
 
