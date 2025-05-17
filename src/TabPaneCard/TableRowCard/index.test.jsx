@@ -21,8 +21,16 @@ afterEach(cleanup)
 test('インタラクション', async () => {
   let deckMain = new Map()
   let deckSide = new Map()
-  const handleSetDeckMain = vi.fn()
-  const handleSetDeckSide = vi.fn()
+  const decrementMain = vi.fn()
+  const incrementMain = vi.fn()
+  const decrementSide = vi.fn()
+  const incrementSide = vi.fn()
+  const dispatchDeck = {
+    decrementMain,
+    incrementMain,
+    decrementSide,
+    incrementSide,
+  }
   const interruptSimulator = vi.fn()
   const handleSetIdZoom = vi.fn()
   const { rerender, getByText, getByRole, getAllByRole } = render(
@@ -36,16 +44,17 @@ test('インタラクション', async () => {
           color={enumColor.RED}
           deckMain={deckMain}
           deckSide={deckSide}
-          handleSetDeckMain={handleSetDeckMain}
-          handleSetDeckSide={handleSetDeckSide}
+          dispatchDeck={dispatchDeck}
           handleSetIdZoom={handleSetIdZoom}
           interruptSimulator={interruptSimulator}
         />
       </tbody>
     </Table>
   )
-  expect(handleSetDeckMain.mock.calls.length).toBe(0)
-  expect(handleSetDeckSide.mock.calls.length).toBe(0)
+  expect(decrementMain.mock.calls.length).toBe(0)
+  expect(incrementMain.mock.calls.length).toBe(0)
+  expect(decrementSide.mock.calls.length).toBe(0)
+  expect(incrementSide.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(0)
   expect(handleSetIdZoom.mock.calls.length).toBe(0)
   expect(getByText('1-1')).toBeVisible()
@@ -75,12 +84,13 @@ test('インタラクション', async () => {
   // メインのプラスボタンを押す
   await userEvent.click(buttonPlusMain)
 
-  expect(handleSetDeckMain.mock.calls.length).toBe(1) // 呼ばれた
-  expect(handleSetDeckMain.mock.lastCall.length).toBe(1)
-  expect(handleSetDeckMain.mock.lastCall[0].has('1-1')).toBe(true)
-  expect(handleSetDeckMain.mock.lastCall[0].get('1-1')).toBe(1)
+  expect(decrementMain.mock.calls.length).toBe(0)
+  expect(incrementMain.mock.calls.length).toBe(1) // 呼ばれた
+  expect(incrementMain.mock.lastCall.length).toBe(1)
+  expect(incrementMain.mock.lastCall[0]).toBe('1-1')
   deckMain = new Map([['1-1', 1]])
-  expect(handleSetDeckSide.mock.calls.length).toBe(0)
+  expect(decrementSide.mock.calls.length).toBe(0)
+  expect(incrementSide.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(1) // 呼ばれた
   expect(handleSetIdZoom.mock.calls.length).toBe(0)
 
@@ -95,8 +105,7 @@ test('インタラクション', async () => {
           color={enumColor.RED}
           deckMain={deckMain}
           deckSide={deckSide}
-          handleSetDeckMain={handleSetDeckMain}
-          handleSetDeckSide={handleSetDeckSide}
+          dispatchDeck={dispatchDeck}
           handleSetIdZoom={handleSetIdZoom}
           interruptSimulator={interruptSimulator}
         />
@@ -128,11 +137,12 @@ test('インタラクション', async () => {
   // サイドのプラスボタンを押す
   await userEvent.click(buttonPlusSide)
 
-  expect(handleSetDeckMain.mock.calls.length).toBe(1)
-  expect(handleSetDeckSide.mock.calls.length).toBe(1) // 呼ばれた
-  expect(handleSetDeckSide.mock.lastCall.length).toBe(1)
-  expect(handleSetDeckSide.mock.lastCall[0].has('1-1')).toBe(true)
-  expect(handleSetDeckSide.mock.lastCall[0].get('1-1')).toBe(1)
+  expect(decrementMain.mock.calls.length).toBe(0)
+  expect(incrementMain.mock.calls.length).toBe(1)
+  expect(decrementSide.mock.calls.length).toBe(0)
+  expect(incrementSide.mock.calls.length).toBe(1) // 呼ばれた
+  expect(incrementSide.mock.lastCall.length).toBe(1)
+  expect(incrementSide.mock.lastCall[0]).toBe('1-1')
   deckSide = new Map([['1-1', 1]])
   expect(interruptSimulator.mock.calls.length).toBe(1)
   expect(handleSetIdZoom.mock.calls.length).toBe(0)
@@ -148,8 +158,7 @@ test('インタラクション', async () => {
           color={enumColor.RED}
           deckMain={deckMain}
           deckSide={deckSide}
-          handleSetDeckMain={handleSetDeckMain}
-          handleSetDeckSide={handleSetDeckSide}
+          dispatchDeck={dispatchDeck}
           handleSetIdZoom={handleSetIdZoom}
           interruptSimulator={interruptSimulator}
         />
@@ -181,11 +190,13 @@ test('インタラクション', async () => {
   // メインのマイナスボタンを押す
   await userEvent.click(buttonMinusMain)
 
-  expect(handleSetDeckMain.mock.calls.length).toBe(2) // 呼ばれた
-  expect(handleSetDeckMain.mock.lastCall.length).toBe(1)
-  expect(handleSetDeckMain.mock.lastCall[0].has('1-1')).toBe(false)
+  expect(decrementMain.mock.calls.length).toBe(1) // 呼ばれた
+  expect(decrementMain.mock.lastCall.length).toBe(1)
+  expect(decrementMain.mock.lastCall[0]).toBe('1-1')
   deckMain = new Map()
-  expect(handleSetDeckSide.mock.calls.length).toBe(1)
+  expect(incrementMain.mock.calls.length).toBe(1)
+  expect(decrementSide.mock.calls.length).toBe(0)
+  expect(incrementSide.mock.calls.length).toBe(1)
   expect(interruptSimulator.mock.calls.length).toBe(2) // 呼ばれた
   expect(handleSetIdZoom.mock.calls.length).toBe(0)
 
@@ -200,8 +211,7 @@ test('インタラクション', async () => {
           color={enumColor.RED}
           deckMain={deckMain}
           deckSide={deckSide}
-          handleSetDeckMain={handleSetDeckMain}
-          handleSetDeckSide={handleSetDeckSide}
+          dispatchDeck={dispatchDeck}
           handleSetIdZoom={handleSetIdZoom}
           interruptSimulator={interruptSimulator}
         />
@@ -233,11 +243,13 @@ test('インタラクション', async () => {
   // サイドのマイナスボタンを押す
   await userEvent.click(buttonMinusSide)
 
-  expect(handleSetDeckMain.mock.calls.length).toBe(2)
-  expect(handleSetDeckSide.mock.calls.length).toBe(2) // 呼ばれた
-  expect(handleSetDeckSide.mock.lastCall.length).toBe(1)
-  expect(handleSetDeckSide.mock.lastCall[0].has('1-1')).toBe(false)
+  expect(decrementMain.mock.calls.length).toBe(1)
+  expect(incrementMain.mock.calls.length).toBe(1)
+  expect(decrementSide.mock.calls.length).toBe(1) // 呼ばれた
+  expect(decrementSide.mock.lastCall.length).toBe(1)
+  expect(decrementSide.mock.lastCall[0]).toBe('1-1')
   deckSide = new Map()
+  expect(incrementSide.mock.calls.length).toBe(1)
   expect(interruptSimulator.mock.calls.length).toBe(2) // 呼ばれていない
   expect(handleSetIdZoom.mock.calls.length).toBe(0)
 
@@ -252,8 +264,7 @@ test('インタラクション', async () => {
           color={enumColor.RED}
           deckMain={deckMain}
           deckSide={deckSide}
-          handleSetDeckMain={handleSetDeckMain}
-          handleSetDeckSide={handleSetDeckSide}
+          dispatchDeck={dispatchDeck}
           handleSetIdZoom={handleSetIdZoom}
           interruptSimulator={interruptSimulator}
         />
@@ -285,8 +296,10 @@ test('インタラクション', async () => {
   // 虫眼鏡ボタンを押す
   await userEvent.click(buttonZoom)
 
-  expect(handleSetDeckMain.mock.calls.length).toBe(2)
-  expect(handleSetDeckSide.mock.calls.length).toBe(2)
+  expect(decrementMain.mock.calls.length).toBe(1)
+  expect(incrementMain.mock.calls.length).toBe(1)
+  expect(decrementSide.mock.calls.length).toBe(1)
+  expect(incrementSide.mock.calls.length).toBe(1)
   expect(interruptSimulator.mock.calls.length).toBe(2)
   expect(handleSetIdZoom.mock.calls.length).toBe(1) // 呼ばれた
 })
@@ -303,6 +316,12 @@ test('レンダリング赤', async () => {
           color={enumColor.RED}
           deckMain={new Map()}
           deckSide={new Map()}
+          dispatchDeck={{
+            decrementMain: vi.fn(),
+            incrementMain: vi.fn(),
+            decrementSide: vi.fn(),
+            incrementSide: vi.fn(),
+          }}
           handleSetDeckMain={vi.fn()}
           handleSetDeckSide={vi.fn()}
           handleSetIdZoom={vi.fn()}
@@ -330,8 +349,12 @@ test('レンダリング青', async () => {
           color={enumColor.BLUE}
           deckMain={new Map()}
           deckSide={new Map()}
-          handleSetDeckMain={vi.fn()}
-          handleSetDeckSide={vi.fn()}
+          dispatchDeck={{
+            decrementMain: vi.fn(),
+            incrementMain: vi.fn(),
+            decrementSide: vi.fn(),
+            incrementSide: vi.fn(),
+          }}
           handleSetIdZoom={vi.fn()}
           interruptSimulator={vi.fn()}
         />
@@ -357,8 +380,12 @@ test('レンダリング緑', async () => {
           color={enumColor.GREEN}
           deckMain={new Map()}
           deckSide={new Map()}
-          handleSetDeckMain={vi.fn()}
-          handleSetDeckSide={vi.fn()}
+          dispatchDeck={{
+            decrementMain: vi.fn(),
+            incrementMain: vi.fn(),
+            decrementSide: vi.fn(),
+            incrementSide: vi.fn(),
+          }}
           handleSetIdZoom={vi.fn()}
           interruptSimulator={vi.fn()}
         />
@@ -384,8 +411,12 @@ test('レンダリング黄', async () => {
           color={enumColor.YELLOW}
           deckMain={new Map()}
           deckSide={new Map()}
-          handleSetDeckMain={vi.fn()}
-          handleSetDeckSide={vi.fn()}
+          dispatchDeck={{
+            decrementMain: vi.fn(),
+            incrementMain: vi.fn(),
+            decrementSide: vi.fn(),
+            incrementSide: vi.fn(),
+          }}
           handleSetIdZoom={vi.fn()}
           interruptSimulator={vi.fn()}
         />
@@ -411,8 +442,12 @@ test('レンダリング紫', async () => {
           color={enumColor.PURPLE}
           deckMain={new Map()}
           deckSide={new Map()}
-          handleSetDeckMain={vi.fn()}
-          handleSetDeckSide={vi.fn()}
+          dispatchDeck={{
+            decrementMain: vi.fn(),
+            incrementMain: vi.fn(),
+            decrementSide: vi.fn(),
+            incrementSide: vi.fn(),
+          }}
           handleSetIdZoom={vi.fn()}
           interruptSimulator={vi.fn()}
         />
@@ -438,8 +473,12 @@ test('レンダリング赤黄', async () => {
           color={enumColor.RED_YELLOW}
           deckMain={new Map()}
           deckSide={new Map()}
-          handleSetDeckMain={vi.fn()}
-          handleSetDeckSide={vi.fn()}
+          dispatchDeck={{
+            decrementMain: vi.fn(),
+            incrementMain: vi.fn(),
+            decrementSide: vi.fn(),
+            incrementSide: vi.fn(),
+          }}
           handleSetIdZoom={vi.fn()}
           interruptSimulator={vi.fn()}
         />
@@ -465,8 +504,12 @@ test('レンダリング青黄', async () => {
           color={enumColor.BLUE_YELLOW}
           deckMain={new Map()}
           deckSide={new Map()}
-          handleSetDeckMain={vi.fn()}
-          handleSetDeckSide={vi.fn()}
+          dispatchDeck={{
+            decrementMain: vi.fn(),
+            incrementMain: vi.fn(),
+            decrementSide: vi.fn(),
+            incrementSide: vi.fn(),
+          }}
           handleSetIdZoom={vi.fn()}
           interruptSimulator={vi.fn()}
         />
@@ -492,8 +535,12 @@ test('レンダリング青黄', async () => {
           color={enumColor.GREEN_YELLOW}
           deckMain={new Map()}
           deckSide={new Map()}
-          handleSetDeckMain={vi.fn()}
-          handleSetDeckSide={vi.fn()}
+          dispatchDeck={{
+            decrementMain: vi.fn(),
+            incrementMain: vi.fn(),
+            decrementSide: vi.fn(),
+            incrementSide: vi.fn(),
+          }}
           handleSetIdZoom={vi.fn()}
           interruptSimulator={vi.fn()}
         />
@@ -519,8 +566,12 @@ test('レンダリング赤の黄魔導', async () => {
           color={enumColor.RED}
           deckMain={new Map()}
           deckSide={new Map()}
-          handleSetDeckMain={vi.fn()}
-          handleSetDeckSide={vi.fn()}
+          dispatchDeck={{
+            decrementMain: vi.fn(),
+            incrementMain: vi.fn(),
+            decrementSide: vi.fn(),
+            incrementSide: vi.fn(),
+          }}
           handleSetIdZoom={vi.fn()}
           interruptSimulator={vi.fn()}
         />
@@ -546,8 +597,12 @@ test('レンダリング黄の赤魔導', async () => {
           color={enumColor.YELLOW}
           deckMain={new Map()}
           deckSide={new Map()}
-          handleSetDeckMain={vi.fn()}
-          handleSetDeckSide={vi.fn()}
+          dispatchDeck={{
+            decrementMain: vi.fn(),
+            incrementMain: vi.fn(),
+            decrementSide: vi.fn(),
+            incrementSide: vi.fn(),
+          }}
           handleSetIdZoom={vi.fn()}
           interruptSimulator={vi.fn()}
         />
@@ -573,8 +628,12 @@ test('レンダリング黄の青魔導', async () => {
           color={enumColor.YELLOW}
           deckMain={new Map()}
           deckSide={new Map()}
-          handleSetDeckMain={vi.fn()}
-          handleSetDeckSide={vi.fn()}
+          dispatchDeck={{
+            decrementMain: vi.fn(),
+            incrementMain: vi.fn(),
+            decrementSide: vi.fn(),
+            incrementSide: vi.fn(),
+          }}
           handleSetIdZoom={vi.fn()}
           interruptSimulator={vi.fn()}
         />
@@ -600,8 +659,12 @@ test('レンダリング黄の緑魔導', async () => {
           color={enumColor.YELLOW}
           deckMain={new Map()}
           deckSide={new Map()}
-          handleSetDeckMain={vi.fn()}
-          handleSetDeckSide={vi.fn()}
+          dispatchDeck={{
+            decrementMain: vi.fn(),
+            incrementMain: vi.fn(),
+            decrementSide: vi.fn(),
+            incrementSide: vi.fn(),
+          }}
           handleSetIdZoom={vi.fn()}
           interruptSimulator={vi.fn()}
         />
@@ -627,8 +690,12 @@ test('レンダリング無色の赤魔導', async () => {
           color={enumColor.COLORLESS}
           deckMain={new Map()}
           deckSide={new Map()}
-          handleSetDeckMain={vi.fn()}
-          handleSetDeckSide={vi.fn()}
+          dispatchDeck={{
+            decrementMain: vi.fn(),
+            incrementMain: vi.fn(),
+            decrementSide: vi.fn(),
+            incrementSide: vi.fn(),
+          }}
           handleSetIdZoom={vi.fn()}
           interruptSimulator={vi.fn()}
         />
@@ -654,8 +721,12 @@ test('レンダリング無色の青魔導', async () => {
           color={enumColor.COLORLESS}
           deckMain={new Map()}
           deckSide={new Map()}
-          handleSetDeckMain={vi.fn()}
-          handleSetDeckSide={vi.fn()}
+          dispatchDeck={{
+            decrementMain: vi.fn(),
+            incrementMain: vi.fn(),
+            decrementSide: vi.fn(),
+            incrementSide: vi.fn(),
+          }}
           handleSetIdZoom={vi.fn()}
           interruptSimulator={vi.fn()}
         />
@@ -681,8 +752,12 @@ test('レンダリング無色の緑魔導', async () => {
           color={enumColor.COLORLESS}
           deckMain={new Map()}
           deckSide={new Map()}
-          handleSetDeckMain={vi.fn()}
-          handleSetDeckSide={vi.fn()}
+          dispatchDeck={{
+            decrementMain: vi.fn(),
+            incrementMain: vi.fn(),
+            decrementSide: vi.fn(),
+            incrementSide: vi.fn(),
+          }}
           handleSetIdZoom={vi.fn()}
           interruptSimulator={vi.fn()}
         />
@@ -708,8 +783,12 @@ test('レンダリング無色の黄魔導', async () => {
           color={enumColor.COLORLESS}
           deckMain={new Map()}
           deckSide={new Map()}
-          handleSetDeckMain={vi.fn()}
-          handleSetDeckSide={vi.fn()}
+          dispatchDeck={{
+            decrementMain: vi.fn(),
+            incrementMain: vi.fn(),
+            decrementSide: vi.fn(),
+            incrementSide: vi.fn(),
+          }}
           handleSetIdZoom={vi.fn()}
           interruptSimulator={vi.fn()}
         />
@@ -735,8 +814,12 @@ test('レンダリング無色の紫魔導', async () => {
           color={enumColor.COLORLESS}
           deckMain={new Map()}
           deckSide={new Map()}
-          handleSetDeckMain={vi.fn()}
-          handleSetDeckSide={vi.fn()}
+          dispatchDeck={{
+            decrementMain: vi.fn(),
+            incrementMain: vi.fn(),
+            decrementSide: vi.fn(),
+            incrementSide: vi.fn(),
+          }}
           handleSetIdZoom={vi.fn()}
           interruptSimulator={vi.fn()}
         />

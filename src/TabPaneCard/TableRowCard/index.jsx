@@ -3,10 +3,6 @@
 import classNames from 'classnames'
 import { Button } from 'react-bootstrap'
 
-import {
-  handleClickDecrement,
-  handleClickIncrement,
-} from '../../commons/handleClick'
 import enumChromagic from '../enumChromagic'
 import enumColor from '../enumColor'
 import enumTerm from '../enumTerm'
@@ -87,26 +83,10 @@ function TableRowCard({
   term,
   deckMain,
   deckSide,
-  handleSetDeckMain,
-  handleSetDeckSide,
+  dispatchDeck,
   handleSetIdZoom,
   interruptSimulator,
 }) {
-  const dispatchDeck = {
-    decrementMain: (argId) => {
-      handleClickDecrement(argId, deckMain, handleSetDeckMain)
-    },
-    incrementMain: (argId) => {
-      handleClickIncrement(argId, deckMain, handleSetDeckMain)
-    },
-    decrementSide: (argId) => {
-      handleClickDecrement(argId, deckSide, handleSetDeckSide)
-    },
-    incrementSide: (argId) => {
-      handleClickIncrement(argId, deckSide, handleSetDeckSide)
-    },
-  }
-
   const counterMain = deckMain.has(id) ? deckMain.get(id) : 0
   const counterSide = deckSide.has(id) ? deckSide.get(id) : 0
   let classesColor

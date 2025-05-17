@@ -10,6 +10,10 @@ import {
 } from 'react-bootstrap'
 
 import { dataCardsArrayForTable as dataCards } from '../commons/dataCards'
+import {
+  handleClickDecrement,
+  handleClickIncrement,
+} from '../commons/handleClick'
 import enumColor from './enumColor'
 import enumComparator from './enumComparator'
 import enumTerm from './enumTerm'
@@ -134,6 +138,21 @@ function TabPaneCard({
   const [deferredKeywords, includesTraitAndLegacy, renderTextSearch] =
     useContainerTextSearch()
 
+  const dispatchDeck = {
+    decrementMain: (argId) => {
+      handleClickDecrement(argId, deckMain, handleSetDeckMain)
+    },
+    incrementMain: (argId) => {
+      handleClickIncrement(argId, deckMain, handleSetDeckMain)
+    },
+    decrementSide: (argId) => {
+      handleClickDecrement(argId, deckSide, handleSetDeckSide)
+    },
+    incrementSide: (argId) => {
+      handleClickIncrement(argId, deckSide, handleSetDeckSide)
+    },
+  }
+
   function handleClickResetConditions() {
     resetExpansion()
     resetRarity()
@@ -233,8 +252,7 @@ function TabPaneCard({
                   term={element.term}
                   deckMain={deckMain}
                   deckSide={deckSide}
-                  handleSetDeckMain={handleSetDeckMain}
-                  handleSetDeckSide={handleSetDeckSide}
+                  dispatchDeck={dispatchDeck}
                   handleSetIdZoom={handleSetIdZoom}
                   interruptSimulator={interruptSimulator}
                 />
