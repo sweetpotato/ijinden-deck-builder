@@ -82,14 +82,32 @@ function useTabPaneSimulator() {
     reducerSimulator,
     enumStateSimulator.INITIAL
   )
+  const stateInternal = {
+    isInitial: () => state === enumStateSimulator.INITIAL,
+    isStarting: () => state === enumStateSimulator.STARTING,
+    isRunning: () => state === enumStateSimulator.RUNNING,
+    isAborted: () => state === enumStateSimulator.ABORTED,
+    isLessThanTen: () => state === enumStateSimulator.LESS_THAN_TEN,
+  }
+  const dispatchInternal = {
+    reset: () => dispatch(enumActionSimulator.RESET),
+    start: () => dispatch(enumActionSimulator.START),
+    continue: () => dispatch(enumActionSimulator.CONTINUE),
+    checkMainDeck: () => dispatch(enumActionSimulator.CHECK_MAIN_DECK),
+  }
   const interrupt = () => {
     dispatch(enumActionSimulator.INTERRUPT)
   }
   const render = (deck) => {
-    return <TabPaneSimulator deck={deck} state={state} dispatch={dispatch} />
+    return (
+      <TabPaneSimulator
+        deck={deck}
+        state={stateInternal}
+        dispatch={dispatchInternal}
+      />
+    )
   }
   return [interrupt, render]
 }
 
 export default useTabPaneSimulator
-export { enumActionSimulator, enumStateSimulator }

@@ -9,7 +9,6 @@ import {
   ImageCardWithToggleOpaque,
   ImageCardWithToggleTransparent,
 } from './ImageCardWithToggle'
-import { enumActionSimulator, enumStateSimulator } from '.'
 
 function makeIdArray(deck) {
   const result = []
@@ -35,19 +34,15 @@ function TabPaneSimulator({ deck, state, dispatch }) {
   const [guardians, setGuardians] = useState(null)
   const [handAndDeck, setHandAndDeck] = useState(null)
 
-  function continueSimulator() {
-    dispatch(enumActionSimulator.CONTINUE)
-  }
-
   function handleClickReset() {
     setGuardians(null)
     setHandAndDeck(null)
-    dispatch(enumActionSimulator.RESET)
+    dispatch.reset()
   }
 
   function handleClickStart() {
     if (sum(deck.values()) < 10) {
-      dispatch(enumActionSimulator.CHECK_MAIN_DECK)
+      dispatch.checkMainDeck()
       return
     }
 
@@ -55,21 +50,16 @@ function TabPaneSimulator({ deck, state, dispatch }) {
     // ガーディアンが4枚、残りは手札と山札
     setGuardians(library.slice(0, 4))
     setHandAndDeck(library.slice(4, library.length))
-    dispatch(enumActionSimulator.START)
+    dispatch.start()
   }
 
   function handleClickMulligan() {
     setHandAndDeck(makeShuffledArray(handAndDeck))
-    dispatch(enumActionSimulator.CONTINUE)
+    dispatch.continue()
   }
 
-  const enabledStart = state === enumStateSimulator.INITIAL
-  const enabledReset = state !== enumStateSimulator.INITIAL
-  const enabledMulligan = state === enumStateSimulator.STARTING
   const showGuardiansAndHands =
-    state === enumStateSimulator.STARTING ||
-    state === enumStateSimulator.RUNNING ||
-    state === enumStateSimulator.ABORTED
+    state.isStarting() || state.isRunning() || state.isAborted()
   return (
     <>
       <h2 className="m-2">手札シミュレータ</h2>
@@ -77,31 +67,31 @@ function TabPaneSimulator({ deck, state, dispatch }) {
         <Button
           variant="outline-danger"
           onClick={handleClickReset}
-          disabled={!enabledReset}
+          disabled={state.isInitial()}
         >
           リセット
         </Button>
         <Button
           variant="outline-success"
           onClick={handleClickStart}
-          disabled={!enabledStart}
+          disabled={!state.isInitial()}
         >
           スタート
         </Button>
         <Button
           variant="outline-secondary"
           onClick={handleClickMulligan}
-          disabled={!enabledMulligan}
+          disabled={!state.isStarting()}
         >
           マリガン
         </Button>
       </div>
-      {state === enumStateSimulator.LESS_THAN_TEN && (
+      {state.isLessThanTen() && (
         <Alert variant="warning">
           メインデッキの枚数が少なすぎます。10枚以上にしてください。
         </Alert>
       )}
-      {state === enumStateSimulator.ABORTED && (
+      {state.isAborted() && (
         <Alert variant="warning">
           シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。
         </Alert>
@@ -113,14 +103,14 @@ function TabPaneSimulator({ deck, state, dispatch }) {
             title="ガーディアン"
             cards={guardians}
             defaultNumTransparent={0}
-            continueSimulator={continueSimulator}
+            continueSimulator={dispatch.continue}
           />
           <ContainerSection
             id="hand"
             title="手札"
             cards={handAndDeck}
             defaultNumTransparent={6}
-            continueSimulator={continueSimulator}
+            continueSimulator={dispatch.continue}
           />
         </>
       )}
