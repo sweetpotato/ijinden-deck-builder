@@ -13,7 +13,7 @@ import useTabPaneSimulator from './TabPaneSimulator'
 import { decodeDeck } from './commons/dataCards'
 import enumTabPane from './commons/enumTabPane'
 import useDeck from './hooks/useDeck'
-import ModalZoom from './ModalZoom'
+import useModalZoom from './useModalZoom'
 
 function App() {
   // デッキコード関連
@@ -27,7 +27,7 @@ function App() {
   )
   const [showCodeError, setShowCodeError] = useState(!resultsDecode)
 
-  const [idZoom, setIdZoom] = useState(null)
+  const [zoomIn, renderZoom] = useModalZoom()
   const [deckTitle, setDeckTitle] = useState('')
   const [deckMain, deckSide, dispatchDeck] = useDeck(entriesMain, entriesSide)
   const [activeDeckSaved, setActiveDeckSaved] = useState([])
@@ -35,14 +35,6 @@ function App() {
 
   function handleSetShowCodeError(newShowCodeError) {
     setShowCodeError(newShowCodeError)
-  }
-
-  function zoomIn(newIdZoom) {
-    setIdZoom(newIdZoom)
-  }
-
-  function zoomOut() {
-    setIdZoom(null)
   }
 
   function handleSetDeckTitle(newDeckTitle) {
@@ -265,7 +257,7 @@ function App() {
           </p>
         </Tab>
       </Tabs>
-      {idZoom !== null && <ModalZoom id={idZoom} zoomOut={zoomOut} />}
+      {renderZoom()}
     </>
   )
 }
