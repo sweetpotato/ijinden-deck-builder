@@ -11,9 +11,16 @@ import TabPaneDeck from './TabPaneDeck'
 import TabPaneLoad from './TabPaneLoad'
 import useTabPaneSimulator from './TabPaneSimulator'
 import { decodeDeck } from './commons/dataCards'
-import enumTabPane from './commons/enumTabPane'
 import useDeck from './hooks/useDeck'
 import useModalZoom from './useModalZoom'
+
+const enumTabPane = {
+  CARD: 1,
+  DECK: 2,
+  SAVE_AND_LOAD: 3,
+  SIMULATOR: 4,
+  HELP: 5,
+}
 
 function App() {
   // デッキコード関連
@@ -41,16 +48,12 @@ function App() {
     setDeckTitle(newDeckTitle)
   }
 
-  function handleSetActiveTab(newActiveTab) {
-    setActiveTab(newActiveTab)
-  }
-
   function moveToDeck() {
-    handleSetActiveTab(enumTabPane.DECK)
+    setActiveTab(enumTabPane.DECK)
   }
 
   function moveToLoad() {
-    handleSetActiveTab(enumTabPane.SAVE_AND_LOAD)
+    setActiveTab(enumTabPane.SAVE_AND_LOAD)
   }
 
   function handleSetActiveDeckSaved(newActiveDeckSaved) {
