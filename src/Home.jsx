@@ -17,7 +17,7 @@ import useModalZoom from './useModalZoom'
 const enumTabPane = {
   CARD: 1,
   DECK: 2,
-  SAVE_AND_LOAD: 3,
+  LOAD: 3,
   SIMULATOR: 4,
   HELP: 5,
 }
@@ -53,7 +53,7 @@ function Home() {
   }
 
   function moveToLoad() {
-    setActiveTab(enumTabPane.SAVE_AND_LOAD)
+    setActiveTab(enumTabPane.LOAD)
   }
 
   function handleSetActiveDeckSaved(newActiveDeckSaved) {
@@ -93,7 +93,7 @@ function Home() {
             interruptSimulator={interruptSimulator}
           />
         </Tab>
-        <Tab eventKey={enumTabPane.SAVE_AND_LOAD} title="マイデッキ">
+        <Tab eventKey={enumTabPane.LOAD} title="マイデッキ">
           <TabPaneLoad
             handleSetDeckTitle={handleSetDeckTitle}
             dispatchSetFromEntries={dispatchDeck.setFromEntries}
