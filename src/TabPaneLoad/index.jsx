@@ -18,7 +18,6 @@ import {
 
 import { dataCardsArrayForDeck } from '../commons/dataCards'
 import { dbClearDecks, dbDeleteDeck, dbQueryDecks } from '../commons/db'
-import enumTabPane from '../commons/enumTabPane'
 import { sum } from '../commons/utils'
 import ImageCard from '../components/ImageCard'
 
@@ -37,7 +36,7 @@ function TabPaneLoad({
   dispatchSetFromEntries,
   activeDeckSaved,
   handleSetActiveDeckSaved,
-  handleSetActiveTab,
+  moveToDeck,
   interruptSimulator,
 }) {
   const [showModalClear, setShowModalClear] = useState(false)
@@ -85,7 +84,7 @@ function TabPaneLoad({
                     aDeckSaved={aDeckSaved}
                     handleSetDeckTitle={handleSetDeckTitle}
                     dispatchSetFromEntries={dispatchSetFromEntries}
-                    handleSetActiveTab={handleSetActiveTab}
+                    moveToDeck={moveToDeck}
                     interruptSimulator={interruptSimulator}
                   />
                 </AccordionBody>
@@ -128,14 +127,14 @@ function ContainerDeckSaved({
   aDeckSaved,
   handleSetDeckTitle,
   dispatchSetFromEntries,
-  handleSetActiveTab,
+  moveToDeck,
   interruptSimulator,
 }) {
   function handleClickLoad() {
     handleSetDeckTitle(aDeckSaved.title || '') // There may not be a title
     dispatchSetFromEntries(aDeckSaved.main, aDeckSaved.side)
     interruptSimulator()
-    handleSetActiveTab(enumTabPane.DECK)
+    moveToDeck()
   }
 
   async function handleClickDelete() {
