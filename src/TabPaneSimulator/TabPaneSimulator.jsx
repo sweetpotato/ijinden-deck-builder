@@ -9,7 +9,7 @@ import {
   ImageCardWithToggleOpaque,
   ImageCardWithToggleTransparent,
 } from './ImageCardWithToggle'
-import { enumActionSimulator, enumStateSimulator } from '.'
+import { enumStateSimulator } from '.'
 
 function makeIdArray(deck) {
   const result = []
@@ -35,19 +35,15 @@ function TabPaneSimulator({ deck, state, dispatch }) {
   const [guardians, setGuardians] = useState(null)
   const [handAndDeck, setHandAndDeck] = useState(null)
 
-  function continueSimulator() {
-    dispatch(enumActionSimulator.CONTINUE)
-  }
-
   function handleClickReset() {
     setGuardians(null)
     setHandAndDeck(null)
-    dispatch(enumActionSimulator.RESET)
+    dispatch.reset()
   }
 
   function handleClickStart() {
     if (sum(deck.values()) < 10) {
-      dispatch(enumActionSimulator.CHECK_MAIN_DECK)
+      dispatch.checkMainDeck()
       return
     }
 
@@ -55,12 +51,12 @@ function TabPaneSimulator({ deck, state, dispatch }) {
     // ガーディアンが4枚、残りは手札と山札
     setGuardians(library.slice(0, 4))
     setHandAndDeck(library.slice(4, library.length))
-    dispatch(enumActionSimulator.START)
+    dispatch.start()
   }
 
   function handleClickMulligan() {
     setHandAndDeck(makeShuffledArray(handAndDeck))
-    dispatch(enumActionSimulator.CONTINUE)
+    dispatch.continue()
   }
 
   const enabledStart = state === enumStateSimulator.INITIAL
@@ -113,14 +109,14 @@ function TabPaneSimulator({ deck, state, dispatch }) {
             title="ガーディアン"
             cards={guardians}
             defaultNumTransparent={0}
-            continueSimulator={continueSimulator}
+            continueSimulator={dispatch.continue}
           />
           <ContainerSection
             id="hand"
             title="手札"
             cards={handAndDeck}
             defaultNumTransparent={6}
-            continueSimulator={continueSimulator}
+            continueSimulator={dispatch.continue}
           />
         </>
       )}
