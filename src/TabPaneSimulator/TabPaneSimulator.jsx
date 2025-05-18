@@ -58,9 +58,6 @@ function TabPaneSimulator({ deck, state, dispatch }) {
     dispatch.continue()
   }
 
-  const enabledStart = state.isInitial()
-  const enabledReset = !state.isInitial()
-  const enabledMulligan = state.isStarting()
   const showGuardiansAndHands =
     state.isStarting() || state.isRunning() || state.isAborted()
   return (
@@ -70,21 +67,21 @@ function TabPaneSimulator({ deck, state, dispatch }) {
         <Button
           variant="outline-danger"
           onClick={handleClickReset}
-          disabled={!enabledReset}
+          disabled={state.isInitial()}
         >
           リセット
         </Button>
         <Button
           variant="outline-success"
           onClick={handleClickStart}
-          disabled={!enabledStart}
+          disabled={!state.isInitial()}
         >
           スタート
         </Button>
         <Button
           variant="outline-secondary"
           onClick={handleClickMulligan}
-          disabled={!enabledMulligan}
+          disabled={!state.isStarting()}
         >
           マリガン
         </Button>
