@@ -21,14 +21,14 @@ test('フィルタの初期状態', async () => {
     decrementSide,
     incrementSide,
   }
-  const handleSetIdZoom = vi.fn()
+  const zoomIn = vi.fn()
   const interruptSimulator = vi.fn()
   const { rerender, getByPlaceholderText, getByRole, getByTestId } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -36,7 +36,7 @@ test('フィルタの初期状態', async () => {
   expect(incrementMain.mock.calls.length).toBe(0)
   expect(decrementSide.mock.calls.length).toBe(0)
   expect(incrementSide.mock.calls.length).toBe(0)
-  expect(handleSetIdZoom.mock.calls.length).toBe(0)
+  expect(zoomIn.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(0)
 
   const textboxSearch = getByPlaceholderText('カード名やルールテキストで検索')
@@ -63,7 +63,7 @@ test('フィルタの初期状態', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -202,7 +202,7 @@ test('フィルタの初期状態', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -262,7 +262,7 @@ test('フィルタの初期状態', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -310,7 +310,7 @@ test('フィルタの初期状態', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -346,7 +346,7 @@ test('フィルタの初期状態', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -397,7 +397,7 @@ test('フィルタの初期状態', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -445,7 +445,7 @@ test('フィルタの初期状態', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -509,14 +509,14 @@ test('プラスマイナスボタンの操作', async () => {
     decrementSide,
     incrementSide,
   }
-  const handleSetIdZoom = vi.fn()
+  const zoomIn = vi.fn()
   const interruptSimulator = vi.fn()
   const { rerender, getByTestId } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -524,7 +524,7 @@ test('プラスマイナスボタンの操作', async () => {
   expect(incrementMain.mock.calls.length).toBe(0)
   expect(decrementSide.mock.calls.length).toBe(0)
   expect(incrementSide.mock.calls.length).toBe(0)
-  expect(handleSetIdZoom.mock.calls.length).toBe(0)
+  expect(zoomIn.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(0)
 
   let buttonMainMinus1 = getByTestId('table-row-R-1').querySelector(
@@ -601,14 +601,14 @@ test('プラスマイナスボタンの操作', async () => {
   deckMain = new Map([['R-1', 1]])
   expect(decrementSide.mock.calls.length).toBe(0)
   expect(incrementSide.mock.calls.length).toBe(0)
-  expect(handleSetIdZoom.mock.calls.length).toBe(0)
+  expect(zoomIn.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(1) // 実行された
   rerender(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -686,14 +686,14 @@ test('プラスマイナスボタンの操作', async () => {
   expect(incrementSide.mock.lastCall.length).toBe(1)
   expect(incrementSide.mock.lastCall[0]).toBe('R-1')
   deckSide = new Map([['R-1', 1]])
-  expect(handleSetIdZoom.mock.calls.length).toBe(0)
+  expect(zoomIn.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(1)
   rerender(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -774,14 +774,14 @@ test('プラスマイナスボタンの操作', async () => {
   ])
   expect(decrementSide.mock.calls.length).toBe(0)
   expect(incrementSide.mock.calls.length).toBe(1)
-  expect(handleSetIdZoom.mock.calls.length).toBe(0)
+  expect(zoomIn.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(2) // 実行された
   rerender(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -862,14 +862,14 @@ test('プラスマイナスボタンの操作', async () => {
     ['R-1', 1],
     ['R-2', 1],
   ])
-  expect(handleSetIdZoom.mock.calls.length).toBe(0)
+  expect(zoomIn.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(2)
   rerender(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -947,14 +947,14 @@ test('プラスマイナスボタンの操作', async () => {
   expect(incrementMain.mock.calls.length).toBe(2)
   expect(decrementSide.mock.calls.length).toBe(0)
   expect(incrementSide.mock.calls.length).toBe(2)
-  expect(handleSetIdZoom.mock.calls.length).toBe(0)
+  expect(zoomIn.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(3) // 実行された
   rerender(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -1032,14 +1032,14 @@ test('プラスマイナスボタンの操作', async () => {
   expect(decrementSide.mock.lastCall[0]).toBe('R-1')
   expect(incrementSide.mock.calls.length).toBe(2)
   deckSide = new Map([['R-2', 1]])
-  expect(handleSetIdZoom.mock.calls.length).toBe(0)
+  expect(zoomIn.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(3)
   rerender(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -1117,14 +1117,14 @@ test('プラスマイナスボタンの操作', async () => {
   expect(incrementMain.mock.calls.length).toBe(2)
   expect(decrementSide.mock.calls.length).toBe(1)
   expect(incrementSide.mock.calls.length).toBe(2)
-  expect(handleSetIdZoom.mock.calls.length).toBe(0)
+  expect(zoomIn.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(4) // 実行された
   rerender(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -1202,14 +1202,14 @@ test('プラスマイナスボタンの操作', async () => {
   expect(decrementMain.mock.lastCall[0]).toBe('R-2')
   deckSide = new Map()
   expect(incrementSide.mock.calls.length).toBe(2)
-  expect(handleSetIdZoom.mock.calls.length).toBe(0)
+  expect(zoomIn.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(4) // 実行された
   rerender(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -1292,14 +1292,14 @@ test('虫眼鏡ボタンの操作', async () => {
     decrementSide,
     incrementSide,
   }
-  const handleSetIdZoom = vi.fn()
+  const zoomIn = vi.fn()
   const interruptSimulator = vi.fn()
   const { rerender, getByTestId } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -1308,7 +1308,7 @@ test('虫眼鏡ボタンの操作', async () => {
   expect(incrementMain.mock.calls.length).toBe(0)
   expect(decrementSide.mock.calls.length).toBe(0)
   expect(incrementSide.mock.calls.length).toBe(0)
-  expect(handleSetIdZoom.mock.calls.length).toBe(0)
+  expect(zoomIn.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(0)
 
   // R-1 の虫眼鏡ボタンを押す
@@ -1319,9 +1319,9 @@ test('虫眼鏡ボタンの操作', async () => {
   expect(incrementMain.mock.calls.length).toBe(0)
   expect(decrementSide.mock.calls.length).toBe(0)
   expect(incrementSide.mock.calls.length).toBe(0)
-  expect(handleSetIdZoom.mock.calls.length).toBe(1) // 呼ばれた
-  expect(handleSetIdZoom.mock.lastCall.length).toBe(1)
-  expect(handleSetIdZoom.mock.lastCall[0]).toBe('R-1')
+  expect(zoomIn.mock.calls.length).toBe(1) // 呼ばれた
+  expect(zoomIn.mock.lastCall.length).toBe(1)
+  expect(zoomIn.mock.lastCall[0]).toBe('R-1')
   expect(interruptSimulator.mock.calls.length).toBe(0)
 
   rerender(
@@ -1329,7 +1329,7 @@ test('虫眼鏡ボタンの操作', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -1342,9 +1342,9 @@ test('虫眼鏡ボタンの操作', async () => {
   expect(incrementMain.mock.calls.length).toBe(0)
   expect(decrementSide.mock.calls.length).toBe(0)
   expect(incrementSide.mock.calls.length).toBe(0)
-  expect(handleSetIdZoom.mock.calls.length).toBe(2) // 呼ばれた
-  expect(handleSetIdZoom.mock.lastCall.length).toBe(1)
-  expect(handleSetIdZoom.mock.lastCall[0]).toBe('R-2')
+  expect(zoomIn.mock.calls.length).toBe(2) // 呼ばれた
+  expect(zoomIn.mock.lastCall.length).toBe(1)
+  expect(zoomIn.mock.lastCall[0]).toBe('R-2')
   expect(interruptSimulator.mock.calls.length).toBe(0)
 })
 
@@ -1361,14 +1361,14 @@ test('エキスパンションによるフィルタ', async () => {
     decrementSide,
     incrementSide,
   }
-  const handleSetIdZoom = vi.fn()
+  const zoomIn = vi.fn()
   const interruptSimulator = vi.fn()
   const { rerender, getByRole, getByTestId, queryByTestId } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -1385,7 +1385,7 @@ test('エキスパンションによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -1408,7 +1408,7 @@ test('エキスパンションによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -1446,7 +1446,7 @@ test('エキスパンションによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -1474,7 +1474,7 @@ test('エキスパンションによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -1502,7 +1502,7 @@ test('エキスパンションによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -1530,7 +1530,7 @@ test('エキスパンションによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -1558,7 +1558,7 @@ test('エキスパンションによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -1586,7 +1586,7 @@ test('エキスパンションによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -1614,7 +1614,7 @@ test('エキスパンションによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -1642,7 +1642,7 @@ test('エキスパンションによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -1670,7 +1670,7 @@ test('エキスパンションによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -1704,7 +1704,7 @@ test('エキスパンションによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -1738,14 +1738,14 @@ test('レアリティによるフィルタ', async () => {
     decrementSide,
     incrementSide,
   }
-  const handleSetIdZoom = vi.fn()
+  const zoomIn = vi.fn()
   const interruptSimulator = vi.fn()
   const { rerender, getByRole, getByTestId, queryByTestId } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -1762,7 +1762,7 @@ test('レアリティによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -1785,7 +1785,7 @@ test('レアリティによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -1815,7 +1815,7 @@ test('レアリティによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -1837,7 +1837,7 @@ test('レアリティによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -1859,7 +1859,7 @@ test('レアリティによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -1881,7 +1881,7 @@ test('レアリティによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -1903,7 +1903,7 @@ test('レアリティによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -1929,7 +1929,7 @@ test('レアリティによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -1955,14 +1955,14 @@ test('色によるフィルタ', async () => {
     decrementSide,
     incrementSide,
   }
-  const handleSetIdZoom = vi.fn()
+  const zoomIn = vi.fn()
   const interruptSimulator = vi.fn()
   const { rerender, getByRole, getByTestId, queryByTestId } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -1979,7 +1979,7 @@ test('色によるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -2023,7 +2023,7 @@ test('色によるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -2051,7 +2051,7 @@ test('色によるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -2079,7 +2079,7 @@ test('色によるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -2107,7 +2107,7 @@ test('色によるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -2135,7 +2135,7 @@ test('色によるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -2163,7 +2163,7 @@ test('色によるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -2191,7 +2191,7 @@ test('色によるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -2223,7 +2223,7 @@ test('色によるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -2255,14 +2255,14 @@ test('種類によるフィルタ', async () => {
     decrementSide,
     incrementSide,
   }
-  const handleSetIdZoom = vi.fn()
+  const zoomIn = vi.fn()
   const interruptSimulator = vi.fn()
   const { rerender, getByRole, getByTestId, queryByTestId } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -2279,7 +2279,7 @@ test('種類によるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -2318,7 +2318,7 @@ test('種類によるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -2341,7 +2341,7 @@ test('種類によるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -2364,7 +2364,7 @@ test('種類によるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -2387,7 +2387,7 @@ test('種類によるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -2414,7 +2414,7 @@ test('種類によるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -2441,14 +2441,14 @@ test('イジンのパワーによるフィルタ', async () => {
     decrementSide,
     incrementSide,
   }
-  const handleSetIdZoom = vi.fn()
+  const zoomIn = vi.fn()
   const interruptSimulator = vi.fn()
   const { rerender, getByRole, getByTestId, queryByTestId } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -2465,7 +2465,7 @@ test('イジンのパワーによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -2511,7 +2511,7 @@ test('イジンのパワーによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -2546,7 +2546,7 @@ test('イジンのパワーによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -2564,7 +2564,7 @@ test('イジンのパワーによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -2577,7 +2577,7 @@ test('イジンのパワーによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -2588,7 +2588,7 @@ test('イジンのパワーによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -2606,7 +2606,7 @@ test('イジンのパワーによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -2624,7 +2624,7 @@ test('イジンのパワーによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -2642,7 +2642,7 @@ test('イジンのパワーによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -2653,7 +2653,7 @@ test('イジンのパワーによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -2671,7 +2671,7 @@ test('イジンのパワーによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -2689,7 +2689,7 @@ test('イジンのパワーによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -2707,7 +2707,7 @@ test('イジンのパワーによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -2718,7 +2718,7 @@ test('イジンのパワーによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -2736,7 +2736,7 @@ test('イジンのパワーによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -2754,7 +2754,7 @@ test('イジンのパワーによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -2776,7 +2776,7 @@ test('イジンのパワーによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -2812,14 +2812,14 @@ test('レベルによるフィルタ', async () => {
     decrementSide,
     incrementSide,
   }
-  const handleSetIdZoom = vi.fn()
+  const zoomIn = vi.fn()
   const interruptSimulator = vi.fn()
   const { rerender, getByRole, getByTestId, queryByTestId } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -2836,7 +2836,7 @@ test('レベルによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -2859,7 +2859,7 @@ test('レベルによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -2895,7 +2895,7 @@ test('レベルによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -2920,7 +2920,7 @@ test('レベルによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -2947,7 +2947,7 @@ test('レベルによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -2963,7 +2963,7 @@ test('レベルによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -2988,7 +2988,7 @@ test('レベルによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -3013,7 +3013,7 @@ test('レベルによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -3040,7 +3040,7 @@ test('レベルによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -3056,7 +3056,7 @@ test('レベルによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -3081,7 +3081,7 @@ test('レベルによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -3106,7 +3106,7 @@ test('レベルによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -3133,7 +3133,7 @@ test('レベルによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -3149,7 +3149,7 @@ test('レベルによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -3174,7 +3174,7 @@ test('レベルによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -3199,7 +3199,7 @@ test('レベルによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -3231,7 +3231,7 @@ test('レベルによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -3263,14 +3263,14 @@ test('特性によるフィルタ', async () => {
     decrementSide,
     incrementSide,
   }
-  const handleSetIdZoom = vi.fn()
+  const zoomIn = vi.fn()
   const interruptSimulator = vi.fn()
   const { rerender, getByRole, getByTestId, queryByTestId } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -3287,7 +3287,7 @@ test('特性によるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -3310,7 +3310,7 @@ test('特性によるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -3356,7 +3356,7 @@ test('特性によるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -3392,7 +3392,7 @@ test('特性によるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -3428,7 +3428,7 @@ test('特性によるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -3464,7 +3464,7 @@ test('特性によるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -3500,7 +3500,7 @@ test('特性によるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -3536,7 +3536,7 @@ test('特性によるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -3578,7 +3578,7 @@ test('特性によるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -3620,14 +3620,14 @@ test('能力語によるフィルタ', async () => {
     decrementSide,
     incrementSide,
   }
-  const handleSetIdZoom = vi.fn()
+  const zoomIn = vi.fn()
   const interruptSimulator = vi.fn()
   const { rerender, getByRole, getByTestId, queryByTestId } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -3644,7 +3644,7 @@ test('能力語によるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -3667,7 +3667,7 @@ test('能力語によるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -3712,7 +3712,7 @@ test('能力語によるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -3747,7 +3747,7 @@ test('能力語によるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -3782,7 +3782,7 @@ test('能力語によるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -3817,7 +3817,7 @@ test('能力語によるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -3852,7 +3852,7 @@ test('能力語によるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -3893,7 +3893,7 @@ test('能力語によるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -3934,14 +3934,14 @@ test('遺業能力によるフィルタ', async () => {
     decrementSide,
     incrementSide,
   }
-  const handleSetIdZoom = vi.fn()
+  const zoomIn = vi.fn()
   const interruptSimulator = vi.fn()
   const { rerender, getByRole, getByTestId, queryByTestId } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -3958,7 +3958,7 @@ test('遺業能力によるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -3981,7 +3981,7 @@ test('遺業能力によるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -4020,7 +4020,7 @@ test('遺業能力によるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -4049,7 +4049,7 @@ test('遺業能力によるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -4078,7 +4078,7 @@ test('遺業能力によるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -4107,7 +4107,7 @@ test('遺業能力によるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -4136,7 +4136,7 @@ test('遺業能力によるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -4165,7 +4165,7 @@ test('遺業能力によるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -4194,7 +4194,7 @@ test('遺業能力によるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -4223,7 +4223,7 @@ test('遺業能力によるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -4252,7 +4252,7 @@ test('遺業能力によるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -4287,7 +4287,7 @@ test('遺業能力によるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -4322,14 +4322,14 @@ test('色と種類とレベルによる複合フィルタ', async () => {
     decrementSide,
     incrementSide,
   }
-  const handleSetIdZoom = vi.fn()
+  const zoomIn = vi.fn()
   const interruptSimulator = vi.fn()
   const { rerender, getByRole, getByTestId, queryByTestId } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -4346,7 +4346,7 @@ test('色と種類とレベルによる複合フィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -4402,7 +4402,7 @@ test('色と種類とレベルによる複合フィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -4412,7 +4412,7 @@ test('色と種類とレベルによる複合フィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -4424,7 +4424,7 @@ test('色と種類とレベルによる複合フィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -4453,7 +4453,7 @@ test('色と種類とレベルによる複合フィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -4484,7 +4484,7 @@ test('キーワードによるフィルタ', async () => {
     decrementSide,
     incrementSide,
   }
-  const handleSetIdZoom = vi.fn()
+  const zoomIn = vi.fn()
   const interruptSimulator = vi.fn()
   const {
     rerender,
@@ -4497,7 +4497,7 @@ test('キーワードによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -4516,7 +4516,7 @@ test('キーワードによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -4535,7 +4535,7 @@ test('キーワードによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -4547,7 +4547,7 @@ test('キーワードによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -4566,7 +4566,7 @@ test('キーワードによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -4578,7 +4578,7 @@ test('キーワードによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -4598,7 +4598,7 @@ test('キーワードによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -4624,7 +4624,7 @@ test('複合キーワードによるフィルタ', async () => {
     decrementSide,
     incrementSide,
   }
-  const handleSetIdZoom = vi.fn()
+  const zoomIn = vi.fn()
   const interruptSimulator = vi.fn()
   const {
     rerender,
@@ -4637,7 +4637,7 @@ test('複合キーワードによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -4657,7 +4657,7 @@ test('複合キーワードによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -4678,7 +4678,7 @@ test('複合キーワードによるフィルタ', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -4705,7 +4705,7 @@ test('特性と遺業能力を含めるか否か', async () => {
     decrementSide,
     incrementSide,
   }
-  const handleSetIdZoom = vi.fn()
+  const zoomIn = vi.fn()
   const interruptSimulator = vi.fn()
   const {
     rerender,
@@ -4718,7 +4718,7 @@ test('特性と遺業能力を含めるか否か', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -4743,7 +4743,7 @@ test('特性と遺業能力を含めるか否か', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -4765,7 +4765,7 @@ test('特性と遺業能力を含めるか否か', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -4786,7 +4786,7 @@ test('特性と遺業能力を含めるか否か', async () => {
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -4810,7 +4810,7 @@ test('キーワードと色と種類の複合によるフィルタ', async () =>
     decrementSide,
     incrementSide,
   }
-  const handleSetIdZoom = vi.fn()
+  const zoomIn = vi.fn()
   const interruptSimulator = vi.fn()
   const {
     rerender,
@@ -4823,7 +4823,7 @@ test('キーワードと色と種類の複合によるフィルタ', async () =>
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -4865,7 +4865,7 @@ test('キーワードと色と種類の複合によるフィルタ', async () =>
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -4892,7 +4892,7 @@ test('キーワードと色と種類の複合によるフィルタ', async () =>
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -4919,7 +4919,7 @@ test('キーワードと色と種類の複合によるフィルタ', async () =>
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -4943,7 +4943,7 @@ test('キーワードと色と種類の複合によるフィルタ', async () =>
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -4958,7 +4958,7 @@ test('キーワードと色と種類の複合によるフィルタ', async () =>
       deckMain={deckMain}
       deckSide={deckSide}
       dispatchDeck={dispatchDeck}
-      handleSetIdZoom={handleSetIdZoom}
+      zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
     />
   )

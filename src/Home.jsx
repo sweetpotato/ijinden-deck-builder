@@ -37,7 +37,7 @@ function App() {
     setShowCodeError(newShowCodeError)
   }
 
-  function handleSetIdZoom(newIdZoom) {
+  function zoomIn(newIdZoom) {
     setIdZoom(newIdZoom)
   }
 
@@ -67,7 +67,7 @@ function App() {
       >
         <Tab eventKey={enumTabPane.CARD} title="カード">
           <TabPaneCard
-            handleSetIdZoom={handleSetIdZoom}
+            zoomIn={zoomIn}
             deckMain={deckMain}
             deckSide={deckSide}
             dispatchDeck={dispatchDeck}
@@ -79,7 +79,7 @@ function App() {
             code={code}
             showCodeError={showCodeError}
             handleSetShowCodeError={handleSetShowCodeError}
-            handleSetIdZoom={handleSetIdZoom}
+            zoomIn={zoomIn}
             deckTitle={deckTitle}
             handleSetDeckTitle={handleSetDeckTitle}
             deckMain={deckMain}

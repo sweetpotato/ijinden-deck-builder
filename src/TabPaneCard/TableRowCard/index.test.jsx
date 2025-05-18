@@ -30,7 +30,7 @@ test('インタラクション', async () => {
     incrementSide,
   }
   const interruptSimulator = vi.fn()
-  const handleSetIdZoom = vi.fn()
+  const zoomIn = vi.fn()
   const { rerender, getByText, getByRole, getAllByRole } = render(
     <Table>
       <tbody>
@@ -43,7 +43,7 @@ test('インタラクション', async () => {
           counterMain={0}
           counterSide={0}
           dispatchDeck={dispatchDeck}
-          handleSetIdZoom={handleSetIdZoom}
+          zoomIn={zoomIn}
           interruptSimulator={interruptSimulator}
         />
       </tbody>
@@ -54,7 +54,7 @@ test('インタラクション', async () => {
   expect(decrementSide.mock.calls.length).toBe(0)
   expect(incrementSide.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(0)
-  expect(handleSetIdZoom.mock.calls.length).toBe(0)
+  expect(zoomIn.mock.calls.length).toBe(0)
   expect(getByText('1-1')).toBeVisible()
   expect(getByText('織田信長')).toBeVisible()
 
@@ -89,7 +89,7 @@ test('インタラクション', async () => {
   expect(decrementSide.mock.calls.length).toBe(0)
   expect(incrementSide.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(1) // 呼ばれた
-  expect(handleSetIdZoom.mock.calls.length).toBe(0)
+  expect(zoomIn.mock.calls.length).toBe(0)
 
   rerender(
     <Table>
@@ -103,7 +103,7 @@ test('インタラクション', async () => {
           counterMain={1}
           counterSide={0}
           dispatchDeck={dispatchDeck}
-          handleSetIdZoom={handleSetIdZoom}
+          zoomIn={zoomIn}
           interruptSimulator={interruptSimulator}
         />
       </tbody>
@@ -141,7 +141,7 @@ test('インタラクション', async () => {
   expect(incrementSide.mock.lastCall.length).toBe(1)
   expect(incrementSide.mock.lastCall[0]).toBe('1-1')
   expect(interruptSimulator.mock.calls.length).toBe(1)
-  expect(handleSetIdZoom.mock.calls.length).toBe(0)
+  expect(zoomIn.mock.calls.length).toBe(0)
 
   rerender(
     <Table>
@@ -155,7 +155,7 @@ test('インタラクション', async () => {
           counterMain={1}
           counterSide={1}
           dispatchDeck={dispatchDeck}
-          handleSetIdZoom={handleSetIdZoom}
+          zoomIn={zoomIn}
           interruptSimulator={interruptSimulator}
         />
       </tbody>
@@ -193,7 +193,7 @@ test('インタラクション', async () => {
   expect(decrementSide.mock.calls.length).toBe(0)
   expect(incrementSide.mock.calls.length).toBe(1)
   expect(interruptSimulator.mock.calls.length).toBe(2) // 呼ばれた
-  expect(handleSetIdZoom.mock.calls.length).toBe(0)
+  expect(zoomIn.mock.calls.length).toBe(0)
 
   rerender(
     <Table>
@@ -207,7 +207,7 @@ test('インタラクション', async () => {
           counterMain={0}
           counterSide={1}
           dispatchDeck={dispatchDeck}
-          handleSetIdZoom={handleSetIdZoom}
+          zoomIn={zoomIn}
           interruptSimulator={interruptSimulator}
         />
       </tbody>
@@ -245,7 +245,7 @@ test('インタラクション', async () => {
   expect(decrementSide.mock.lastCall[0]).toBe('1-1')
   expect(incrementSide.mock.calls.length).toBe(1)
   expect(interruptSimulator.mock.calls.length).toBe(2) // 呼ばれていない
-  expect(handleSetIdZoom.mock.calls.length).toBe(0)
+  expect(zoomIn.mock.calls.length).toBe(0)
 
   rerender(
     <Table>
@@ -259,7 +259,7 @@ test('インタラクション', async () => {
           counterMain={0}
           counterSide={0}
           dispatchDeck={dispatchDeck}
-          handleSetIdZoom={handleSetIdZoom}
+          zoomIn={zoomIn}
           interruptSimulator={interruptSimulator}
         />
       </tbody>
@@ -295,7 +295,7 @@ test('インタラクション', async () => {
   expect(decrementSide.mock.calls.length).toBe(1)
   expect(incrementSide.mock.calls.length).toBe(1)
   expect(interruptSimulator.mock.calls.length).toBe(2)
-  expect(handleSetIdZoom.mock.calls.length).toBe(1) // 呼ばれた
+  expect(zoomIn.mock.calls.length).toBe(1) // 呼ばれた
 })
 
 test('レンダリング赤', async () => {
@@ -318,7 +318,7 @@ test('レンダリング赤', async () => {
           }}
           handleSetDeckMain={vi.fn()}
           handleSetDeckSide={vi.fn()}
-          handleSetIdZoom={vi.fn()}
+          zoomIn={vi.fn()}
           interruptSimulator={vi.fn()}
         />
       </tbody>
@@ -349,7 +349,7 @@ test('レンダリング青', async () => {
             decrementSide: vi.fn(),
             incrementSide: vi.fn(),
           }}
-          handleSetIdZoom={vi.fn()}
+          zoomIn={vi.fn()}
           interruptSimulator={vi.fn()}
         />
       </tbody>
@@ -380,7 +380,7 @@ test('レンダリング緑', async () => {
             decrementSide: vi.fn(),
             incrementSide: vi.fn(),
           }}
-          handleSetIdZoom={vi.fn()}
+          zoomIn={vi.fn()}
           interruptSimulator={vi.fn()}
         />
       </tbody>
@@ -411,7 +411,7 @@ test('レンダリング黄', async () => {
             decrementSide: vi.fn(),
             incrementSide: vi.fn(),
           }}
-          handleSetIdZoom={vi.fn()}
+          zoomIn={vi.fn()}
           interruptSimulator={vi.fn()}
         />
       </tbody>
@@ -442,7 +442,7 @@ test('レンダリング紫', async () => {
             decrementSide: vi.fn(),
             incrementSide: vi.fn(),
           }}
-          handleSetIdZoom={vi.fn()}
+          zoomIn={vi.fn()}
           interruptSimulator={vi.fn()}
         />
       </tbody>
@@ -473,7 +473,7 @@ test('レンダリング赤黄', async () => {
             decrementSide: vi.fn(),
             incrementSide: vi.fn(),
           }}
-          handleSetIdZoom={vi.fn()}
+          zoomIn={vi.fn()}
           interruptSimulator={vi.fn()}
         />
       </tbody>
@@ -504,7 +504,7 @@ test('レンダリング青黄', async () => {
             decrementSide: vi.fn(),
             incrementSide: vi.fn(),
           }}
-          handleSetIdZoom={vi.fn()}
+          zoomIn={vi.fn()}
           interruptSimulator={vi.fn()}
         />
       </tbody>
@@ -535,7 +535,7 @@ test('レンダリング青黄', async () => {
             decrementSide: vi.fn(),
             incrementSide: vi.fn(),
           }}
-          handleSetIdZoom={vi.fn()}
+          zoomIn={vi.fn()}
           interruptSimulator={vi.fn()}
         />
       </tbody>
@@ -566,7 +566,7 @@ test('レンダリング赤の黄魔導', async () => {
             decrementSide: vi.fn(),
             incrementSide: vi.fn(),
           }}
-          handleSetIdZoom={vi.fn()}
+          zoomIn={vi.fn()}
           interruptSimulator={vi.fn()}
         />
       </tbody>
@@ -597,7 +597,7 @@ test('レンダリング黄の赤魔導', async () => {
             decrementSide: vi.fn(),
             incrementSide: vi.fn(),
           }}
-          handleSetIdZoom={vi.fn()}
+          zoomIn={vi.fn()}
           interruptSimulator={vi.fn()}
         />
       </tbody>
@@ -628,7 +628,7 @@ test('レンダリング黄の青魔導', async () => {
             decrementSide: vi.fn(),
             incrementSide: vi.fn(),
           }}
-          handleSetIdZoom={vi.fn()}
+          zoomIn={vi.fn()}
           interruptSimulator={vi.fn()}
         />
       </tbody>
@@ -659,7 +659,7 @@ test('レンダリング黄の緑魔導', async () => {
             decrementSide: vi.fn(),
             incrementSide: vi.fn(),
           }}
-          handleSetIdZoom={vi.fn()}
+          zoomIn={vi.fn()}
           interruptSimulator={vi.fn()}
         />
       </tbody>
@@ -690,7 +690,7 @@ test('レンダリング無色の赤魔導', async () => {
             decrementSide: vi.fn(),
             incrementSide: vi.fn(),
           }}
-          handleSetIdZoom={vi.fn()}
+          zoomIn={vi.fn()}
           interruptSimulator={vi.fn()}
         />
       </tbody>
@@ -721,7 +721,7 @@ test('レンダリング無色の青魔導', async () => {
             decrementSide: vi.fn(),
             incrementSide: vi.fn(),
           }}
-          handleSetIdZoom={vi.fn()}
+          zoomIn={vi.fn()}
           interruptSimulator={vi.fn()}
         />
       </tbody>
@@ -752,7 +752,7 @@ test('レンダリング無色の緑魔導', async () => {
             decrementSide: vi.fn(),
             incrementSide: vi.fn(),
           }}
-          handleSetIdZoom={vi.fn()}
+          zoomIn={vi.fn()}
           interruptSimulator={vi.fn()}
         />
       </tbody>
@@ -783,7 +783,7 @@ test('レンダリング無色の黄魔導', async () => {
             decrementSide: vi.fn(),
             incrementSide: vi.fn(),
           }}
-          handleSetIdZoom={vi.fn()}
+          zoomIn={vi.fn()}
           interruptSimulator={vi.fn()}
         />
       </tbody>
@@ -814,7 +814,7 @@ test('レンダリング無色の紫魔導', async () => {
             decrementSide: vi.fn(),
             incrementSide: vi.fn(),
           }}
-          handleSetIdZoom={vi.fn()}
+          zoomIn={vi.fn()}
           interruptSimulator={vi.fn()}
         />
       </tbody>
