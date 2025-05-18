@@ -14,7 +14,6 @@ import {
 
 import { dataCardsArrayForDeck as dataCardsArray } from '../commons/dataCards'
 import { dbAddDeck } from '../commons/db'
-import enumTabPane from '../commons/enumTabPane'
 import { sum } from '../commons/utils'
 import ImageCard from '../components/ImageCard'
 import ContainerDeckShare from './ContainerDeckShare'
@@ -33,14 +32,10 @@ function TabPaneDeck({
   deckSide,
   dispatchDeck,
   handleSetActiveDeckSaved,
-  handleSetActiveTab,
+  moveToLoad,
   interruptSimulator,
 }) {
   const [showModalEmpty, setShowModalEmpty] = useState(false)
-
-  function moveToLoad() {
-    handleSetActiveTab(enumTabPane.SAVE_AND_LOAD)
-  }
 
   function handleChangeDeckTitle(event) {
     handleSetDeckTitle(event.target.value)

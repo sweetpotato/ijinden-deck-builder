@@ -45,6 +45,10 @@ function App() {
     setActiveTab(newActiveTab)
   }
 
+  function moveToLoad() {
+    handleSetActiveTab(enumTabPane.SAVE_AND_LOAD)
+  }
+
   function handleSetActiveDeckSaved(newActiveDeckSaved) {
     setActiveDeckSaved(newActiveDeckSaved)
   }
@@ -78,7 +82,7 @@ function App() {
             deckSide={deckSide}
             dispatchDeck={dispatchDeck}
             handleSetActiveDeckSaved={handleSetActiveDeckSaved}
-            handleSetActiveTab={handleSetActiveTab}
+            moveToLoad={moveToLoad}
             interruptSimulator={interruptSimulator}
           />
         </Tab>
