@@ -1,13 +1,7 @@
 // SPDX-License-Identifier: MIT
 
 import { useState } from 'react'
-import {
-  Alert,
-  Modal,
-  ModalBody,
-  ModalHeader,
-  ModalTitle,
-} from 'react-bootstrap'
+import { Alert } from 'react-bootstrap'
 import Tab from 'react-bootstrap/Tab'
 import Tabs from 'react-bootstrap/Tabs'
 import { useParams } from 'react-router-dom'
@@ -16,9 +10,10 @@ import TabPaneCard from './TabPaneCard'
 import TabPaneDeck from './TabPaneDeck'
 import TabPaneLoad from './TabPaneLoad'
 import useTabPaneSimulator from './TabPaneSimulator'
-import { dataCardsMap, decodeDeck } from './commons/dataCards'
+import { decodeDeck } from './commons/dataCards'
 import enumTabPane from './commons/enumTabPane'
 import useDeck from './hooks/useDeck'
+import ModalZoom from './ModalZoom'
 
 function App() {
   // デッキコード関連
@@ -271,18 +266,7 @@ function App() {
         </Tab>
       </Tabs>
       {idZoom !== null && (
-        <Modal show onHide={handleClearIdZoom}>
-          <ModalHeader closeButton>
-            <ModalTitle>{dataCardsMap.get(idZoom).name}</ModalTitle>
-          </ModalHeader>
-          <ModalBody>
-            <img
-              src={dataCardsMap.get(idZoom).imageUrl}
-              alt={dataCardsMap.get(idZoom).name}
-              style={{ width: '100%', height: 'auto' }}
-            />
-          </ModalBody>
-        </Modal>
+        <ModalZoom idZoom={idZoom} handleClearIdZoom={handleClearIdZoom} />
       )}
     </>
   )
