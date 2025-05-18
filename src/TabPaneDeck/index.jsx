@@ -38,6 +38,10 @@ function TabPaneDeck({
 }) {
   const [showModalEmpty, setShowModalEmpty] = useState(false)
 
+  function moveToLoad() {
+    handleSetActiveTab(enumTabPane.SAVE_AND_LOAD)
+  }
+
   function handleChangeDeckTitle(event) {
     handleSetDeckTitle(event.target.value)
   }
@@ -62,7 +66,7 @@ function TabPaneDeck({
     const idDeck = await dbAddDeck(objectDeck)
     // マイデッキペインに移動する
     handleSetActiveDeckSaved(idDeck)
-    handleSetActiveTab(enumTabPane.SAVE_AND_LOAD)
+    moveToLoad()
   }
 
   function handleClickClear() {
