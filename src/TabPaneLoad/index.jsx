@@ -43,6 +43,10 @@ function TabPaneLoad({
   const [showModalClear, setShowModalClear] = useState(false)
   const decksSaved = useLiveQuery(async () => await dbQueryDecks())
 
+  function moveToDeck() {
+    handleSetActiveTab(enumTabPane.DECK)
+  }
+
   function handleSelectAccordion(eventKey) {
     handleSetActiveDeckSaved(eventKey)
   }
@@ -85,7 +89,7 @@ function TabPaneLoad({
                     aDeckSaved={aDeckSaved}
                     handleSetDeckTitle={handleSetDeckTitle}
                     dispatchSetFromEntries={dispatchSetFromEntries}
-                    handleSetActiveTab={handleSetActiveTab}
+                    moveToDeck={moveToDeck}
                     interruptSimulator={interruptSimulator}
                   />
                 </AccordionBody>
@@ -128,13 +132,9 @@ function ContainerDeckSaved({
   aDeckSaved,
   handleSetDeckTitle,
   dispatchSetFromEntries,
-  handleSetActiveTab,
+  moveToDeck,
   interruptSimulator,
 }) {
-  function moveToDeck() {
-    handleSetActiveTab(enumTabPane.DECK)
-  }
-
   function handleClickLoad() {
     handleSetDeckTitle(aDeckSaved.title || '') // There may not be a title
     dispatchSetFromEntries(aDeckSaved.main, aDeckSaved.side)
