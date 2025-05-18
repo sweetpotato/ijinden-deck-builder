@@ -22,7 +22,7 @@ const enumTabPane = {
   HELP: 5,
 }
 
-function App() {
+function Home() {
   // デッキコード関連
   const { code } = useParams()
   const resultsDecode = code && decodeDeck(code)
@@ -273,4 +273,4 @@ function App() {
   )
 }
 
-export default App
+export default Home
