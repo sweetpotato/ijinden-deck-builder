@@ -9,7 +9,6 @@ import {
   ImageCardWithToggleOpaque,
   ImageCardWithToggleTransparent,
 } from './ImageCardWithToggle'
-import { enumStateSimulator } from '.'
 
 function makeIdArray(deck) {
   const result = []
@@ -59,13 +58,11 @@ function TabPaneSimulator({ deck, state, dispatch }) {
     dispatch.continue()
   }
 
-  const enabledStart = state === enumStateSimulator.INITIAL
-  const enabledReset = state !== enumStateSimulator.INITIAL
-  const enabledMulligan = state === enumStateSimulator.STARTING
+  const enabledStart = state.isInitial()
+  const enabledReset = !state.isInitial()
+  const enabledMulligan = state.isStarting()
   const showGuardiansAndHands =
-    state === enumStateSimulator.STARTING ||
-    state === enumStateSimulator.RUNNING ||
-    state === enumStateSimulator.ABORTED
+    state.isStarting() || state.isRunning() || state.isAborted()
   return (
     <>
       <h2 className="m-2">手札シミュレータ</h2>
@@ -92,12 +89,12 @@ function TabPaneSimulator({ deck, state, dispatch }) {
           マリガン
         </Button>
       </div>
-      {state === enumStateSimulator.LESS_THAN_TEN && (
+      {state.isLessThanTen() && (
         <Alert variant="warning">
           メインデッキの枚数が少なすぎます。10枚以上にしてください。
         </Alert>
       )}
-      {state === enumStateSimulator.ABORTED && (
+      {state.isAborted() && (
         <Alert variant="warning">
           シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。
         </Alert>
