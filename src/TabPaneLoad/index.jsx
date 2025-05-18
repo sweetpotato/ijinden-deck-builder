@@ -18,7 +18,6 @@ import {
 
 import { dataCardsArrayForDeck } from '../commons/dataCards'
 import { dbClearDecks, dbDeleteDeck, dbQueryDecks } from '../commons/db'
-import enumTabPane from '../commons/enumTabPane'
 import { sum } from '../commons/utils'
 import ImageCard from '../components/ImageCard'
 
@@ -37,15 +36,11 @@ function TabPaneLoad({
   dispatchSetFromEntries,
   activeDeckSaved,
   handleSetActiveDeckSaved,
-  handleSetActiveTab,
+  moveToDeck,
   interruptSimulator,
 }) {
   const [showModalClear, setShowModalClear] = useState(false)
   const decksSaved = useLiveQuery(async () => await dbQueryDecks())
-
-  function moveToDeck() {
-    handleSetActiveTab(enumTabPane.DECK)
-  }
 
   function handleSelectAccordion(eventKey) {
     handleSetActiveDeckSaved(eventKey)
