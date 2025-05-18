@@ -131,11 +131,15 @@ function ContainerDeckSaved({
   handleSetActiveTab,
   interruptSimulator,
 }) {
+  function moveToDeck() {
+    handleSetActiveTab(enumTabPane.DECK)
+  }
+
   function handleClickLoad() {
     handleSetDeckTitle(aDeckSaved.title || '') // There may not be a title
     dispatchSetFromEntries(aDeckSaved.main, aDeckSaved.side)
     interruptSimulator()
-    handleSetActiveTab(enumTabPane.DECK)
+    moveToDeck()
   }
 
   async function handleClickDelete() {
