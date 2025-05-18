@@ -26,7 +26,7 @@ function TabPaneDeck({
   code,
   showCodeError,
   handleSetShowCodeError,
-  handleSetIdZoom,
+  zoomIn,
   deckTitle,
   handleSetDeckTitle,
   deckMain,
@@ -122,7 +122,7 @@ function TabPaneDeck({
         dispatchDecrement={dispatchDeck.decrementMain}
         dispatchIncrement={dispatchDeck.incrementMain}
         dispatchMoveOut={dispatchDeck.moveOutMain}
-        handleSetIdZoom={handleSetIdZoom}
+        zoomIn={zoomIn}
         interruptSimulator={interruptSimulator}
       />
       <ContainerDeckPart
@@ -131,7 +131,7 @@ function TabPaneDeck({
         dispatchDecrement={dispatchDeck.decrementSide}
         dispatchIncrement={dispatchDeck.incrementSide}
         dispatchMoveOut={dispatchDeck.moveOutSide}
-        handleSetIdZoom={handleSetIdZoom}
+        zoomIn={zoomIn}
         interruptSimulator={interruptSimulator}
         isSide
       />
@@ -148,7 +148,7 @@ function ContainerDeckPart({
   dispatchDecrement,
   dispatchIncrement,
   dispatchMoveOut,
-  handleSetIdZoom,
+  zoomIn,
   interruptSimulator,
   isSide = false,
 }) {
@@ -166,7 +166,7 @@ function ContainerDeckPart({
             dispatchDecrement={dispatchDecrement}
             dispatchIncrement={dispatchIncrement}
             dispatchMoveOut={dispatchMoveOut}
-            handleSetIdZoom={handleSetIdZoom}
+            zoomIn={zoomIn}
             interruptSimulator={interruptSimulator}
             isSide={isSide}
           />
@@ -184,7 +184,7 @@ function ContainerDeckCard({
   dispatchDecrement,
   dispatchIncrement,
   dispatchMoveOut,
-  handleSetIdZoom,
+  zoomIn,
   interruptSimulator,
   isSide = false,
 }) {
@@ -208,7 +208,7 @@ function ContainerDeckCard({
   }
 
   function handleClickZoom() {
-    handleSetIdZoom(id)
+    zoomIn(id)
   }
 
   const moveText = isSide ? '^' : 'v'

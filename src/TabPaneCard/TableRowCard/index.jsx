@@ -84,7 +84,7 @@ function TableRowCard({
   counterMain,
   counterSide,
   dispatchDeck,
-  handleSetIdZoom,
+  zoomIn,
   interruptSimulator,
 }) {
   let classesColor
@@ -117,7 +117,7 @@ function TableRowCard({
           variant="secondary-outline"
           size="sm"
           className="m-0 p-0 border-0"
-          onClick={() => handleSetIdZoom(id)}
+          onClick={() => zoomIn(id)}
         >
           🔎
         </Button>

@@ -89,7 +89,7 @@ const dataLegacies = [
 ]
 
 function TabPaneCard({
-  handleSetIdZoom,
+  zoomIn,
   deckMain,
   deckSide,
   dispatchDeck,
@@ -237,7 +237,7 @@ function TabPaneCard({
                     deckSide.has(element.id) ? deckSide.get(element.id) : 0
                   }
                   dispatchDeck={dispatchDeck}
-                  handleSetIdZoom={handleSetIdZoom}
+                  zoomIn={zoomIn}
                   interruptSimulator={interruptSimulator}
                 />
               )

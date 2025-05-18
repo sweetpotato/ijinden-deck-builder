@@ -1,13 +1,7 @@
 // SPDX-License-Identifier: MIT
 
 import { useState } from 'react'
-import {
-  Alert,
-  Modal,
-  ModalBody,
-  ModalHeader,
-  ModalTitle,
-} from 'react-bootstrap'
+import { Alert } from 'react-bootstrap'
 import Tab from 'react-bootstrap/Tab'
 import Tabs from 'react-bootstrap/Tabs'
 import { useParams } from 'react-router-dom'
@@ -16,9 +10,10 @@ import TabPaneCard from './TabPaneCard'
 import TabPaneDeck from './TabPaneDeck'
 import TabPaneLoad from './TabPaneLoad'
 import useTabPaneSimulator from './TabPaneSimulator'
-import { dataCardsMap, decodeDeck } from './commons/dataCards'
+import { decodeDeck } from './commons/dataCards'
 import enumTabPane from './commons/enumTabPane'
 import useDeck from './hooks/useDeck'
+import useModalZoom from './useModalZoom'
 
 function App() {
   // デッキコード関連
@@ -32,7 +27,7 @@ function App() {
   )
   const [showCodeError, setShowCodeError] = useState(!resultsDecode)
 
-  const [idZoom, setIdZoom] = useState(null)
+  const [zoomIn, renderZoom] = useModalZoom()
   const [deckTitle, setDeckTitle] = useState('')
   const [deckMain, deckSide, dispatchDeck] = useDeck(entriesMain, entriesSide)
   const [activeDeckSaved, setActiveDeckSaved] = useState([])
@@ -40,14 +35,6 @@ function App() {
 
   function handleSetShowCodeError(newShowCodeError) {
     setShowCodeError(newShowCodeError)
-  }
-
-  function handleSetIdZoom(newIdZoom) {
-    setIdZoom(newIdZoom)
-  }
-
-  function handleClearIdZoom() {
-    setIdZoom(null)
   }
 
   function handleSetDeckTitle(newDeckTitle) {
@@ -72,7 +59,7 @@ function App() {
       >
         <Tab eventKey={enumTabPane.CARD} title="カード">
           <TabPaneCard
-            handleSetIdZoom={handleSetIdZoom}
+            zoomIn={zoomIn}
             deckMain={deckMain}
             deckSide={deckSide}
             dispatchDeck={dispatchDeck}
@@ -84,7 +71,7 @@ function App() {
             code={code}
             showCodeError={showCodeError}
             handleSetShowCodeError={handleSetShowCodeError}
-            handleSetIdZoom={handleSetIdZoom}
+            zoomIn={zoomIn}
             deckTitle={deckTitle}
             handleSetDeckTitle={handleSetDeckTitle}
             deckMain={deckMain}
@@ -270,20 +257,7 @@ function App() {
           </p>
         </Tab>
       </Tabs>
-      {idZoom !== null && (
-        <Modal show onHide={handleClearIdZoom}>
-          <ModalHeader closeButton>
-            <ModalTitle>{dataCardsMap.get(idZoom).name}</ModalTitle>
-          </ModalHeader>
-          <ModalBody>
-            <img
-              src={dataCardsMap.get(idZoom).imageUrl}
-              alt={dataCardsMap.get(idZoom).name}
-              style={{ width: '100%', height: 'auto' }}
-            />
-          </ModalBody>
-        </Modal>
-      )}
+      {renderZoom()}
     </>
   )
 }
