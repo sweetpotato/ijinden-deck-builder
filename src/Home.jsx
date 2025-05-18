@@ -41,7 +41,7 @@ function App() {
     setIdZoom(newIdZoom)
   }
 
-  function handleClearIdZoom() {
+  function zoomOut() {
     setIdZoom(null)
   }
 
@@ -265,9 +265,7 @@ function App() {
           </p>
         </Tab>
       </Tabs>
-      {idZoom !== null && (
-        <ModalZoom idZoom={idZoom} handleClearIdZoom={handleClearIdZoom} />
-      )}
+      {idZoom !== null && <ModalZoom id={idZoom} zoomOut={zoomOut} />}
     </>
   )
 }

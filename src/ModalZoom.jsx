@@ -4,16 +4,16 @@ import { Modal, ModalBody, ModalHeader, ModalTitle } from 'react-bootstrap'
 
 import { dataCardsMap } from './commons/dataCards'
 
-function ModalZoom({ idZoom, handleClearIdZoom }) {
+function ModalZoom({ id, zoomOut }) {
   return (
-    <Modal show onHide={handleClearIdZoom}>
+    <Modal show onHide={zoomOut}>
       <ModalHeader closeButton>
-        <ModalTitle>{dataCardsMap.get(idZoom).name}</ModalTitle>
+        <ModalTitle>{dataCardsMap.get(id).name}</ModalTitle>
       </ModalHeader>
       <ModalBody>
         <img
-          src={dataCardsMap.get(idZoom).imageUrl}
-          alt={dataCardsMap.get(idZoom).name}
+          src={dataCardsMap.get(id).imageUrl}
+          alt={dataCardsMap.get(id).name}
           style={{ width: '100%', height: 'auto' }}
         />
       </ModalBody>
