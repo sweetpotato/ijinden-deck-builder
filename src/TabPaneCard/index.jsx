@@ -13,6 +13,7 @@ import { dataCardsArrayForTable as dataCards } from '../commons/dataCards'
 import enumColor from './enumColor'
 import enumComparator from './enumComparator'
 import enumTerm from './enumTerm'
+import enumType from './enumType'
 import useAccordionItemGenericFilter from './AccordionItemGenericFilter'
 import useAccordionItemLevelFilter from './AccordionItemLevelFilter'
 import useAccordionItemTypeFilter from './AccordionItemTypeFilter'
@@ -20,7 +21,6 @@ import useContainerTextSearch from './ContainerTextSearch'
 import TableRowCard from './TableRowCard'
 
 import './index.css'
-import enumType from './enumType'
 
 const dataExpansions = [
   { value: 0, label: 'すべて' },
@@ -89,10 +89,10 @@ const dataLegacies = [
 ]
 
 function TabPaneCard({
-  zoomIn,
   deckMain,
   deckSide,
   dispatchDeck,
+  zoomIn,
   interruptSimulator,
 }) {
   const [expansion, resetExpansion, renderExpansion] =

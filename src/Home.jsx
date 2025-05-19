@@ -6,13 +6,13 @@ import Tab from 'react-bootstrap/Tab'
 import Tabs from 'react-bootstrap/Tabs'
 import { useParams } from 'react-router-dom'
 
+import { decodeDeck } from './commons/dataCards'
+import useDeck from './hooks/useDeck'
+import useModalZoom from './useModalZoom'
 import TabPaneCard from './TabPaneCard'
 import TabPaneDeck from './TabPaneDeck'
 import TabPaneLoad from './TabPaneLoad'
 import useTabPaneSimulator from './TabPaneSimulator'
-import { decodeDeck } from './commons/dataCards'
-import useDeck from './hooks/useDeck'
-import useModalZoom from './useModalZoom'
 
 const enumTabPane = {
   CARD: 1,
@@ -40,14 +40,6 @@ function Home() {
   const [activeDeckSaved, expandAccordion] = useState(null)
   const [interruptSimulator, renderTabPaneSimulator] = useTabPaneSimulator()
 
-  function handleSetShowCodeError(newShowCodeError) {
-    setShowCodeError(newShowCodeError)
-  }
-
-  function handleSetDeckTitle(newDeckTitle) {
-    setDeckTitle(newDeckTitle)
-  }
-
   function moveToDeck() {
     setActiveTab(enumTabPane.DECK)
   }
@@ -66,10 +58,10 @@ function Home() {
       >
         <Tab eventKey={enumTabPane.CARD} title="カード">
           <TabPaneCard
-            zoomIn={zoomIn}
             deckMain={deckMain}
             deckSide={deckSide}
             dispatchDeck={dispatchDeck}
+            zoomIn={zoomIn}
             interruptSimulator={interruptSimulator}
           />
         </Tab>
@@ -77,25 +69,25 @@ function Home() {
           <TabPaneDeck
             code={code}
             showCodeError={showCodeError}
-            handleSetShowCodeError={handleSetShowCodeError}
-            zoomIn={zoomIn}
+            setShowCodeError={setShowCodeError}
             deckTitle={deckTitle}
-            handleSetDeckTitle={handleSetDeckTitle}
+            setDeckTitle={setDeckTitle}
             deckMain={deckMain}
             deckSide={deckSide}
             dispatchDeck={dispatchDeck}
-            expandAccordion={expandAccordion}
+            zoomIn={zoomIn}
             moveToLoad={moveToLoad}
+            expandAccordion={expandAccordion}
             interruptSimulator={interruptSimulator}
           />
         </Tab>
         <Tab eventKey={enumTabPane.LOAD} title="マイデッキ">
           <TabPaneLoad
-            handleSetDeckTitle={handleSetDeckTitle}
-            dispatchSetFromEntries={dispatchDeck.setFromEntries}
+            setDeckTitle={setDeckTitle}
             activeDeckSaved={activeDeckSaved}
-            expandAccordion={expandAccordion}
+            dispatchSetFromEntries={dispatchDeck.setFromEntries}
             moveToDeck={moveToDeck}
+            expandAccordion={expandAccordion}
             interruptSimulator={interruptSimulator}
           />
         </Tab>
