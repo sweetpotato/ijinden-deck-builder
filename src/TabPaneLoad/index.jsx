@@ -33,10 +33,10 @@ const DTF = new Intl.DateTimeFormat([], {
 
 function TabPaneLoad({
   handleSetDeckTitle,
-  dispatchSetFromEntries,
   activeDeckSaved,
-  expandAccordion,
+  dispatchSetFromEntries,
   moveToDeck,
+  expandAccordion,
   interruptSimulator,
 }) {
   const [showModalClear, setShowModalClear] = useState(false)

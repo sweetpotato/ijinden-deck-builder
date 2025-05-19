@@ -89,10 +89,10 @@ const dataLegacies = [
 ]
 
 function TabPaneCard({
-  zoomIn,
   deckMain,
   deckSide,
   dispatchDeck,
+  zoomIn,
   interruptSimulator,
 }) {
   const [expansion, resetExpansion, renderExpansion] =

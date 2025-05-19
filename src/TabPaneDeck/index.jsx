@@ -25,14 +25,14 @@ function TabPaneDeck({
   code,
   showCodeError,
   handleSetShowCodeError,
-  zoomIn,
   deckTitle,
   handleSetDeckTitle,
   deckMain,
   deckSide,
   dispatchDeck,
-  expandAccordion,
+  zoomIn,
   moveToLoad,
+  expandAccordion,
   interruptSimulator,
 }) {
   const [showModalEmpty, setShowModalEmpty] = useState(false)

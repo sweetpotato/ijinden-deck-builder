@@ -66,10 +66,10 @@ function Home() {
       >
         <Tab eventKey={enumTabPane.CARD} title="カード">
           <TabPaneCard
-            zoomIn={zoomIn}
             deckMain={deckMain}
             deckSide={deckSide}
             dispatchDeck={dispatchDeck}
+            zoomIn={zoomIn}
             interruptSimulator={interruptSimulator}
           />
         </Tab>
@@ -78,24 +78,24 @@ function Home() {
             code={code}
             showCodeError={showCodeError}
             handleSetShowCodeError={handleSetShowCodeError}
-            zoomIn={zoomIn}
             deckTitle={deckTitle}
             handleSetDeckTitle={handleSetDeckTitle}
             deckMain={deckMain}
             deckSide={deckSide}
             dispatchDeck={dispatchDeck}
-            expandAccordion={expandAccordion}
+            zoomIn={zoomIn}
             moveToLoad={moveToLoad}
+            expandAccordion={expandAccordion}
             interruptSimulator={interruptSimulator}
           />
         </Tab>
         <Tab eventKey={enumTabPane.LOAD} title="マイデッキ">
           <TabPaneLoad
             handleSetDeckTitle={handleSetDeckTitle}
-            dispatchSetFromEntries={dispatchDeck.setFromEntries}
             activeDeckSaved={activeDeckSaved}
-            expandAccordion={expandAccordion}
+            dispatchSetFromEntries={dispatchDeck.setFromEntries}
             moveToDeck={moveToDeck}
+            expandAccordion={expandAccordion}
             interruptSimulator={interruptSimulator}
           />
         </Tab>
