@@ -6,13 +6,13 @@ import Tab from 'react-bootstrap/Tab'
 import Tabs from 'react-bootstrap/Tabs'
 import { useParams } from 'react-router-dom'
 
+import { decodeDeck } from './commons/dataCards'
+import useDeck from './hooks/useDeck'
+import useModalZoom from './useModalZoom'
 import TabPaneCard from './TabPaneCard'
 import TabPaneDeck from './TabPaneDeck'
 import TabPaneLoad from './TabPaneLoad'
 import useTabPaneSimulator from './TabPaneSimulator'
-import { decodeDeck } from './commons/dataCards'
-import useDeck from './hooks/useDeck'
-import useModalZoom from './useModalZoom'
 
 const enumTabPane = {
   CARD: 1,
