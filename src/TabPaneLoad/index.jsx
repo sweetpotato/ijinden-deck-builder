@@ -65,30 +65,15 @@ function TabPaneLoad({
       {decksSaved ? (
         <Accordion activeKey={activeDeckSaved} onSelect={handleSelectAccordion}>
           {decksSaved.map((aDeckSaved) => {
-            const timestamp = DTF.format(new Date(aDeckSaved.timestamp))
-            const numCardsMain = sum(aDeckSaved.main.map(([, n]) => n))
-            const numCardsSide = sum(aDeckSaved.side.map(([, n]) => n))
-            const title = aDeckSaved.title || '' // There may not be a title
-            const subNumCardsMain =
-              numCardsSide !== 0
-                ? `メイン${numCardsMain}枚`
-                : `${numCardsMain}枚`
-            const subNumCardsSide =
-              numCardsSide !== 0 ? `/サイド${numCardsSide}枚` : ''
-            const header = `#${aDeckSaved.id} ${title} [${subNumCardsMain}${subNumCardsSide}] (${timestamp})`
             return (
-              <AccordionItem key={aDeckSaved.id} eventKey={aDeckSaved.id}>
-                <AccordionHeader>{header}</AccordionHeader>
-                <AccordionBody>
-                  <ContainerDeckSaved
-                    aDeckSaved={aDeckSaved}
-                    handleSetDeckTitle={handleSetDeckTitle}
-                    dispatchSetFromEntries={dispatchSetFromEntries}
-                    moveToDeck={moveToDeck}
-                    interruptSimulator={interruptSimulator}
-                  />
-                </AccordionBody>
-              </AccordionItem>
+              <AccordionItemDeckSaved
+                key={aDeckSaved.id}
+                aDeckSaved={aDeckSaved}
+                handleSetDeckTitle={handleSetDeckTitle}
+                dispatchSetFromEntries={dispatchSetFromEntries}
+                moveToDeck={moveToDeck}
+                interruptSimulator={interruptSimulator}
+              />
             )
           })}
         </Accordion>
@@ -123,13 +108,22 @@ function TabPaneLoad({
   )
 }
 
-function ContainerDeckSaved({
+function AccordionItemDeckSaved({
   aDeckSaved,
   handleSetDeckTitle,
   dispatchSetFromEntries,
   moveToDeck,
   interruptSimulator,
 }) {
+  const timestamp = DTF.format(new Date(aDeckSaved.timestamp))
+  const numCardsMain = sum(aDeckSaved.main.map(([, n]) => n))
+  const numCardsSide = sum(aDeckSaved.side.map(([, n]) => n))
+  const title = aDeckSaved.title || '' // There may not be a title
+  const subNumCardsMain =
+    numCardsSide !== 0 ? `メイン${numCardsMain}枚` : `${numCardsMain}枚`
+  const subNumCardsSide = numCardsSide !== 0 ? `/サイド${numCardsSide}枚` : ''
+  const header = `#${aDeckSaved.id} ${title} [${subNumCardsMain}${subNumCardsSide}] (${timestamp})`
+
   function handleClickLoad() {
     handleSetDeckTitle(aDeckSaved.title || '') // There may not be a title
     dispatchSetFromEntries(aDeckSaved.main, aDeckSaved.side)
@@ -142,24 +136,27 @@ function ContainerDeckSaved({
   }
 
   return (
-    <>
-      <div className="container-button mb-2">
-        <Button variant="outline-success" onClick={handleClickLoad}>
-          読込み
-        </Button>
-        <Button variant="outline-danger" onClick={handleClickDelete}>
-          削除
-        </Button>
-      </div>
-      <ContainerDeckSavedPart
-        title="メインデッキ"
-        deckSaved={new Map(aDeckSaved.main)}
-      />
-      <ContainerDeckSavedPart
-        title="サイドデッキ"
-        deckSaved={new Map(aDeckSaved.side)}
-      />
-    </>
+    <AccordionItem eventKey={aDeckSaved.id}>
+      <AccordionHeader>{header}</AccordionHeader>
+      <AccordionBody>
+        <div className="container-button mb-2">
+          <Button variant="outline-success" onClick={handleClickLoad}>
+            読込み
+          </Button>
+          <Button variant="outline-danger" onClick={handleClickDelete}>
+            削除
+          </Button>
+        </div>
+        <ContainerDeckSavedPart
+          title="メインデッキ"
+          deckSaved={new Map(aDeckSaved.main)}
+        />
+        <ContainerDeckSavedPart
+          title="サイドデッキ"
+          deckSaved={new Map(aDeckSaved.side)}
+        />
+      </AccordionBody>
+    </AccordionItem>
   )
 }
 
