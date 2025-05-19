@@ -40,14 +40,6 @@ function Home() {
   const [activeDeckSaved, expandAccordion] = useState(null)
   const [interruptSimulator, renderTabPaneSimulator] = useTabPaneSimulator()
 
-  function handleSetShowCodeError(newShowCodeError) {
-    setShowCodeError(newShowCodeError)
-  }
-
-  function handleSetDeckTitle(newDeckTitle) {
-    setDeckTitle(newDeckTitle)
-  }
-
   function moveToDeck() {
     setActiveTab(enumTabPane.DECK)
   }
@@ -77,9 +69,9 @@ function Home() {
           <TabPaneDeck
             code={code}
             showCodeError={showCodeError}
-            handleSetShowCodeError={handleSetShowCodeError}
+            setShowCodeError={setShowCodeError}
             deckTitle={deckTitle}
-            handleSetDeckTitle={handleSetDeckTitle}
+            setDeckTitle={setDeckTitle}
             deckMain={deckMain}
             deckSide={deckSide}
             dispatchDeck={dispatchDeck}
@@ -91,7 +83,7 @@ function Home() {
         </Tab>
         <Tab eventKey={enumTabPane.LOAD} title="マイデッキ">
           <TabPaneLoad
-            handleSetDeckTitle={handleSetDeckTitle}
+            setDeckTitle={setDeckTitle}
             activeDeckSaved={activeDeckSaved}
             dispatchSetFromEntries={dispatchDeck.setFromEntries}
             moveToDeck={moveToDeck}

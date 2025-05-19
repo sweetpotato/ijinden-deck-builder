@@ -24,9 +24,9 @@ import './index.css'
 function TabPaneDeck({
   code,
   showCodeError,
-  handleSetShowCodeError,
+  setShowCodeError,
   deckTitle,
-  handleSetDeckTitle,
+  setDeckTitle,
   deckMain,
   deckSide,
   dispatchDeck,
@@ -38,7 +38,7 @@ function TabPaneDeck({
   const [showModalEmpty, setShowModalEmpty] = useState(false)
 
   function handleChangeDeckTitle(event) {
-    handleSetDeckTitle(event.target.value)
+    setDeckTitle(event.target.value)
   }
 
   async function handleClickSave() {
@@ -65,7 +65,7 @@ function TabPaneDeck({
   }
 
   function handleClickClear() {
-    handleSetDeckTitle('')
+    setDeckTitle('')
     dispatchDeck.clear()
     interruptSimulator()
   }
@@ -82,7 +82,7 @@ function TabPaneDeck({
           <Alert
             dismissible
             variant="danger"
-            onClose={() => handleSetShowCodeError(false)}
+            onClose={() => setShowCodeError(false)}
           >
             デッキコードが正しくありません: {code}
           </Alert>

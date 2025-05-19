@@ -32,7 +32,7 @@ const DTF = new Intl.DateTimeFormat([], {
 })
 
 function TabPaneLoad({
-  handleSetDeckTitle,
+  setDeckTitle,
   activeDeckSaved,
   dispatchSetFromEntries,
   moveToDeck,
@@ -65,7 +65,7 @@ function TabPaneLoad({
               <AccordionItemDeckSaved
                 key={deck.id}
                 deck={deck}
-                handleSetDeckTitle={handleSetDeckTitle}
+                setDeckTitle={setDeckTitle}
                 dispatchSetFromEntries={dispatchSetFromEntries}
                 moveToDeck={moveToDeck}
                 interruptSimulator={interruptSimulator}
@@ -106,7 +106,7 @@ function TabPaneLoad({
 
 function AccordionItemDeckSaved({
   deck,
-  handleSetDeckTitle,
+  setDeckTitle,
   dispatchSetFromEntries,
   moveToDeck,
   interruptSimulator,
@@ -121,7 +121,7 @@ function AccordionItemDeckSaved({
   const header = `#${deck.id} ${deckTitle} [${subNumCardsMain}${subNumCardsSide}] (${timestamp})`
 
   function handleClickLoad() {
-    handleSetDeckTitle(deck.title || '') // There may not be a title
+    setDeckTitle(deck.title || '') // There may not be a title
     dispatchSetFromEntries(deck.main, deck.side)
     interruptSimulator()
     moveToDeck()
