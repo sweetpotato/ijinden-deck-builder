@@ -37,7 +37,7 @@ function Home() {
   const [zoomIn, renderZoom] = useModalZoom()
   const [deckTitle, setDeckTitle] = useState('')
   const [deckMain, deckSide, dispatchDeck] = useDeck(entriesMain, entriesSide)
-  const [activeDeckSaved, setActiveDeckSaved] = useState([])
+  const [activeDeckSaved, expandAccordion] = useState(null)
   const [interruptSimulator, renderTabPaneSimulator] = useTabPaneSimulator()
 
   function handleSetShowCodeError(newShowCodeError) {
@@ -54,10 +54,6 @@ function Home() {
 
   function moveToLoad() {
     setActiveTab(enumTabPane.LOAD)
-  }
-
-  function handleSetActiveDeckSaved(newActiveDeckSaved) {
-    setActiveDeckSaved(newActiveDeckSaved)
   }
 
   return (
@@ -88,7 +84,7 @@ function Home() {
             deckMain={deckMain}
             deckSide={deckSide}
             dispatchDeck={dispatchDeck}
-            handleSetActiveDeckSaved={handleSetActiveDeckSaved}
+            expandAccordion={expandAccordion}
             moveToLoad={moveToLoad}
             interruptSimulator={interruptSimulator}
           />
@@ -98,7 +94,7 @@ function Home() {
             handleSetDeckTitle={handleSetDeckTitle}
             dispatchSetFromEntries={dispatchDeck.setFromEntries}
             activeDeckSaved={activeDeckSaved}
-            handleSetActiveDeckSaved={handleSetActiveDeckSaved}
+            expandAccordion={expandAccordion}
             moveToDeck={moveToDeck}
             interruptSimulator={interruptSimulator}
           />
