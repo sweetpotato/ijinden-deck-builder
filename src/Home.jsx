@@ -98,7 +98,7 @@ function Home() {
             handleSetDeckTitle={handleSetDeckTitle}
             dispatchSetFromEntries={dispatchDeck.setFromEntries}
             activeDeckSaved={activeDeckSaved}
-            handleSetActiveDeckSaved={handleSetActiveDeckSaved}
+            expandAccordion={handleSetActiveDeckSaved}
             moveToDeck={moveToDeck}
             interruptSimulator={interruptSimulator}
           />

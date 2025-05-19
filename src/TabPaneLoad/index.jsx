@@ -35,7 +35,7 @@ function TabPaneLoad({
   handleSetDeckTitle,
   dispatchSetFromEntries,
   activeDeckSaved,
-  handleSetActiveDeckSaved,
+  expandAccordion,
   moveToDeck,
   interruptSimulator,
 }) {
@@ -59,10 +59,7 @@ function TabPaneLoad({
     <>
       <h2 className="m-2">ロード</h2>
       {decks ? (
-        <Accordion
-          activeKey={activeDeckSaved}
-          onSelect={handleSetActiveDeckSaved}
-        >
+        <Accordion activeKey={activeDeckSaved} onSelect={expandAccordion}>
           {decks.map((deck) => {
             return (
               <AccordionItemDeckSaved
