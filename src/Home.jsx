@@ -37,7 +37,7 @@ function Home() {
   const [zoomIn, renderZoom] = useModalZoom()
   const [deckTitle, setDeckTitle] = useState('')
   const [deckMain, deckSide, dispatchDeck] = useDeck(entriesMain, entriesSide)
-  const [activeDeckSaved, expandAccordion] = useState([])
+  const [activeDeckSaved, expandAccordion] = useState(null)
   const [interruptSimulator, renderTabPaneSimulator] = useTabPaneSimulator()
 
   function handleSetShowCodeError(newShowCodeError) {
