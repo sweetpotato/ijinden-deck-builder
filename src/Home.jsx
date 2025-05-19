@@ -88,7 +88,7 @@ function Home() {
             deckMain={deckMain}
             deckSide={deckSide}
             dispatchDeck={dispatchDeck}
-            handleSetActiveDeckSaved={handleSetActiveDeckSaved}
+            expandAccordion={handleSetActiveDeckSaved}
             moveToLoad={moveToLoad}
             interruptSimulator={interruptSimulator}
           />

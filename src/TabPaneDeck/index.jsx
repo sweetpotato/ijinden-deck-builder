@@ -31,7 +31,7 @@ function TabPaneDeck({
   deckMain,
   deckSide,
   dispatchDeck,
-  handleSetActiveDeckSaved,
+  expandAccordion,
   moveToLoad,
   interruptSimulator,
 }) {
@@ -60,7 +60,7 @@ function TabPaneDeck({
     // IndexedDB に保存する
     const idDeck = await dbAddDeck(objectDeck)
     // マイデッキペインに移動する
-    handleSetActiveDeckSaved(idDeck)
+    expandAccordion(idDeck)
     moveToLoad()
   }
 
