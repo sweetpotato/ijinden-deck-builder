@@ -6,22 +6,48 @@ import userEvent from '@testing-library/user-event'
 
 import InputGroupCounter from '.'
 
-afterEach(cleanup)
-
-test('メインデッキのカウンターを0から1に増やす', async () => {
-  const id = 'R-1'
+// interruptSimulator がある
+function defaultRenderMain(id, counter) {
   const dispatchDecrement = vi.fn()
   const dispatchIncrement = vi.fn()
   const interruptSimulator = vi.fn()
   const { getByRole } = render(
     <InputGroupCounter
       id={id}
-      counter={0}
+      counter={counter}
       dispatchDecrement={dispatchDecrement}
       dispatchIncrement={dispatchIncrement}
       interruptSimulator={interruptSimulator}
     />
   )
+  return { dispatchDecrement, dispatchIncrement, interruptSimulator, getByRole }
+}
+
+// interruptSimulator がない
+function defaultRenderSide(id, counter) {
+  const dispatchDecrement = vi.fn()
+  const dispatchIncrement = vi.fn()
+  const { getByRole } = render(
+    <InputGroupCounter
+      id={id}
+      counter={counter}
+      dispatchDecrement={dispatchDecrement}
+      dispatchIncrement={dispatchIncrement}
+    />
+  )
+  return { dispatchDecrement, dispatchIncrement, getByRole }
+}
+
+afterEach(cleanup)
+
+test('メインデッキのカウンターを0から1に増やす', async () => {
+  const id = 'R-1'
+  const {
+    dispatchDecrement,
+    dispatchIncrement,
+    interruptSimulator,
+    getByRole,
+  } = defaultRenderMain(id, 0)
 
   const buttonMinus = getByRole('button', { name: '-' })
   expect(buttonMinus).toBeVisible()
@@ -46,18 +72,12 @@ test('メインデッキのカウンターを0から1に増やす', async () => 
 
 test('メインデッキのカウンターを1から0に減らす', async () => {
   const id = 'B-1'
-  const dispatchDecrement = vi.fn()
-  const dispatchIncrement = vi.fn()
-  const interruptSimulator = vi.fn()
-  const { getByRole } = render(
-    <InputGroupCounter
-      id={id}
-      counter={1}
-      dispatchDecrement={dispatchDecrement}
-      dispatchIncrement={dispatchIncrement}
-      interruptSimulator={interruptSimulator}
-    />
-  )
+  const {
+    dispatchDecrement,
+    dispatchIncrement,
+    interruptSimulator,
+    getByRole,
+  } = defaultRenderMain(id, 1)
 
   const buttonMinus = getByRole('button', { name: '-' })
   expect(buttonMinus).toBeVisible()
@@ -82,18 +102,12 @@ test('メインデッキのカウンターを1から0に減らす', async () => 
 
 test('メインデッキのカウンターを1から2に増やす', async () => {
   const id = 'G-1'
-  const dispatchDecrement = vi.fn()
-  const dispatchIncrement = vi.fn()
-  const interruptSimulator = vi.fn()
-  const { getByRole } = render(
-    <InputGroupCounter
-      id={id}
-      counter={1}
-      dispatchDecrement={dispatchDecrement}
-      dispatchIncrement={dispatchIncrement}
-      interruptSimulator={interruptSimulator}
-    />
-  )
+  const {
+    dispatchDecrement,
+    dispatchIncrement,
+    interruptSimulator,
+    getByRole,
+  } = defaultRenderMain(id, 1)
 
   const buttonMinus = getByRole('button', { name: '-' })
   expect(buttonMinus).toBeVisible()
@@ -118,15 +132,9 @@ test('メインデッキのカウンターを1から2に増やす', async () => 
 
 test('サイドデッキのカウンターを0から1に増やす', async () => {
   const id = 'Y-2'
-  const dispatchDecrement = vi.fn()
-  const dispatchIncrement = vi.fn()
-  const { getByRole } = render(
-    <InputGroupCounter
-      id={id}
-      counter={0}
-      dispatchDecrement={dispatchDecrement}
-      dispatchIncrement={dispatchIncrement}
-    />
+  const { dispatchDecrement, dispatchIncrement, getByRole } = defaultRenderSide(
+    id,
+    0
   )
 
   const buttonMinus = getByRole('button', { name: '-' })
@@ -150,15 +158,9 @@ test('サイドデッキのカウンターを0から1に増やす', async () => 
 
 test('サイドデッキのカウンターを1から0に減らす', async () => {
   const id = 'P-2'
-  const dispatchDecrement = vi.fn()
-  const dispatchIncrement = vi.fn()
-  const { getByRole } = render(
-    <InputGroupCounter
-      id={id}
-      counter={1}
-      dispatchDecrement={dispatchDecrement}
-      dispatchIncrement={dispatchIncrement}
-    />
+  const { dispatchDecrement, dispatchIncrement, getByRole } = defaultRenderSide(
+    id,
+    1
   )
 
   const buttonMinus = getByRole('button', { name: '-' })
@@ -182,15 +184,9 @@ test('サイドデッキのカウンターを1から0に減らす', async () => 
 
 test('サイドデッキのカウンターを1から2に増やす', async () => {
   const id = '1-2'
-  const dispatchDecrement = vi.fn()
-  const dispatchIncrement = vi.fn()
-  const { getByRole } = render(
-    <InputGroupCounter
-      id={id}
-      counter={1}
-      dispatchDecrement={dispatchDecrement}
-      dispatchIncrement={dispatchIncrement}
-    />
+  const { dispatchDecrement, dispatchIncrement, getByRole } = defaultRenderSide(
+    id,
+    1
   )
 
   const buttonMinus = getByRole('button', { name: '-' })
