@@ -12,7 +12,7 @@ test('メインデッキのカウンターを0から1に増やす', async () => 
   const dispatchDecrement = vi.fn()
   const dispatchIncrement = vi.fn()
   const interruptSimulator = vi.fn()
-  const { findByRole } = render(
+  const { getByRole } = render(
     <InputGroupCounter
       id="R-1"
       counter={0}
@@ -22,13 +22,13 @@ test('メインデッキのカウンターを0から1に増やす', async () => 
     />
   )
 
-  const buttonMinus = await findByRole('button', { name: '-' })
+  const buttonMinus = getByRole('button', { name: '-' })
   expect(buttonMinus).toBeVisible()
   expect(buttonMinus).toBeDisabled() // 無効
-  const buttonPlus = await findByRole('button', { name: '+' })
+  const buttonPlus = getByRole('button', { name: '+' })
   expect(buttonPlus).toBeVisible()
   expect(buttonPlus).not.toBeDisabled()
-  const inputCounter = await findByRole('spinbutton', { value: '0' })
+  const inputCounter = getByRole('spinbutton', { value: '0' })
   expect(inputCounter).toBeVisible()
   expect(inputCounter).toHaveAttribute('readonly')
 
@@ -47,7 +47,7 @@ test('メインデッキのカウンターを1から0に減らす', async () => 
   const dispatchDecrement = vi.fn()
   const dispatchIncrement = vi.fn()
   const interruptSimulator = vi.fn()
-  const { findByRole } = render(
+  const { getByRole } = render(
     <InputGroupCounter
       id="B-1"
       counter={1}
@@ -57,13 +57,13 @@ test('メインデッキのカウンターを1から0に減らす', async () => 
     />
   )
 
-  const buttonMinus = await findByRole('button', { name: '-' })
+  const buttonMinus = getByRole('button', { name: '-' })
   expect(buttonMinus).toBeVisible()
   expect(buttonMinus).not.toBeDisabled()
-  const buttonPlus = await findByRole('button', { name: '+' })
+  const buttonPlus = getByRole('button', { name: '+' })
   expect(buttonPlus).toBeVisible()
   expect(buttonPlus).not.toBeDisabled()
-  const inputCounter = await findByRole('spinbutton', { value: '1' })
+  const inputCounter = getByRole('spinbutton', { value: '1' })
   expect(inputCounter).toBeVisible()
   expect(inputCounter).toHaveAttribute('readonly')
 
@@ -82,7 +82,7 @@ test('メインデッキのカウンターを1から2に増やす', async () => 
   const dispatchDecrement = vi.fn()
   const dispatchIncrement = vi.fn()
   const interruptSimulator = vi.fn()
-  const { findByRole } = render(
+  const { getByRole } = render(
     <InputGroupCounter
       id="G-1"
       counter={1}
@@ -92,13 +92,13 @@ test('メインデッキのカウンターを1から2に増やす', async () => 
     />
   )
 
-  const buttonMinus = await findByRole('button', { name: '-' })
+  const buttonMinus = getByRole('button', { name: '-' })
   expect(buttonMinus).toBeVisible()
   expect(buttonMinus).not.toBeDisabled()
-  const buttonPlus = await findByRole('button', { name: '+' })
+  const buttonPlus = getByRole('button', { name: '+' })
   expect(buttonPlus).toBeVisible()
   expect(buttonPlus).not.toBeDisabled()
-  const inputCounter = await findByRole('spinbutton', { value: '1' })
+  const inputCounter = getByRole('spinbutton', { value: '1' })
   expect(inputCounter).toBeVisible()
   expect(inputCounter).toHaveAttribute('readonly')
 
@@ -116,7 +116,7 @@ test('メインデッキのカウンターを1から2に増やす', async () => 
 test('サイドデッキのカウンターを0から1に増やす', async () => {
   const dispatchDecrement = vi.fn()
   const dispatchIncrement = vi.fn()
-  const { findByRole } = render(
+  const { getByRole } = render(
     <InputGroupCounter
       id="Y-2"
       counter={0}
@@ -125,13 +125,13 @@ test('サイドデッキのカウンターを0から1に増やす', async () => 
     />
   )
 
-  const buttonMinus = await findByRole('button', { name: '-' })
+  const buttonMinus = getByRole('button', { name: '-' })
   expect(buttonMinus).toBeVisible()
   expect(buttonMinus).toBeDisabled() // 無効
-  const buttonPlus = await findByRole('button', { name: '+' })
+  const buttonPlus = getByRole('button', { name: '+' })
   expect(buttonPlus).toBeVisible()
   expect(buttonPlus).not.toBeDisabled()
-  const inputCounter = await findByRole('spinbutton', { value: '0' })
+  const inputCounter = getByRole('spinbutton', { value: '0' })
   expect(inputCounter).toBeVisible()
   expect(inputCounter).toHaveAttribute('readonly')
 
@@ -147,7 +147,7 @@ test('サイドデッキのカウンターを0から1に増やす', async () => 
 test('サイドデッキのカウンターを1から0に減らす', async () => {
   const dispatchDecrement = vi.fn()
   const dispatchIncrement = vi.fn()
-  const { findByRole } = render(
+  const { getByRole } = render(
     <InputGroupCounter
       id="P-2"
       counter={1}
@@ -156,13 +156,13 @@ test('サイドデッキのカウンターを1から0に減らす', async () => 
     />
   )
 
-  const buttonMinus = await findByRole('button', { name: '-' })
+  const buttonMinus = getByRole('button', { name: '-' })
   expect(buttonMinus).toBeVisible()
   expect(buttonMinus).not.toBeDisabled()
-  const buttonPlus = await findByRole('button', { name: '+' })
+  const buttonPlus = getByRole('button', { name: '+' })
   expect(buttonPlus).toBeVisible()
   expect(buttonPlus).not.toBeDisabled()
-  const inputCounter = await findByRole('spinbutton', { value: '1' })
+  const inputCounter = getByRole('spinbutton', { value: '1' })
   expect(inputCounter).toBeVisible()
   expect(inputCounter).toHaveAttribute('readonly')
 
@@ -178,7 +178,7 @@ test('サイドデッキのカウンターを1から0に減らす', async () => 
 test('サイドデッキのカウンターを1から2に増やす', async () => {
   const dispatchDecrement = vi.fn()
   const dispatchIncrement = vi.fn()
-  const { findByRole } = render(
+  const { getByRole } = render(
     <InputGroupCounter
       id="1-2"
       counter={1}
@@ -187,13 +187,13 @@ test('サイドデッキのカウンターを1から2に増やす', async () => 
     />
   )
 
-  const buttonMinus = await findByRole('button', { name: '-' })
+  const buttonMinus = getByRole('button', { name: '-' })
   expect(buttonMinus).toBeVisible()
   expect(buttonMinus).not.toBeDisabled()
-  const buttonPlus = await findByRole('button', { name: '+' })
+  const buttonPlus = getByRole('button', { name: '+' })
   expect(buttonPlus).toBeVisible()
   expect(buttonPlus).not.toBeDisabled()
-  const inputCounter = await findByRole('spinbutton', { value: '1' })
+  const inputCounter = getByRole('spinbutton', { value: '1' })
   expect(inputCounter).toBeVisible()
   expect(inputCounter).toHaveAttribute('readonly')
 
