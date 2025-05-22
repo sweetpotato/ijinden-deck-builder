@@ -55,9 +55,10 @@ test('メインデッキのカウンターを0から1に増やす', async () => 
   const buttonPlus = getByRole('button', { name: '+' })
   expect(buttonPlus).toBeVisible()
   expect(buttonPlus).toBeEnabled()
-  const inputCounter = getByRole('spinbutton', { value: '0' })
+  const inputCounter = getByRole('spinbutton')
   expect(inputCounter).toBeVisible()
   expect(inputCounter).toHaveAttribute('readonly')
+  expect(inputCounter).toHaveValue(0)
 
   // プラスボタンを押す
   await userEvent.click(buttonPlus)
@@ -85,9 +86,10 @@ test('メインデッキのカウンターを1から0に減らす', async () => 
   const buttonPlus = getByRole('button', { name: '+' })
   expect(buttonPlus).toBeVisible()
   expect(buttonPlus).toBeEnabled()
-  const inputCounter = getByRole('spinbutton', { value: '1' })
+  const inputCounter = getByRole('spinbutton')
   expect(inputCounter).toBeVisible()
   expect(inputCounter).toHaveAttribute('readonly')
+  expect(inputCounter).toHaveValue(1)
 
   // マイナスボタンを押す
   await userEvent.click(buttonMinus)
@@ -115,9 +117,10 @@ test('メインデッキのカウンターを1から2に増やす', async () => 
   const buttonPlus = getByRole('button', { name: '+' })
   expect(buttonPlus).toBeVisible()
   expect(buttonPlus).toBeEnabled()
-  const inputCounter = getByRole('spinbutton', { value: '1' })
+  const inputCounter = getByRole('spinbutton')
   expect(inputCounter).toBeVisible()
   expect(inputCounter).toHaveAttribute('readonly')
+  expect(inputCounter).toHaveValue(1)
 
   // プラスボタンを押す
   await userEvent.click(buttonPlus)
@@ -143,9 +146,10 @@ test('サイドデッキのカウンターを0から1に増やす', async () => 
   const buttonPlus = getByRole('button', { name: '+' })
   expect(buttonPlus).toBeVisible()
   expect(buttonPlus).toBeEnabled()
-  const inputCounter = getByRole('spinbutton', { value: '0' })
+  const inputCounter = getByRole('spinbutton')
   expect(inputCounter).toBeVisible()
   expect(inputCounter).toHaveAttribute('readonly')
+  expect(inputCounter).toHaveValue(0)
 
   // プラスボタンを押す
   await userEvent.click(buttonPlus)
@@ -169,9 +173,10 @@ test('サイドデッキのカウンターを1から0に減らす', async () => 
   const buttonPlus = getByRole('button', { name: '+' })
   expect(buttonPlus).toBeVisible()
   expect(buttonPlus).toBeEnabled()
-  const inputCounter = getByRole('spinbutton', { value: '1' })
+  const inputCounter = getByRole('spinbutton')
   expect(inputCounter).toBeVisible()
   expect(inputCounter).toHaveAttribute('readonly')
+  expect(inputCounter).toHaveValue(1)
 
   // マイナスボタンを押す
   await userEvent.click(buttonMinus)
@@ -195,9 +200,10 @@ test('サイドデッキのカウンターを1から2に増やす', async () => 
   const buttonPlus = getByRole('button', { name: '+' })
   expect(buttonPlus).toBeVisible()
   expect(buttonPlus).toBeEnabled()
-  const inputCounter = getByRole('spinbutton', { value: '1' })
+  const inputCounter = getByRole('spinbutton')
   expect(inputCounter).toBeVisible()
   expect(inputCounter).toHaveAttribute('readonly')
+  expect(inputCounter).toHaveValue(1)
 
   // プラスボタンを押す
   await userEvent.click(buttonPlus)
