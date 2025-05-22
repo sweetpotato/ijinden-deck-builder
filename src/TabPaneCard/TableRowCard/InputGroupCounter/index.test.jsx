@@ -11,7 +11,7 @@ function defaultRenderMain(id, counter) {
   const dispatchDecrement = vi.fn()
   const dispatchIncrement = vi.fn()
   const interruptSimulator = vi.fn()
-  const { getByRole } = render(
+  const { rerender, getByRole } = render(
     <InputGroupCounter
       id={id}
       counter={counter}
@@ -20,14 +20,30 @@ function defaultRenderMain(id, counter) {
       interruptSimulator={interruptSimulator}
     />
   )
-  return { dispatchDecrement, dispatchIncrement, interruptSimulator, getByRole }
+  const defaultRerender = (counter) =>
+    rerender(
+      <InputGroupCounter
+        id={id}
+        counter={counter}
+        dispatchDecrement={dispatchDecrement}
+        dispatchIncrement={dispatchIncrement}
+        interruptSimulator={interruptSimulator}
+      />
+    )
+  return {
+    dispatchDecrement,
+    dispatchIncrement,
+    interruptSimulator,
+    defaultRerender,
+    getByRole,
+  }
 }
 
 // interruptSimulator がない
 function defaultRenderSide(id, counter) {
   const dispatchDecrement = vi.fn()
   const dispatchIncrement = vi.fn()
-  const { getByRole } = render(
+  const { rerender, getByRole } = render(
     <InputGroupCounter
       id={id}
       counter={counter}
@@ -35,7 +51,16 @@ function defaultRenderSide(id, counter) {
       dispatchIncrement={dispatchIncrement}
     />
   )
-  return { dispatchDecrement, dispatchIncrement, getByRole }
+  const defaultRerender = (counter) =>
+    rerender(
+      <InputGroupCounter
+        id={id}
+        counter={counter}
+        dispatchDecrement={dispatchDecrement}
+        dispatchIncrement={dispatchIncrement}
+      />
+    )
+  return { dispatchDecrement, dispatchIncrement, defaultRerender, getByRole }
 }
 
 afterEach(cleanup)
@@ -61,6 +86,7 @@ test('メインデッキのカウンターを0から1に増やす', async () => 
     dispatchDecrement,
     dispatchIncrement,
     interruptSimulator,
+    defaultRerender,
     getByRole,
   } = defaultRenderMain(id, 0)
 
@@ -77,6 +103,12 @@ test('メインデッキのカウンターを0から1に増やす', async () => 
   expect(dispatchIncrement.mock.lastCall[0]).toBe(id)
   expect(interruptSimulator.mock.calls.length).toBe(1) // 呼ばれた
   expect(interruptSimulator.mock.lastCall.length).toBe(0)
+
+  defaultRerender(1)
+
+  expect(getByRole('button', { name: '-' })).toBeEnabled() // 有効になった
+  expect(getByRole('button', { name: '+' })).toBeEnabled()
+  expect(getByRole('spinbutton')).toHaveValue(1)
 })
 
 test('メインデッキのカウンターを1から0に減らす', async () => {
@@ -85,6 +117,7 @@ test('メインデッキのカウンターを1から0に減らす', async () => 
     dispatchDecrement,
     dispatchIncrement,
     interruptSimulator,
+    defaultRerender,
     getByRole,
   } = defaultRenderMain(id, 1)
 
@@ -101,6 +134,12 @@ test('メインデッキのカウンターを1から0に減らす', async () => 
   expect(dispatchIncrement.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(1) // 呼ばれた
   expect(interruptSimulator.mock.lastCall.length).toBe(0)
+
+  defaultRerender(0)
+
+  expect(getByRole('button', { name: '-' })).toBeDisabled() // 無効になった
+  expect(getByRole('button', { name: '+' })).toBeEnabled()
+  expect(getByRole('spinbutton')).toHaveValue(0)
 })
 
 test('メインデッキのカウンターを1から2に増やす', async () => {
@@ -109,6 +148,7 @@ test('メインデッキのカウンターを1から2に増やす', async () => 
     dispatchDecrement,
     dispatchIncrement,
     interruptSimulator,
+    defaultRerender,
     getByRole,
   } = defaultRenderMain(id, 1)
 
@@ -125,14 +165,18 @@ test('メインデッキのカウンターを1から2に増やす', async () => 
   expect(dispatchIncrement.mock.lastCall[0]).toBe(id)
   expect(interruptSimulator.mock.calls.length).toBe(1) // 呼ばれた
   expect(interruptSimulator.mock.lastCall.length).toBe(0)
+
+  defaultRerender(2)
+
+  expect(getByRole('button', { name: '-' })).toBeEnabled()
+  expect(getByRole('button', { name: '+' })).toBeEnabled()
+  expect(getByRole('spinbutton')).toHaveValue(2)
 })
 
 test('サイドデッキのカウンターを0から1に増やす', async () => {
   const id = 'Y-2'
-  const { dispatchDecrement, dispatchIncrement, getByRole } = defaultRenderSide(
-    id,
-    0
-  )
+  const { dispatchDecrement, dispatchIncrement, defaultRerender, getByRole } =
+    defaultRenderSide(id, 0)
 
   expect(getByRole('button', { name: '-' })).toBeDisabled() // 無効
   expect(getByRole('button', { name: '+' })).toBeEnabled()
@@ -145,14 +189,18 @@ test('サイドデッキのカウンターを0から1に増やす', async () => 
   expect(dispatchIncrement.mock.calls.length).toBe(1) // 呼ばれた
   expect(dispatchIncrement.mock.lastCall.length).toBe(1)
   expect(dispatchIncrement.mock.lastCall[0]).toBe(id)
+
+  defaultRerender(1)
+
+  expect(getByRole('button', { name: '-' })).toBeEnabled() // 有効になった
+  expect(getByRole('button', { name: '+' })).toBeEnabled()
+  expect(getByRole('spinbutton')).toHaveValue(1)
 })
 
 test('サイドデッキのカウンターを1から0に減らす', async () => {
   const id = 'P-2'
-  const { dispatchDecrement, dispatchIncrement, getByRole } = defaultRenderSide(
-    id,
-    1
-  )
+  const { dispatchDecrement, dispatchIncrement, defaultRerender, getByRole } =
+    defaultRenderSide(id, 1)
 
   expect(getByRole('button', { name: '-' })).toBeEnabled()
   expect(getByRole('button', { name: '+' })).toBeEnabled()
@@ -165,14 +213,18 @@ test('サイドデッキのカウンターを1から0に減らす', async () => 
   expect(dispatchDecrement.mock.lastCall.length).toBe(1)
   expect(dispatchDecrement.mock.lastCall[0]).toBe(id)
   expect(dispatchIncrement.mock.calls.length).toBe(0)
+
+  defaultRerender(0)
+
+  expect(getByRole('button', { name: '-' })).toBeDisabled() // 無効になった
+  expect(getByRole('button', { name: '+' })).toBeEnabled()
+  expect(getByRole('spinbutton')).toHaveValue(0)
 })
 
 test('サイドデッキのカウンターを1から2に増やす', async () => {
   const id = '1-2'
-  const { dispatchDecrement, dispatchIncrement, getByRole } = defaultRenderSide(
-    id,
-    1
-  )
+  const { dispatchDecrement, dispatchIncrement, defaultRerender, getByRole } =
+    defaultRenderSide(id, 1)
 
   expect(getByRole('button', { name: '-' })).toBeEnabled()
   expect(getByRole('button', { name: '+' })).toBeEnabled()
@@ -185,4 +237,10 @@ test('サイドデッキのカウンターを1から2に増やす', async () => 
   expect(dispatchIncrement.mock.calls.length).toBe(1) // 呼ばれた
   expect(dispatchIncrement.mock.lastCall.length).toBe(1)
   expect(dispatchIncrement.mock.lastCall[0]).toBe(id)
+
+  defaultRerender(2)
+
+  expect(getByRole('button', { name: '-' })).toBeEnabled()
+  expect(getByRole('button', { name: '+' })).toBeEnabled()
+  expect(getByRole('spinbutton')).toHaveValue(2)
 })
