@@ -22,30 +22,24 @@ test('メインデッキのカウンターを0から1に増やす', async () => 
     />
   )
 
-  // 初期状態のチェック
   const buttonMinus = await findByRole('button', { name: '-' })
   expect(buttonMinus).toBeVisible()
-  // マイナスボタンは無効である
-  expect(buttonMinus).toBeDisabled()
+  expect(buttonMinus).toBeDisabled() // 無効
   const buttonPlus = await findByRole('button', { name: '+' })
   expect(buttonPlus).toBeVisible()
   expect(buttonPlus).not.toBeDisabled()
   const inputCounter = await findByRole('spinbutton', { value: '0' })
   expect(inputCounter).toBeVisible()
-  // テキストボックスは読み取り専用である
   expect(inputCounter).toHaveAttribute('readonly')
 
   // プラスボタンを押す
   await userEvent.click(buttonPlus)
 
-  // 新しいデッキのチェック
   expect(dispatchDecrement.mock.calls.length).toBe(0)
-  expect(dispatchIncrement.mock.calls.length).toBe(1)
+  expect(dispatchIncrement.mock.calls.length).toBe(1) // 呼ばれた
   expect(dispatchIncrement.mock.lastCall.length).toBe(1)
   expect(dispatchIncrement.mock.lastCall[0]).toBe('R-1')
-
-  // シミュレータに通知が送られる
-  expect(interruptSimulator.mock.calls.length).toBe(1)
+  expect(interruptSimulator.mock.calls.length).toBe(1) // 呼ばれた
   expect(interruptSimulator.mock.lastCall.length).toBe(0)
 })
 
@@ -63,7 +57,6 @@ test('メインデッキのカウンターを1から0に減らす', async () => 
     />
   )
 
-  // 初期状態のチェック
   const buttonMinus = await findByRole('button', { name: '-' })
   expect(buttonMinus).toBeVisible()
   expect(buttonMinus).not.toBeDisabled()
@@ -72,20 +65,16 @@ test('メインデッキのカウンターを1から0に減らす', async () => 
   expect(buttonPlus).not.toBeDisabled()
   const inputCounter = await findByRole('spinbutton', { value: '1' })
   expect(inputCounter).toBeVisible()
-  // テキストボックスは読み取り専用である
   expect(inputCounter).toHaveAttribute('readonly')
 
   // マイナスボタンを押す
   await userEvent.click(buttonMinus)
 
-  // 新しいデッキのチェック
-  expect(dispatchDecrement.mock.calls.length).toBe(1)
+  expect(dispatchDecrement.mock.calls.length).toBe(1) // 呼ばれた
   expect(dispatchDecrement.mock.lastCall.length).toBe(1)
   expect(dispatchDecrement.mock.lastCall[0]).toBe('B-1')
   expect(dispatchIncrement.mock.calls.length).toBe(0)
-
-  // シミュレータに通知が送られる
-  expect(interruptSimulator.mock.calls.length).toBe(1)
+  expect(interruptSimulator.mock.calls.length).toBe(1) // 呼ばれた
   expect(interruptSimulator.mock.lastCall.length).toBe(0)
 })
 
@@ -103,7 +92,6 @@ test('メインデッキのカウンターを1から2に増やす', async () => 
     />
   )
 
-  // 初期状態のチェック
   const buttonMinus = await findByRole('button', { name: '-' })
   expect(buttonMinus).toBeVisible()
   expect(buttonMinus).not.toBeDisabled()
@@ -112,20 +100,16 @@ test('メインデッキのカウンターを1から2に増やす', async () => 
   expect(buttonPlus).not.toBeDisabled()
   const inputCounter = await findByRole('spinbutton', { value: '1' })
   expect(inputCounter).toBeVisible()
-  // テキストボックスは読み取り専用である
   expect(inputCounter).toHaveAttribute('readonly')
 
   // プラスボタンを押す
   await userEvent.click(buttonPlus)
 
-  // 新しいデッキのチェック
   expect(dispatchDecrement.mock.calls.length).toBe(0)
-  expect(dispatchIncrement.mock.calls.length).toBe(1)
+  expect(dispatchIncrement.mock.calls.length).toBe(1) // 呼ばれた
   expect(dispatchIncrement.mock.lastCall.length).toBe(1)
   expect(dispatchIncrement.mock.lastCall[0]).toBe('G-1')
-
-  // シミュレータに通知が送られる
-  expect(interruptSimulator.mock.calls.length).toBe(1)
+  expect(interruptSimulator.mock.calls.length).toBe(1) // 呼ばれた
   expect(interruptSimulator.mock.lastCall.length).toBe(0)
 })
 
@@ -141,25 +125,21 @@ test('サイドデッキのカウンターを0から1に増やす', async () => 
     />
   )
 
-  // 初期状態のチェック
   const buttonMinus = await findByRole('button', { name: '-' })
   expect(buttonMinus).toBeVisible()
-  // マイナスボタンは無効である
-  expect(buttonMinus).toBeDisabled()
+  expect(buttonMinus).toBeDisabled() // 無効
   const buttonPlus = await findByRole('button', { name: '+' })
   expect(buttonPlus).toBeVisible()
   expect(buttonPlus).not.toBeDisabled()
   const inputCounter = await findByRole('spinbutton', { value: '0' })
   expect(inputCounter).toBeVisible()
-  // テキストボックスは読み取り専用である
   expect(inputCounter).toHaveAttribute('readonly')
 
   // プラスボタンを押す
   await userEvent.click(buttonPlus)
 
-  // 新しいデッキのチェック
   expect(dispatchDecrement.mock.calls.length).toBe(0)
-  expect(dispatchIncrement.mock.calls.length).toBe(1)
+  expect(dispatchIncrement.mock.calls.length).toBe(1) // 呼ばれた
   expect(dispatchIncrement.mock.lastCall.length).toBe(1)
   expect(dispatchIncrement.mock.lastCall[0]).toBe('Y-2')
 })
@@ -176,7 +156,6 @@ test('サイドデッキのカウンターを1から0に減らす', async () => 
     />
   )
 
-  // 初期状態のチェック
   const buttonMinus = await findByRole('button', { name: '-' })
   expect(buttonMinus).toBeVisible()
   expect(buttonMinus).not.toBeDisabled()
@@ -185,14 +164,12 @@ test('サイドデッキのカウンターを1から0に減らす', async () => 
   expect(buttonPlus).not.toBeDisabled()
   const inputCounter = await findByRole('spinbutton', { value: '1' })
   expect(inputCounter).toBeVisible()
-  // テキストボックスは読み取り専用である
   expect(inputCounter).toHaveAttribute('readonly')
 
   // マイナスボタンを押す
   await userEvent.click(buttonMinus)
 
-  // 新しいデッキのチェック
-  expect(dispatchDecrement.mock.calls.length).toBe(1)
+  expect(dispatchDecrement.mock.calls.length).toBe(1) // 呼ばれた
   expect(dispatchDecrement.mock.lastCall.length).toBe(1)
   expect(dispatchDecrement.mock.lastCall[0]).toBe('P-2')
   expect(dispatchIncrement.mock.calls.length).toBe(0)
@@ -210,7 +187,6 @@ test('サイドデッキのカウンターを1から2に増やす', async () => 
     />
   )
 
-  // 初期状態のチェック
   const buttonMinus = await findByRole('button', { name: '-' })
   expect(buttonMinus).toBeVisible()
   expect(buttonMinus).not.toBeDisabled()
@@ -219,15 +195,13 @@ test('サイドデッキのカウンターを1から2に増やす', async () => 
   expect(buttonPlus).not.toBeDisabled()
   const inputCounter = await findByRole('spinbutton', { value: '1' })
   expect(inputCounter).toBeVisible()
-  // テキストボックスは読み取り専用である
   expect(inputCounter).toHaveAttribute('readonly')
 
   // プラスボタンを押す
   await userEvent.click(buttonPlus)
 
-  // 新しいデッキのチェック
   expect(dispatchDecrement.mock.calls.length).toBe(0)
-  expect(dispatchIncrement.mock.calls.length).toBe(1)
+  expect(dispatchIncrement.mock.calls.length).toBe(1) // 呼ばれた
   expect(dispatchIncrement.mock.lastCall.length).toBe(1)
   expect(dispatchIncrement.mock.lastCall[0]).toBe('1-2')
 })
