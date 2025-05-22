@@ -111,37 +111,6 @@ test('メインデッキのカウンターを0から1に増やす', async () => 
   expect(getByRole('spinbutton')).toHaveValue(1)
 })
 
-test('メインデッキのカウンターを1から0に減らす', async () => {
-  const id = 'B-1'
-  const {
-    dispatchDecrement,
-    dispatchIncrement,
-    interruptSimulator,
-    defaultRerender,
-    getByRole,
-  } = defaultRenderMain(id, 1)
-
-  expect(getByRole('button', { name: '-' })).toBeEnabled()
-  expect(getByRole('button', { name: '+' })).toBeEnabled()
-  expect(getByRole('spinbutton')).toHaveValue(1)
-
-  // マイナスボタンを押す
-  await userEvent.click(getByRole('button', { name: '-' }))
-
-  expect(dispatchDecrement.mock.calls.length).toBe(1) // 呼ばれた
-  expect(dispatchDecrement.mock.lastCall.length).toBe(1)
-  expect(dispatchDecrement.mock.lastCall[0]).toBe(id)
-  expect(dispatchIncrement.mock.calls.length).toBe(0)
-  expect(interruptSimulator.mock.calls.length).toBe(1) // 呼ばれた
-  expect(interruptSimulator.mock.lastCall.length).toBe(0)
-
-  defaultRerender(0)
-
-  expect(getByRole('button', { name: '-' })).toBeDisabled() // 無効になった
-  expect(getByRole('button', { name: '+' })).toBeEnabled()
-  expect(getByRole('spinbutton')).toHaveValue(0)
-})
-
 test('メインデッキのカウンターを1から2に増やす', async () => {
   const id = 'G-1'
   const {
@@ -173,6 +142,37 @@ test('メインデッキのカウンターを1から2に増やす', async () => 
   expect(getByRole('spinbutton')).toHaveValue(2)
 })
 
+test('メインデッキのカウンターを1から0に減らす', async () => {
+  const id = 'B-1'
+  const {
+    dispatchDecrement,
+    dispatchIncrement,
+    interruptSimulator,
+    defaultRerender,
+    getByRole,
+  } = defaultRenderMain(id, 1)
+
+  expect(getByRole('button', { name: '-' })).toBeEnabled()
+  expect(getByRole('button', { name: '+' })).toBeEnabled()
+  expect(getByRole('spinbutton')).toHaveValue(1)
+
+  // マイナスボタンを押す
+  await userEvent.click(getByRole('button', { name: '-' }))
+
+  expect(dispatchDecrement.mock.calls.length).toBe(1) // 呼ばれた
+  expect(dispatchDecrement.mock.lastCall.length).toBe(1)
+  expect(dispatchDecrement.mock.lastCall[0]).toBe(id)
+  expect(dispatchIncrement.mock.calls.length).toBe(0)
+  expect(interruptSimulator.mock.calls.length).toBe(1) // 呼ばれた
+  expect(interruptSimulator.mock.lastCall.length).toBe(0)
+
+  defaultRerender(0)
+
+  expect(getByRole('button', { name: '-' })).toBeDisabled() // 無効になった
+  expect(getByRole('button', { name: '+' })).toBeEnabled()
+  expect(getByRole('spinbutton')).toHaveValue(0)
+})
+
 test('サイドデッキのカウンターを0から1に増やす', async () => {
   const id = 'Y-2'
   const { dispatchDecrement, dispatchIncrement, defaultRerender, getByRole } =
@@ -197,30 +197,6 @@ test('サイドデッキのカウンターを0から1に増やす', async () => 
   expect(getByRole('spinbutton')).toHaveValue(1)
 })
 
-test('サイドデッキのカウンターを1から0に減らす', async () => {
-  const id = 'P-2'
-  const { dispatchDecrement, dispatchIncrement, defaultRerender, getByRole } =
-    defaultRenderSide(id, 1)
-
-  expect(getByRole('button', { name: '-' })).toBeEnabled()
-  expect(getByRole('button', { name: '+' })).toBeEnabled()
-  expect(getByRole('spinbutton')).toHaveValue(1)
-
-  // マイナスボタンを押す
-  await userEvent.click(getByRole('button', { name: '-' }))
-
-  expect(dispatchDecrement.mock.calls.length).toBe(1) // 呼ばれた
-  expect(dispatchDecrement.mock.lastCall.length).toBe(1)
-  expect(dispatchDecrement.mock.lastCall[0]).toBe(id)
-  expect(dispatchIncrement.mock.calls.length).toBe(0)
-
-  defaultRerender(0)
-
-  expect(getByRole('button', { name: '-' })).toBeDisabled() // 無効になった
-  expect(getByRole('button', { name: '+' })).toBeEnabled()
-  expect(getByRole('spinbutton')).toHaveValue(0)
-})
-
 test('サイドデッキのカウンターを1から2に増やす', async () => {
   const id = '1-2'
   const { dispatchDecrement, dispatchIncrement, defaultRerender, getByRole } =
@@ -243,4 +219,28 @@ test('サイドデッキのカウンターを1から2に増やす', async () => 
   expect(getByRole('button', { name: '-' })).toBeEnabled()
   expect(getByRole('button', { name: '+' })).toBeEnabled()
   expect(getByRole('spinbutton')).toHaveValue(2)
+})
+
+test('サイドデッキのカウンターを1から0に減らす', async () => {
+  const id = 'P-2'
+  const { dispatchDecrement, dispatchIncrement, defaultRerender, getByRole } =
+    defaultRenderSide(id, 1)
+
+  expect(getByRole('button', { name: '-' })).toBeEnabled()
+  expect(getByRole('button', { name: '+' })).toBeEnabled()
+  expect(getByRole('spinbutton')).toHaveValue(1)
+
+  // マイナスボタンを押す
+  await userEvent.click(getByRole('button', { name: '-' }))
+
+  expect(dispatchDecrement.mock.calls.length).toBe(1) // 呼ばれた
+  expect(dispatchDecrement.mock.lastCall.length).toBe(1)
+  expect(dispatchDecrement.mock.lastCall[0]).toBe(id)
+  expect(dispatchIncrement.mock.calls.length).toBe(0)
+
+  defaultRerender(0)
+
+  expect(getByRole('button', { name: '-' })).toBeDisabled() // 無効になった
+  expect(getByRole('button', { name: '+' })).toBeEnabled()
+  expect(getByRole('spinbutton')).toHaveValue(0)
 })
