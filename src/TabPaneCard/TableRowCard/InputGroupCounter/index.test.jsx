@@ -65,7 +65,7 @@ function defaultRenderSide(id, counter) {
 
 afterEach(cleanup)
 
-test('デフォルトのレンダリング', async () => {
+test('デフォルトのレンダリング', () => {
   const { getByRole } = defaultRenderMain('1-1', 0)
 
   const buttonMinus = getByRole('button', { name: '-' })
