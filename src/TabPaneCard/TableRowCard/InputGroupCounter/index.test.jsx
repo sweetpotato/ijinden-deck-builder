@@ -142,6 +142,37 @@ test('メインデッキのカウンターを1から2に増やす', async () => 
   expect(getByRole('spinbutton')).toHaveValue(2)
 })
 
+test('メインデッキのカウンターを2から1に減らす', async () => {
+  const id = '3-1'
+  const {
+    dispatchDecrement,
+    dispatchIncrement,
+    interruptSimulator,
+    defaultRerender,
+    getByRole,
+  } = defaultRenderMain(id, 2)
+
+  expect(getByRole('button', { name: '-' })).toBeEnabled()
+  expect(getByRole('button', { name: '+' })).toBeEnabled()
+  expect(getByRole('spinbutton')).toHaveValue(2)
+
+  // マイナスボタンを押す
+  await userEvent.click(getByRole('button', { name: '-' }))
+
+  expect(dispatchDecrement.mock.calls.length).toBe(1) // 呼ばれた
+  expect(dispatchDecrement.mock.lastCall.length).toBe(1)
+  expect(dispatchDecrement.mock.lastCall[0]).toBe(id)
+  expect(dispatchIncrement.mock.calls.length).toBe(0)
+  expect(interruptSimulator.mock.calls.length).toBe(1) // 呼ばれた
+  expect(interruptSimulator.mock.lastCall.length).toBe(0)
+
+  defaultRerender(1)
+
+  expect(getByRole('button', { name: '-' })).toBeEnabled()
+  expect(getByRole('button', { name: '+' })).toBeEnabled()
+  expect(getByRole('spinbutton')).toHaveValue(1)
+})
+
 test('メインデッキのカウンターを1から0に減らす', async () => {
   const id = 'B-1'
   const {
@@ -221,6 +252,30 @@ test('サイドデッキのカウンターを1から2に増やす', async () => 
   expect(getByRole('spinbutton')).toHaveValue(2)
 })
 
+test('サイドデッキのカウンターを2から1に減らす', async () => {
+  const id = '4-2'
+  const { dispatchDecrement, dispatchIncrement, defaultRerender, getByRole } =
+    defaultRenderSide(id, 2)
+
+  expect(getByRole('button', { name: '-' })).toBeEnabled()
+  expect(getByRole('button', { name: '+' })).toBeEnabled()
+  expect(getByRole('spinbutton')).toHaveValue(2)
+
+  // マイナスボタンを押す
+  await userEvent.click(getByRole('button', { name: '-' }))
+
+  expect(dispatchDecrement.mock.calls.length).toBe(1) // 呼ばれた
+  expect(dispatchDecrement.mock.lastCall.length).toBe(1)
+  expect(dispatchDecrement.mock.lastCall[0]).toBe(id)
+  expect(dispatchIncrement.mock.calls.length).toBe(0)
+
+  defaultRerender(1)
+
+  expect(getByRole('button', { name: '-' })).toBeEnabled()
+  expect(getByRole('button', { name: '+' })).toBeEnabled()
+  expect(getByRole('spinbutton')).toHaveValue(1)
+})
+
 test('サイドデッキのカウンターを1から0に減らす', async () => {
   const id = 'P-2'
   const { dispatchDecrement, dispatchIncrement, defaultRerender, getByRole } =
@@ -237,6 +292,62 @@ test('サイドデッキのカウンターを1から0に減らす', async () => 
   expect(dispatchDecrement.mock.lastCall.length).toBe(1)
   expect(dispatchDecrement.mock.lastCall[0]).toBe(id)
   expect(dispatchIncrement.mock.calls.length).toBe(0)
+
+  defaultRerender(0)
+
+  expect(getByRole('button', { name: '-' })).toBeDisabled() // 無効になった
+  expect(getByRole('button', { name: '+' })).toBeEnabled()
+  expect(getByRole('spinbutton')).toHaveValue(0)
+})
+
+test('ボタンを押さずにメインデッキのカウンターを0から4に増やす', () => {
+  const { defaultRerender, getByRole } = defaultRenderMain('1-5', 0)
+
+  expect(getByRole('button', { name: '-' })).toBeDisabled() // 無効
+  expect(getByRole('button', { name: '+' })).toBeEnabled()
+  expect(getByRole('spinbutton')).toHaveValue(0)
+
+  defaultRerender(4)
+
+  expect(getByRole('button', { name: '-' })).toBeEnabled() // 有効になった
+  expect(getByRole('button', { name: '+' })).toBeEnabled()
+  expect(getByRole('spinbutton')).toHaveValue(4)
+})
+
+test('ボタンを押さずにメインデッキのカウンターを4から0に減らす', () => {
+  const { defaultRerender, getByRole } = defaultRenderMain('1-6', 4)
+
+  expect(getByRole('button', { name: '-' })).toBeEnabled()
+  expect(getByRole('button', { name: '+' })).toBeEnabled()
+  expect(getByRole('spinbutton')).toHaveValue(4)
+
+  defaultRerender(0)
+
+  expect(getByRole('button', { name: '-' })).toBeDisabled() // 無効になった
+  expect(getByRole('button', { name: '+' })).toBeEnabled()
+  expect(getByRole('spinbutton')).toHaveValue(0)
+})
+
+test('ボタンを押さずにサイドデッキのカウンターを0から4に増やす', () => {
+  const { defaultRerender, getByRole } = defaultRenderSide('1-7', 0)
+
+  expect(getByRole('button', { name: '-' })).toBeDisabled() // 無効
+  expect(getByRole('button', { name: '+' })).toBeEnabled()
+  expect(getByRole('spinbutton')).toHaveValue(0)
+
+  defaultRerender(4)
+
+  expect(getByRole('button', { name: '-' })).toBeEnabled() // 有効になった
+  expect(getByRole('button', { name: '+' })).toBeEnabled()
+  expect(getByRole('spinbutton')).toHaveValue(4)
+})
+
+test('ボタンを押さずにサイドデッキのカウンターを4から0に減らす', () => {
+  const { defaultRerender, getByRole } = defaultRenderSide('1-8', 4)
+
+  expect(getByRole('button', { name: '-' })).toBeEnabled()
+  expect(getByRole('button', { name: '+' })).toBeEnabled()
+  expect(getByRole('spinbutton')).toHaveValue(4)
 
   defaultRerender(0)
 
