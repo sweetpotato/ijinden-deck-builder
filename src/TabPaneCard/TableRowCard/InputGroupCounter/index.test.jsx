@@ -40,6 +40,21 @@ function defaultRenderSide(id, counter) {
 
 afterEach(cleanup)
 
+test('デフォルトのレンダリング', async () => {
+  const { getByRole } = defaultRenderMain('2-1', 0)
+
+  const buttonMinus = getByRole('button', { name: '-' })
+  expect(buttonMinus).toBeVisible()
+  expect(buttonMinus).toBeDisabled() // 無効
+  const buttonPlus = getByRole('button', { name: '+' })
+  expect(buttonPlus).toBeVisible()
+  expect(buttonPlus).toBeEnabled()
+  const inputCounter = getByRole('spinbutton')
+  expect(inputCounter).toBeVisible()
+  expect(inputCounter).toHaveAttribute('readonly')
+  expect(inputCounter).toHaveValue(0)
+})
+
 test('メインデッキのカウンターを0から1に増やす', async () => {
   const id = 'R-1'
   const {
