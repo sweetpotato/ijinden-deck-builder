@@ -9,12 +9,13 @@ import InputGroupCounter from '.'
 afterEach(cleanup)
 
 test('メインデッキのカウンターを0から1に増やす', async () => {
+  const id = 'R-1'
   const dispatchDecrement = vi.fn()
   const dispatchIncrement = vi.fn()
   const interruptSimulator = vi.fn()
   const { getByRole } = render(
     <InputGroupCounter
-      id="R-1"
+      id={id}
       counter={0}
       dispatchDecrement={dispatchDecrement}
       dispatchIncrement={dispatchIncrement}
@@ -38,18 +39,19 @@ test('メインデッキのカウンターを0から1に増やす', async () => 
   expect(dispatchDecrement.mock.calls.length).toBe(0)
   expect(dispatchIncrement.mock.calls.length).toBe(1) // 呼ばれた
   expect(dispatchIncrement.mock.lastCall.length).toBe(1)
-  expect(dispatchIncrement.mock.lastCall[0]).toBe('R-1')
+  expect(dispatchIncrement.mock.lastCall[0]).toBe(id)
   expect(interruptSimulator.mock.calls.length).toBe(1) // 呼ばれた
   expect(interruptSimulator.mock.lastCall.length).toBe(0)
 })
 
 test('メインデッキのカウンターを1から0に減らす', async () => {
+  const id = 'B-1'
   const dispatchDecrement = vi.fn()
   const dispatchIncrement = vi.fn()
   const interruptSimulator = vi.fn()
   const { getByRole } = render(
     <InputGroupCounter
-      id="B-1"
+      id={id}
       counter={1}
       dispatchDecrement={dispatchDecrement}
       dispatchIncrement={dispatchIncrement}
@@ -72,19 +74,20 @@ test('メインデッキのカウンターを1から0に減らす', async () => 
 
   expect(dispatchDecrement.mock.calls.length).toBe(1) // 呼ばれた
   expect(dispatchDecrement.mock.lastCall.length).toBe(1)
-  expect(dispatchDecrement.mock.lastCall[0]).toBe('B-1')
+  expect(dispatchDecrement.mock.lastCall[0]).toBe(id)
   expect(dispatchIncrement.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(1) // 呼ばれた
   expect(interruptSimulator.mock.lastCall.length).toBe(0)
 })
 
 test('メインデッキのカウンターを1から2に増やす', async () => {
+  const id = 'G-1'
   const dispatchDecrement = vi.fn()
   const dispatchIncrement = vi.fn()
   const interruptSimulator = vi.fn()
   const { getByRole } = render(
     <InputGroupCounter
-      id="G-1"
+      id={id}
       counter={1}
       dispatchDecrement={dispatchDecrement}
       dispatchIncrement={dispatchIncrement}
@@ -108,17 +111,18 @@ test('メインデッキのカウンターを1から2に増やす', async () => 
   expect(dispatchDecrement.mock.calls.length).toBe(0)
   expect(dispatchIncrement.mock.calls.length).toBe(1) // 呼ばれた
   expect(dispatchIncrement.mock.lastCall.length).toBe(1)
-  expect(dispatchIncrement.mock.lastCall[0]).toBe('G-1')
+  expect(dispatchIncrement.mock.lastCall[0]).toBe(id)
   expect(interruptSimulator.mock.calls.length).toBe(1) // 呼ばれた
   expect(interruptSimulator.mock.lastCall.length).toBe(0)
 })
 
 test('サイドデッキのカウンターを0から1に増やす', async () => {
+  const id = 'Y-2'
   const dispatchDecrement = vi.fn()
   const dispatchIncrement = vi.fn()
   const { getByRole } = render(
     <InputGroupCounter
-      id="Y-2"
+      id={id}
       counter={0}
       dispatchDecrement={dispatchDecrement}
       dispatchIncrement={dispatchIncrement}
@@ -141,15 +145,16 @@ test('サイドデッキのカウンターを0から1に増やす', async () => 
   expect(dispatchDecrement.mock.calls.length).toBe(0)
   expect(dispatchIncrement.mock.calls.length).toBe(1) // 呼ばれた
   expect(dispatchIncrement.mock.lastCall.length).toBe(1)
-  expect(dispatchIncrement.mock.lastCall[0]).toBe('Y-2')
+  expect(dispatchIncrement.mock.lastCall[0]).toBe(id)
 })
 
 test('サイドデッキのカウンターを1から0に減らす', async () => {
+  const id = 'P-2'
   const dispatchDecrement = vi.fn()
   const dispatchIncrement = vi.fn()
   const { getByRole } = render(
     <InputGroupCounter
-      id="P-2"
+      id={id}
       counter={1}
       dispatchDecrement={dispatchDecrement}
       dispatchIncrement={dispatchIncrement}
@@ -171,16 +176,17 @@ test('サイドデッキのカウンターを1から0に減らす', async () => 
 
   expect(dispatchDecrement.mock.calls.length).toBe(1) // 呼ばれた
   expect(dispatchDecrement.mock.lastCall.length).toBe(1)
-  expect(dispatchDecrement.mock.lastCall[0]).toBe('P-2')
+  expect(dispatchDecrement.mock.lastCall[0]).toBe(id)
   expect(dispatchIncrement.mock.calls.length).toBe(0)
 })
 
 test('サイドデッキのカウンターを1から2に増やす', async () => {
+  const id = '1-2'
   const dispatchDecrement = vi.fn()
   const dispatchIncrement = vi.fn()
   const { getByRole } = render(
     <InputGroupCounter
-      id="1-2"
+      id={id}
       counter={1}
       dispatchDecrement={dispatchDecrement}
       dispatchIncrement={dispatchIncrement}
@@ -203,5 +209,5 @@ test('サイドデッキのカウンターを1から2に増やす', async () => 
   expect(dispatchDecrement.mock.calls.length).toBe(0)
   expect(dispatchIncrement.mock.calls.length).toBe(1) // 呼ばれた
   expect(dispatchIncrement.mock.lastCall.length).toBe(1)
-  expect(dispatchIncrement.mock.lastCall[0]).toBe('1-2')
+  expect(dispatchIncrement.mock.lastCall[0]).toBe(id)
 })
