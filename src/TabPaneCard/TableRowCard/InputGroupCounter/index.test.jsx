@@ -66,7 +66,7 @@ function defaultRenderSide(id, counter) {
 afterEach(cleanup)
 
 test('デフォルトのレンダリング', async () => {
-  const { getByRole } = defaultRenderMain('2-1', 0)
+  const { getByRole } = defaultRenderMain('1-1', 0)
 
   const buttonMinus = getByRole('button', { name: '-' })
   expect(buttonMinus).toBeVisible()
@@ -81,7 +81,7 @@ test('デフォルトのレンダリング', async () => {
 })
 
 test('メインデッキのカウンターを0から1に増やす', async () => {
-  const id = 'R-1'
+  const id = '1-2'
   const {
     dispatchDecrement,
     dispatchIncrement,
@@ -112,7 +112,7 @@ test('メインデッキのカウンターを0から1に増やす', async () => 
 })
 
 test('メインデッキのカウンターを1から2に増やす', async () => {
-  const id = 'G-1'
+  const id = '1-3'
   const {
     dispatchDecrement,
     dispatchIncrement,
@@ -143,7 +143,7 @@ test('メインデッキのカウンターを1から2に増やす', async () => 
 })
 
 test('メインデッキのカウンターを2から1に減らす', async () => {
-  const id = '3-1'
+  const id = '1-4'
   const {
     dispatchDecrement,
     dispatchIncrement,
@@ -174,7 +174,7 @@ test('メインデッキのカウンターを2から1に減らす', async () => 
 })
 
 test('メインデッキのカウンターを1から0に減らす', async () => {
-  const id = 'B-1'
+  const id = '1-5'
   const {
     dispatchDecrement,
     dispatchIncrement,
@@ -205,7 +205,7 @@ test('メインデッキのカウンターを1から0に減らす', async () => 
 })
 
 test('サイドデッキのカウンターを0から1に増やす', async () => {
-  const id = 'Y-2'
+  const id = '1-6'
   const { dispatchDecrement, dispatchIncrement, defaultRerender, getByRole } =
     defaultRenderSide(id, 0)
 
@@ -229,7 +229,7 @@ test('サイドデッキのカウンターを0から1に増やす', async () => 
 })
 
 test('サイドデッキのカウンターを1から2に増やす', async () => {
-  const id = '1-2'
+  const id = '1-7'
   const { dispatchDecrement, dispatchIncrement, defaultRerender, getByRole } =
     defaultRenderSide(id, 1)
 
@@ -253,7 +253,7 @@ test('サイドデッキのカウンターを1から2に増やす', async () => 
 })
 
 test('サイドデッキのカウンターを2から1に減らす', async () => {
-  const id = '4-2'
+  const id = '1-8'
   const { dispatchDecrement, dispatchIncrement, defaultRerender, getByRole } =
     defaultRenderSide(id, 2)
 
@@ -277,7 +277,7 @@ test('サイドデッキのカウンターを2から1に減らす', async () => 
 })
 
 test('サイドデッキのカウンターを1から0に減らす', async () => {
-  const id = 'P-2'
+  const id = '1-9'
   const { dispatchDecrement, dispatchIncrement, defaultRerender, getByRole } =
     defaultRenderSide(id, 1)
 
@@ -301,7 +301,7 @@ test('サイドデッキのカウンターを1から0に減らす', async () => 
 })
 
 test('ボタンを押さずにメインデッキのカウンターを0から4に増やす', () => {
-  const { defaultRerender, getByRole } = defaultRenderMain('1-5', 0)
+  const { defaultRerender, getByRole } = defaultRenderMain('1-10', 0)
 
   expect(getByRole('button', { name: '-' })).toBeDisabled() // 無効
   expect(getByRole('button', { name: '+' })).toBeEnabled()
@@ -315,7 +315,7 @@ test('ボタンを押さずにメインデッキのカウンターを0から4に
 })
 
 test('ボタンを押さずにメインデッキのカウンターを4から0に減らす', () => {
-  const { defaultRerender, getByRole } = defaultRenderMain('1-6', 4)
+  const { defaultRerender, getByRole } = defaultRenderMain('1-11', 4)
 
   expect(getByRole('button', { name: '-' })).toBeEnabled()
   expect(getByRole('button', { name: '+' })).toBeEnabled()
@@ -329,7 +329,7 @@ test('ボタンを押さずにメインデッキのカウンターを4から0に
 })
 
 test('ボタンを押さずにサイドデッキのカウンターを0から4に増やす', () => {
-  const { defaultRerender, getByRole } = defaultRenderSide('1-7', 0)
+  const { defaultRerender, getByRole } = defaultRenderSide('1-12', 0)
 
   expect(getByRole('button', { name: '-' })).toBeDisabled() // 無効
   expect(getByRole('button', { name: '+' })).toBeEnabled()
@@ -343,7 +343,7 @@ test('ボタンを押さずにサイドデッキのカウンターを0から4に
 })
 
 test('ボタンを押さずにサイドデッキのカウンターを4から0に減らす', () => {
-  const { defaultRerender, getByRole } = defaultRenderSide('1-8', 4)
+  const { defaultRerender, getByRole } = defaultRenderSide('1-13', 4)
 
   expect(getByRole('button', { name: '-' })).toBeEnabled()
   expect(getByRole('button', { name: '+' })).toBeEnabled()
