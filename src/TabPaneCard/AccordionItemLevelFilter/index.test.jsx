@@ -1,7 +1,13 @@
 import { act } from 'react'
 import { Accordion } from 'react-bootstrap'
 import { afterEach, expect, test } from 'vitest'
-import { cleanup, fireEvent, render, renderHook } from '@testing-library/react'
+import {
+  cleanup,
+  fireEvent,
+  render,
+  renderHook,
+  within,
+} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import enumComparator from '../enumComparator'
@@ -10,12 +16,12 @@ import useAccordionItemLevelFilter from '.'
 function defaultRenderHook() {
   const { result } = renderHook(() => useAccordionItemLevelFilter())
   const defaultRender = () => {
-    const { rerender, getByRole, getByTestId } = render(
+    const { rerender, getByRole } = render(
       <Accordion alwaysOpen>{result.current[3]('0')}</Accordion>
     )
     const defaultRerender = () =>
       rerender(<Accordion alwaysOpen>{result.current[3]('0')}</Accordion>)
-    return { defaultRerender, getByRole, getByTestId }
+    return { defaultRerender, getByRole }
   }
   return { result, defaultRender }
 }
@@ -134,42 +140,19 @@ test('スライダーの選択', async () => {
   expect(getByRole('slider')).toHaveValue('0')
 })
 
-test('getByTestId による選択', async () => {
-  const { result, defaultRender } = defaultRenderHook()
-  expect(getLevel(result)).toBe(0)
-  expect(getComparator(result)).toBe(enumComparator.GE)
-  const { defaultRerender, getByTestId } = defaultRender()
+test('アクセシブル名はヘッダに含まれている', () => {
+  const { defaultRender } = defaultRenderHook()
+  const { getByRole } = defaultRender()
 
-  expect(getByTestId('slider-level')).toHaveValue('0')
-  const spanGE = getByTestId('button-level-ge')
-  expect(spanGE.querySelector('input')).toBeChecked()
-  expect(spanGE.querySelector('label')).toHaveTextContent('以上')
-  const spanLE = getByTestId('button-level-le')
-  expect(spanLE.querySelector('input')).not.toBeChecked()
-  expect(spanLE.querySelector('label')).toHaveTextContent('以下')
-  const spanEQ = getByTestId('button-level-eq')
-  expect(spanEQ.querySelector('input')).not.toBeChecked()
-  expect(spanEQ.querySelector('label')).toHaveTextContent('等しい')
-
-  fireEvent.change(getByTestId('slider-level'), { target: { value: '5' } })
-  expect(getLevel(result)).toBe(5)
-  defaultRerender()
-  expect(getByTestId('slider-level')).toHaveValue('5')
-
-  await userEvent.click(getByTestId('button-level-le').querySelector('input'))
-  expect(getComparator(result)).toBe(enumComparator.LE)
-  defaultRerender()
-  expect(getByTestId('button-level-le').querySelector('input')).toBeChecked()
-
-  await userEvent.click(getByTestId('button-level-eq').querySelector('input'))
-  expect(getComparator(result)).toBe(enumComparator.EQ)
-  defaultRerender()
-  expect(getByTestId('button-level-eq').querySelector('input')).toBeChecked()
-
-  await act(() => getResetFn(result)())
-  expect(getLevel(result)).toBe(0)
-  expect(getComparator(result)).toBe(enumComparator.GE)
-  defaultRerender()
-  expect(getByTestId('slider-level')).toHaveValue('0')
-  expect(getByTestId('button-level-ge').querySelector('input')).toBeChecked()
+  // リストアイテムとして取得できる
+  const item = getByRole('listitem', { name: 'レベル' })
+  expect(item).toBeVisible()
+  // スライダーとボタンが取得できる
+  expect(within(item).getByRole('slider')).toHaveValue('0')
+  expect(within(item).getByRole('radio', { name: '以上' })).toBeChecked()
+  expect(within(item).getByRole('radio', { name: '以下' })).not.toBeChecked()
+  expect(within(item).getByRole('radio', { name: '等しい' })).not.toBeChecked()
+  // ヘッダ部分はボタンとして取得できる
+  // TODO 正規表現でなく部分文字列マッチさせたい
+  expect(getByRole('button', { name: /レベル/ })).toBeVisible()
 })
