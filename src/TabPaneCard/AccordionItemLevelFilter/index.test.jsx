@@ -20,6 +20,18 @@ function defaultRenderHook() {
   return { result, defaultRender }
 }
 
+function getLevel(result) {
+  return result.current[0]
+}
+
+function getComparator(result) {
+  return result.current[1]
+}
+
+function getResetFn(result) {
+  return result.current[2]
+}
+
 afterEach(cleanup)
 
 test('デフォルトのレンダリング', () => {
@@ -45,7 +57,7 @@ test('デフォルトのレンダリング', () => {
 test('ボタンの選択', async () => {
   // 初期状態では「以上」が選択されている
   const { result, defaultRender } = defaultRenderHook()
-  expect(result.current[1]).toBe(enumComparator.GE)
+  expect(getComparator(result)).toBe(enumComparator.GE)
   const { defaultRerender, getByRole } = defaultRender()
   expect(getByRole('radio', { name: '以上' })).toBeChecked()
   expect(getByRole('radio', { name: '以下' })).not.toBeChecked()
@@ -53,7 +65,7 @@ test('ボタンの選択', async () => {
 
   // 「以下」を選択する
   await userEvent.click(getByRole('radio', { name: '以下' }))
-  expect(result.current[1]).toBe(enumComparator.LE)
+  expect(getComparator(result)).toBe(enumComparator.LE)
   defaultRerender()
   expect(getByRole('radio', { name: '以上' })).not.toBeChecked()
   expect(getByRole('radio', { name: '以下' })).toBeChecked()
@@ -61,15 +73,15 @@ test('ボタンの選択', async () => {
 
   // 「等しい」を選択する
   await userEvent.click(getByRole('radio', { name: '等しい' }))
-  expect(result.current[1]).toBe(enumComparator.EQ)
+  expect(getComparator(result)).toBe(enumComparator.EQ)
   defaultRerender()
   expect(getByRole('radio', { name: '以上' })).not.toBeChecked()
   expect(getByRole('radio', { name: '以下' })).not.toBeChecked()
   expect(getByRole('radio', { name: '等しい' })).toBeChecked()
 
   // リセットすると「以上」ボタンが選択される
-  await act(() => result.current[2]())
-  expect(result.current[1]).toBe(enumComparator.GE)
+  await act(() => getResetFn(result)())
+  expect(getComparator(result)).toBe(enumComparator.GE)
   defaultRerender()
   expect(getByRole('radio', { name: '以上' })).toBeChecked()
   expect(getByRole('radio', { name: '以下' })).not.toBeChecked()
@@ -79,7 +91,7 @@ test('ボタンの選択', async () => {
 test('スライダーの選択', async () => {
   // 初期値は0である
   const { result, defaultRender } = defaultRenderHook()
-  expect(result.current[0]).toBe(0)
+  expect(getLevel(result)).toBe(0)
   const { defaultRerender, getByRole } = defaultRender()
   expect(getByRole('slider')).toHaveValue('0')
 
@@ -87,46 +99,45 @@ test('スライダーの選択', async () => {
   // userEvent は slider に未対応とのこと。
   // See: https://github.com/testing-library/user-event/issues/871
   fireEvent.change(getByRole('slider'), { target: { value: '1' } })
-  expect(result.current[0]).toBe(1)
+  expect(getLevel(result)).toBe(1)
   defaultRerender()
   expect(getByRole('slider')).toHaveValue('1')
 
   // 値を10にする
   fireEvent.change(getByRole('slider'), { target: { value: '10' } })
-  expect(result.current[0]).toBe(10)
+  expect(getLevel(result)).toBe(10)
   defaultRerender()
   expect(getByRole('slider')).toHaveValue('10')
 
   // 値を11にしようとすると10になる
   fireEvent.change(getByRole('slider'), { target: { value: '11' } })
-  expect(result.current[0]).toBe(10)
+  expect(getLevel(result)).toBe(10)
   defaultRerender()
   expect(getByRole('slider')).toHaveValue('10')
 
   // 値を17にする
   fireEvent.change(getByRole('slider'), { target: { value: '17' } })
-  expect(result.current[0]).toBe(17)
+  expect(getLevel(result)).toBe(17)
   defaultRerender()
   expect(getByRole('slider')).toHaveValue('17')
 
   // 値を16にしようとすると17になる
   fireEvent.change(getByRole('slider'), { target: { value: '16' } })
-  expect(result.current[0]).toBe(17)
+  expect(getLevel(result)).toBe(17)
   defaultRerender()
   expect(getByRole('slider')).toHaveValue('17')
 
   // リセットすると値は0になる
-  await act(() => result.current[2]())
-  expect(result.current[0]).toBe(0)
+  await act(() => getResetFn(result)())
+  expect(getLevel(result)).toBe(0)
   defaultRerender()
   expect(getByRole('slider')).toHaveValue('0')
 })
 
 test('getByTestId による選択', async () => {
   const { result, defaultRender } = defaultRenderHook()
-  let [level, comparator, reset] = result.current
-  expect(level).toBe(0)
-  expect(comparator).toBe(enumComparator.GE)
+  expect(getLevel(result)).toBe(0)
+  expect(getComparator(result)).toBe(enumComparator.GE)
   const { defaultRerender, getByTestId } = defaultRender()
 
   expect(getByTestId('slider-level')).toHaveValue('0')
@@ -141,27 +152,23 @@ test('getByTestId による選択', async () => {
   expect(spanEQ.querySelector('label')).toHaveTextContent('等しい')
 
   fireEvent.change(getByTestId('slider-level'), { target: { value: '5' } })
-  ;[level, comparator, reset] = result.current
-  expect(level).toBe(5)
+  expect(getLevel(result)).toBe(5)
   defaultRerender()
   expect(getByTestId('slider-level')).toHaveValue('5')
 
   await userEvent.click(getByTestId('button-level-le').querySelector('input'))
-  ;[level, comparator, reset] = result.current
-  expect(comparator).toBe(enumComparator.LE)
+  expect(getComparator(result)).toBe(enumComparator.LE)
   defaultRerender()
   expect(getByTestId('button-level-le').querySelector('input')).toBeChecked()
 
   await userEvent.click(getByTestId('button-level-eq').querySelector('input'))
-  ;[level, comparator, reset] = result.current
-  expect(comparator).toBe(enumComparator.EQ)
+  expect(getComparator(result)).toBe(enumComparator.EQ)
   defaultRerender()
   expect(getByTestId('button-level-eq').querySelector('input')).toBeChecked()
 
-  await act(() => reset())
-  ;[level, comparator, reset] = result.current
-  expect(level).toBe(0)
-  expect(comparator).toBe(enumComparator.GE)
+  await act(() => getResetFn(result)())
+  expect(getLevel(result)).toBe(0)
+  expect(getComparator(result)).toBe(enumComparator.GE)
   defaultRerender()
   expect(getByTestId('slider-level')).toHaveValue('0')
   expect(getByTestId('button-level-ge').querySelector('input')).toBeChecked()
