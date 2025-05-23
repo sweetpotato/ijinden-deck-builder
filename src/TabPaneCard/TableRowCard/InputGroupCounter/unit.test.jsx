@@ -65,7 +65,7 @@ function defaultRenderSide(id, counter) {
 
 afterEach(cleanup)
 
-test('デフォルトのレンダリング', () => {
+test('メインデッキのカウンターを0にしてレンダリング', () => {
   const { getByRole } = defaultRenderMain('1-1', 0)
 
   const buttonMinus = getByRole('button', { name: '-' })
@@ -78,6 +78,51 @@ test('デフォルトのレンダリング', () => {
   expect(inputCounter).toBeVisible()
   expect(inputCounter).toHaveAttribute('readonly')
   expect(inputCounter).toHaveValue(0)
+})
+
+test('メインデッキのカウンターを1にしてレンダリング', () => {
+  const { getByRole } = defaultRenderMain('1-14', 1)
+
+  const buttonMinus = getByRole('button', { name: '-' })
+  expect(buttonMinus).toBeVisible()
+  expect(buttonMinus).toBeEnabled()
+  const buttonPlus = getByRole('button', { name: '+' })
+  expect(buttonPlus).toBeVisible()
+  expect(buttonPlus).toBeEnabled()
+  const inputCounter = getByRole('spinbutton')
+  expect(inputCounter).toBeVisible()
+  expect(inputCounter).toHaveAttribute('readonly')
+  expect(inputCounter).toHaveValue(1)
+})
+
+test('サイドデッキのカウンターを0にしてレンダリング', () => {
+  const { getByRole } = defaultRenderSide('1-15', 0)
+
+  const buttonMinus = getByRole('button', { name: '-' })
+  expect(buttonMinus).toBeVisible()
+  expect(buttonMinus).toBeDisabled() // 無効
+  const buttonPlus = getByRole('button', { name: '+' })
+  expect(buttonPlus).toBeVisible()
+  expect(buttonPlus).toBeEnabled()
+  const inputCounter = getByRole('spinbutton')
+  expect(inputCounter).toBeVisible()
+  expect(inputCounter).toHaveAttribute('readonly')
+  expect(inputCounter).toHaveValue(0)
+})
+
+test('サイドデッキのカウンターを1にしてレンダリング', () => {
+  const { getByRole } = defaultRenderSide('1-16', 1)
+
+  const buttonMinus = getByRole('button', { name: '-' })
+  expect(buttonMinus).toBeVisible()
+  expect(buttonMinus).toBeEnabled()
+  const buttonPlus = getByRole('button', { name: '+' })
+  expect(buttonPlus).toBeVisible()
+  expect(buttonPlus).toBeEnabled()
+  const inputCounter = getByRole('spinbutton')
+  expect(inputCounter).toBeVisible()
+  expect(inputCounter).toHaveAttribute('readonly')
+  expect(inputCounter).toHaveValue(1)
 })
 
 test('メインデッキのカウンターを0から1に増やす', async () => {
@@ -212,7 +257,7 @@ test('サイドデッキのカウンターを1から0に減らす', async () => 
   expect(dispatchIncrement.mock.calls.length).toBe(0)
 })
 
-test('ボタンを押さずにメインデッキのカウンターを0から4に増やす', () => {
+test('リレンダリングでメインデッキのカウンターを0から4に増やす', () => {
   const { defaultRerender, getByRole } = defaultRenderMain('1-10', 0)
 
   expect(getByRole('button', { name: '-' })).toBeDisabled() // 無効
@@ -226,7 +271,7 @@ test('ボタンを押さずにメインデッキのカウンターを0から4に
   expect(getByRole('spinbutton')).toHaveValue(4)
 })
 
-test('ボタンを押さずにメインデッキのカウンターを4から0に減らす', () => {
+test('リレンダリングでメインデッキのカウンターを4から0に減らす', () => {
   const { defaultRerender, getByRole } = defaultRenderMain('1-11', 4)
 
   expect(getByRole('button', { name: '-' })).toBeEnabled()
@@ -240,7 +285,7 @@ test('ボタンを押さずにメインデッキのカウンターを4から0に
   expect(getByRole('spinbutton')).toHaveValue(0)
 })
 
-test('ボタンを押さずにサイドデッキのカウンターを0から4に増やす', () => {
+test('リレンダリングでサイドデッキのカウンターを0から4に増やす', () => {
   const { defaultRerender, getByRole } = defaultRenderSide('1-12', 0)
 
   expect(getByRole('button', { name: '-' })).toBeDisabled() // 無効
@@ -254,7 +299,7 @@ test('ボタンを押さずにサイドデッキのカウンターを0から4に
   expect(getByRole('spinbutton')).toHaveValue(4)
 })
 
-test('ボタンを押さずにサイドデッキのカウンターを4から0に減らす', () => {
+test('リレンダリングでサイドデッキのカウンターを4から0に減らす', () => {
   const { defaultRerender, getByRole } = defaultRenderSide('1-13', 4)
 
   expect(getByRole('button', { name: '-' })).toBeEnabled()
