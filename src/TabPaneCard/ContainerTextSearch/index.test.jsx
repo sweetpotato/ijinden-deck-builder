@@ -6,15 +6,21 @@ import userEvent from '@testing-library/user-event'
 
 import useContainerTextSearch from '.'
 
+function defaultRender() {
+  const { result } = renderHook(() => useContainerTextSearch())
+  const { rerender, getByRole } = render(result.current[2]())
+  const defaultRerender = () => rerender(result.current[2]())
+  return { result, defaultRerender, getByRole }
+}
+
 afterEach(cleanup)
 
 test('レンダリング', async () => {
-  const { result } = renderHook(() => useContainerTextSearch())
-  let [keywords, includesTraitAndLegacy, renderContainer] = result.current
+  const { result, defaultRerender, getByRole } = defaultRender()
+  let [keywords, includesTraitAndLegacy] = result.current
   expect(keywords).toEqual([])
   expect(includesTraitAndLegacy).toBe(true)
 
-  const { rerender, getByRole } = render(renderContainer())
   let textbox = getByRole('textbox')
   expect(textbox).toBeVisible()
   expect(textbox).toHaveValue('')
@@ -27,11 +33,11 @@ test('レンダリング', async () => {
 
   // テキストボックスに「けんしん」と入力する
   await userEvent.type(textbox, 'けんしん') // 4文字
-  ;[keywords, includesTraitAndLegacy, renderContainer] = result.current
+  ;[keywords, includesTraitAndLegacy] = result.current
   expect(keywords).toEqual(['けんしん'])
   expect(includesTraitAndLegacy).toBe(true)
 
-  rerender(renderContainer())
+  defaultRerender()
   textbox = getByRole('textbox')
   expect(textbox).toBeVisible()
   expect(textbox).toHaveValue('けんしん')
@@ -43,11 +49,11 @@ test('レンダリング', async () => {
 
   // チェックボックスをタップする
   await userEvent.click(checkbox)
-  ;[keywords, includesTraitAndLegacy, renderContainer] = result.current
+  ;[keywords, includesTraitAndLegacy] = result.current
   expect(keywords).toEqual(['けんしん'])
   expect(includesTraitAndLegacy).toBe(false)
 
-  rerender(renderContainer())
+  defaultRerender()
   textbox = getByRole('textbox')
   expect(textbox).toBeVisible()
   expect(textbox).toHaveValue('けんしん')
@@ -59,11 +65,11 @@ test('レンダリング', async () => {
 
   // クリアボタンを押す
   await userEvent.click(buttonClear)
-  ;[keywords, includesTraitAndLegacy, renderContainer] = result.current
+  ;[keywords, includesTraitAndLegacy] = result.current
   expect(keywords).toEqual([])
   expect(includesTraitAndLegacy).toBe(false)
 
-  rerender(renderContainer())
+  defaultRerender()
   textbox = getByRole('textbox')
   expect(textbox).toBeVisible()
   expect(textbox).toHaveValue('')
@@ -75,12 +81,11 @@ test('レンダリング', async () => {
 })
 
 test('スペース区切りのキーワード列', async () => {
-  const { result } = renderHook(() => useContainerTextSearch())
-  let [keywords, includesTraitAndLegacy, renderContainer] = result.current
+  const { result, defaultRerender, getByRole } = defaultRender()
+  let [keywords, includesTraitAndLegacy] = result.current
   expect(keywords).toEqual([])
   expect(includesTraitAndLegacy).toBe(true)
 
-  const { rerender, getByRole } = render(renderContainer())
   let textbox = getByRole('textbox')
   expect(textbox).toBeVisible()
   expect(textbox).toHaveValue('')
@@ -92,11 +97,11 @@ test('スペース区切りのキーワード列', async () => {
 
   // テキストボックスに「ハイケイ ドロー 」と入力する (末尾の空白文字に注意)
   await userEvent.type(textbox, 'ハイケイ ドロー ')
-  ;[keywords, includesTraitAndLegacy, renderContainer] = result.current
+  ;[keywords, includesTraitAndLegacy] = result.current
   expect(keywords).toEqual(['ハイケイ', 'ドロー'])
   expect(includesTraitAndLegacy).toBe(true)
 
-  rerender(renderContainer())
+  defaultRerender()
   textbox = getByRole('textbox')
   expect(textbox).toBeVisible()
   expect(textbox).toHaveValue('ハイケイ ドロー ')
@@ -108,11 +113,11 @@ test('スペース区切りのキーワード列', async () => {
 
   // クリアボタンを押す
   await userEvent.click(buttonClear)
-  ;[keywords, includesTraitAndLegacy, renderContainer] = result.current
+  ;[keywords, includesTraitAndLegacy] = result.current
   expect(keywords).toEqual([])
   expect(includesTraitAndLegacy).toBe(true)
 
-  rerender(renderContainer())
+  defaultRerender()
   textbox = getByRole('textbox')
   expect(textbox).toBeVisible()
   expect(textbox).toHaveValue('')
