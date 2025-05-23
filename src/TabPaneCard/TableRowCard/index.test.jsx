@@ -29,7 +29,7 @@ function defaultRender(id, name, term, color, counterMain, counterSide) {
   }
   const zoomIn = vi.fn()
   const interruptSimulator = vi.fn()
-  const { rerender, getByText, getByRole, getAllByRole } = render(
+  const { rerender, getByRole, getAllByRole } = render(
     <Table>
       <tbody>
         <TableRowCard
@@ -72,7 +72,6 @@ function defaultRender(id, name, term, color, counterMain, counterSide) {
     zoomIn,
     interruptSimulator,
     defaultRerender,
-    getByText,
     getByRole,
     getAllByRole,
   }
