@@ -7,16 +7,27 @@ import userEvent from '@testing-library/user-event'
 import enumComparator from '../enumComparator'
 import useAccordionItemLevelFilter from '.'
 
+function defaultRenderHook() {
+  const { result } = renderHook(() => useAccordionItemLevelFilter())
+  const defaultRender = () => {
+    const { rerender, getByRole, getByTestId } = render(
+      <Accordion alwaysOpen>{result.current[3]('0')}</Accordion>
+    )
+    const defaultRerender = () =>
+      rerender(<Accordion alwaysOpen>{result.current[3]('0')}</Accordion>)
+    return { defaultRerender, getByRole, getByTestId }
+  }
+  return { result, defaultRender }
+}
+
 afterEach(cleanup)
 
 test('ボタンの選択', async () => {
-  const { result } = renderHook(() => useAccordionItemLevelFilter())
-  let [level, comparator, reset, renderItem] = result.current
+  const { result, defaultRender } = defaultRenderHook()
+  let [level, comparator, reset] = result.current
   expect(level).toBe(0)
   expect(comparator).toBe(enumComparator.GE)
-  const { rerender, getByRole } = render(
-    <Accordion alwaysOpen>{renderItem('0')}</Accordion>
-  )
+  const { defaultRerender, getByRole } = defaultRender()
 
   let slider = getByRole('slider')
   expect(slider).toBeVisible()
@@ -33,10 +44,10 @@ test('ボタンの選択', async () => {
 
   // 以下を選択する
   await userEvent.click(buttonLE)
-  ;[level, comparator, reset, renderItem] = result.current
+  ;[level, comparator, reset] = result.current
   expect(level).toBe(0)
   expect(comparator).toBe(enumComparator.LE)
-  rerender(<Accordion alwaysOpen>{renderItem('0')}</Accordion>)
+  defaultRerender()
 
   slider = getByRole('slider')
   expect(slider).toBeVisible()
@@ -53,10 +64,10 @@ test('ボタンの選択', async () => {
 
   // 等しいを選択する
   await userEvent.click(buttonEQ)
-  ;[level, comparator, reset, renderItem] = result.current
+  ;[level, comparator, reset] = result.current
   expect(level).toBe(0)
   expect(comparator).toBe(enumComparator.EQ)
-  rerender(<Accordion alwaysOpen>{renderItem('0')}</Accordion>)
+  defaultRerender()
 
   slider = getByRole('slider')
   expect(slider).toBeVisible()
@@ -73,10 +84,10 @@ test('ボタンの選択', async () => {
 
   // 状態をリセットする
   await act(() => reset())
-  ;[level, comparator, reset, renderItem] = result.current
+  ;[level, comparator, reset] = result.current
   expect(level).toBe(0)
   expect(comparator).toBe(enumComparator.GE)
-  rerender(<Accordion alwaysOpen>{renderItem('0')}</Accordion>)
+  defaultRerender()
 
   slider = getByRole('slider')
   expect(slider).toBeVisible()
@@ -93,13 +104,11 @@ test('ボタンの選択', async () => {
 })
 
 test('スライダーの選択', async () => {
-  const { result } = renderHook(() => useAccordionItemLevelFilter())
-  let [level, comparator, reset, renderItem] = result.current
+  const { result, defaultRender } = defaultRenderHook()
+  let [level, comparator, reset] = result.current
   expect(level).toBe(0)
   expect(comparator).toBe(enumComparator.GE)
-  const { rerender, getByRole } = render(
-    <Accordion alwaysOpen>{renderItem('0')}</Accordion>
-  )
+  const { defaultRerender, getByRole } = defaultRender()
 
   let slider = getByRole('slider')
   expect(slider).toBeVisible()
@@ -118,10 +127,10 @@ test('スライダーの選択', async () => {
   // userEvent は slider に未対応とのこと。
   // See: https://github.com/testing-library/user-event/issues/871
   fireEvent.change(slider, { target: { value: '1' } })
-  ;[level, comparator, reset, renderItem] = result.current
+  ;[level, comparator, reset] = result.current
   expect(level).toBe(1) // 1になっている
   expect(comparator).toBe(enumComparator.GE)
-  rerender(<Accordion alwaysOpen>{renderItem('0')}</Accordion>)
+  defaultRerender()
 
   slider = getByRole('slider')
   expect(slider).toBeVisible()
@@ -138,10 +147,10 @@ test('スライダーの選択', async () => {
 
   // 値を10にする
   fireEvent.change(slider, { target: { value: '10' } })
-  ;[level, comparator, reset, renderItem] = result.current
+  ;[level, comparator, reset] = result.current
   expect(level).toBe(10) // 10になっている
   expect(comparator).toBe(enumComparator.GE)
-  rerender(<Accordion alwaysOpen>{renderItem('0')}</Accordion>)
+  defaultRerender()
 
   slider = getByRole('slider')
   expect(slider).toBeVisible()
@@ -158,10 +167,10 @@ test('スライダーの選択', async () => {
 
   // 値を11にしようとする
   fireEvent.change(slider, { target: { value: '11' } })
-  ;[level, comparator, reset, renderItem] = result.current
+  ;[level, comparator, reset] = result.current
   expect(level).toBe(10) // 11ではなく10になっている
   expect(comparator).toBe(enumComparator.GE)
-  rerender(<Accordion alwaysOpen>{renderItem('0')}</Accordion>)
+  defaultRerender()
 
   slider = getByRole('slider')
   expect(slider).toBeVisible()
@@ -178,10 +187,10 @@ test('スライダーの選択', async () => {
 
   // 値を17にする
   fireEvent.change(slider, { target: { value: '17' } })
-  ;[level, comparator, reset, renderItem] = result.current
+  ;[level, comparator, reset] = result.current
   expect(level).toBe(17) // 17になっている
   expect(comparator).toBe(enumComparator.GE)
-  rerender(<Accordion alwaysOpen>{renderItem('0')}</Accordion>)
+  defaultRerender()
 
   slider = getByRole('slider')
   expect(slider).toBeVisible()
@@ -198,10 +207,10 @@ test('スライダーの選択', async () => {
 
   // 値を16にしようとする
   fireEvent.change(slider, { target: { value: '16' } })
-  ;[level, comparator, reset, renderItem] = result.current
+  ;[level, comparator, reset] = result.current
   expect(level).toBe(17) // 16ではなく17になっている
   expect(comparator).toBe(enumComparator.GE)
-  rerender(<Accordion alwaysOpen>{renderItem('0')}</Accordion>)
+  defaultRerender()
 
   slider = getByRole('slider')
   expect(slider).toBeVisible()
@@ -218,10 +227,10 @@ test('スライダーの選択', async () => {
 
   // 状態をリセットする
   await act(() => reset())
-  ;[level, comparator, reset, renderItem] = result.current
+  ;[level, comparator, reset] = result.current
   expect(level).toBe(0) // 0になっている
   expect(comparator).toBe(enumComparator.GE) // 以上になっている
-  rerender(<Accordion alwaysOpen>{renderItem('0')}</Accordion>)
+  defaultRerender()
 
   slider = getByRole('slider')
   expect(slider).toBeVisible()
@@ -238,13 +247,11 @@ test('スライダーの選択', async () => {
 })
 
 test('getByTestId による選択', async () => {
-  const { result } = renderHook(() => useAccordionItemLevelFilter())
-  let [level, comparator, reset, renderItem] = result.current
+  const { result, defaultRender } = defaultRenderHook()
+  let [level, comparator, reset] = result.current
   expect(level).toBe(0)
   expect(comparator).toBe(enumComparator.GE)
-  const { rerender, getByTestId } = render(
-    <Accordion alwaysOpen>{renderItem('0')}</Accordion>
-  )
+  const { defaultRerender, getByTestId } = defaultRender()
 
   expect(getByTestId('slider-level')).toHaveValue('0')
   const spanGE = getByTestId('button-level-ge')
@@ -258,28 +265,28 @@ test('getByTestId による選択', async () => {
   expect(spanEQ.querySelector('label')).toHaveTextContent('等しい')
 
   fireEvent.change(getByTestId('slider-level'), { target: { value: '5' } })
-  ;[level, comparator, reset, renderItem] = result.current
+  ;[level, comparator, reset] = result.current
   expect(level).toBe(5)
-  rerender(<Accordion alwaysOpen>{renderItem('0')}</Accordion>)
+  defaultRerender()
   expect(getByTestId('slider-level')).toHaveValue('5')
 
   await userEvent.click(getByTestId('button-level-le').querySelector('input'))
-  ;[level, comparator, reset, renderItem] = result.current
+  ;[level, comparator, reset] = result.current
   expect(comparator).toBe(enumComparator.LE)
-  rerender(<Accordion alwaysOpen>{renderItem('0')}</Accordion>)
+  defaultRerender()
   expect(getByTestId('button-level-le').querySelector('input')).toBeChecked()
 
   await userEvent.click(getByTestId('button-level-eq').querySelector('input'))
-  ;[level, comparator, reset, renderItem] = result.current
+  ;[level, comparator, reset] = result.current
   expect(comparator).toBe(enumComparator.EQ)
-  rerender(<Accordion alwaysOpen>{renderItem('0')}</Accordion>)
+  defaultRerender()
   expect(getByTestId('button-level-eq').querySelector('input')).toBeChecked()
 
   await act(() => reset())
-  ;[level, comparator, reset, renderItem] = result.current
+  ;[level, comparator, reset] = result.current
   expect(level).toBe(0)
   expect(comparator).toBe(enumComparator.GE)
-  rerender(<Accordion alwaysOpen>{renderItem('0')}</Accordion>)
+  defaultRerender()
   expect(getByTestId('slider-level')).toHaveValue('0')
   expect(getByTestId('button-level-ge').querySelector('input')).toBeChecked()
 })
