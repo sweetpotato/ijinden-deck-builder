@@ -155,6 +155,66 @@ test('デフォルトのレンダリング', () => {
   expect(buttonPlusSide).toBeEnabled()
 })
 
+test('各行のアクセシブル名はIDである', async () => {
+  // デフォルトレンダラは使わない
+  const { getByRole } = render(
+    <Table>
+      <tbody>
+        <TableRowCard
+          id="1-1"
+          name="織田信長"
+          term={0}
+          color={enumColor.RED}
+          counterMain={1}
+          counterSide={2}
+          dispatchDeck={{
+            decrementMain: vi.fn(),
+            incrementMain: vi.fn(),
+            decrementSide: vi.fn(),
+            incrementSide: vi.fn(),
+          }}
+          zoomIn={vi.fn()}
+          interruptSimulator={vi.fn()}
+        />
+        <TableRowCard
+          id="1-2"
+          name="クレオパトラ"
+          term={0}
+          color={enumColor.RED}
+          counterMain={3}
+          counterSide={4}
+          dispatchDeck={{
+            decrementMain: vi.fn(),
+            incrementMain: vi.fn(),
+            decrementSide: vi.fn(),
+            incrementSide: vi.fn(),
+          }}
+          zoomIn={vi.fn()}
+          interruptSimulator={vi.fn()}
+        />
+      </tbody>
+    </Table>
+  )
+
+  const row1 = getByRole('row', { name: '1-1' })
+  expect(row1).toBeVisible()
+  const columns1 = within(row1).getAllByRole('cell')
+  expect(columns1.length).toBe(4)
+  expect(columns1[0]).toHaveTextContent('1-1')
+  expect(columns1[1]).toHaveTextContent('織田信長')
+  expect(within(columns1[2]).getByRole('spinbutton')).toHaveValue(1)
+  expect(within(columns1[3]).getByRole('spinbutton')).toHaveValue(2)
+
+  const row2 = getByRole('row', { name: '1-2' })
+  expect(row2).toBeVisible()
+  const columns2 = within(row2).getAllByRole('cell')
+  expect(columns2.length).toBe(4)
+  expect(columns2[0]).toHaveTextContent('1-2')
+  expect(columns2[1]).toHaveTextContent('クレオパトラ')
+  expect(within(columns2[2]).getByRole('spinbutton')).toHaveValue(3)
+  expect(within(columns2[3]).getByRole('spinbutton')).toHaveValue(4)
+})
+
 test('虫眼鏡ボタンを押す', async () => {
   const id = '1-1'
   const {
@@ -190,7 +250,6 @@ test('メインデッキのカウンターを0から1に増やす', async () => 
     incrementSide,
     zoomIn,
     interruptSimulator,
-    defaultRerender,
     getByRole,
   } = defaultRender(id, '織田信長', 0, enumColor.RED, 0, 0)
   let main = within(within(getByRole('row')).getAllByRole('cell')[2])
@@ -215,17 +274,6 @@ test('メインデッキのカウンターを0から1に増やす', async () => 
   expect(zoomIn.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(1) // 呼ばれた
   expect(interruptSimulator.mock.lastCall.length).toBe(0)
-
-  defaultRerender(1, 0)
-  main = within(within(getByRole('row')).getAllByRole('cell')[2])
-  side = within(within(getByRole('row')).getAllByRole('cell')[3])
-
-  expect(main.getByRole('button', { name: '-' })).toBeEnabled() // 有効になった
-  expect(main.getByRole('spinbutton')).toHaveValue(1)
-  expect(main.getByRole('button', { name: '+' })).toBeEnabled()
-  expect(side.getByRole('button', { name: '-' })).toBeDisabled()
-  expect(side.getByRole('spinbutton')).toHaveValue(0)
-  expect(side.getByRole('button', { name: '+' })).toBeEnabled()
 })
 
 test('メインデッキのカウンターを1から2に増やす', async () => {
@@ -237,7 +285,6 @@ test('メインデッキのカウンターを1から2に増やす', async () => 
     incrementSide,
     zoomIn,
     interruptSimulator,
-    defaultRerender,
     getByRole,
   } = defaultRender(id, '織田信長', 0, enumColor.RED, 1, 1)
   let main = within(within(getByRole('row')).getAllByRole('cell')[2])
@@ -262,64 +309,6 @@ test('メインデッキのカウンターを1から2に増やす', async () => 
   expect(zoomIn.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(1) // 呼ばれた
   expect(interruptSimulator.mock.lastCall.length).toBe(0)
-
-  defaultRerender(2, 1)
-  main = within(within(getByRole('row')).getAllByRole('cell')[2])
-  side = within(within(getByRole('row')).getAllByRole('cell')[3])
-
-  expect(main.getByRole('button', { name: '-' })).toBeEnabled()
-  expect(main.getByRole('spinbutton')).toHaveValue(2)
-  expect(main.getByRole('button', { name: '+' })).toBeEnabled()
-  expect(side.getByRole('button', { name: '-' })).toBeEnabled()
-  expect(side.getByRole('spinbutton')).toHaveValue(1)
-  expect(side.getByRole('button', { name: '+' })).toBeEnabled()
-})
-
-test('メインデッキのカウンターを2から1に減らす', async () => {
-  const id = '1-1'
-  const {
-    decrementMain,
-    incrementMain,
-    decrementSide,
-    incrementSide,
-    zoomIn,
-    interruptSimulator,
-    defaultRerender,
-    getByRole,
-  } = defaultRender(id, '織田信長', 0, enumColor.RED, 2, 2)
-  let main = within(within(getByRole('row')).getAllByRole('cell')[2])
-  let side = within(within(getByRole('row')).getAllByRole('cell')[3])
-
-  expect(main.getByRole('button', { name: '-' })).toBeEnabled()
-  expect(main.getByRole('spinbutton')).toHaveValue(2)
-  expect(main.getByRole('button', { name: '+' })).toBeEnabled()
-  expect(side.getByRole('button', { name: '-' })).toBeEnabled()
-  expect(side.getByRole('spinbutton')).toHaveValue(2)
-  expect(side.getByRole('button', { name: '+' })).toBeEnabled()
-
-  // メインデッキのマイナスボタンを押す
-  await userEvent.click(main.getByRole('button', { name: '-' }))
-
-  expect(decrementMain.mock.calls.length).toBe(1) // 呼ばれた
-  expect(decrementMain.mock.lastCall.length).toBe(1)
-  expect(decrementMain.mock.lastCall[0]).toBe(id)
-  expect(incrementMain.mock.calls.length).toBe(0)
-  expect(decrementSide.mock.calls.length).toBe(0)
-  expect(incrementSide.mock.calls.length).toBe(0)
-  expect(zoomIn.mock.calls.length).toBe(0)
-  expect(interruptSimulator.mock.calls.length).toBe(1) // 呼ばれた
-  expect(interruptSimulator.mock.lastCall.length).toBe(0)
-
-  defaultRerender(1, 2)
-  main = within(within(getByRole('row')).getAllByRole('cell')[2])
-  side = within(within(getByRole('row')).getAllByRole('cell')[3])
-
-  expect(main.getByRole('button', { name: '-' })).toBeEnabled()
-  expect(main.getByRole('spinbutton')).toHaveValue(1)
-  expect(main.getByRole('button', { name: '+' })).toBeEnabled()
-  expect(side.getByRole('button', { name: '-' })).toBeEnabled()
-  expect(side.getByRole('spinbutton')).toHaveValue(2)
-  expect(side.getByRole('button', { name: '+' })).toBeEnabled()
 })
 
 test('メインデッキのカウンターを1から0に減らす', async () => {
@@ -331,7 +320,6 @@ test('メインデッキのカウンターを1から0に減らす', async () => 
     incrementSide,
     zoomIn,
     interruptSimulator,
-    defaultRerender,
     getByRole,
   } = defaultRender(id, '織田信長', 0, enumColor.RED, 1, 1)
   let main = within(within(getByRole('row')).getAllByRole('cell')[2])
@@ -356,17 +344,6 @@ test('メインデッキのカウンターを1から0に減らす', async () => 
   expect(zoomIn.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(1) // 呼ばれた
   expect(interruptSimulator.mock.lastCall.length).toBe(0)
-
-  defaultRerender(0, 1)
-  main = within(within(getByRole('row')).getAllByRole('cell')[2])
-  side = within(within(getByRole('row')).getAllByRole('cell')[3])
-
-  expect(main.getByRole('button', { name: '-' })).toBeDisabled() // 無効になった
-  expect(main.getByRole('spinbutton')).toHaveValue(0)
-  expect(main.getByRole('button', { name: '+' })).toBeEnabled()
-  expect(side.getByRole('button', { name: '-' })).toBeEnabled()
-  expect(side.getByRole('spinbutton')).toHaveValue(1)
-  expect(side.getByRole('button', { name: '+' })).toBeEnabled()
 })
 
 test('サイドデッキのカウンターを0から1に増やす', async () => {
@@ -378,7 +355,6 @@ test('サイドデッキのカウンターを0から1に増やす', async () => 
     incrementSide,
     zoomIn,
     interruptSimulator,
-    defaultRerender,
     getByRole,
   } = defaultRender(id, '織田信長', 0, enumColor.RED, 0, 0)
   let main = within(within(getByRole('row')).getAllByRole('cell')[2])
@@ -402,17 +378,6 @@ test('サイドデッキのカウンターを0から1に増やす', async () => 
   expect(incrementSide.mock.lastCall[0]).toBe(id)
   expect(zoomIn.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(0)
-
-  defaultRerender(0, 1)
-  main = within(within(getByRole('row')).getAllByRole('cell')[2])
-  side = within(within(getByRole('row')).getAllByRole('cell')[3])
-
-  expect(main.getByRole('button', { name: '-' })).toBeDisabled()
-  expect(main.getByRole('spinbutton')).toHaveValue(0)
-  expect(main.getByRole('button', { name: '+' })).toBeEnabled()
-  expect(side.getByRole('button', { name: '-' })).toBeEnabled() // 有効になった
-  expect(side.getByRole('spinbutton')).toHaveValue(1)
-  expect(side.getByRole('button', { name: '+' })).toBeEnabled()
 })
 
 test('サイドデッキのカウンターを1から2に増やす', async () => {
@@ -424,7 +389,6 @@ test('サイドデッキのカウンターを1から2に増やす', async () => 
     incrementSide,
     zoomIn,
     interruptSimulator,
-    defaultRerender,
     getByRole,
   } = defaultRender(id, '織田信長', 0, enumColor.RED, 1, 1)
   let main = within(within(getByRole('row')).getAllByRole('cell')[2])
@@ -448,63 +412,6 @@ test('サイドデッキのカウンターを1から2に増やす', async () => 
   expect(incrementSide.mock.lastCall[0]).toBe(id)
   expect(zoomIn.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(0)
-
-  defaultRerender(1, 2)
-  main = within(within(getByRole('row')).getAllByRole('cell')[2])
-  side = within(within(getByRole('row')).getAllByRole('cell')[3])
-
-  expect(main.getByRole('button', { name: '-' })).toBeEnabled()
-  expect(main.getByRole('spinbutton')).toHaveValue(1)
-  expect(main.getByRole('button', { name: '+' })).toBeEnabled()
-  expect(side.getByRole('button', { name: '-' })).toBeEnabled()
-  expect(side.getByRole('spinbutton')).toHaveValue(2)
-  expect(side.getByRole('button', { name: '+' })).toBeEnabled()
-})
-
-test('サイドデッキのカウンターを2から1に減らす', async () => {
-  const id = '1-1'
-  const {
-    decrementMain,
-    incrementMain,
-    decrementSide,
-    incrementSide,
-    zoomIn,
-    interruptSimulator,
-    defaultRerender,
-    getByRole,
-  } = defaultRender(id, '織田信長', 0, enumColor.RED, 2, 2)
-  let main = within(within(getByRole('row')).getAllByRole('cell')[2])
-  let side = within(within(getByRole('row')).getAllByRole('cell')[3])
-
-  expect(main.getByRole('button', { name: '-' })).toBeEnabled()
-  expect(main.getByRole('spinbutton')).toHaveValue(2)
-  expect(main.getByRole('button', { name: '+' })).toBeEnabled()
-  expect(side.getByRole('button', { name: '-' })).toBeEnabled()
-  expect(side.getByRole('spinbutton')).toHaveValue(2)
-  expect(side.getByRole('button', { name: '+' })).toBeEnabled()
-
-  // サイドデッキのマイナスボタンを押す
-  await userEvent.click(side.getByRole('button', { name: '-' }))
-
-  expect(decrementMain.mock.calls.length).toBe(0)
-  expect(incrementMain.mock.calls.length).toBe(0)
-  expect(decrementSide.mock.calls.length).toBe(1) // 呼ばれた
-  expect(decrementSide.mock.lastCall.length).toBe(1)
-  expect(decrementSide.mock.lastCall[0]).toBe(id)
-  expect(incrementSide.mock.calls.length).toBe(0)
-  expect(zoomIn.mock.calls.length).toBe(0)
-  expect(interruptSimulator.mock.calls.length).toBe(0)
-
-  defaultRerender(2, 1)
-  main = within(within(getByRole('row')).getAllByRole('cell')[2])
-  side = within(within(getByRole('row')).getAllByRole('cell')[3])
-
-  expect(main.getByRole('button', { name: '-' })).toBeEnabled()
-  expect(main.getByRole('spinbutton')).toHaveValue(2)
-  expect(main.getByRole('button', { name: '+' })).toBeEnabled()
-  expect(side.getByRole('button', { name: '-' })).toBeEnabled()
-  expect(side.getByRole('spinbutton')).toHaveValue(1)
-  expect(side.getByRole('button', { name: '+' })).toBeEnabled()
 })
 
 test('サイドデッキのカウンターを1から0に減らす', async () => {
@@ -516,7 +423,6 @@ test('サイドデッキのカウンターを1から0に減らす', async () => 
     incrementSide,
     zoomIn,
     interruptSimulator,
-    defaultRerender,
     getByRole,
   } = defaultRender(id, '織田信長', 0, enumColor.RED, 1, 1)
   let main = within(within(getByRole('row')).getAllByRole('cell')[2])
@@ -540,20 +446,9 @@ test('サイドデッキのカウンターを1から0に減らす', async () => 
   expect(incrementSide.mock.calls.length).toBe(0)
   expect(zoomIn.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(0)
-
-  defaultRerender(1, 0)
-  main = within(within(getByRole('row')).getAllByRole('cell')[2])
-  side = within(within(getByRole('row')).getAllByRole('cell')[3])
-
-  expect(main.getByRole('button', { name: '-' })).toBeEnabled()
-  expect(main.getByRole('spinbutton')).toHaveValue(1)
-  expect(main.getByRole('button', { name: '+' })).toBeEnabled()
-  expect(side.getByRole('button', { name: '-' })).toBeDisabled() // 無効になった
-  expect(side.getByRole('spinbutton')).toHaveValue(0)
-  expect(side.getByRole('button', { name: '+' })).toBeEnabled()
 })
 
-test('ボタンを押さずにメインデッキのカウンターを0から4に増やす', async () => {
+test('ボタンを押さずにメインデッキのカウンターを0から4に増やす', () => {
   const { defaultRerender, getByRole } = defaultRender(
     '1-1',
     '織田信長',
@@ -584,7 +479,7 @@ test('ボタンを押さずにメインデッキのカウンターを0から4に
   expect(side.getByRole('button', { name: '+' })).toBeEnabled()
 })
 
-test('ボタンを押さずにメインデッキのカウンターを4から0に減らす', async () => {
+test('ボタンを押さずにメインデッキのカウンターを4から0に減らす', () => {
   const { defaultRerender, getByRole } = defaultRender(
     '1-1',
     '織田信長',
@@ -615,7 +510,7 @@ test('ボタンを押さずにメインデッキのカウンターを4から0に
   expect(side.getByRole('button', { name: '+' })).toBeEnabled()
 })
 
-test('ボタンを押さずにサイドデッキのカウンターを0から4に増やす', async () => {
+test('ボタンを押さずにサイドデッキのカウンターを0から4に増やす', () => {
   const { defaultRerender, getByRole } = defaultRender(
     '1-1',
     '織田信長',
@@ -646,7 +541,7 @@ test('ボタンを押さずにサイドデッキのカウンターを0から4に
   expect(side.getByRole('button', { name: '+' })).toBeEnabled()
 })
 
-test('ボタンを押さずにサイドデッキのカウンターを4から0に減らす', async () => {
+test('ボタンを押さずにサイドデッキのカウンターを4から0に減らす', () => {
   const { defaultRerender, getByRole } = defaultRender(
     '1-1',
     '織田信長',
@@ -677,7 +572,7 @@ test('ボタンを押さずにサイドデッキのカウンターを4から0に
   expect(side.getByRole('button', { name: '+' })).toBeEnabled()
 })
 
-test('ボタンを押さずにメインデッキとサイドデッキのカウンターを同時に増減させる', async () => {
+test('ボタンを押さずにメインデッキとサイドデッキのカウンターを同時に増減させる', () => {
   const { defaultRerender, getByRole } = defaultRender(
     '1-1',
     '織田信長',

@@ -511,7 +511,7 @@ test('プラスマイナスボタンの操作', async () => {
   }
   const zoomIn = vi.fn()
   const interruptSimulator = vi.fn()
-  const { rerender, getByTestId } = render(
+  const { rerender, getByRole } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
@@ -527,66 +527,66 @@ test('プラスマイナスボタンの操作', async () => {
   expect(zoomIn.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(0)
 
-  let buttonMainMinus1 = getByTestId('table-row-R-1').querySelector(
+  let buttonMainMinus1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(3) button:nth-child(1)'
   )
   expect(buttonMainMinus1).toBeVisible()
   expect(buttonMainMinus1).not.toBeEnabled()
-  let textboxMain1 = getByTestId('table-row-R-1').querySelector(
+  let textboxMain1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(3) input'
   )
   expect(textboxMain1).toBeVisible()
   expect(textboxMain1).toHaveAttribute('readonly')
   expect(textboxMain1).toHaveValue(0)
-  let buttonMainPlus1 = getByTestId('table-row-R-1').querySelector(
+  let buttonMainPlus1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(3) button:nth-child(3)'
   )
   expect(buttonMainPlus1).toBeVisible()
   expect(buttonMainPlus1).toBeEnabled()
-  let buttonSideMinus1 = getByTestId('table-row-R-1').querySelector(
+  let buttonSideMinus1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(4) button:nth-child(1)'
   )
   expect(buttonSideMinus1).toBeVisible()
   expect(buttonSideMinus1).not.toBeEnabled()
-  let textboxSide1 = getByTestId('table-row-R-1').querySelector(
+  let textboxSide1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(4) input'
   )
   expect(textboxSide1).toBeVisible()
   expect(textboxSide1).toHaveAttribute('readonly')
   expect(textboxSide1).toHaveValue(0)
-  let buttonSidePlus1 = getByTestId('table-row-R-1').querySelector(
+  let buttonSidePlus1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(4) button:nth-child(3)'
   )
   expect(buttonSidePlus1).toBeVisible()
   expect(buttonSidePlus1).toBeEnabled()
-  let buttonMainMinus2 = getByTestId('table-row-R-2').querySelector(
+  let buttonMainMinus2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(3) button:nth-child(1)'
   )
   expect(buttonMainMinus2).toBeVisible()
   expect(buttonMainMinus2).not.toBeEnabled()
-  let textboxMain2 = getByTestId('table-row-R-2').querySelector(
+  let textboxMain2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(3) input'
   )
   expect(textboxMain2).toBeVisible()
   expect(textboxMain2).toHaveAttribute('readonly')
   expect(textboxMain2).toHaveValue(0)
-  let buttonMainPlus2 = getByTestId('table-row-R-2').querySelector(
+  let buttonMainPlus2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(3) button:nth-child(3)'
   )
   expect(buttonMainPlus2).toBeVisible()
   expect(buttonMainPlus2).toBeEnabled()
-  let buttonSideMinus2 = getByTestId('table-row-R-2').querySelector(
+  let buttonSideMinus2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(4) button:nth-child(1)'
   )
   expect(buttonSideMinus2).toBeVisible()
   expect(buttonSideMinus2).not.toBeEnabled()
-  let textboxSide2 = getByTestId('table-row-R-2').querySelector(
+  let textboxSide2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(4) input'
   )
   expect(textboxSide2).toBeVisible()
   expect(textboxSide2).toHaveAttribute('readonly')
   expect(textboxSide2).toHaveValue(0)
-  let buttonSidePlus2 = getByTestId('table-row-R-2').querySelector(
+  let buttonSidePlus2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(4) button:nth-child(3)'
   )
   expect(buttonSidePlus2).toBeVisible()
@@ -612,66 +612,66 @@ test('プラスマイナスボタンの操作', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  buttonMainMinus1 = getByTestId('table-row-R-1').querySelector(
+  buttonMainMinus1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(3) button:nth-child(1)'
   )
   expect(buttonMainMinus1).toBeVisible()
   expect(buttonMainMinus1).toBeEnabled() // 有効になった
-  textboxMain1 = getByTestId('table-row-R-1').querySelector(
+  textboxMain1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(3) input'
   )
   expect(textboxMain1).toBeVisible()
   expect(textboxMain1).toHaveAttribute('readonly')
   expect(textboxMain1).toHaveValue(1) // 増えた
-  buttonMainPlus1 = getByTestId('table-row-R-1').querySelector(
+  buttonMainPlus1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(3) button:nth-child(3)'
   )
   expect(buttonMainPlus1).toBeVisible()
   expect(buttonMainPlus1).toBeEnabled()
-  buttonSideMinus1 = getByTestId('table-row-R-1').querySelector(
+  buttonSideMinus1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(4) button:nth-child(1)'
   )
   expect(buttonSideMinus1).toBeVisible()
   expect(buttonSideMinus1).not.toBeEnabled()
-  textboxSide1 = getByTestId('table-row-R-1').querySelector(
+  textboxSide1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(4) input'
   )
   expect(textboxSide1).toBeVisible()
   expect(textboxSide1).toHaveAttribute('readonly')
   expect(textboxSide1).toHaveValue(0)
-  buttonSidePlus1 = getByTestId('table-row-R-1').querySelector(
+  buttonSidePlus1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(4) button:nth-child(3)'
   )
   expect(buttonSidePlus1).toBeVisible()
   expect(buttonSidePlus1).toBeEnabled()
-  buttonMainMinus2 = getByTestId('table-row-R-2').querySelector(
+  buttonMainMinus2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(3) button:nth-child(1)'
   )
   expect(buttonMainMinus2).toBeVisible()
   expect(buttonMainMinus2).not.toBeEnabled()
-  textboxMain2 = getByTestId('table-row-R-2').querySelector(
+  textboxMain2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(3) input'
   )
   expect(textboxMain2).toBeVisible()
   expect(textboxMain2).toHaveAttribute('readonly')
   expect(textboxMain2).toHaveValue(0)
-  buttonMainPlus2 = getByTestId('table-row-R-2').querySelector(
+  buttonMainPlus2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(3) button:nth-child(3)'
   )
   expect(buttonMainPlus2).toBeVisible()
   expect(buttonMainPlus2).toBeEnabled()
-  buttonSideMinus2 = getByTestId('table-row-R-2').querySelector(
+  buttonSideMinus2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(4) button:nth-child(1)'
   )
   expect(buttonSideMinus2).toBeVisible()
   expect(buttonSideMinus2).not.toBeEnabled()
-  textboxSide2 = getByTestId('table-row-R-2').querySelector(
+  textboxSide2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(4) input'
   )
   expect(textboxSide2).toBeVisible()
   expect(textboxSide2).toHaveAttribute('readonly')
   expect(textboxSide2).toHaveValue(0)
-  buttonSidePlus2 = getByTestId('table-row-R-2').querySelector(
+  buttonSidePlus2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(4) button:nth-child(3)'
   )
   expect(buttonSidePlus2).toBeVisible()
@@ -697,66 +697,66 @@ test('プラスマイナスボタンの操作', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  buttonMainMinus1 = getByTestId('table-row-R-1').querySelector(
+  buttonMainMinus1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(3) button:nth-child(1)'
   )
   expect(buttonMainMinus1).toBeVisible()
   expect(buttonMainMinus1).toBeEnabled()
-  textboxMain1 = getByTestId('table-row-R-1').querySelector(
+  textboxMain1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(3) input'
   )
   expect(textboxMain1).toBeVisible()
   expect(textboxMain1).toHaveAttribute('readonly')
   expect(textboxMain1).toHaveValue(1)
-  buttonMainPlus1 = getByTestId('table-row-R-1').querySelector(
+  buttonMainPlus1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(3) button:nth-child(3)'
   )
   expect(buttonMainPlus1).toBeVisible()
   expect(buttonMainPlus1).toBeEnabled()
-  buttonSideMinus1 = getByTestId('table-row-R-1').querySelector(
+  buttonSideMinus1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(4) button:nth-child(1)'
   )
   expect(buttonSideMinus1).toBeVisible()
   expect(buttonSideMinus1).toBeEnabled() // 有効になった
-  textboxSide1 = getByTestId('table-row-R-1').querySelector(
+  textboxSide1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(4) input'
   )
   expect(textboxSide1).toBeVisible()
   expect(textboxSide1).toHaveAttribute('readonly')
   expect(textboxSide1).toHaveValue(1) // 増えた
-  buttonSidePlus1 = getByTestId('table-row-R-1').querySelector(
+  buttonSidePlus1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(4) button:nth-child(3)'
   )
   expect(buttonSidePlus1).toBeVisible()
   expect(buttonSidePlus1).toBeEnabled()
-  buttonMainMinus2 = getByTestId('table-row-R-2').querySelector(
+  buttonMainMinus2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(3) button:nth-child(1)'
   )
   expect(buttonMainMinus2).toBeVisible()
   expect(buttonMainMinus2).not.toBeEnabled()
-  textboxMain2 = getByTestId('table-row-R-2').querySelector(
+  textboxMain2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(3) input'
   )
   expect(textboxMain2).toBeVisible()
   expect(textboxMain2).toHaveAttribute('readonly')
   expect(textboxMain2).toHaveValue(0)
-  buttonMainPlus2 = getByTestId('table-row-R-2').querySelector(
+  buttonMainPlus2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(3) button:nth-child(3)'
   )
   expect(buttonMainPlus2).toBeVisible()
   expect(buttonMainPlus2).toBeEnabled()
-  buttonSideMinus2 = getByTestId('table-row-R-2').querySelector(
+  buttonSideMinus2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(4) button:nth-child(1)'
   )
   expect(buttonSideMinus2).toBeVisible()
   expect(buttonSideMinus2).not.toBeEnabled()
-  textboxSide2 = getByTestId('table-row-R-2').querySelector(
+  textboxSide2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(4) input'
   )
   expect(textboxSide2).toBeVisible()
   expect(textboxSide2).toHaveAttribute('readonly')
   expect(textboxSide2).toHaveValue(0)
-  buttonSidePlus2 = getByTestId('table-row-R-2').querySelector(
+  buttonSidePlus2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(4) button:nth-child(3)'
   )
   expect(buttonSidePlus2).toBeVisible()
@@ -785,66 +785,66 @@ test('プラスマイナスボタンの操作', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  buttonMainMinus1 = getByTestId('table-row-R-1').querySelector(
+  buttonMainMinus1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(3) button:nth-child(1)'
   )
   expect(buttonMainMinus1).toBeVisible()
   expect(buttonMainMinus1).toBeEnabled()
-  textboxMain1 = getByTestId('table-row-R-1').querySelector(
+  textboxMain1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(3) input'
   )
   expect(textboxMain1).toBeVisible()
   expect(textboxMain1).toHaveAttribute('readonly')
   expect(textboxMain1).toHaveValue(1)
-  buttonMainPlus1 = getByTestId('table-row-R-1').querySelector(
+  buttonMainPlus1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(3) button:nth-child(3)'
   )
   expect(buttonMainPlus1).toBeVisible()
   expect(buttonMainPlus1).toBeEnabled()
-  buttonSideMinus1 = getByTestId('table-row-R-1').querySelector(
+  buttonSideMinus1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(4) button:nth-child(1)'
   )
   expect(buttonSideMinus1).toBeVisible()
   expect(buttonSideMinus1).toBeEnabled()
-  textboxSide1 = getByTestId('table-row-R-1').querySelector(
+  textboxSide1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(4) input'
   )
   expect(textboxSide1).toBeVisible()
   expect(textboxSide1).toHaveAttribute('readonly')
   expect(textboxSide1).toHaveValue(1)
-  buttonSidePlus1 = getByTestId('table-row-R-1').querySelector(
+  buttonSidePlus1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(4) button:nth-child(3)'
   )
   expect(buttonSidePlus1).toBeVisible()
   expect(buttonSidePlus1).toBeEnabled()
-  buttonMainMinus2 = getByTestId('table-row-R-2').querySelector(
+  buttonMainMinus2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(3) button:nth-child(1)'
   )
   expect(buttonMainMinus2).toBeVisible()
   expect(buttonMainMinus2).toBeEnabled() // 有効になった
-  textboxMain2 = getByTestId('table-row-R-2').querySelector(
+  textboxMain2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(3) input'
   )
   expect(textboxMain2).toBeVisible()
   expect(textboxMain2).toHaveAttribute('readonly')
   expect(textboxMain2).toHaveValue(1) // 増えた
-  buttonMainPlus2 = getByTestId('table-row-R-2').querySelector(
+  buttonMainPlus2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(3) button:nth-child(3)'
   )
   expect(buttonMainPlus2).toBeVisible()
   expect(buttonMainPlus2).toBeEnabled()
-  buttonSideMinus2 = getByTestId('table-row-R-2').querySelector(
+  buttonSideMinus2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(4) button:nth-child(1)'
   )
   expect(buttonSideMinus2).toBeVisible()
   expect(buttonSideMinus2).not.toBeEnabled()
-  textboxSide2 = getByTestId('table-row-R-2').querySelector(
+  textboxSide2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(4) input'
   )
   expect(textboxSide2).toBeVisible()
   expect(textboxSide2).toHaveAttribute('readonly')
   expect(textboxSide2).toHaveValue(0)
-  buttonSidePlus2 = getByTestId('table-row-R-2').querySelector(
+  buttonSidePlus2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(4) button:nth-child(3)'
   )
   expect(buttonSidePlus2).toBeVisible()
@@ -873,66 +873,66 @@ test('プラスマイナスボタンの操作', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  buttonMainMinus1 = getByTestId('table-row-R-1').querySelector(
+  buttonMainMinus1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(3) button:nth-child(1)'
   )
   expect(buttonMainMinus1).toBeVisible()
   expect(buttonMainMinus1).toBeEnabled()
-  textboxMain1 = getByTestId('table-row-R-1').querySelector(
+  textboxMain1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(3) input'
   )
   expect(textboxMain1).toBeVisible()
   expect(textboxMain1).toHaveAttribute('readonly')
   expect(textboxMain1).toHaveValue(1)
-  buttonMainPlus1 = getByTestId('table-row-R-1').querySelector(
+  buttonMainPlus1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(3) button:nth-child(3)'
   )
   expect(buttonMainPlus1).toBeVisible()
   expect(buttonMainPlus1).toBeEnabled()
-  buttonSideMinus1 = getByTestId('table-row-R-1').querySelector(
+  buttonSideMinus1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(4) button:nth-child(1)'
   )
   expect(buttonSideMinus1).toBeVisible()
   expect(buttonSideMinus1).toBeEnabled()
-  textboxSide1 = getByTestId('table-row-R-1').querySelector(
+  textboxSide1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(4) input'
   )
   expect(textboxSide1).toBeVisible()
   expect(textboxSide1).toHaveAttribute('readonly')
   expect(textboxSide1).toHaveValue(1)
-  buttonSidePlus1 = getByTestId('table-row-R-1').querySelector(
+  buttonSidePlus1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(4) button:nth-child(3)'
   )
   expect(buttonSidePlus1).toBeVisible()
   expect(buttonSidePlus1).toBeEnabled()
-  buttonMainMinus2 = getByTestId('table-row-R-2').querySelector(
+  buttonMainMinus2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(3) button:nth-child(1)'
   )
   expect(buttonMainMinus2).toBeVisible()
   expect(buttonMainMinus2).toBeEnabled()
-  textboxMain2 = getByTestId('table-row-R-2').querySelector(
+  textboxMain2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(3) input'
   )
   expect(textboxMain2).toBeVisible()
   expect(textboxMain2).toHaveAttribute('readonly')
   expect(textboxMain2).toHaveValue(1)
-  buttonMainPlus2 = getByTestId('table-row-R-2').querySelector(
+  buttonMainPlus2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(3) button:nth-child(3)'
   )
   expect(buttonMainPlus2).toBeVisible()
   expect(buttonMainPlus2).toBeEnabled()
-  buttonSideMinus2 = getByTestId('table-row-R-2').querySelector(
+  buttonSideMinus2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(4) button:nth-child(1)'
   )
   expect(buttonSideMinus2).toBeVisible()
   expect(buttonSideMinus2).toBeEnabled() // 有効になった
-  textboxSide2 = getByTestId('table-row-R-2').querySelector(
+  textboxSide2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(4) input'
   )
   expect(textboxSide2).toBeVisible()
   expect(textboxSide2).toHaveAttribute('readonly')
   expect(textboxSide2).toHaveValue(1) // 増えた
-  buttonSidePlus2 = getByTestId('table-row-R-2').querySelector(
+  buttonSidePlus2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(4) button:nth-child(3)'
   )
   expect(buttonSidePlus2).toBeVisible()
@@ -958,66 +958,66 @@ test('プラスマイナスボタンの操作', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  buttonMainMinus1 = getByTestId('table-row-R-1').querySelector(
+  buttonMainMinus1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(3) button:nth-child(1)'
   )
   expect(buttonMainMinus1).toBeVisible()
   expect(buttonMainMinus1).not.toBeEnabled() // 無効になった
-  textboxMain1 = getByTestId('table-row-R-1').querySelector(
+  textboxMain1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(3) input'
   )
   expect(textboxMain1).toBeVisible()
   expect(textboxMain1).toHaveAttribute('readonly')
   expect(textboxMain1).toHaveValue(0) // 減った
-  buttonMainPlus1 = getByTestId('table-row-R-1').querySelector(
+  buttonMainPlus1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(3) button:nth-child(3)'
   )
   expect(buttonMainPlus1).toBeVisible()
   expect(buttonMainPlus1).toBeEnabled()
-  buttonSideMinus1 = getByTestId('table-row-R-1').querySelector(
+  buttonSideMinus1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(4) button:nth-child(1)'
   )
   expect(buttonSideMinus1).toBeVisible()
   expect(buttonSideMinus1).toBeEnabled()
-  textboxSide1 = getByTestId('table-row-R-1').querySelector(
+  textboxSide1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(4) input'
   )
   expect(textboxSide1).toBeVisible()
   expect(textboxSide1).toHaveAttribute('readonly')
   expect(textboxSide1).toHaveValue(1)
-  buttonSidePlus1 = getByTestId('table-row-R-1').querySelector(
+  buttonSidePlus1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(4) button:nth-child(3)'
   )
   expect(buttonSidePlus1).toBeVisible()
   expect(buttonSidePlus1).toBeEnabled()
-  buttonMainMinus2 = getByTestId('table-row-R-2').querySelector(
+  buttonMainMinus2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(3) button:nth-child(1)'
   )
   expect(buttonMainMinus2).toBeVisible()
   expect(buttonMainMinus2).toBeEnabled()
-  textboxMain2 = getByTestId('table-row-R-2').querySelector(
+  textboxMain2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(3) input'
   )
   expect(textboxMain2).toBeVisible()
   expect(textboxMain2).toHaveAttribute('readonly')
   expect(textboxMain2).toHaveValue(1)
-  buttonMainPlus2 = getByTestId('table-row-R-2').querySelector(
+  buttonMainPlus2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(3) button:nth-child(3)'
   )
   expect(buttonMainPlus2).toBeVisible()
   expect(buttonMainPlus2).toBeEnabled()
-  buttonSideMinus2 = getByTestId('table-row-R-2').querySelector(
+  buttonSideMinus2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(4) button:nth-child(1)'
   )
   expect(buttonSideMinus2).toBeVisible()
   expect(buttonSideMinus2).toBeEnabled()
-  textboxSide2 = getByTestId('table-row-R-2').querySelector(
+  textboxSide2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(4) input'
   )
   expect(textboxSide2).toBeVisible()
   expect(textboxSide2).toHaveAttribute('readonly')
   expect(textboxSide2).toHaveValue(1)
-  buttonSidePlus2 = getByTestId('table-row-R-2').querySelector(
+  buttonSidePlus2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(4) button:nth-child(3)'
   )
   expect(buttonSidePlus2).toBeVisible()
@@ -1043,66 +1043,66 @@ test('プラスマイナスボタンの操作', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  buttonMainMinus1 = getByTestId('table-row-R-1').querySelector(
+  buttonMainMinus1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(3) button:nth-child(1)'
   )
   expect(buttonMainMinus1).toBeVisible()
   expect(buttonMainMinus1).not.toBeEnabled()
-  textboxMain1 = getByTestId('table-row-R-1').querySelector(
+  textboxMain1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(3) input'
   )
   expect(textboxMain1).toBeVisible()
   expect(textboxMain1).toHaveAttribute('readonly')
   expect(textboxMain1).toHaveValue(0)
-  buttonMainPlus1 = getByTestId('table-row-R-1').querySelector(
+  buttonMainPlus1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(3) button:nth-child(3)'
   )
   expect(buttonMainPlus1).toBeVisible()
   expect(buttonMainPlus1).toBeEnabled()
-  buttonSideMinus1 = getByTestId('table-row-R-1').querySelector(
+  buttonSideMinus1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(4) button:nth-child(1)'
   )
   expect(buttonSideMinus1).toBeVisible()
   expect(buttonSideMinus1).not.toBeEnabled() // 無効になった
-  textboxSide1 = getByTestId('table-row-R-1').querySelector(
+  textboxSide1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(4) input'
   )
   expect(textboxSide1).toBeVisible()
   expect(textboxSide1).toHaveAttribute('readonly')
   expect(textboxSide1).toHaveValue(0) // 減った
-  buttonSidePlus1 = getByTestId('table-row-R-1').querySelector(
+  buttonSidePlus1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(4) button:nth-child(3)'
   )
   expect(buttonSidePlus1).toBeVisible()
   expect(buttonSidePlus1).toBeEnabled()
-  buttonMainMinus2 = getByTestId('table-row-R-2').querySelector(
+  buttonMainMinus2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(3) button:nth-child(1)'
   )
   expect(buttonMainMinus2).toBeVisible()
   expect(buttonMainMinus2).toBeEnabled()
-  textboxMain2 = getByTestId('table-row-R-2').querySelector(
+  textboxMain2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(3) input'
   )
   expect(textboxMain2).toBeVisible()
   expect(textboxMain2).toHaveAttribute('readonly')
   expect(textboxMain2).toHaveValue(1)
-  buttonMainPlus2 = getByTestId('table-row-R-2').querySelector(
+  buttonMainPlus2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(3) button:nth-child(3)'
   )
   expect(buttonMainPlus2).toBeVisible()
   expect(buttonMainPlus2).toBeEnabled()
-  buttonSideMinus2 = getByTestId('table-row-R-2').querySelector(
+  buttonSideMinus2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(4) button:nth-child(1)'
   )
   expect(buttonSideMinus2).toBeVisible()
   expect(buttonSideMinus2).toBeEnabled()
-  textboxSide2 = getByTestId('table-row-R-2').querySelector(
+  textboxSide2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(4) input'
   )
   expect(textboxSide2).toBeVisible()
   expect(textboxSide2).toHaveAttribute('readonly')
   expect(textboxSide2).toHaveValue(1)
-  buttonSidePlus2 = getByTestId('table-row-R-2').querySelector(
+  buttonSidePlus2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(4) button:nth-child(3)'
   )
   expect(buttonSidePlus2).toBeVisible()
@@ -1128,66 +1128,66 @@ test('プラスマイナスボタンの操作', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  buttonMainMinus1 = getByTestId('table-row-R-1').querySelector(
+  buttonMainMinus1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(3) button:nth-child(1)'
   )
   expect(buttonMainMinus1).toBeVisible()
   expect(buttonMainMinus1).not.toBeEnabled()
-  textboxMain1 = getByTestId('table-row-R-1').querySelector(
+  textboxMain1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(3) input'
   )
   expect(textboxMain1).toBeVisible()
   expect(textboxMain1).toHaveAttribute('readonly')
   expect(textboxMain1).toHaveValue(0)
-  buttonMainPlus1 = getByTestId('table-row-R-1').querySelector(
+  buttonMainPlus1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(3) button:nth-child(3)'
   )
   expect(buttonMainPlus1).toBeVisible()
   expect(buttonMainPlus1).toBeEnabled()
-  buttonSideMinus1 = getByTestId('table-row-R-1').querySelector(
+  buttonSideMinus1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(4) button:nth-child(1)'
   )
   expect(buttonSideMinus1).toBeVisible()
   expect(buttonSideMinus1).not.toBeEnabled()
-  textboxSide1 = getByTestId('table-row-R-1').querySelector(
+  textboxSide1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(4) input'
   )
   expect(textboxSide1).toBeVisible()
   expect(textboxSide1).toHaveAttribute('readonly')
   expect(textboxSide1).toHaveValue(0)
-  buttonSidePlus1 = getByTestId('table-row-R-1').querySelector(
+  buttonSidePlus1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(4) button:nth-child(3)'
   )
   expect(buttonSidePlus1).toBeVisible()
   expect(buttonSidePlus1).toBeEnabled()
-  buttonMainMinus2 = getByTestId('table-row-R-2').querySelector(
+  buttonMainMinus2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(3) button:nth-child(1)'
   )
   expect(buttonMainMinus2).toBeVisible()
   expect(buttonMainMinus2).not.toBeEnabled() // 無効になった
-  textboxMain2 = getByTestId('table-row-R-2').querySelector(
+  textboxMain2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(3) input'
   )
   expect(textboxMain2).toBeVisible()
   expect(textboxMain2).toHaveAttribute('readonly')
   expect(textboxMain2).toHaveValue(0) // 減った
-  buttonMainPlus2 = getByTestId('table-row-R-2').querySelector(
+  buttonMainPlus2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(3) button:nth-child(3)'
   )
   expect(buttonMainPlus2).toBeVisible()
   expect(buttonMainPlus2).toBeEnabled()
-  buttonSideMinus2 = getByTestId('table-row-R-2').querySelector(
+  buttonSideMinus2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(4) button:nth-child(1)'
   )
   expect(buttonSideMinus2).toBeVisible()
   expect(buttonSideMinus2).toBeEnabled()
-  textboxSide2 = getByTestId('table-row-R-2').querySelector(
+  textboxSide2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(4) input'
   )
   expect(textboxSide2).toBeVisible()
   expect(textboxSide2).toHaveAttribute('readonly')
   expect(textboxSide2).toHaveValue(1)
-  buttonSidePlus2 = getByTestId('table-row-R-2').querySelector(
+  buttonSidePlus2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(4) button:nth-child(3)'
   )
   expect(buttonSidePlus2).toBeVisible()
@@ -1213,66 +1213,66 @@ test('プラスマイナスボタンの操作', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  buttonMainMinus1 = getByTestId('table-row-R-1').querySelector(
+  buttonMainMinus1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(3) button:nth-child(1)'
   )
   expect(buttonMainMinus1).toBeVisible()
   expect(buttonMainMinus1).not.toBeEnabled()
-  textboxMain1 = getByTestId('table-row-R-1').querySelector(
+  textboxMain1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(3) input'
   )
   expect(textboxMain1).toBeVisible()
   expect(textboxMain1).toHaveAttribute('readonly')
   expect(textboxMain1).toHaveValue(0)
-  buttonMainPlus1 = getByTestId('table-row-R-1').querySelector(
+  buttonMainPlus1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(3) button:nth-child(3)'
   )
   expect(buttonMainPlus1).toBeVisible()
   expect(buttonMainPlus1).toBeEnabled()
-  buttonSideMinus1 = getByTestId('table-row-R-1').querySelector(
+  buttonSideMinus1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(4) button:nth-child(1)'
   )
   expect(buttonSideMinus1).toBeVisible()
   expect(buttonSideMinus1).not.toBeEnabled()
-  textboxSide1 = getByTestId('table-row-R-1').querySelector(
+  textboxSide1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(4) input'
   )
   expect(textboxSide1).toBeVisible()
   expect(textboxSide1).toHaveAttribute('readonly')
   expect(textboxSide1).toHaveValue(0)
-  buttonSidePlus1 = getByTestId('table-row-R-1').querySelector(
+  buttonSidePlus1 = getByRole('row', { name: 'R-1' }).querySelector(
     'td:nth-child(4) button:nth-child(3)'
   )
   expect(buttonSidePlus1).toBeVisible()
   expect(buttonSidePlus1).toBeEnabled()
-  buttonMainMinus2 = getByTestId('table-row-R-2').querySelector(
+  buttonMainMinus2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(3) button:nth-child(1)'
   )
   expect(buttonMainMinus2).toBeVisible()
   expect(buttonMainMinus2).not.toBeEnabled()
-  textboxMain2 = getByTestId('table-row-R-2').querySelector(
+  textboxMain2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(3) input'
   )
   expect(textboxMain2).toBeVisible()
   expect(textboxMain2).toHaveAttribute('readonly')
   expect(textboxMain2).toHaveValue(0)
-  buttonMainPlus2 = getByTestId('table-row-R-2').querySelector(
+  buttonMainPlus2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(3) button:nth-child(3)'
   )
   expect(buttonMainPlus2).toBeVisible()
   expect(buttonMainPlus2).toBeEnabled()
-  buttonSideMinus2 = getByTestId('table-row-R-2').querySelector(
+  buttonSideMinus2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(4) button:nth-child(1)'
   )
   expect(buttonSideMinus2).toBeVisible()
   expect(buttonSideMinus2).not.toBeEnabled() // 無効になった
-  textboxSide2 = getByTestId('table-row-R-2').querySelector(
+  textboxSide2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(4) input'
   )
   expect(textboxSide2).toBeVisible()
   expect(textboxSide2).toHaveAttribute('readonly')
   expect(textboxSide2).toHaveValue(0) // 減った
-  buttonSidePlus2 = getByTestId('table-row-R-2').querySelector(
+  buttonSidePlus2 = getByRole('row', { name: 'R-2' }).querySelector(
     'td:nth-child(4) button:nth-child(3)'
   )
   expect(buttonSidePlus2).toBeVisible()
@@ -1294,7 +1294,7 @@ test('虫眼鏡ボタンの操作', async () => {
   }
   const zoomIn = vi.fn()
   const interruptSimulator = vi.fn()
-  const { rerender, getByTestId } = render(
+  const { rerender, getByRole } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
@@ -1313,7 +1313,7 @@ test('虫眼鏡ボタンの操作', async () => {
 
   // R-1 の虫眼鏡ボタンを押す
   await userEvent.click(
-    getByTestId('table-row-R-1').querySelector('td:nth-child(2) button')
+    getByRole('row', { name: 'R-1' }).querySelector('td:nth-child(2) button')
   )
   expect(decrementMain.mock.calls.length).toBe(0)
   expect(incrementMain.mock.calls.length).toBe(0)
@@ -1336,7 +1336,7 @@ test('虫眼鏡ボタンの操作', async () => {
 
   // R-2 の虫眼鏡ボタンを押す
   await userEvent.click(
-    getByTestId('table-row-R-2').querySelector('td:nth-child(2) button')
+    getByRole('row', { name: 'R-2' }).querySelector('td:nth-child(2) button')
   )
   expect(decrementMain.mock.calls.length).toBe(0)
   expect(incrementMain.mock.calls.length).toBe(0)
@@ -1363,7 +1363,7 @@ test('エキスパンションによるフィルタ', async () => {
   }
   const zoomIn = vi.fn()
   const interruptSimulator = vi.fn()
-  const { rerender, getByRole, getByTestId, queryByTestId } = render(
+  const { rerender, getByRole, queryByRole, getByTestId } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
@@ -1426,15 +1426,15 @@ test('エキスパンションによるフィルタ', async () => {
   expect(buttonExpansionAll).toBeVisible()
   expect(buttonExpansionAll).toBeChecked()
 
-  expect(getByTestId('table-row-R-1')).toBeVisible()
-  expect(getByTestId('table-row-B-1')).toBeVisible()
-  expect(getByTestId('table-row-G-1')).toBeVisible()
-  expect(getByTestId('table-row-1-1')).toBeVisible()
-  expect(getByTestId('table-row-Y-1')).toBeVisible()
-  expect(getByTestId('table-row-2-1')).toBeVisible()
-  expect(getByTestId('table-row-P-1')).toBeVisible()
-  expect(getByTestId('table-row-3-1')).toBeVisible()
-  expect(getByTestId('table-row-4-1')).toBeVisible()
+  expect(getByRole('row', { name: 'R-1' })).toBeVisible()
+  expect(getByRole('row', { name: 'B-1' })).toBeVisible()
+  expect(getByRole('row', { name: 'G-1' })).toBeVisible()
+  expect(getByRole('row', { name: '1-1' })).toBeVisible()
+  expect(getByRole('row', { name: 'Y-1' })).toBeVisible()
+  expect(getByRole('row', { name: '2-1' })).toBeVisible()
+  expect(getByRole('row', { name: 'P-1' })).toBeVisible()
+  expect(getByRole('row', { name: '3-1' })).toBeVisible()
+  expect(getByRole('row', { name: '4-1' })).toBeVisible()
 
   // 伝説の武将ボタンを押す
   let buttonExpansionRed = getByRole('radio', { name: '伝説の武将' })
@@ -1454,15 +1454,15 @@ test('エキスパンションによるフィルタ', async () => {
   expect(buttonExpansionRed).toBeVisible()
   expect(buttonExpansionRed).toBeChecked()
 
-  expect(getByTestId('table-row-R-1')).toBeVisible()
-  expect(queryByTestId('table-row-B-1')).toBeNull()
-  expect(queryByTestId('table-row-G-1')).toBeNull()
-  expect(queryByTestId('table-row-1-1')).toBeNull()
-  expect(queryByTestId('table-row-Y-1')).toBeNull()
-  expect(queryByTestId('table-row-2-1')).toBeNull()
-  expect(queryByTestId('table-row-P-1')).toBeNull()
-  expect(queryByTestId('table-row-3-1')).toBeNull()
-  expect(queryByTestId('table-row-4-1')).toBeNull()
+  expect(getByRole('row', { name: 'R-1' })).toBeVisible()
+  expect(queryByRole('row', { name: 'B-1' })).toBeNull()
+  expect(queryByRole('row', { name: 'G-1' })).toBeNull()
+  expect(queryByRole('row', { name: '1-1' })).toBeNull()
+  expect(queryByRole('row', { name: 'Y-1' })).toBeNull()
+  expect(queryByRole('row', { name: '2-1' })).toBeNull()
+  expect(queryByRole('row', { name: 'P-1' })).toBeNull()
+  expect(queryByRole('row', { name: '3-1' })).toBeNull()
+  expect(queryByRole('row', { name: '4-1' })).toBeNull()
 
   // 美と知の革命ボタンを押す
   let buttonExpansionBlue = getByRole('radio', { name: '美と知の革命' })
@@ -1482,15 +1482,15 @@ test('エキスパンションによるフィルタ', async () => {
   expect(buttonExpansionBlue).toBeVisible()
   expect(buttonExpansionBlue).toBeChecked()
 
-  expect(queryByTestId('table-row-R-1')).toBeNull()
-  expect(getByTestId('table-row-B-1')).toBeVisible()
-  expect(queryByTestId('table-row-G-1')).toBeNull()
-  expect(queryByTestId('table-row-1-1')).toBeNull()
-  expect(queryByTestId('table-row-Y-1')).toBeNull()
-  expect(queryByTestId('table-row-2-1')).toBeNull()
-  expect(queryByTestId('table-row-P-1')).toBeNull()
-  expect(queryByTestId('table-row-3-1')).toBeNull()
-  expect(queryByTestId('table-row-4-1')).toBeNull()
+  expect(queryByRole('row', { name: 'R-1' })).toBeNull()
+  expect(getByRole('row', { name: 'B-1' })).toBeVisible()
+  expect(queryByRole('row', { name: 'G-1' })).toBeNull()
+  expect(queryByRole('row', { name: '1-1' })).toBeNull()
+  expect(queryByRole('row', { name: 'Y-1' })).toBeNull()
+  expect(queryByRole('row', { name: '2-1' })).toBeNull()
+  expect(queryByRole('row', { name: 'P-1' })).toBeNull()
+  expect(queryByRole('row', { name: '3-1' })).toBeNull()
+  expect(queryByRole('row', { name: '4-1' })).toBeNull()
 
   // 日本の大天才ボタンを押す
   let buttonExpansionGreen = getByRole('radio', { name: '日本の大天才' })
@@ -1510,15 +1510,15 @@ test('エキスパンションによるフィルタ', async () => {
   expect(buttonExpansionGreen).toBeVisible()
   expect(buttonExpansionGreen).toBeChecked()
 
-  expect(queryByTestId('table-row-R-1')).toBeNull()
-  expect(queryByTestId('table-row-B-1')).toBeNull()
-  expect(getByTestId('table-row-G-1')).toBeVisible()
-  expect(queryByTestId('table-row-1-1')).toBeNull()
-  expect(queryByTestId('table-row-Y-1')).toBeNull()
-  expect(queryByTestId('table-row-2-1')).toBeNull()
-  expect(queryByTestId('table-row-P-1')).toBeNull()
-  expect(queryByTestId('table-row-3-1')).toBeNull()
-  expect(queryByTestId('table-row-4-1')).toBeNull()
+  expect(queryByRole('row', { name: 'R-1' })).toBeNull()
+  expect(queryByRole('row', { name: 'B-1' })).toBeNull()
+  expect(getByRole('row', { name: 'G-1' })).toBeVisible()
+  expect(queryByRole('row', { name: '1-1' })).toBeNull()
+  expect(queryByRole('row', { name: 'Y-1' })).toBeNull()
+  expect(queryByRole('row', { name: '2-1' })).toBeNull()
+  expect(queryByRole('row', { name: 'P-1' })).toBeNull()
+  expect(queryByRole('row', { name: '3-1' })).toBeNull()
+  expect(queryByRole('row', { name: '4-1' })).toBeNull()
 
   // 第１弾ブースターボタンを押す
   let buttonExpansionFirst = getByRole('radio', { name: '第１弾ブースター' })
@@ -1538,15 +1538,15 @@ test('エキスパンションによるフィルタ', async () => {
   expect(buttonExpansionFirst).toBeVisible()
   expect(buttonExpansionFirst).toBeChecked()
 
-  expect(queryByTestId('table-row-R-1')).toBeNull()
-  expect(queryByTestId('table-row-B-1')).toBeNull()
-  expect(queryByTestId('table-row-G-1')).toBeNull()
-  expect(getByTestId('table-row-1-1')).toBeVisible()
-  expect(queryByTestId('table-row-Y-1')).toBeNull()
-  expect(queryByTestId('table-row-2-1')).toBeNull()
-  expect(queryByTestId('table-row-P-1')).toBeNull()
-  expect(queryByTestId('table-row-3-1')).toBeNull()
-  expect(queryByTestId('table-row-4-1')).toBeNull()
+  expect(queryByRole('row', { name: 'R-1' })).toBeNull()
+  expect(queryByRole('row', { name: 'B-1' })).toBeNull()
+  expect(queryByRole('row', { name: 'G-1' })).toBeNull()
+  expect(getByRole('row', { name: '1-1' })).toBeVisible()
+  expect(queryByRole('row', { name: 'Y-1' })).toBeNull()
+  expect(queryByRole('row', { name: '2-1' })).toBeNull()
+  expect(queryByRole('row', { name: 'P-1' })).toBeNull()
+  expect(queryByRole('row', { name: '3-1' })).toBeNull()
+  expect(queryByRole('row', { name: '4-1' })).toBeNull()
 
   // 三国の英傑ボタンを押す
   let buttonExpansionYellow = getByRole('radio', { name: '三国の英傑' })
@@ -1566,15 +1566,15 @@ test('エキスパンションによるフィルタ', async () => {
   expect(buttonExpansionYellow).toBeVisible()
   expect(buttonExpansionYellow).toBeChecked()
 
-  expect(queryByTestId('table-row-R-1')).toBeNull()
-  expect(queryByTestId('table-row-B-1')).toBeNull()
-  expect(queryByTestId('table-row-G-1')).toBeNull()
-  expect(queryByTestId('table-row-1-1')).toBeNull()
-  expect(getByTestId('table-row-Y-1')).toBeVisible()
-  expect(queryByTestId('table-row-2-1')).toBeNull()
-  expect(queryByTestId('table-row-P-1')).toBeNull()
-  expect(queryByTestId('table-row-3-1')).toBeNull()
-  expect(queryByTestId('table-row-4-1')).toBeNull()
+  expect(queryByRole('row', { name: 'R-1' })).toBeNull()
+  expect(queryByRole('row', { name: 'B-1' })).toBeNull()
+  expect(queryByRole('row', { name: 'G-1' })).toBeNull()
+  expect(queryByRole('row', { name: '1-1' })).toBeNull()
+  expect(getByRole('row', { name: 'Y-1' })).toBeVisible()
+  expect(queryByRole('row', { name: '2-1' })).toBeNull()
+  expect(queryByRole('row', { name: 'P-1' })).toBeNull()
+  expect(queryByRole('row', { name: '3-1' })).toBeNull()
+  expect(queryByRole('row', { name: '4-1' })).toBeNull()
 
   // 第２弾ブースターボタンを押す
   let buttonExpansionSecond = getByRole('radio', { name: '第２弾ブースター' })
@@ -1594,15 +1594,15 @@ test('エキスパンションによるフィルタ', async () => {
   expect(buttonExpansionSecond).toBeVisible()
   expect(buttonExpansionSecond).toBeChecked()
 
-  expect(queryByTestId('table-row-R-1')).toBeNull()
-  expect(queryByTestId('table-row-B-1')).toBeNull()
-  expect(queryByTestId('table-row-G-1')).toBeNull()
-  expect(queryByTestId('table-row-1-1')).toBeNull()
-  expect(queryByTestId('table-row-Y-1')).toBeNull()
-  expect(getByTestId('table-row-2-1')).toBeVisible()
-  expect(queryByTestId('table-row-P-1')).toBeNull()
-  expect(queryByTestId('table-row-3-1')).toBeNull()
-  expect(queryByTestId('table-row-4-1')).toBeNull()
+  expect(queryByRole('row', { name: 'R-1' })).toBeNull()
+  expect(queryByRole('row', { name: 'B-1' })).toBeNull()
+  expect(queryByRole('row', { name: 'G-1' })).toBeNull()
+  expect(queryByRole('row', { name: '1-1' })).toBeNull()
+  expect(queryByRole('row', { name: 'Y-1' })).toBeNull()
+  expect(getByRole('row', { name: '2-1' })).toBeVisible()
+  expect(queryByRole('row', { name: 'P-1' })).toBeNull()
+  expect(queryByRole('row', { name: '3-1' })).toBeNull()
+  expect(queryByRole('row', { name: '4-1' })).toBeNull()
 
   // 発展する医学ボタンを押す
   let buttonExpansionPurple = getByRole('radio', { name: '発展する医学' })
@@ -1622,15 +1622,15 @@ test('エキスパンションによるフィルタ', async () => {
   expect(buttonExpansionPurple).toBeVisible()
   expect(buttonExpansionPurple).toBeChecked()
 
-  expect(queryByTestId('table-row-R-1')).toBeNull()
-  expect(queryByTestId('table-row-B-1')).toBeNull()
-  expect(queryByTestId('table-row-G-1')).toBeNull()
-  expect(queryByTestId('table-row-1-1')).toBeNull()
-  expect(queryByTestId('table-row-Y-1')).toBeNull()
-  expect(queryByTestId('table-row-2-1')).toBeNull()
-  expect(getByTestId('table-row-P-1')).toBeVisible()
-  expect(queryByTestId('table-row-3-1')).toBeNull()
-  expect(queryByTestId('table-row-4-1')).toBeNull()
+  expect(queryByRole('row', { name: 'R-1' })).toBeNull()
+  expect(queryByRole('row', { name: 'B-1' })).toBeNull()
+  expect(queryByRole('row', { name: 'G-1' })).toBeNull()
+  expect(queryByRole('row', { name: '1-1' })).toBeNull()
+  expect(queryByRole('row', { name: 'Y-1' })).toBeNull()
+  expect(queryByRole('row', { name: '2-1' })).toBeNull()
+  expect(getByRole('row', { name: 'P-1' })).toBeVisible()
+  expect(queryByRole('row', { name: '3-1' })).toBeNull()
+  expect(queryByRole('row', { name: '4-1' })).toBeNull()
 
   // 第３弾ブースターボタンを押す
   let buttonExpansionThird = getByRole('radio', { name: '第３弾ブースター' })
@@ -1650,15 +1650,15 @@ test('エキスパンションによるフィルタ', async () => {
   expect(buttonExpansionThird).toBeVisible()
   expect(buttonExpansionThird).toBeChecked()
 
-  expect(queryByTestId('table-row-R-1')).toBeNull()
-  expect(queryByTestId('table-row-B-1')).toBeNull()
-  expect(queryByTestId('table-row-G-1')).toBeNull()
-  expect(queryByTestId('table-row-1-1')).toBeNull()
-  expect(queryByTestId('table-row-Y-1')).toBeNull()
-  expect(queryByTestId('table-row-2-1')).toBeNull()
-  expect(queryByTestId('table-row-P-1')).toBeNull()
-  expect(getByTestId('table-row-3-1')).toBeVisible()
-  expect(queryByTestId('table-row-4-1')).toBeNull()
+  expect(queryByRole('row', { name: 'R-1' })).toBeNull()
+  expect(queryByRole('row', { name: 'B-1' })).toBeNull()
+  expect(queryByRole('row', { name: 'G-1' })).toBeNull()
+  expect(queryByRole('row', { name: '1-1' })).toBeNull()
+  expect(queryByRole('row', { name: 'Y-1' })).toBeNull()
+  expect(queryByRole('row', { name: '2-1' })).toBeNull()
+  expect(queryByRole('row', { name: 'P-1' })).toBeNull()
+  expect(getByRole('row', { name: '3-1' })).toBeVisible()
+  expect(queryByRole('row', { name: '4-1' })).toBeNull()
 
   // 第４弾ブースターボタンを押す
   let buttonExpansionFourth = getByRole('radio', { name: '第４弾ブースター' })
@@ -1678,15 +1678,15 @@ test('エキスパンションによるフィルタ', async () => {
   expect(buttonExpansionFourth).toBeVisible()
   expect(buttonExpansionFourth).toBeChecked()
 
-  expect(queryByTestId('table-row-R-1')).toBeNull()
-  expect(queryByTestId('table-row-B-1')).toBeNull()
-  expect(queryByTestId('table-row-G-1')).toBeNull()
-  expect(queryByTestId('table-row-1-1')).toBeNull()
-  expect(queryByTestId('table-row-Y-1')).toBeNull()
-  expect(queryByTestId('table-row-2-1')).toBeNull()
-  expect(queryByTestId('table-row-P-1')).toBeNull()
-  expect(queryByTestId('table-row-3-1')).toBeNull()
-  expect(getByTestId('table-row-4-1')).toBeVisible()
+  expect(queryByRole('row', { name: 'R-1' })).toBeNull()
+  expect(queryByRole('row', { name: 'B-1' })).toBeNull()
+  expect(queryByRole('row', { name: 'G-1' })).toBeNull()
+  expect(queryByRole('row', { name: '1-1' })).toBeNull()
+  expect(queryByRole('row', { name: 'Y-1' })).toBeNull()
+  expect(queryByRole('row', { name: '2-1' })).toBeNull()
+  expect(queryByRole('row', { name: 'P-1' })).toBeNull()
+  expect(queryByRole('row', { name: '3-1' })).toBeNull()
+  expect(getByRole('row', { name: '4-1' })).toBeVisible()
 
   // 条件すべてをリセットするボタンを押す
   buttonExpansionAll = getByTestId('button-expansion-all').querySelector(
@@ -1714,15 +1714,15 @@ test('エキスパンションによるフィルタ', async () => {
   expect(buttonExpansionAll).toBeVisible()
   expect(buttonExpansionAll).toBeChecked()
 
-  expect(getByTestId('table-row-R-1')).toBeVisible()
-  expect(getByTestId('table-row-B-1')).toBeVisible()
-  expect(getByTestId('table-row-G-1')).toBeVisible()
-  expect(getByTestId('table-row-1-1')).toBeVisible()
-  expect(getByTestId('table-row-Y-1')).toBeVisible()
-  expect(getByTestId('table-row-2-1')).toBeVisible()
-  expect(getByTestId('table-row-P-1')).toBeVisible()
-  expect(getByTestId('table-row-3-1')).toBeVisible()
-  expect(getByTestId('table-row-4-1')).toBeVisible()
+  expect(getByRole('row', { name: 'R-1' })).toBeVisible()
+  expect(getByRole('row', { name: 'B-1' })).toBeVisible()
+  expect(getByRole('row', { name: 'G-1' })).toBeVisible()
+  expect(getByRole('row', { name: '1-1' })).toBeVisible()
+  expect(getByRole('row', { name: 'Y-1' })).toBeVisible()
+  expect(getByRole('row', { name: '2-1' })).toBeVisible()
+  expect(getByRole('row', { name: 'P-1' })).toBeVisible()
+  expect(getByRole('row', { name: '3-1' })).toBeVisible()
+  expect(getByRole('row', { name: '4-1' })).toBeVisible()
 })
 
 test('レアリティによるフィルタ', async () => {
@@ -1740,7 +1740,7 @@ test('レアリティによるフィルタ', async () => {
   }
   const zoomIn = vi.fn()
   const interruptSimulator = vi.fn()
-  const { rerender, getByRole, getByTestId, queryByTestId } = render(
+  const { rerender, getByRole, queryByRole, getByTestId } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
@@ -1801,9 +1801,9 @@ test('レアリティによるフィルタ', async () => {
   expect(buttonRarityAll).toBeVisible()
   expect(buttonRarityAll).toBeChecked()
 
-  expect(getByTestId('table-row-1-1')).toBeVisible() // 織田信長 (SR)
-  expect(getByTestId('table-row-1-15')).toBeVisible() // 中臣鎌足 (R)
-  expect(getByTestId('table-row-1-17')).toBeVisible() // 藤原道長 (N)
+  expect(getByRole('row', { name: '1-1' })).toBeVisible() // 織田信長 (SR)
+  expect(getByRole('row', { name: '1-15' })).toBeVisible() // 中臣鎌足 (R)
+  expect(getByRole('row', { name: '1-17' })).toBeVisible() // 藤原道長 (N)
 
   // Nのみボタンを押す
   let buttonRarityN = getByRole('radio', { name: 'Nのみ' })
@@ -1823,9 +1823,9 @@ test('レアリティによるフィルタ', async () => {
   expect(buttonRarityN).toBeVisible()
   expect(buttonRarityN).toBeChecked()
 
-  expect(queryByTestId('table-row-1-1')).toBeNull()
-  expect(queryByTestId('table-row-1-15')).toBeNull()
-  expect(getByTestId('table-row-1-17')).toBeVisible()
+  expect(queryByRole('row', { name: '1-1' })).toBeNull()
+  expect(queryByRole('row', { name: '1-15' })).toBeNull()
+  expect(getByRole('row', { name: '1-17' })).toBeVisible()
 
   // NとRボタンを押す
   let buttonRarityNandR = getByRole('radio', { name: 'NとR' })
@@ -1844,10 +1844,10 @@ test('レアリティによるフィルタ', async () => {
   buttonRarityNandR = getByRole('radio', { name: 'NとR' })
   expect(buttonRarityNandR).toBeVisible()
   expect(buttonRarityNandR).toBeChecked()
-  expect(queryByTestId('table-row-1-1')).toBeNull()
+  expect(queryByRole('row', { name: '1-1' })).toBeNull()
 
-  expect(getByTestId('table-row-1-15')).toBeVisible()
-  expect(getByTestId('table-row-1-17')).toBeVisible()
+  expect(getByRole('row', { name: '1-15' })).toBeVisible()
+  expect(getByRole('row', { name: '1-17' })).toBeVisible()
 
   // Rのみボタンを押す
   let buttonRarityR = getByRole('radio', { name: 'Rのみ' })
@@ -1867,9 +1867,9 @@ test('レアリティによるフィルタ', async () => {
   expect(buttonRarityR).toBeVisible()
   expect(buttonRarityR).toBeChecked()
 
-  expect(queryByTestId('table-row-1-1')).toBeNull()
-  expect(getByTestId('table-row-1-15')).toBeVisible()
-  expect(queryByTestId('table-row-1-17')).toBeNull()
+  expect(queryByRole('row', { name: '1-1' })).toBeNull()
+  expect(getByRole('row', { name: '1-15' })).toBeVisible()
+  expect(queryByRole('row', { name: '1-17' })).toBeNull()
 
   // RとSRボタンを押す
   let buttonRarityRandSR = getByRole('radio', { name: 'RとSR' })
@@ -1889,9 +1889,9 @@ test('レアリティによるフィルタ', async () => {
   expect(buttonRarityRandSR).toBeVisible()
   expect(buttonRarityRandSR).toBeChecked()
 
-  expect(getByTestId('table-row-1-1')).toBeVisible()
-  expect(getByTestId('table-row-1-15')).toBeVisible()
-  expect(queryByTestId('table-row-1-17')).toBeNull()
+  expect(getByRole('row', { name: '1-1' })).toBeVisible()
+  expect(getByRole('row', { name: '1-15' })).toBeVisible()
+  expect(queryByRole('row', { name: '1-17' })).toBeNull()
 
   // SRのみボタンを押す
   let buttonRaritySR = getByRole('radio', { name: 'SRのみ' })
@@ -1911,9 +1911,9 @@ test('レアリティによるフィルタ', async () => {
   expect(buttonRaritySR).toBeVisible()
   expect(buttonRaritySR).toBeChecked()
 
-  expect(getByTestId('table-row-1-1')).toBeVisible()
-  expect(queryByTestId('table-row-1-15')).toBeNull()
-  expect(queryByTestId('table-row-1-17')).toBeNull()
+  expect(getByRole('row', { name: '1-1' })).toBeVisible()
+  expect(queryByRole('row', { name: '1-15' })).toBeNull()
+  expect(queryByRole('row', { name: '1-17' })).toBeNull()
 
   // 条件すべてをリセットするボタンを押す
   buttonRarityAll = getByTestId('button-rarity-all').querySelector('input')
@@ -1937,9 +1937,9 @@ test('レアリティによるフィルタ', async () => {
   expect(buttonRarityAll).toBeVisible()
   expect(buttonRarityAll).toBeChecked()
 
-  expect(getByTestId('table-row-1-1')).toBeVisible()
-  expect(getByTestId('table-row-1-15')).toBeVisible()
-  expect(getByTestId('table-row-1-17')).toBeVisible()
+  expect(getByRole('row', { name: '1-1' })).toBeVisible()
+  expect(getByRole('row', { name: '1-15' })).toBeVisible()
+  expect(getByRole('row', { name: '1-17' })).toBeVisible()
 })
 
 test('色によるフィルタ', async () => {
@@ -1957,7 +1957,7 @@ test('色によるフィルタ', async () => {
   }
   const zoomIn = vi.fn()
   const interruptSimulator = vi.fn()
-  const { rerender, getByRole, getByTestId, queryByTestId } = render(
+  const { rerender, getByRole, queryByRole, getByTestId } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
@@ -2003,15 +2003,15 @@ test('色によるフィルタ', async () => {
   expect(buttonColorAll).toBeVisible()
   expect(buttonColorAll).toBeChecked()
 
-  expect(getByTestId('table-row-2-78')).toBeVisible() // RYマーブルオーブ (赤黄)
-  expect(getByTestId('table-row-2-79')).toBeVisible() // RYマーブルオーブ (青黄)
-  expect(getByTestId('table-row-2-80')).toBeVisible() // RYマーブルオーブ (緑黄)
-  expect(getByTestId('table-row-3-15')).toBeVisible() // 淀殿 (赤)
-  expect(getByTestId('table-row-3-19')).toBeVisible() // 伊達政宗 (青)
-  expect(getByTestId('table-row-3-27')).toBeVisible() // 小野小町 (緑)
-  expect(getByTestId('table-row-3-35')).toBeVisible() // 徳川吉宗 (黄)
-  expect(getByTestId('table-row-3-45')).toBeVisible() // 坂本龍馬 (紫)
-  expect(getByTestId('table-row-3-80')).toBeVisible() // オブシディアン (無色)
+  expect(getByRole('row', { name: '2-78' })).toBeVisible() // RYマーブルオーブ (赤黄)
+  expect(getByRole('row', { name: '2-79' })).toBeVisible() // RYマーブルオーブ (青黄)
+  expect(getByRole('row', { name: '2-80' })).toBeVisible() // RYマーブルオーブ (緑黄)
+  expect(getByRole('row', { name: '3-15' })).toBeVisible() // 淀殿 (赤)
+  expect(getByRole('row', { name: '3-19' })).toBeVisible() // 伊達政宗 (青)
+  expect(getByRole('row', { name: '3-27' })).toBeVisible() // 小野小町 (緑)
+  expect(getByRole('row', { name: '3-35' })).toBeVisible() // 徳川吉宗 (黄)
+  expect(getByRole('row', { name: '3-45' })).toBeVisible() // 坂本龍馬 (紫)
+  expect(getByRole('row', { name: '3-80' })).toBeVisible() // オブシディアン (無色)
 
   // 赤ボタンを押す
   let buttonColorRed = getByRole('radio', { name: '赤' })
@@ -2031,15 +2031,15 @@ test('色によるフィルタ', async () => {
   expect(buttonColorRed).toBeVisible()
   expect(buttonColorRed).toBeChecked()
 
-  expect(getByTestId('table-row-2-78')).toBeVisible() // RYマーブルオーブ (赤黄)
-  expect(queryByTestId('table-row-2-79')).toBeNull() // RYマーブルオーブ (青黄)
-  expect(queryByTestId('table-row-2-80')).toBeNull() // RYマーブルオーブ (緑黄)
-  expect(getByTestId('table-row-3-15')).toBeVisible() // 淀殿 (赤)
-  expect(queryByTestId('table-row-3-19')).toBeNull() // 伊達政宗 (青)
-  expect(queryByTestId('table-row-3-27')).toBeNull() // 小野小町 (緑)
-  expect(queryByTestId('table-row-3-35')).toBeNull() // 徳川吉宗 (黄)
-  expect(queryByTestId('table-row-3-45')).toBeNull() // 坂本龍馬 (紫)
-  expect(queryByTestId('table-row-3-80')).toBeNull() // オブシディアン (無色)
+  expect(getByRole('row', { name: '2-78' })).toBeVisible() // RYマーブルオーブ (赤黄)
+  expect(queryByRole('row', { name: '2-79' })).toBeNull() // RYマーブルオーブ (青黄)
+  expect(queryByRole('row', { name: '2-80' })).toBeNull() // RYマーブルオーブ (緑黄)
+  expect(getByRole('row', { name: '3-15' })).toBeVisible() // 淀殿 (赤)
+  expect(queryByRole('row', { name: '3-19' })).toBeNull() // 伊達政宗 (青)
+  expect(queryByRole('row', { name: '3-27' })).toBeNull() // 小野小町 (緑)
+  expect(queryByRole('row', { name: '3-35' })).toBeNull() // 徳川吉宗 (黄)
+  expect(queryByRole('row', { name: '3-45' })).toBeNull() // 坂本龍馬 (紫)
+  expect(queryByRole('row', { name: '3-80' })).toBeNull() // オブシディアン (無色)
 
   // 青ボタンを押す
   let buttonColorBlue = getByRole('radio', { name: '青' })
@@ -2059,15 +2059,15 @@ test('色によるフィルタ', async () => {
   expect(buttonColorBlue).toBeVisible()
   expect(buttonColorBlue).toBeChecked()
 
-  expect(queryByTestId('table-row-2-78')).toBeNull() // RYマーブルオーブ (赤黄)
-  expect(getByTestId('table-row-2-79')).toBeVisible() // RYマーブルオーブ (青黄)
-  expect(queryByTestId('table-row-2-80')).toBeNull() // RYマーブルオーブ (緑黄)
-  expect(queryByTestId('table-row-3-15')).toBeNull() // 淀殿 (赤)
-  expect(getByTestId('table-row-3-19')).toBeVisible() // 伊達政宗 (青)
-  expect(queryByTestId('table-row-3-27')).toBeNull() // 小野小町 (緑)
-  expect(queryByTestId('table-row-3-35')).toBeNull() // 徳川吉宗 (黄)
-  expect(queryByTestId('table-row-3-45')).toBeNull() // 坂本龍馬 (紫)
-  expect(queryByTestId('table-row-3-80')).toBeNull() // オブシディアン (無色)
+  expect(queryByRole('row', { name: '2-78' })).toBeNull() // RYマーブルオーブ (赤黄)
+  expect(getByRole('row', { name: '2-79' })).toBeVisible() // RYマーブルオーブ (青黄)
+  expect(queryByRole('row', { name: '2-80' })).toBeNull() // RYマーブルオーブ (緑黄)
+  expect(queryByRole('row', { name: '3-15' })).toBeNull() // 淀殿 (赤)
+  expect(getByRole('row', { name: '3-19' })).toBeVisible() // 伊達政宗 (青)
+  expect(queryByRole('row', { name: '3-27' })).toBeNull() // 小野小町 (緑)
+  expect(queryByRole('row', { name: '3-35' })).toBeNull() // 徳川吉宗 (黄)
+  expect(queryByRole('row', { name: '3-45' })).toBeNull() // 坂本龍馬 (紫)
+  expect(queryByRole('row', { name: '3-80' })).toBeNull() // オブシディアン (無色)
 
   // 緑ボタンを押す
   let buttonColorGreen = getByRole('radio', { name: '緑' })
@@ -2087,15 +2087,15 @@ test('色によるフィルタ', async () => {
   expect(buttonColorGreen).toBeVisible()
   expect(buttonColorGreen).toBeChecked()
 
-  expect(queryByTestId('table-row-2-78')).toBeNull() // RYマーブルオーブ (赤黄)
-  expect(queryByTestId('table-row-2-79')).toBeNull() // RYマーブルオーブ (青黄)
-  expect(getByTestId('table-row-2-80')).toBeVisible() // RYマーブルオーブ (緑黄)
-  expect(queryByTestId('table-row-3-15')).toBeNull() // 淀殿 (赤)
-  expect(queryByTestId('table-row-3-19')).toBeNull() // 伊達政宗 (青)
-  expect(getByTestId('table-row-3-27')).toBeVisible() // 小野小町 (緑)
-  expect(queryByTestId('table-row-3-35')).toBeNull() // 徳川吉宗 (黄)
-  expect(queryByTestId('table-row-3-45')).toBeNull() // 坂本龍馬 (紫)
-  expect(queryByTestId('table-row-3-80')).toBeNull() // オブシディアン (無色)
+  expect(queryByRole('row', { name: '2-78' })).toBeNull() // RYマーブルオーブ (赤黄)
+  expect(queryByRole('row', { name: '2-79' })).toBeNull() // RYマーブルオーブ (青黄)
+  expect(getByRole('row', { name: '2-80' })).toBeVisible() // RYマーブルオーブ (緑黄)
+  expect(queryByRole('row', { name: '3-15' })).toBeNull() // 淀殿 (赤)
+  expect(queryByRole('row', { name: '3-19' })).toBeNull() // 伊達政宗 (青)
+  expect(getByRole('row', { name: '3-27' })).toBeVisible() // 小野小町 (緑)
+  expect(queryByRole('row', { name: '3-35' })).toBeNull() // 徳川吉宗 (黄)
+  expect(queryByRole('row', { name: '3-45' })).toBeNull() // 坂本龍馬 (紫)
+  expect(queryByRole('row', { name: '3-80' })).toBeNull() // オブシディアン (無色)
 
   // 黄ボタンを押す
   let buttonColorYellow = getByRole('radio', { name: '黄' })
@@ -2115,15 +2115,15 @@ test('色によるフィルタ', async () => {
   expect(buttonColorYellow).toBeVisible()
   expect(buttonColorYellow).toBeChecked()
 
-  expect(getByTestId('table-row-2-78')).toBeVisible() // RYマーブルオーブ (赤黄)
-  expect(getByTestId('table-row-2-79')).toBeVisible() // RYマーブルオーブ (青黄)
-  expect(getByTestId('table-row-2-80')).toBeVisible() // RYマーブルオーブ (緑黄)
-  expect(queryByTestId('table-row-3-15')).toBeNull() // 淀殿 (赤)
-  expect(queryByTestId('table-row-3-19')).toBeNull() // 伊達政宗 (青)
-  expect(queryByTestId('table-row-3-27')).toBeNull() // 小野小町 (緑)
-  expect(getByTestId('table-row-3-35')).toBeVisible() // 徳川吉宗 (黄)
-  expect(queryByTestId('table-row-3-45')).toBeNull() // 坂本龍馬 (紫)
-  expect(queryByTestId('table-row-3-80')).toBeNull() // オブシディアン (無色)
+  expect(getByRole('row', { name: '2-78' })).toBeVisible() // RYマーブルオーブ (赤黄)
+  expect(getByRole('row', { name: '2-79' })).toBeVisible() // RYマーブルオーブ (青黄)
+  expect(getByRole('row', { name: '2-80' })).toBeVisible() // RYマーブルオーブ (緑黄)
+  expect(queryByRole('row', { name: '3-15' })).toBeNull() // 淀殿 (赤)
+  expect(queryByRole('row', { name: '3-19' })).toBeNull() // 伊達政宗 (青)
+  expect(queryByRole('row', { name: '3-27' })).toBeNull() // 小野小町 (緑)
+  expect(getByRole('row', { name: '3-35' })).toBeVisible() // 徳川吉宗 (黄)
+  expect(queryByRole('row', { name: '3-45' })).toBeNull() // 坂本龍馬 (紫)
+  expect(queryByRole('row', { name: '3-80' })).toBeNull() // オブシディアン (無色)
 
   // 紫ボタンを押す
   let buttonColorPurple = getByRole('radio', { name: '紫' })
@@ -2143,15 +2143,15 @@ test('色によるフィルタ', async () => {
   expect(buttonColorPurple).toBeVisible()
   expect(buttonColorPurple).toBeChecked()
 
-  expect(queryByTestId('table-row-2-78')).toBeNull() // RYマーブルオーブ (赤黄)
-  expect(queryByTestId('table-row-2-79')).toBeNull() // RYマーブルオーブ (青黄)
-  expect(queryByTestId('table-row-2-80')).toBeNull() // RYマーブルオーブ (緑黄)
-  expect(queryByTestId('table-row-3-15')).toBeNull() // 淀殿 (赤)
-  expect(queryByTestId('table-row-3-19')).toBeNull() // 伊達政宗 (青)
-  expect(queryByTestId('table-row-3-27')).toBeNull() // 小野小町 (緑)
-  expect(queryByTestId('table-row-3-35')).toBeNull() // 徳川吉宗 (黄)
-  expect(getByTestId('table-row-3-45')).toBeVisible() // 坂本龍馬 (紫)
-  expect(queryByTestId('table-row-3-80')).toBeNull() // オブシディアン (無色)
+  expect(queryByRole('row', { name: '2-78' })).toBeNull() // RYマーブルオーブ (赤黄)
+  expect(queryByRole('row', { name: '2-79' })).toBeNull() // RYマーブルオーブ (青黄)
+  expect(queryByRole('row', { name: '2-80' })).toBeNull() // RYマーブルオーブ (緑黄)
+  expect(queryByRole('row', { name: '3-15' })).toBeNull() // 淀殿 (赤)
+  expect(queryByRole('row', { name: '3-19' })).toBeNull() // 伊達政宗 (青)
+  expect(queryByRole('row', { name: '3-27' })).toBeNull() // 小野小町 (緑)
+  expect(queryByRole('row', { name: '3-35' })).toBeNull() // 徳川吉宗 (黄)
+  expect(getByRole('row', { name: '3-45' })).toBeVisible() // 坂本龍馬 (紫)
+  expect(queryByRole('row', { name: '3-80' })).toBeNull() // オブシディアン (無色)
 
   // 多色ボタンを押す
   let buttonColorMulticolor = getByRole('radio', { name: '多色' })
@@ -2171,15 +2171,15 @@ test('色によるフィルタ', async () => {
   expect(buttonColorMulticolor).toBeVisible()
   expect(buttonColorMulticolor).toBeChecked()
 
-  expect(getByTestId('table-row-2-78')).toBeVisible() // RYマーブルオーブ (赤黄)
-  expect(getByTestId('table-row-2-79')).toBeVisible() // RYマーブルオーブ (青黄)
-  expect(getByTestId('table-row-2-80')).toBeVisible() // RYマーブルオーブ (緑黄)
-  expect(queryByTestId('table-row-3-15')).toBeNull() // 淀殿 (赤)
-  expect(queryByTestId('table-row-3-19')).toBeNull() // 伊達政宗 (青)
-  expect(queryByTestId('table-row-3-27')).toBeNull() // 小野小町 (緑)
-  expect(queryByTestId('table-row-3-35')).toBeNull() // 徳川吉宗 (黄)
-  expect(queryByTestId('table-row-3-45')).toBeNull() // 坂本龍馬 (紫)
-  expect(queryByTestId('table-row-3-80')).toBeNull() // オブシディアン (無色)
+  expect(getByRole('row', { name: '2-78' })).toBeVisible() // RYマーブルオーブ (赤黄)
+  expect(getByRole('row', { name: '2-79' })).toBeVisible() // RYマーブルオーブ (青黄)
+  expect(getByRole('row', { name: '2-80' })).toBeVisible() // RYマーブルオーブ (緑黄)
+  expect(queryByRole('row', { name: '3-15' })).toBeNull() // 淀殿 (赤)
+  expect(queryByRole('row', { name: '3-19' })).toBeNull() // 伊達政宗 (青)
+  expect(queryByRole('row', { name: '3-27' })).toBeNull() // 小野小町 (緑)
+  expect(queryByRole('row', { name: '3-35' })).toBeNull() // 徳川吉宗 (黄)
+  expect(queryByRole('row', { name: '3-45' })).toBeNull() // 坂本龍馬 (紫)
+  expect(queryByRole('row', { name: '3-80' })).toBeNull() // オブシディアン (無色)
 
   // 無色ボタンを押す
   let buttonColorColorless = getByRole('radio', { name: '無色' })
@@ -2199,15 +2199,15 @@ test('色によるフィルタ', async () => {
   expect(buttonColorColorless).toBeVisible()
   expect(buttonColorColorless).toBeChecked()
 
-  expect(queryByTestId('table-row-2-78')).toBeNull() // RYマーブルオーブ (赤黄)
-  expect(queryByTestId('table-row-2-79')).toBeNull() // RYマーブルオーブ (青黄)
-  expect(queryByTestId('table-row-2-80')).toBeNull() // RYマーブルオーブ (緑黄)
-  expect(queryByTestId('table-row-3-15')).toBeNull() // 淀殿 (赤)
-  expect(queryByTestId('table-row-3-19')).toBeNull() // 伊達政宗 (青)
-  expect(queryByTestId('table-row-3-27')).toBeNull() // 小野小町 (緑)
-  expect(queryByTestId('table-row-3-35')).toBeNull() // 徳川吉宗 (黄)
-  expect(queryByTestId('table-row-3-45')).toBeNull() // 坂本龍馬 (紫)
-  expect(getByTestId('table-row-3-80')).toBeVisible() // オブシディアン (無色)
+  expect(queryByRole('row', { name: '2-78' })).toBeNull() // RYマーブルオーブ (赤黄)
+  expect(queryByRole('row', { name: '2-79' })).toBeNull() // RYマーブルオーブ (青黄)
+  expect(queryByRole('row', { name: '2-80' })).toBeNull() // RYマーブルオーブ (緑黄)
+  expect(queryByRole('row', { name: '3-15' })).toBeNull() // 淀殿 (赤)
+  expect(queryByRole('row', { name: '3-19' })).toBeNull() // 伊達政宗 (青)
+  expect(queryByRole('row', { name: '3-27' })).toBeNull() // 小野小町 (緑)
+  expect(queryByRole('row', { name: '3-35' })).toBeNull() // 徳川吉宗 (黄)
+  expect(queryByRole('row', { name: '3-45' })).toBeNull() // 坂本龍馬 (紫)
+  expect(getByRole('row', { name: '3-80' })).toBeVisible() // オブシディアン (無色)
 
   // 条件すべてをリセットするボタンを押す
   buttonColorAll = getByTestId('button-color-all').querySelector('input')
@@ -2231,15 +2231,15 @@ test('色によるフィルタ', async () => {
   expect(buttonColorAll).toBeVisible()
   expect(buttonColorAll).toBeChecked()
 
-  expect(getByTestId('table-row-2-78')).toBeVisible() // RYマーブルオーブ (赤黄)
-  expect(getByTestId('table-row-2-79')).toBeVisible() // RYマーブルオーブ (青黄)
-  expect(getByTestId('table-row-2-80')).toBeVisible() // RYマーブルオーブ (緑黄)
-  expect(getByTestId('table-row-3-15')).toBeVisible() // 淀殿 (赤)
-  expect(getByTestId('table-row-3-19')).toBeVisible() // 伊達政宗 (青)
-  expect(getByTestId('table-row-3-27')).toBeVisible() // 小野小町 (緑)
-  expect(getByTestId('table-row-3-35')).toBeVisible() // 徳川吉宗 (黄)
-  expect(getByTestId('table-row-3-45')).toBeVisible() // 坂本龍馬 (紫)
-  expect(getByTestId('table-row-3-80')).toBeVisible() // オブシディアン (無色)
+  expect(getByRole('row', { name: '2-78' })).toBeVisible() // RYマーブルオーブ (赤黄)
+  expect(getByRole('row', { name: '2-79' })).toBeVisible() // RYマーブルオーブ (青黄)
+  expect(getByRole('row', { name: '2-80' })).toBeVisible() // RYマーブルオーブ (緑黄)
+  expect(getByRole('row', { name: '3-15' })).toBeVisible() // 淀殿 (赤)
+  expect(getByRole('row', { name: '3-19' })).toBeVisible() // 伊達政宗 (青)
+  expect(getByRole('row', { name: '3-27' })).toBeVisible() // 小野小町 (緑)
+  expect(getByRole('row', { name: '3-35' })).toBeVisible() // 徳川吉宗 (黄)
+  expect(getByRole('row', { name: '3-45' })).toBeVisible() // 坂本龍馬 (紫)
+  expect(getByRole('row', { name: '3-80' })).toBeVisible() // オブシディアン (無色)
 })
 
 test('種類によるフィルタ', async () => {
@@ -2257,7 +2257,7 @@ test('種類によるフィルタ', async () => {
   }
   const zoomIn = vi.fn()
   const interruptSimulator = vi.fn()
-  const { rerender, getByRole, getByTestId, queryByTestId } = render(
+  const { rerender, getByRole, queryByRole, getByTestId } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
@@ -2303,10 +2303,10 @@ test('種類によるフィルタ', async () => {
   expect(buttonTypeAll).toBeVisible()
   expect(buttonTypeAll).toBeChecked()
 
-  expect(getByTestId('table-row-B-2')).toBeVisible() // ヴァスコ・ダ・ガマ
-  expect(getByTestId('table-row-B-9')).toBeVisible() // モナ・リザ
-  expect(getByTestId('table-row-B-11')).toBeVisible() // フリート
-  expect(getByTestId('table-row-B-13')).toBeVisible() // ブルーストーン
+  expect(getByRole('row', { name: 'B-2' })).toBeVisible() // ヴァスコ・ダ・ガマ
+  expect(getByRole('row', { name: 'B-9' })).toBeVisible() // モナ・リザ
+  expect(getByRole('row', { name: 'B-11' })).toBeVisible() // フリート
+  expect(getByRole('row', { name: 'B-13' })).toBeVisible() // ブルーストーン
 
   // イジンボタンを押す
   let buttonTypeIjin = getByRole('radio', { name: 'イジン' })
@@ -2326,10 +2326,10 @@ test('種類によるフィルタ', async () => {
   expect(buttonTypeIjin).toBeVisible()
   expect(buttonTypeIjin).toBeChecked()
 
-  expect(getByTestId('table-row-B-2')).toBeVisible()
-  expect(queryByTestId('table-row-B-9')).toBeNull()
-  expect(queryByTestId('table-row-B-11')).toBeNull()
-  expect(queryByTestId('table-row-B-13')).toBeNull()
+  expect(getByRole('row', { name: 'B-2' })).toBeVisible()
+  expect(queryByRole('row', { name: 'B-9' })).toBeNull()
+  expect(queryByRole('row', { name: 'B-11' })).toBeNull()
+  expect(queryByRole('row', { name: 'B-13' })).toBeNull()
 
   // ハイケイボタンを押す
   let buttonTypeHaikei = getByRole('radio', { name: 'ハイケイ' })
@@ -2349,10 +2349,10 @@ test('種類によるフィルタ', async () => {
   expect(buttonTypeHaikei).toBeVisible()
   expect(buttonTypeHaikei).toBeChecked()
 
-  expect(queryByTestId('table-row-B-2')).toBeNull()
-  expect(getByTestId('table-row-B-9')).toBeVisible()
-  expect(queryByTestId('table-row-B-11')).toBeNull()
-  expect(queryByTestId('table-row-B-13')).toBeNull()
+  expect(queryByRole('row', { name: 'B-2' })).toBeNull()
+  expect(getByRole('row', { name: 'B-9' })).toBeVisible()
+  expect(queryByRole('row', { name: 'B-11' })).toBeNull()
+  expect(queryByRole('row', { name: 'B-13' })).toBeNull()
 
   // マホウボタンを押す
   let buttonTypeMahou = getByRole('radio', { name: 'マホウ' })
@@ -2372,10 +2372,10 @@ test('種類によるフィルタ', async () => {
   expect(buttonTypeMahou).toBeVisible()
   expect(buttonTypeMahou).toBeChecked()
 
-  expect(queryByTestId('table-row-B-2')).toBeNull()
-  expect(queryByTestId('table-row-B-9')).toBeNull()
-  expect(getByTestId('table-row-B-11')).toBeVisible()
-  expect(queryByTestId('table-row-B-13')).toBeNull()
+  expect(queryByRole('row', { name: 'B-2' })).toBeNull()
+  expect(queryByRole('row', { name: 'B-9' })).toBeNull()
+  expect(getByRole('row', { name: 'B-11' })).toBeVisible()
+  expect(queryByRole('row', { name: 'B-13' })).toBeNull()
 
   // マリョクボタンを押す
   let buttonTypeMaryoku = getByRole('radio', { name: 'マリョク' })
@@ -2395,10 +2395,10 @@ test('種類によるフィルタ', async () => {
   expect(buttonTypeMaryoku).toBeVisible()
   expect(buttonTypeMaryoku).toBeChecked()
 
-  expect(queryByTestId('table-row-B-2')).toBeNull()
-  expect(queryByTestId('table-row-B-9')).toBeNull()
-  expect(queryByTestId('table-row-B-11')).toBeNull()
-  expect(getByTestId('table-row-B-13')).toBeVisible()
+  expect(queryByRole('row', { name: 'B-2' })).toBeNull()
+  expect(queryByRole('row', { name: 'B-9' })).toBeNull()
+  expect(queryByRole('row', { name: 'B-11' })).toBeNull()
+  expect(getByRole('row', { name: 'B-13' })).toBeVisible()
 
   // 条件すべてをリセットするボタンを押す
   buttonTypeAll = getByTestId('button-type-all').querySelector('input')
@@ -2422,10 +2422,10 @@ test('種類によるフィルタ', async () => {
   expect(buttonTypeAll).toBeVisible()
   expect(buttonTypeAll).toBeChecked()
 
-  expect(getByTestId('table-row-B-2')).toBeVisible()
-  expect(getByTestId('table-row-B-9')).toBeVisible()
-  expect(getByTestId('table-row-B-11')).toBeVisible()
-  expect(getByTestId('table-row-B-13')).toBeVisible()
+  expect(getByRole('row', { name: 'B-2' })).toBeVisible()
+  expect(getByRole('row', { name: 'B-9' })).toBeVisible()
+  expect(getByRole('row', { name: 'B-11' })).toBeVisible()
+  expect(getByRole('row', { name: 'B-13' })).toBeVisible()
 })
 
 test('イジンのパワーによるフィルタ', async () => {
@@ -2443,7 +2443,7 @@ test('イジンのパワーによるフィルタ', async () => {
   }
   const zoomIn = vi.fn()
   const interruptSimulator = vi.fn()
-  const { rerender, getByRole, getByTestId, queryByTestId } = render(
+  const { rerender, getByRole, queryByRole, getByTestId } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
@@ -2534,10 +2534,10 @@ test('イジンのパワーによるフィルタ', async () => {
   expect(buttonPowerEQ).toBeEnabled()
   expect(buttonPowerEQ).not.toBeChecked()
 
-  expect(getByTestId('table-row-4-37')).toBeVisible() // フローレンス・ナイチンゲール (0)
-  expect(getByTestId('table-row-G-2')).toBeVisible() // 卑弥呼 (500)
-  expect(getByTestId('table-row-1-18')).toBeVisible() // 源頼朝 (5000)
-  expect(getByTestId('table-row-2-8')).toBeVisible() // 豊臣秀吉 (10000)
+  expect(getByRole('row', { name: '4-37' })).toBeVisible() // フローレンス・ナイチンゲール (0)
+  expect(getByRole('row', { name: 'G-2' })).toBeVisible() // 卑弥呼 (500)
+  expect(getByRole('row', { name: '1-18' })).toBeVisible() // 源頼朝 (5000)
+  expect(getByRole('row', { name: '2-8' })).toBeVisible() // 豊臣秀吉 (10000)
 
   // 以下ボタンを押す
   await userEvent.click(getByTestId('button-power-le').querySelector('input'))
@@ -2552,10 +2552,10 @@ test('イジンのパワーによるフィルタ', async () => {
   )
   expect(getByTestId('button-power-le').querySelector('input')).toBeChecked()
 
-  expect(getByTestId('table-row-4-37')).toBeVisible() // フローレンス・ナイチンゲール (0)
-  expect(queryByTestId('table-row-G-2')).toBeNull() // 卑弥呼 (500)
-  expect(queryByTestId('table-row-1-18')).toBeNull() // 源頼朝 (5000)
-  expect(queryByTestId('table-row-2-8')).toBeNull() // 豊臣秀吉 (10000)
+  expect(getByRole('row', { name: '4-37' })).toBeVisible() // フローレンス・ナイチンゲール (0)
+  expect(queryByRole('row', { name: 'G-2' })).toBeNull() // 卑弥呼 (500)
+  expect(queryByRole('row', { name: '1-18' })).toBeNull() // 源頼朝 (5000)
+  expect(queryByRole('row', { name: '2-8' })).toBeNull() // 豊臣秀吉 (10000)
 
   // 等しいボタンを押す
   await userEvent.click(getByTestId('button-power-eq').querySelector('input'))
@@ -2594,10 +2594,10 @@ test('イジンのパワーによるフィルタ', async () => {
   )
   expect(getByTestId('slider-power')).toHaveValue('500')
 
-  expect(queryByTestId('table-row-4-37')).toBeNull() // フローレンス・ナイチンゲール (0)
-  expect(getByTestId('table-row-G-2')).toBeVisible() // 卑弥呼 (500)
-  expect(getByTestId('table-row-1-18')).toBeVisible() // 源頼朝 (5000)
-  expect(getByTestId('table-row-2-8')).toBeVisible() // 豊臣秀吉 (10000)
+  expect(queryByRole('row', { name: '4-37' })).toBeNull() // フローレンス・ナイチンゲール (0)
+  expect(getByRole('row', { name: 'G-2' })).toBeVisible() // 卑弥呼 (500)
+  expect(getByRole('row', { name: '1-18' })).toBeVisible() // 源頼朝 (5000)
+  expect(getByRole('row', { name: '2-8' })).toBeVisible() // 豊臣秀吉 (10000)
 
   // 以下ボタンを押す
   await userEvent.click(getByTestId('button-power-le').querySelector('input'))
@@ -2612,10 +2612,10 @@ test('イジンのパワーによるフィルタ', async () => {
   )
   expect(getByTestId('button-power-le').querySelector('input')).toBeChecked()
 
-  expect(getByTestId('table-row-4-37')).toBeVisible() // フローレンス・ナイチンゲール (0)
-  expect(getByTestId('table-row-G-2')).toBeVisible() // 卑弥呼 (500)
-  expect(queryByTestId('table-row-1-18')).toBeNull() // 源頼朝 (5000)
-  expect(queryByTestId('table-row-2-8')).toBeNull() // 豊臣秀吉 (10000)
+  expect(getByRole('row', { name: '4-37' })).toBeVisible() // フローレンス・ナイチンゲール (0)
+  expect(getByRole('row', { name: 'G-2' })).toBeVisible() // 卑弥呼 (500)
+  expect(queryByRole('row', { name: '1-18' })).toBeNull() // 源頼朝 (5000)
+  expect(queryByRole('row', { name: '2-8' })).toBeNull() // 豊臣秀吉 (10000)
 
   // 等しいボタンを押す
   await userEvent.click(getByTestId('button-power-eq').querySelector('input'))
@@ -2630,10 +2630,10 @@ test('イジンのパワーによるフィルタ', async () => {
   )
   expect(getByTestId('button-power-eq').querySelector('input')).toBeChecked()
 
-  expect(queryByTestId('table-row-4-37')).toBeNull() // フローレンス・ナイチンゲール (0)
-  expect(getByTestId('table-row-G-2')).toBeVisible() // 卑弥呼 (500)
-  expect(queryByTestId('table-row-1-18')).toBeNull() // 源頼朝 (5000)
-  expect(queryByTestId('table-row-2-8')).toBeNull() // 豊臣秀吉 (10000)
+  expect(queryByRole('row', { name: '4-37' })).toBeNull() // フローレンス・ナイチンゲール (0)
+  expect(getByRole('row', { name: 'G-2' })).toBeVisible() // 卑弥呼 (500)
+  expect(queryByRole('row', { name: '1-18' })).toBeNull() // 源頼朝 (5000)
+  expect(queryByRole('row', { name: '2-8' })).toBeNull() // 豊臣秀吉 (10000)
 
   // 以上ボタンを押して、スライダーを5000にする
   await userEvent.click(getByTestId('button-power-ge').querySelector('input'))
@@ -2659,10 +2659,10 @@ test('イジンのパワーによるフィルタ', async () => {
   )
   expect(getByTestId('slider-power')).toHaveValue('5000')
 
-  expect(queryByTestId('table-row-4-37')).toBeNull() // フローレンス・ナイチンゲール (0)
-  expect(queryByTestId('table-row-G-2')).toBeNull() // 卑弥呼 (500)
-  expect(getByTestId('table-row-1-18')).toBeVisible() // 源頼朝 (5000)
-  expect(getByTestId('table-row-2-8')).toBeVisible() // 豊臣秀吉 (10000)
+  expect(queryByRole('row', { name: '4-37' })).toBeNull() // フローレンス・ナイチンゲール (0)
+  expect(queryByRole('row', { name: 'G-2' })).toBeNull() // 卑弥呼 (500)
+  expect(getByRole('row', { name: '1-18' })).toBeVisible() // 源頼朝 (5000)
+  expect(getByRole('row', { name: '2-8' })).toBeVisible() // 豊臣秀吉 (10000)
 
   // 以下ボタンを押す
   await userEvent.click(getByTestId('button-power-le').querySelector('input'))
@@ -2677,10 +2677,10 @@ test('イジンのパワーによるフィルタ', async () => {
   )
   expect(getByTestId('button-power-le').querySelector('input')).toBeChecked()
 
-  expect(getByTestId('table-row-4-37')).toBeVisible() // フローレンス・ナイチンゲール (0)
-  expect(getByTestId('table-row-G-2')).toBeVisible() // 卑弥呼 (500)
-  expect(getByTestId('table-row-1-18')).toBeVisible() // 源頼朝 (5000)
-  expect(queryByTestId('table-row-2-8')).toBeNull() // 豊臣秀吉 (10000)
+  expect(getByRole('row', { name: '4-37' })).toBeVisible() // フローレンス・ナイチンゲール (0)
+  expect(getByRole('row', { name: 'G-2' })).toBeVisible() // 卑弥呼 (500)
+  expect(getByRole('row', { name: '1-18' })).toBeVisible() // 源頼朝 (5000)
+  expect(queryByRole('row', { name: '2-8' })).toBeNull() // 豊臣秀吉 (10000)
 
   // 等しいボタンを押す
   await userEvent.click(getByTestId('button-power-eq').querySelector('input'))
@@ -2695,10 +2695,10 @@ test('イジンのパワーによるフィルタ', async () => {
   )
   expect(getByTestId('button-power-eq').querySelector('input')).toBeChecked()
 
-  expect(queryByTestId('table-row-4-37')).toBeNull() // フローレンス・ナイチンゲール (0)
-  expect(queryByTestId('table-row-G-2')).toBeNull() // 卑弥呼 (500)
-  expect(getByTestId('table-row-1-18')).toBeVisible() // 源頼朝 (5000)
-  expect(queryByTestId('table-row-2-8')).toBeNull() // 豊臣秀吉 (10000)
+  expect(queryByRole('row', { name: '4-37' })).toBeNull() // フローレンス・ナイチンゲール (0)
+  expect(queryByRole('row', { name: 'G-2' })).toBeNull() // 卑弥呼 (500)
+  expect(getByRole('row', { name: '1-18' })).toBeVisible() // 源頼朝 (5000)
+  expect(queryByRole('row', { name: '2-8' })).toBeNull() // 豊臣秀吉 (10000)
 
   // 以上ボタンを押して、スライダーを10000にする
   await userEvent.click(getByTestId('button-power-ge').querySelector('input'))
@@ -2724,10 +2724,10 @@ test('イジンのパワーによるフィルタ', async () => {
   )
   expect(getByTestId('slider-power')).toHaveValue('10000')
 
-  expect(queryByTestId('table-row-4-37')).toBeNull() // フローレンス・ナイチンゲール (0)
-  expect(queryByTestId('table-row-G-2')).toBeNull() // 卑弥呼 (500)
-  expect(queryByTestId('table-row-1-18')).toBeNull() // 源頼朝 (5000)
-  expect(getByTestId('table-row-2-8')).toBeVisible() // 豊臣秀吉 (10000)
+  expect(queryByRole('row', { name: '4-37' })).toBeNull() // フローレンス・ナイチンゲール (0)
+  expect(queryByRole('row', { name: 'G-2' })).toBeNull() // 卑弥呼 (500)
+  expect(queryByRole('row', { name: '1-18' })).toBeNull() // 源頼朝 (5000)
+  expect(getByRole('row', { name: '2-8' })).toBeVisible() // 豊臣秀吉 (10000)
 
   // 以下ボタンを押す
   await userEvent.click(getByTestId('button-power-le').querySelector('input'))
@@ -2742,10 +2742,10 @@ test('イジンのパワーによるフィルタ', async () => {
   )
   expect(getByTestId('button-power-le').querySelector('input')).toBeChecked()
 
-  expect(getByTestId('table-row-4-37')).toBeVisible() // フローレンス・ナイチンゲール (0)
-  expect(getByTestId('table-row-G-2')).toBeVisible() // 卑弥呼 (500)
-  expect(getByTestId('table-row-1-18')).toBeVisible() // 源頼朝 (5000)
-  expect(getByTestId('table-row-2-8')).toBeVisible() // 豊臣秀吉 (10000)
+  expect(getByRole('row', { name: '4-37' })).toBeVisible() // フローレンス・ナイチンゲール (0)
+  expect(getByRole('row', { name: 'G-2' })).toBeVisible() // 卑弥呼 (500)
+  expect(getByRole('row', { name: '1-18' })).toBeVisible() // 源頼朝 (5000)
+  expect(getByRole('row', { name: '2-8' })).toBeVisible() // 豊臣秀吉 (10000)
 
   // 等しいボタンを押す
   await userEvent.click(getByTestId('button-power-eq').querySelector('input'))
@@ -2760,10 +2760,10 @@ test('イジンのパワーによるフィルタ', async () => {
   )
   expect(getByTestId('button-power-eq').querySelector('input')).toBeChecked()
 
-  expect(queryByTestId('table-row-4-37')).toBeNull() // フローレンス・ナイチンゲール (0)
-  expect(queryByTestId('table-row-G-2')).toBeNull() // 卑弥呼 (500)
-  expect(queryByTestId('table-row-1-18')).toBeNull() // 源頼朝 (5000)
-  expect(getByTestId('table-row-2-8')).toBeVisible() // 豊臣秀吉 (10000)
+  expect(queryByRole('row', { name: '4-37' })).toBeNull() // フローレンス・ナイチンゲール (0)
+  expect(queryByRole('row', { name: 'G-2' })).toBeNull() // 卑弥呼 (500)
+  expect(queryByRole('row', { name: '1-18' })).toBeNull() // 源頼朝 (5000)
+  expect(getByRole('row', { name: '2-8' })).toBeVisible() // 豊臣秀吉 (10000)
 
   // 条件すべてをリセットするボタンを押す
   await userEvent.click(
@@ -2793,10 +2793,10 @@ test('イジンのパワーによるフィルタ', async () => {
     getByTestId('button-power-eq').querySelector('input')
   ).not.toBeEnabled()
 
-  expect(getByTestId('table-row-4-37')).toBeVisible() // フローレンス・ナイチンゲール (0)
-  expect(getByTestId('table-row-G-2')).toBeVisible() // 卑弥呼 (500)
-  expect(getByTestId('table-row-1-18')).toBeVisible() // 源頼朝 (5000)
-  expect(getByTestId('table-row-2-8')).toBeVisible() // 豊臣秀吉 (10000)
+  expect(getByRole('row', { name: '4-37' })).toBeVisible() // フローレンス・ナイチンゲール (0)
+  expect(getByRole('row', { name: 'G-2' })).toBeVisible() // 卑弥呼 (500)
+  expect(getByRole('row', { name: '1-18' })).toBeVisible() // 源頼朝 (5000)
+  expect(getByRole('row', { name: '2-8' })).toBeVisible() // 豊臣秀吉 (10000)
 })
 
 test('レベルによるフィルタ', async () => {
@@ -2814,7 +2814,7 @@ test('レベルによるフィルタ', async () => {
   }
   const zoomIn = vi.fn()
   const interruptSimulator = vi.fn()
-  const { rerender, getByRole, getByTestId, queryByTestId } = render(
+  const { rerender, getByRole, queryByRole, getByTestId } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
@@ -2878,12 +2878,12 @@ test('レベルによるフィルタ', async () => {
   expect(buttonLevelGE).toBeVisible()
   expect(buttonLevelGE).toBeChecked()
 
-  expect(getByTestId('table-row-3-77')).toBeVisible() // 遁甲盤 (レベル0)
-  expect(getByTestId('table-row-2-10')).toBeVisible() // 栄西 (レベル1)
-  expect(getByTestId('table-row-2-14')).toBeVisible() // 北条時政 (レベル5)
-  expect(getByTestId('table-row-2-12')).toBeVisible() // 足利義昭 (レベル9)
-  expect(getByTestId('table-row-3-63')).toBeVisible() // アイオン (レベル10)
-  expect(getByTestId('table-row-4-46')).toBeVisible() // 大日本沿海輿地全図 (レベル17)
+  expect(getByRole('row', { name: '3-77' })).toBeVisible() // 遁甲盤 (レベル0)
+  expect(getByRole('row', { name: '2-10' })).toBeVisible() // 栄西 (レベル1)
+  expect(getByRole('row', { name: '2-14' })).toBeVisible() // 北条時政 (レベル5)
+  expect(getByRole('row', { name: '2-12' })).toBeVisible() // 足利義昭 (レベル9)
+  expect(getByRole('row', { name: '3-63' })).toBeVisible() // アイオン (レベル10)
+  expect(getByRole('row', { name: '4-46' })).toBeVisible() // 大日本沿海輿地全図 (レベル17)
 
   // 0以下
   let buttonLevelLE = getByTestId('button-level-le').querySelector('input')
@@ -2903,12 +2903,12 @@ test('レベルによるフィルタ', async () => {
   expect(buttonLevelLE).toBeVisible()
   expect(buttonLevelLE).toBeChecked()
 
-  expect(getByTestId('table-row-3-77')).toBeVisible() // 遁甲盤 (レベル0)
-  expect(queryByTestId('table-row-2-10')).toBeNull() // 栄西 (レベル1)
-  expect(queryByTestId('table-row-2-14')).toBeNull() // 北条時政 (レベル5)
-  expect(queryByTestId('table-row-2-12')).toBeNull() // 足利義昭 (レベル9)
-  expect(queryByTestId('table-row-3-63')).toBeNull() // アイオン (レベル10)
-  expect(queryByTestId('table-row-4-46')).toBeNull() // 大日本沿海輿地全図 (レベル17)
+  expect(getByRole('row', { name: '3-77' })).toBeVisible() // 遁甲盤 (レベル0)
+  expect(queryByRole('row', { name: '2-10' })).toBeNull() // 栄西 (レベル1)
+  expect(queryByRole('row', { name: '2-14' })).toBeNull() // 北条時政 (レベル5)
+  expect(queryByRole('row', { name: '2-12' })).toBeNull() // 足利義昭 (レベル9)
+  expect(queryByRole('row', { name: '3-63' })).toBeNull() // アイオン (レベル10)
+  expect(queryByRole('row', { name: '4-46' })).toBeNull() // 大日本沿海輿地全図 (レベル17)
 
   // 0に等しい
   let buttonLevelEQ = getByTestId('button-level-eq').querySelector('input')
@@ -2928,12 +2928,12 @@ test('レベルによるフィルタ', async () => {
   expect(buttonLevelEQ).toBeVisible()
   expect(buttonLevelEQ).toBeChecked()
 
-  expect(getByTestId('table-row-3-77')).toBeVisible() // 遁甲盤 (レベル0)
-  expect(queryByTestId('table-row-2-10')).toBeNull() // 栄西 (レベル1)
-  expect(queryByTestId('table-row-2-14')).toBeNull() // 北条時政 (レベル5)
-  expect(queryByTestId('table-row-2-12')).toBeNull() // 足利義昭 (レベル9)
-  expect(queryByTestId('table-row-3-63')).toBeNull() // アイオン (レベル10)
-  expect(queryByTestId('table-row-4-46')).toBeNull() // 大日本沿海輿地全図 (レベル17)
+  expect(getByRole('row', { name: '3-77' })).toBeVisible() // 遁甲盤 (レベル0)
+  expect(queryByRole('row', { name: '2-10' })).toBeNull() // 栄西 (レベル1)
+  expect(queryByRole('row', { name: '2-14' })).toBeNull() // 北条時政 (レベル5)
+  expect(queryByRole('row', { name: '2-12' })).toBeNull() // 足利義昭 (レベル9)
+  expect(queryByRole('row', { name: '3-63' })).toBeNull() // アイオン (レベル10)
+  expect(queryByRole('row', { name: '4-46' })).toBeNull() // 大日本沿海輿地全図 (レベル17)
 
   // 5以上
   sliderLevel = getByTestId('slider-level')
@@ -2971,12 +2971,12 @@ test('レベルによるフィルタ', async () => {
   expect(buttonLevelGE).toBeVisible()
   expect(buttonLevelGE).toBeChecked()
 
-  expect(queryByTestId('table-row-3-77')).toBeNull() // 遁甲盤 (レベル0)
-  expect(queryByTestId('table-row-2-10')).toBeNull() // 栄西 (レベル1)
-  expect(getByTestId('table-row-2-14')).toBeVisible() // 北条時政 (レベル5)
-  expect(getByTestId('table-row-2-12')).toBeVisible() // 足利義昭 (レベル9)
-  expect(getByTestId('table-row-3-63')).toBeVisible() // アイオン (レベル10)
-  expect(getByTestId('table-row-4-46')).toBeVisible() // 大日本沿海輿地全図 (レベル17)
+  expect(queryByRole('row', { name: '3-77' })).toBeNull() // 遁甲盤 (レベル0)
+  expect(queryByRole('row', { name: '2-10' })).toBeNull() // 栄西 (レベル1)
+  expect(getByRole('row', { name: '2-14' })).toBeVisible() // 北条時政 (レベル5)
+  expect(getByRole('row', { name: '2-12' })).toBeVisible() // 足利義昭 (レベル9)
+  expect(getByRole('row', { name: '3-63' })).toBeVisible() // アイオン (レベル10)
+  expect(getByRole('row', { name: '4-46' })).toBeVisible() // 大日本沿海輿地全図 (レベル17)
 
   // 5以下
   buttonLevelLE = getByTestId('button-level-le').querySelector('input')
@@ -2996,12 +2996,12 @@ test('レベルによるフィルタ', async () => {
   expect(buttonLevelLE).toBeVisible()
   expect(buttonLevelLE).toBeChecked()
 
-  expect(getByTestId('table-row-3-77')).toBeVisible() // 遁甲盤 (レベル0)
-  expect(getByTestId('table-row-2-10')).toBeVisible() // 栄西 (レベル1)
-  expect(getByTestId('table-row-2-14')).toBeVisible() // 北条時政 (レベル5)
-  expect(queryByTestId('table-row-2-12')).toBeNull() // 足利義昭 (レベル9)
-  expect(queryByTestId('table-row-3-63')).toBeNull() // アイオン (レベル10)
-  expect(queryByTestId('table-row-4-46')).toBeNull() // 大日本沿海輿地全図 (レベル17)
+  expect(getByRole('row', { name: '3-77' })).toBeVisible() // 遁甲盤 (レベル0)
+  expect(getByRole('row', { name: '2-10' })).toBeVisible() // 栄西 (レベル1)
+  expect(getByRole('row', { name: '2-14' })).toBeVisible() // 北条時政 (レベル5)
+  expect(queryByRole('row', { name: '2-12' })).toBeNull() // 足利義昭 (レベル9)
+  expect(queryByRole('row', { name: '3-63' })).toBeNull() // アイオン (レベル10)
+  expect(queryByRole('row', { name: '4-46' })).toBeNull() // 大日本沿海輿地全図 (レベル17)
 
   // 5に等しい
   buttonLevelEQ = getByTestId('button-level-eq').querySelector('input')
@@ -3021,12 +3021,12 @@ test('レベルによるフィルタ', async () => {
   expect(buttonLevelEQ).toBeVisible()
   expect(buttonLevelEQ).toBeChecked()
 
-  expect(queryByTestId('table-row-3-77')).toBeNull() // 遁甲盤 (レベル0)
-  expect(queryByTestId('table-row-2-10')).toBeNull() // 栄西 (レベル1)
-  expect(getByTestId('table-row-2-14')).toBeVisible() // 北条時政 (レベル5)
-  expect(queryByTestId('table-row-2-12')).toBeNull() // 足利義昭 (レベル9)
-  expect(queryByTestId('table-row-3-63')).toBeNull() // アイオン (レベル10)
-  expect(queryByTestId('table-row-4-46')).toBeNull() // 大日本沿海輿地全図 (レベル17)
+  expect(queryByRole('row', { name: '3-77' })).toBeNull() // 遁甲盤 (レベル0)
+  expect(queryByRole('row', { name: '2-10' })).toBeNull() // 栄西 (レベル1)
+  expect(getByRole('row', { name: '2-14' })).toBeVisible() // 北条時政 (レベル5)
+  expect(queryByRole('row', { name: '2-12' })).toBeNull() // 足利義昭 (レベル9)
+  expect(queryByRole('row', { name: '3-63' })).toBeNull() // アイオン (レベル10)
+  expect(queryByRole('row', { name: '4-46' })).toBeNull() // 大日本沿海輿地全図 (レベル17)
 
   // 10以上
   sliderLevel = getByTestId('slider-level')
@@ -3064,12 +3064,12 @@ test('レベルによるフィルタ', async () => {
   expect(buttonLevelGE).toBeVisible()
   expect(buttonLevelGE).toBeChecked()
 
-  expect(queryByTestId('table-row-3-77')).toBeNull() // 遁甲盤 (レベル0)
-  expect(queryByTestId('table-row-2-10')).toBeNull() // 栄西 (レベル1)
-  expect(queryByTestId('table-row-2-14')).toBeNull() // 北条時政 (レベル5)
-  expect(queryByTestId('table-row-2-12')).toBeNull() // 足利義昭 (レベル9)
-  expect(getByTestId('table-row-3-63')).toBeVisible() // アイオン (レベル10)
-  expect(getByTestId('table-row-4-46')).toBeVisible() // 大日本沿海輿地全図 (レベル17)
+  expect(queryByRole('row', { name: '3-77' })).toBeNull() // 遁甲盤 (レベル0)
+  expect(queryByRole('row', { name: '2-10' })).toBeNull() // 栄西 (レベル1)
+  expect(queryByRole('row', { name: '2-14' })).toBeNull() // 北条時政 (レベル5)
+  expect(queryByRole('row', { name: '2-12' })).toBeNull() // 足利義昭 (レベル9)
+  expect(getByRole('row', { name: '3-63' })).toBeVisible() // アイオン (レベル10)
+  expect(getByRole('row', { name: '4-46' })).toBeVisible() // 大日本沿海輿地全図 (レベル17)
 
   // 10以下
   buttonLevelLE = getByTestId('button-level-le').querySelector('input')
@@ -3089,12 +3089,12 @@ test('レベルによるフィルタ', async () => {
   expect(buttonLevelLE).toBeVisible()
   expect(buttonLevelLE).toBeChecked()
 
-  expect(getByTestId('table-row-3-77')).toBeVisible() // 遁甲盤 (レベル0)
-  expect(getByTestId('table-row-2-10')).toBeVisible() // 栄西 (レベル1)
-  expect(getByTestId('table-row-2-14')).toBeVisible() // 北条時政 (レベル5)
-  expect(getByTestId('table-row-2-12')).toBeVisible() // 足利義昭 (レベル9)
-  expect(getByTestId('table-row-3-63')).toBeVisible() // アイオン (レベル10)
-  expect(queryByTestId('table-row-4-46')).toBeNull() // 大日本沿海輿地全図 (レベル17)
+  expect(getByRole('row', { name: '3-77' })).toBeVisible() // 遁甲盤 (レベル0)
+  expect(getByRole('row', { name: '2-10' })).toBeVisible() // 栄西 (レベル1)
+  expect(getByRole('row', { name: '2-14' })).toBeVisible() // 北条時政 (レベル5)
+  expect(getByRole('row', { name: '2-12' })).toBeVisible() // 足利義昭 (レベル9)
+  expect(getByRole('row', { name: '3-63' })).toBeVisible() // アイオン (レベル10)
+  expect(queryByRole('row', { name: '4-46' })).toBeNull() // 大日本沿海輿地全図 (レベル17)
 
   // 10に等しい
   buttonLevelEQ = getByTestId('button-level-eq').querySelector('input')
@@ -3114,12 +3114,12 @@ test('レベルによるフィルタ', async () => {
   expect(buttonLevelEQ).toBeVisible()
   expect(buttonLevelEQ).toBeChecked()
 
-  expect(queryByTestId('table-row-3-77')).toBeNull() // 遁甲盤 (レベル0)
-  expect(queryByTestId('table-row-2-10')).toBeNull() // 栄西 (レベル1)
-  expect(queryByTestId('table-row-2-14')).toBeNull() // 北条時政 (レベル5)
-  expect(queryByTestId('table-row-2-12')).toBeNull() // 足利義昭 (レベル9)
-  expect(getByTestId('table-row-3-63')).toBeVisible() // アイオン (レベル10)
-  expect(queryByTestId('table-row-4-46')).toBeNull() // 大日本沿海輿地全図 (レベル17)
+  expect(queryByRole('row', { name: '3-77' })).toBeNull() // 遁甲盤 (レベル0)
+  expect(queryByRole('row', { name: '2-10' })).toBeNull() // 栄西 (レベル1)
+  expect(queryByRole('row', { name: '2-14' })).toBeNull() // 北条時政 (レベル5)
+  expect(queryByRole('row', { name: '2-12' })).toBeNull() // 足利義昭 (レベル9)
+  expect(getByRole('row', { name: '3-63' })).toBeVisible() // アイオン (レベル10)
+  expect(queryByRole('row', { name: '4-46' })).toBeNull() // 大日本沿海輿地全図 (レベル17)
 
   // 17以上
   sliderLevel = getByTestId('slider-level')
@@ -3157,12 +3157,12 @@ test('レベルによるフィルタ', async () => {
   expect(buttonLevelGE).toBeVisible()
   expect(buttonLevelGE).toBeChecked()
 
-  expect(queryByTestId('table-row-3-77')).toBeNull() // 遁甲盤 (レベル0)
-  expect(queryByTestId('table-row-2-10')).toBeNull() // 栄西 (レベル1)
-  expect(queryByTestId('table-row-2-14')).toBeNull() // 北条時政 (レベル5)
-  expect(queryByTestId('table-row-2-12')).toBeNull() // 足利義昭 (レベル9)
-  expect(queryByTestId('table-row-3-63')).toBeNull() // アイオン (レベル10)
-  expect(getByTestId('table-row-4-46')).toBeVisible() // 大日本沿海輿地全図 (レベル17)
+  expect(queryByRole('row', { name: '3-77' })).toBeNull() // 遁甲盤 (レベル0)
+  expect(queryByRole('row', { name: '2-10' })).toBeNull() // 栄西 (レベル1)
+  expect(queryByRole('row', { name: '2-14' })).toBeNull() // 北条時政 (レベル5)
+  expect(queryByRole('row', { name: '2-12' })).toBeNull() // 足利義昭 (レベル9)
+  expect(queryByRole('row', { name: '3-63' })).toBeNull() // アイオン (レベル10)
+  expect(getByRole('row', { name: '4-46' })).toBeVisible() // 大日本沿海輿地全図 (レベル17)
 
   // 17以下
   buttonLevelLE = getByTestId('button-level-le').querySelector('input')
@@ -3182,12 +3182,12 @@ test('レベルによるフィルタ', async () => {
   expect(buttonLevelLE).toBeVisible()
   expect(buttonLevelLE).toBeChecked()
 
-  expect(getByTestId('table-row-3-77')).toBeVisible() // 遁甲盤 (レベル0)
-  expect(getByTestId('table-row-2-10')).toBeVisible() // 栄西 (レベル1)
-  expect(getByTestId('table-row-2-14')).toBeVisible() // 北条時政 (レベル5)
-  expect(getByTestId('table-row-2-12')).toBeVisible() // 足利義昭 (レベル9)
-  expect(getByTestId('table-row-3-63')).toBeVisible() // アイオン (レベル10)
-  expect(getByTestId('table-row-4-46')).toBeVisible() // 大日本沿海輿地全図 (レベル17)
+  expect(getByRole('row', { name: '3-77' })).toBeVisible() // 遁甲盤 (レベル0)
+  expect(getByRole('row', { name: '2-10' })).toBeVisible() // 栄西 (レベル1)
+  expect(getByRole('row', { name: '2-14' })).toBeVisible() // 北条時政 (レベル5)
+  expect(getByRole('row', { name: '2-12' })).toBeVisible() // 足利義昭 (レベル9)
+  expect(getByRole('row', { name: '3-63' })).toBeVisible() // アイオン (レベル10)
+  expect(getByRole('row', { name: '4-46' })).toBeVisible() // 大日本沿海輿地全図 (レベル17)
 
   // 17に等しい
   buttonLevelEQ = getByTestId('button-level-eq').querySelector('input')
@@ -3207,12 +3207,12 @@ test('レベルによるフィルタ', async () => {
   expect(buttonLevelEQ).toBeVisible()
   expect(buttonLevelEQ).toBeChecked()
 
-  expect(queryByTestId('table-row-3-77')).toBeNull() // 遁甲盤 (レベル0)
-  expect(queryByTestId('table-row-2-10')).toBeNull() // 栄西 (レベル1)
-  expect(queryByTestId('table-row-2-14')).toBeNull() // 北条時政 (レベル5)
-  expect(queryByTestId('table-row-2-12')).toBeNull() // 足利義昭 (レベル9)
-  expect(queryByTestId('table-row-3-63')).toBeNull() // アイオン (レベル10)
-  expect(getByTestId('table-row-4-46')).toBeVisible() // 大日本沿海輿地全図 (レベル17)
+  expect(queryByRole('row', { name: '3-77' })).toBeNull() // 遁甲盤 (レベル0)
+  expect(queryByRole('row', { name: '2-10' })).toBeNull() // 栄西 (レベル1)
+  expect(queryByRole('row', { name: '2-14' })).toBeNull() // 北条時政 (レベル5)
+  expect(queryByRole('row', { name: '2-12' })).toBeNull() // 足利義昭 (レベル9)
+  expect(queryByRole('row', { name: '3-63' })).toBeNull() // アイオン (レベル10)
+  expect(getByRole('row', { name: '4-46' })).toBeVisible() // 大日本沿海輿地全図 (レベル17)
 
   // 条件すべてをリセットするボタンを押す
   sliderLevel = getByTestId('slider-level')
@@ -3242,12 +3242,12 @@ test('レベルによるフィルタ', async () => {
   expect(buttonLevelGE).toBeVisible()
   expect(buttonLevelGE).toBeChecked()
 
-  expect(getByTestId('table-row-3-77')).toBeVisible() // 遁甲盤 (レベル0)
-  expect(getByTestId('table-row-2-10')).toBeVisible() // 栄西 (レベル1)
-  expect(getByTestId('table-row-2-14')).toBeVisible() // 北条時政 (レベル5)
-  expect(getByTestId('table-row-2-12')).toBeVisible() // 足利義昭 (レベル9)
-  expect(getByTestId('table-row-3-63')).toBeVisible() // アイオン (レベル10)
-  expect(getByTestId('table-row-4-46')).toBeVisible() // 大日本沿海輿地全図 (レベル17)
+  expect(getByRole('row', { name: '3-77' })).toBeVisible() // 遁甲盤 (レベル0)
+  expect(getByRole('row', { name: '2-10' })).toBeVisible() // 栄西 (レベル1)
+  expect(getByRole('row', { name: '2-14' })).toBeVisible() // 北条時政 (レベル5)
+  expect(getByRole('row', { name: '2-12' })).toBeVisible() // 足利義昭 (レベル9)
+  expect(getByRole('row', { name: '3-63' })).toBeVisible() // アイオン (レベル10)
+  expect(getByRole('row', { name: '4-46' })).toBeVisible() // 大日本沿海輿地全図 (レベル17)
 })
 
 test('特性によるフィルタ', async () => {
@@ -3265,7 +3265,7 @@ test('特性によるフィルタ', async () => {
   }
   const zoomIn = vi.fn()
   const interruptSimulator = vi.fn()
-  const { rerender, getByRole, getByTestId, queryByTestId } = render(
+  const { rerender, getByRole, queryByRole, getByTestId } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
@@ -3328,23 +3328,23 @@ test('特性によるフィルタ', async () => {
   expect(buttonTraitUnspecified).toBeVisible()
   expect(buttonTraitUnspecified).toBeChecked()
 
-  expect(getByTestId('table-row-1-10')).toBeVisible() // 徳川家康 (剣術イジン)
-  expect(getByTestId('table-row-1-23')).toBeVisible() // ドナテッロ (美術イジン)
-  expect(getByTestId('table-row-1-39')).toBeVisible() // ヨハン・ゼバスティアン・バッハ (音楽イジン)
-  expect(getByTestId('table-row-3-21')).toBeVisible() // 木戸孝允 (思想イジン)
-  expect(getByTestId('table-row-3-44')).toBeVisible() // 本居宣長 (医術イジン)
-  expect(getByTestId('table-row-3-43')).toBeVisible() // 芹沢鴨 (志願イジン)
-  expect(getByTestId('table-row-B-9')).toBeVisible() // モナ・リザ (美術ハイケイ)
-  expect(getByTestId('table-row-1-51')).toBeVisible() // 冨嶽三十六景 (美術ハイケイ)
-  expect(getByTestId('table-row-3-57')).toBeVisible() // 風神雷神図 (美術ハイケイ)
-  expect(getByTestId('table-row-2-51')).toBeVisible() // リヴァイアサン (思想ハイケイ)
-  expect(getByTestId('table-row-4-44')).toBeVisible() // 落日の王宮 (美術・思想ハイケイ)
-  expect(getByTestId('table-row-G-3')).toBeVisible() // アテルイ (テキストに剣術を含むイジン)
-  expect(getByTestId('table-row-1-56')).toBeVisible() // リバイバル (テキストに美術を含むマホウ)
-  expect(getByTestId('table-row-B-11')).toBeVisible() // マザーグース (テキストに音楽を含むハイケイ)
-  expect(getByTestId('table-row-2-55')).toBeVisible() // 凱旋門 (テキストに思想を含むハイケイ)
-  expect(getByTestId('table-row-P-5')).toBeVisible() // 渡辺崋山 (テキストに医術を含む【美術】イジン)
-  expect(getByTestId('table-row-3-76')).toBeVisible() // ダンダラ羽織 (テキストに志願を含むマリョク)
+  expect(getByRole('row', { name: '1-10' })).toBeVisible() // 徳川家康 (剣術イジン)
+  expect(getByRole('row', { name: '1-23' })).toBeVisible() // ドナテッロ (美術イジン)
+  expect(getByRole('row', { name: '1-39' })).toBeVisible() // ヨハン・ゼバスティアン・バッハ (音楽イジン)
+  expect(getByRole('row', { name: '3-21' })).toBeVisible() // 木戸孝允 (思想イジン)
+  expect(getByRole('row', { name: '3-44' })).toBeVisible() // 本居宣長 (医術イジン)
+  expect(getByRole('row', { name: '3-43' })).toBeVisible() // 芹沢鴨 (志願イジン)
+  expect(getByRole('row', { name: 'B-9' })).toBeVisible() // モナ・リザ (美術ハイケイ)
+  expect(getByRole('row', { name: '1-51' })).toBeVisible() // 冨嶽三十六景 (美術ハイケイ)
+  expect(getByRole('row', { name: '3-57' })).toBeVisible() // 風神雷神図 (美術ハイケイ)
+  expect(getByRole('row', { name: '2-51' })).toBeVisible() // リヴァイアサン (思想ハイケイ)
+  expect(getByRole('row', { name: '4-44' })).toBeVisible() // 落日の王宮 (美術・思想ハイケイ)
+  expect(getByRole('row', { name: 'G-3' })).toBeVisible() // アテルイ (テキストに剣術を含むイジン)
+  expect(getByRole('row', { name: '1-56' })).toBeVisible() // リバイバル (テキストに美術を含むマホウ)
+  expect(getByRole('row', { name: 'B-11' })).toBeVisible() // マザーグース (テキストに音楽を含むハイケイ)
+  expect(getByRole('row', { name: '2-55' })).toBeVisible() // 凱旋門 (テキストに思想を含むハイケイ)
+  expect(getByRole('row', { name: 'P-5' })).toBeVisible() // 渡辺崋山 (テキストに医術を含む【美術】イジン)
+  expect(getByRole('row', { name: '3-76' })).toBeVisible() // ダンダラ羽織 (テキストに志願を含むマリョク)
 
   // 剣術ボタンを押す
   let buttonTraitSwordplay = getByRole('radio', { name: '剣術' })
@@ -3364,23 +3364,23 @@ test('特性によるフィルタ', async () => {
   expect(buttonTraitSwordplay).toBeVisible()
   expect(buttonTraitSwordplay).toBeChecked()
 
-  expect(getByTestId('table-row-1-10')).toBeVisible() // 徳川家康 (剣術イジン)
-  expect(queryByTestId('table-row-1-23')).toBeNull() // ドナテッロ (美術イジン)
-  expect(queryByTestId('table-row-1-39')).toBeNull() // ヨハン・ゼバスティアン・バッハ (音楽イジン)
-  expect(queryByTestId('table-row-3-21')).toBeNull() // 木戸孝允 (思想イジン)
-  expect(queryByTestId('table-row-3-44')).toBeNull() // 本居宣長 (医術イジン)
-  expect(queryByTestId('table-row-3-43')).toBeNull() // 芹沢鴨 (志願イジン)
-  expect(queryByTestId('table-row-B-9')).toBeNull() // モナ・リザ (美術ハイケイ)
-  expect(queryByTestId('table-row-1-51')).toBeNull() // 冨嶽三十六景 (美術ハイケイ)
-  expect(queryByTestId('table-row-3-57')).toBeNull() // 風神雷神図 (美術ハイケイ)
-  expect(queryByTestId('table-row-2-51')).toBeNull() // リヴァイアサン (思想ハイケイ)
-  expect(queryByTestId('table-row-4-44')).toBeNull() // 落日の王宮 (美術・思想ハイケイ)
-  expect(queryByTestId('table-row-G-3')).toBeNull() // アテルイ (テキストに剣術を含むイジン)
-  expect(queryByTestId('table-row-1-56')).toBeNull() // リバイバル (テキストに美術を含むマホウ)
-  expect(queryByTestId('table-row-B-11')).toBeNull() // マザーグース (テキストに音楽を含むハイケイ)
-  expect(queryByTestId('table-row-2-55')).toBeNull() // 凱旋門 (テキストに思想を含むハイケイ)
-  expect(queryByTestId('table-row-P-5')).toBeNull() // 渡辺崋山 (テキストに医術を含む【美術】イジン)
-  expect(queryByTestId('table-row-3-76')).toBeNull() // ダンダラ羽織 (テキストに志願を含むマリョク)
+  expect(getByRole('row', { name: '1-10' })).toBeVisible() // 徳川家康 (剣術イジン)
+  expect(queryByRole('row', { name: '1-23' })).toBeNull() // ドナテッロ (美術イジン)
+  expect(queryByRole('row', { name: '1-39' })).toBeNull() // ヨハン・ゼバスティアン・バッハ (音楽イジン)
+  expect(queryByRole('row', { name: '3-21' })).toBeNull() // 木戸孝允 (思想イジン)
+  expect(queryByRole('row', { name: '3-44' })).toBeNull() // 本居宣長 (医術イジン)
+  expect(queryByRole('row', { name: '3-43' })).toBeNull() // 芹沢鴨 (志願イジン)
+  expect(queryByRole('row', { name: 'B-9' })).toBeNull() // モナ・リザ (美術ハイケイ)
+  expect(queryByRole('row', { name: '1-51' })).toBeNull() // 冨嶽三十六景 (美術ハイケイ)
+  expect(queryByRole('row', { name: '3-57' })).toBeNull() // 風神雷神図 (美術ハイケイ)
+  expect(queryByRole('row', { name: '2-51' })).toBeNull() // リヴァイアサン (思想ハイケイ)
+  expect(queryByRole('row', { name: '4-44' })).toBeNull() // 落日の王宮 (美術・思想ハイケイ)
+  expect(queryByRole('row', { name: 'G-3' })).toBeNull() // アテルイ (テキストに剣術を含むイジン)
+  expect(queryByRole('row', { name: '1-56' })).toBeNull() // リバイバル (テキストに美術を含むマホウ)
+  expect(queryByRole('row', { name: 'B-11' })).toBeNull() // マザーグース (テキストに音楽を含むハイケイ)
+  expect(queryByRole('row', { name: '2-55' })).toBeNull() // 凱旋門 (テキストに思想を含むハイケイ)
+  expect(queryByRole('row', { name: 'P-5' })).toBeNull() // 渡辺崋山 (テキストに医術を含む【美術】イジン)
+  expect(queryByRole('row', { name: '3-76' })).toBeNull() // ダンダラ羽織 (テキストに志願を含むマリョク)
 
   // 美術ボタンを押す
   let buttonTraitArt = getByRole('radio', { name: '美術' })
@@ -3400,23 +3400,23 @@ test('特性によるフィルタ', async () => {
   expect(buttonTraitArt).toBeVisible()
   expect(buttonTraitArt).toBeChecked()
 
-  expect(queryByTestId('table-row-1-10')).toBeNull() // 徳川家康 (剣術イジン)
-  expect(getByTestId('table-row-1-23')).toBeVisible() // ドナテッロ (美術イジン)
-  expect(queryByTestId('table-row-1-39')).toBeNull() // ヨハン・ゼバスティアン・バッハ (音楽イジン)
-  expect(queryByTestId('table-row-3-21')).toBeNull() // 木戸孝允 (思想イジン)
-  expect(queryByTestId('table-row-3-44')).toBeNull() // 本居宣長 (医術イジン)
-  expect(queryByTestId('table-row-3-43')).toBeNull() // 芹沢鴨 (志願イジン)
-  expect(getByTestId('table-row-B-9')).toBeVisible() // モナ・リザ (美術ハイケイ)
-  expect(getByTestId('table-row-1-51')).toBeVisible() // 冨嶽三十六景 (美術ハイケイ)
-  expect(getByTestId('table-row-3-57')).toBeVisible() // 風神雷神図 (美術ハイケイ)
-  expect(queryByTestId('table-row-2-51')).toBeNull() // リヴァイアサン (思想ハイケイ)
-  expect(getByTestId('table-row-4-44')).toBeVisible() // 落日の王宮 (美術・思想ハイケイ)
-  expect(queryByTestId('table-row-G-3')).toBeNull() // アテルイ (テキストに剣術を含むイジン)
-  expect(queryByTestId('table-row-1-56')).toBeNull() // リバイバル (テキストに美術を含むマホウ)
-  expect(queryByTestId('table-row-B-11')).toBeNull() // マザーグース (テキストに音楽を含むハイケイ)
-  expect(queryByTestId('table-row-2-55')).toBeNull() // 凱旋門 (テキストに思想を含むハイケイ)
-  expect(getByTestId('table-row-P-5')).toBeVisible() // 渡辺崋山 (テキストに医術を含む【美術】イジン)
-  expect(queryByTestId('table-row-3-76')).toBeNull() // ダンダラ羽織 (テキストに志願を含むマリョク)
+  expect(queryByRole('row', { name: '1-10' })).toBeNull() // 徳川家康 (剣術イジン)
+  expect(getByRole('row', { name: '1-23' })).toBeVisible() // ドナテッロ (美術イジン)
+  expect(queryByRole('row', { name: '1-39' })).toBeNull() // ヨハン・ゼバスティアン・バッハ (音楽イジン)
+  expect(queryByRole('row', { name: '3-21' })).toBeNull() // 木戸孝允 (思想イジン)
+  expect(queryByRole('row', { name: '3-44' })).toBeNull() // 本居宣長 (医術イジン)
+  expect(queryByRole('row', { name: '3-43' })).toBeNull() // 芹沢鴨 (志願イジン)
+  expect(getByRole('row', { name: 'B-9' })).toBeVisible() // モナ・リザ (美術ハイケイ)
+  expect(getByRole('row', { name: '1-51' })).toBeVisible() // 冨嶽三十六景 (美術ハイケイ)
+  expect(getByRole('row', { name: '3-57' })).toBeVisible() // 風神雷神図 (美術ハイケイ)
+  expect(queryByRole('row', { name: '2-51' })).toBeNull() // リヴァイアサン (思想ハイケイ)
+  expect(getByRole('row', { name: '4-44' })).toBeVisible() // 落日の王宮 (美術・思想ハイケイ)
+  expect(queryByRole('row', { name: 'G-3' })).toBeNull() // アテルイ (テキストに剣術を含むイジン)
+  expect(queryByRole('row', { name: '1-56' })).toBeNull() // リバイバル (テキストに美術を含むマホウ)
+  expect(queryByRole('row', { name: 'B-11' })).toBeNull() // マザーグース (テキストに音楽を含むハイケイ)
+  expect(queryByRole('row', { name: '2-55' })).toBeNull() // 凱旋門 (テキストに思想を含むハイケイ)
+  expect(getByRole('row', { name: 'P-5' })).toBeVisible() // 渡辺崋山 (テキストに医術を含む【美術】イジン)
+  expect(queryByRole('row', { name: '3-76' })).toBeNull() // ダンダラ羽織 (テキストに志願を含むマリョク)
 
   // 音楽ボタンを押す
   let buttonTraitMusic = getByRole('radio', { name: '音楽' })
@@ -3436,23 +3436,23 @@ test('特性によるフィルタ', async () => {
   expect(buttonTraitMusic).toBeVisible()
   expect(buttonTraitMusic).toBeChecked()
 
-  expect(queryByTestId('table-row-1-10')).toBeNull() // 徳川家康 (剣術イジン)
-  expect(queryByTestId('table-row-1-23')).toBeNull() // ドナテッロ (美術イジン)
-  expect(getByTestId('table-row-1-39')).toBeVisible() // ヨハン・ゼバスティアン・バッハ (音楽イジン)
-  expect(queryByTestId('table-row-3-21')).toBeNull() // 木戸孝允 (思想イジン)
-  expect(queryByTestId('table-row-3-44')).toBeNull() // 本居宣長 (医術イジン)
-  expect(queryByTestId('table-row-3-43')).toBeNull() // 芹沢鴨 (志願イジン)
-  expect(queryByTestId('table-row-B-9')).toBeNull() // モナ・リザ (美術ハイケイ)
-  expect(queryByTestId('table-row-1-51')).toBeNull() // 冨嶽三十六景 (美術ハイケイ)
-  expect(queryByTestId('table-row-3-57')).toBeNull() // 風神雷神図 (美術ハイケイ)
-  expect(queryByTestId('table-row-2-51')).toBeNull() // リヴァイアサン (思想ハイケイ)
-  expect(queryByTestId('table-row-4-44')).toBeNull() // 落日の王宮 (美術・思想ハイケイ)
-  expect(queryByTestId('table-row-G-3')).toBeNull() // アテルイ (テキストに剣術を含むイジン)
-  expect(queryByTestId('table-row-1-56')).toBeNull() // リバイバル (テキストに美術を含むマホウ)
-  expect(queryByTestId('table-row-B-11')).toBeNull() // マザーグース (テキストに音楽を含むハイケイ)
-  expect(queryByTestId('table-row-2-55')).toBeNull() // 凱旋門 (テキストに思想を含むハイケイ)
-  expect(queryByTestId('table-row-P-5')).toBeNull() // 渡辺崋山 (テキストに医術を含む【美術】イジン)
-  expect(queryByTestId('table-row-3-76')).toBeNull() // ダンダラ羽織 (テキストに志願を含むマリョク)
+  expect(queryByRole('row', { name: '1-10' })).toBeNull() // 徳川家康 (剣術イジン)
+  expect(queryByRole('row', { name: '1-23' })).toBeNull() // ドナテッロ (美術イジン)
+  expect(getByRole('row', { name: '1-39' })).toBeVisible() // ヨハン・ゼバスティアン・バッハ (音楽イジン)
+  expect(queryByRole('row', { name: '3-21' })).toBeNull() // 木戸孝允 (思想イジン)
+  expect(queryByRole('row', { name: '3-44' })).toBeNull() // 本居宣長 (医術イジン)
+  expect(queryByRole('row', { name: '3-43' })).toBeNull() // 芹沢鴨 (志願イジン)
+  expect(queryByRole('row', { name: 'B-9' })).toBeNull() // モナ・リザ (美術ハイケイ)
+  expect(queryByRole('row', { name: '1-51' })).toBeNull() // 冨嶽三十六景 (美術ハイケイ)
+  expect(queryByRole('row', { name: '3-57' })).toBeNull() // 風神雷神図 (美術ハイケイ)
+  expect(queryByRole('row', { name: '2-51' })).toBeNull() // リヴァイアサン (思想ハイケイ)
+  expect(queryByRole('row', { name: '4-44' })).toBeNull() // 落日の王宮 (美術・思想ハイケイ)
+  expect(queryByRole('row', { name: 'G-3' })).toBeNull() // アテルイ (テキストに剣術を含むイジン)
+  expect(queryByRole('row', { name: '1-56' })).toBeNull() // リバイバル (テキストに美術を含むマホウ)
+  expect(queryByRole('row', { name: 'B-11' })).toBeNull() // マザーグース (テキストに音楽を含むハイケイ)
+  expect(queryByRole('row', { name: '2-55' })).toBeNull() // 凱旋門 (テキストに思想を含むハイケイ)
+  expect(queryByRole('row', { name: 'P-5' })).toBeNull() // 渡辺崋山 (テキストに医術を含む【美術】イジン)
+  expect(queryByRole('row', { name: '3-76' })).toBeNull() // ダンダラ羽織 (テキストに志願を含むマリョク)
 
   // 思想ボタンを押す
   let buttonTraitThought = getByRole('radio', { name: '思想' })
@@ -3472,23 +3472,23 @@ test('特性によるフィルタ', async () => {
   expect(buttonTraitThought).toBeVisible()
   expect(buttonTraitThought).toBeChecked()
 
-  expect(queryByTestId('table-row-1-10')).toBeNull() // 徳川家康 (剣術イジン)
-  expect(queryByTestId('table-row-1-23')).toBeNull() // ドナテッロ (美術イジン)
-  expect(queryByTestId('table-row-1-39')).toBeNull() // ヨハン・ゼバスティアン・バッハ (音楽イジン)
-  expect(getByTestId('table-row-3-21')).toBeVisible() // 木戸孝允 (思想イジン)
-  expect(queryByTestId('table-row-3-44')).toBeNull() // 本居宣長 (医術イジン)
-  expect(queryByTestId('table-row-3-43')).toBeNull() // 芹沢鴨 (志願イジン)
-  expect(queryByTestId('table-row-B-9')).toBeNull() // モナ・リザ (美術ハイケイ)
-  expect(queryByTestId('table-row-1-51')).toBeNull() // 冨嶽三十六景 (美術ハイケイ)
-  expect(queryByTestId('table-row-3-57')).toBeNull() // 風神雷神図 (美術ハイケイ)
-  expect(getByTestId('table-row-2-51')).toBeVisible() // リヴァイアサン (思想ハイケイ)
-  expect(getByTestId('table-row-4-44')).toBeVisible() // 落日の王宮 (美術・思想ハイケイ)
-  expect(queryByTestId('table-row-G-3')).toBeNull() // アテルイ (テキストに剣術を含むイジン)
-  expect(queryByTestId('table-row-1-56')).toBeNull() // リバイバル (テキストに美術を含むマホウ)
-  expect(queryByTestId('table-row-B-11')).toBeNull() // マザーグース (テキストに音楽を含むハイケイ)
-  expect(queryByTestId('table-row-2-55')).toBeNull() // 凱旋門 (テキストに思想を含むハイケイ)
-  expect(queryByTestId('table-row-P-5')).toBeNull() // 渡辺崋山 (テキストに医術を含む【美術】イジン)
-  expect(queryByTestId('table-row-3-76')).toBeNull() // ダンダラ羽織 (テキストに志願を含むマリョク)
+  expect(queryByRole('row', { name: '1-10' })).toBeNull() // 徳川家康 (剣術イジン)
+  expect(queryByRole('row', { name: '1-23' })).toBeNull() // ドナテッロ (美術イジン)
+  expect(queryByRole('row', { name: '1-39' })).toBeNull() // ヨハン・ゼバスティアン・バッハ (音楽イジン)
+  expect(getByRole('row', { name: '3-21' })).toBeVisible() // 木戸孝允 (思想イジン)
+  expect(queryByRole('row', { name: '3-44' })).toBeNull() // 本居宣長 (医術イジン)
+  expect(queryByRole('row', { name: '3-43' })).toBeNull() // 芹沢鴨 (志願イジン)
+  expect(queryByRole('row', { name: 'B-9' })).toBeNull() // モナ・リザ (美術ハイケイ)
+  expect(queryByRole('row', { name: '1-51' })).toBeNull() // 冨嶽三十六景 (美術ハイケイ)
+  expect(queryByRole('row', { name: '3-57' })).toBeNull() // 風神雷神図 (美術ハイケイ)
+  expect(getByRole('row', { name: '2-51' })).toBeVisible() // リヴァイアサン (思想ハイケイ)
+  expect(getByRole('row', { name: '4-44' })).toBeVisible() // 落日の王宮 (美術・思想ハイケイ)
+  expect(queryByRole('row', { name: 'G-3' })).toBeNull() // アテルイ (テキストに剣術を含むイジン)
+  expect(queryByRole('row', { name: '1-56' })).toBeNull() // リバイバル (テキストに美術を含むマホウ)
+  expect(queryByRole('row', { name: 'B-11' })).toBeNull() // マザーグース (テキストに音楽を含むハイケイ)
+  expect(queryByRole('row', { name: '2-55' })).toBeNull() // 凱旋門 (テキストに思想を含むハイケイ)
+  expect(queryByRole('row', { name: 'P-5' })).toBeNull() // 渡辺崋山 (テキストに医術を含む【美術】イジン)
+  expect(queryByRole('row', { name: '3-76' })).toBeNull() // ダンダラ羽織 (テキストに志願を含むマリョク)
 
   // 医術ボタンを押す
   let buttonTraitMedicine = getByRole('radio', { name: '医術' })
@@ -3508,23 +3508,23 @@ test('特性によるフィルタ', async () => {
   expect(buttonTraitMedicine).toBeVisible()
   expect(buttonTraitMedicine).toBeChecked()
 
-  expect(queryByTestId('table-row-1-10')).toBeNull() // 徳川家康 (剣術イジン)
-  expect(queryByTestId('table-row-1-23')).toBeNull() // ドナテッロ (美術イジン)
-  expect(queryByTestId('table-row-1-39')).toBeNull() // ヨハン・ゼバスティアン・バッハ (音楽イジン)
-  expect(queryByTestId('table-row-3-21')).toBeNull() // 木戸孝允 (思想イジン)
-  expect(getByTestId('table-row-3-44')).toBeVisible() // 本居宣長 (医術イジン)
-  expect(queryByTestId('table-row-3-43')).toBeNull() // 芹沢鴨 (志願イジン)
-  expect(queryByTestId('table-row-B-9')).toBeNull() // モナ・リザ (美術ハイケイ)
-  expect(queryByTestId('table-row-1-51')).toBeNull() // 冨嶽三十六景 (美術ハイケイ)
-  expect(queryByTestId('table-row-3-57')).toBeNull() // 風神雷神図 (美術ハイケイ)
-  expect(queryByTestId('table-row-2-51')).toBeNull() // リヴァイアサン (思想ハイケイ)
-  expect(queryByTestId('table-row-4-44')).toBeNull() // 落日の王宮 (美術・思想ハイケイ)
-  expect(queryByTestId('table-row-G-3')).toBeNull() // アテルイ (テキストに剣術を含むイジン)
-  expect(queryByTestId('table-row-1-56')).toBeNull() // リバイバル (テキストに美術を含むマホウ)
-  expect(queryByTestId('table-row-B-11')).toBeNull() // マザーグース (テキストに音楽を含むハイケイ)
-  expect(queryByTestId('table-row-2-55')).toBeNull() // 凱旋門 (テキストに思想を含むハイケイ)
-  expect(queryByTestId('table-row-P-5')).toBeNull() // 渡辺崋山 (テキストに医術を含む【美術】イジン)
-  expect(queryByTestId('table-row-3-76')).toBeNull() // ダンダラ羽織 (テキストに志願を含むマリョク)
+  expect(queryByRole('row', { name: '1-10' })).toBeNull() // 徳川家康 (剣術イジン)
+  expect(queryByRole('row', { name: '1-23' })).toBeNull() // ドナテッロ (美術イジン)
+  expect(queryByRole('row', { name: '1-39' })).toBeNull() // ヨハン・ゼバスティアン・バッハ (音楽イジン)
+  expect(queryByRole('row', { name: '3-21' })).toBeNull() // 木戸孝允 (思想イジン)
+  expect(getByRole('row', { name: '3-44' })).toBeVisible() // 本居宣長 (医術イジン)
+  expect(queryByRole('row', { name: '3-43' })).toBeNull() // 芹沢鴨 (志願イジン)
+  expect(queryByRole('row', { name: 'B-9' })).toBeNull() // モナ・リザ (美術ハイケイ)
+  expect(queryByRole('row', { name: '1-51' })).toBeNull() // 冨嶽三十六景 (美術ハイケイ)
+  expect(queryByRole('row', { name: '3-57' })).toBeNull() // 風神雷神図 (美術ハイケイ)
+  expect(queryByRole('row', { name: '2-51' })).toBeNull() // リヴァイアサン (思想ハイケイ)
+  expect(queryByRole('row', { name: '4-44' })).toBeNull() // 落日の王宮 (美術・思想ハイケイ)
+  expect(queryByRole('row', { name: 'G-3' })).toBeNull() // アテルイ (テキストに剣術を含むイジン)
+  expect(queryByRole('row', { name: '1-56' })).toBeNull() // リバイバル (テキストに美術を含むマホウ)
+  expect(queryByRole('row', { name: 'B-11' })).toBeNull() // マザーグース (テキストに音楽を含むハイケイ)
+  expect(queryByRole('row', { name: '2-55' })).toBeNull() // 凱旋門 (テキストに思想を含むハイケイ)
+  expect(queryByRole('row', { name: 'P-5' })).toBeNull() // 渡辺崋山 (テキストに医術を含む【美術】イジン)
+  expect(queryByRole('row', { name: '3-76' })).toBeNull() // ダンダラ羽織 (テキストに志願を含むマリョク)
 
   // 志願ボタンを押す
   let buttonTraitVolunteer = getByRole('radio', { name: '志願' })
@@ -3544,23 +3544,23 @@ test('特性によるフィルタ', async () => {
   expect(buttonTraitVolunteer).toBeVisible()
   expect(buttonTraitVolunteer).toBeChecked()
 
-  expect(queryByTestId('table-row-1-10')).toBeNull() // 徳川家康 (剣術イジン)
-  expect(queryByTestId('table-row-1-23')).toBeNull() // ドナテッロ (美術イジン)
-  expect(queryByTestId('table-row-1-39')).toBeNull() // ヨハン・ゼバスティアン・バッハ (音楽イジン)
-  expect(queryByTestId('table-row-3-21')).toBeNull() // 木戸孝允 (思想イジン)
-  expect(queryByTestId('table-row-3-44')).toBeNull() // 本居宣長 (医術イジン)
-  expect(getByTestId('table-row-3-43')).toBeVisible() // 芹沢鴨 (志願イジン)
-  expect(queryByTestId('table-row-B-9')).toBeNull() // モナ・リザ (美術ハイケイ)
-  expect(queryByTestId('table-row-1-51')).toBeNull() // 冨嶽三十六景 (美術ハイケイ)
-  expect(queryByTestId('table-row-3-57')).toBeNull() // 風神雷神図 (美術ハイケイ)
-  expect(queryByTestId('table-row-2-51')).toBeNull() // リヴァイアサン (思想ハイケイ)
-  expect(queryByTestId('table-row-4-44')).toBeNull() // 落日の王宮 (美術・思想ハイケイ)
-  expect(queryByTestId('table-row-G-3')).toBeNull() // アテルイ (テキストに剣術を含むイジン)
-  expect(queryByTestId('table-row-1-56')).toBeNull() // リバイバル (テキストに美術を含むマホウ)
-  expect(queryByTestId('table-row-B-11')).toBeNull() // マザーグース (テキストに音楽を含むハイケイ)
-  expect(queryByTestId('table-row-2-55')).toBeNull() // 凱旋門 (テキストに思想を含むハイケイ)
-  expect(queryByTestId('table-row-P-5')).toBeNull() // 渡辺崋山 (テキストに医術を含む【美術】イジン)
-  expect(queryByTestId('table-row-3-76')).toBeNull() // ダンダラ羽織 (テキストに志願を含むマリョク)
+  expect(queryByRole('row', { name: '1-10' })).toBeNull() // 徳川家康 (剣術イジン)
+  expect(queryByRole('row', { name: '1-23' })).toBeNull() // ドナテッロ (美術イジン)
+  expect(queryByRole('row', { name: '1-39' })).toBeNull() // ヨハン・ゼバスティアン・バッハ (音楽イジン)
+  expect(queryByRole('row', { name: '3-21' })).toBeNull() // 木戸孝允 (思想イジン)
+  expect(queryByRole('row', { name: '3-44' })).toBeNull() // 本居宣長 (医術イジン)
+  expect(getByRole('row', { name: '3-43' })).toBeVisible() // 芹沢鴨 (志願イジン)
+  expect(queryByRole('row', { name: 'B-9' })).toBeNull() // モナ・リザ (美術ハイケイ)
+  expect(queryByRole('row', { name: '1-51' })).toBeNull() // 冨嶽三十六景 (美術ハイケイ)
+  expect(queryByRole('row', { name: '3-57' })).toBeNull() // 風神雷神図 (美術ハイケイ)
+  expect(queryByRole('row', { name: '2-51' })).toBeNull() // リヴァイアサン (思想ハイケイ)
+  expect(queryByRole('row', { name: '4-44' })).toBeNull() // 落日の王宮 (美術・思想ハイケイ)
+  expect(queryByRole('row', { name: 'G-3' })).toBeNull() // アテルイ (テキストに剣術を含むイジン)
+  expect(queryByRole('row', { name: '1-56' })).toBeNull() // リバイバル (テキストに美術を含むマホウ)
+  expect(queryByRole('row', { name: 'B-11' })).toBeNull() // マザーグース (テキストに音楽を含むハイケイ)
+  expect(queryByRole('row', { name: '2-55' })).toBeNull() // 凱旋門 (テキストに思想を含むハイケイ)
+  expect(queryByRole('row', { name: 'P-5' })).toBeNull() // 渡辺崋山 (テキストに医術を含む【美術】イジン)
+  expect(queryByRole('row', { name: '3-76' })).toBeNull() // ダンダラ羽織 (テキストに志願を含むマリョク)
 
   // 条件すべてをリセットするボタンを押す
   buttonTraitUnspecified = getByTestId(
@@ -3588,23 +3588,23 @@ test('特性によるフィルタ', async () => {
   expect(buttonTraitUnspecified).toBeVisible()
   expect(buttonTraitUnspecified).toBeChecked()
 
-  expect(getByTestId('table-row-1-10')).toBeVisible() // 徳川家康 (剣術イジン)
-  expect(getByTestId('table-row-1-23')).toBeVisible() // ドナテッロ (美術イジン)
-  expect(getByTestId('table-row-1-39')).toBeVisible() // ヨハン・ゼバスティアン・バッハ (音楽イジン)
-  expect(getByTestId('table-row-3-21')).toBeVisible() // 木戸孝允 (思想イジン)
-  expect(getByTestId('table-row-3-44')).toBeVisible() // 本居宣長 (医術イジン)
-  expect(getByTestId('table-row-3-43')).toBeVisible() // 芹沢鴨 (志願イジン)
-  expect(getByTestId('table-row-B-9')).toBeVisible() // モナ・リザ (美術ハイケイ)
-  expect(getByTestId('table-row-1-51')).toBeVisible() // 冨嶽三十六景 (美術ハイケイ)
-  expect(getByTestId('table-row-3-57')).toBeVisible() // 風神雷神図 (美術ハイケイ)
-  expect(getByTestId('table-row-2-51')).toBeVisible() // リヴァイアサン (思想ハイケイ)
-  expect(getByTestId('table-row-4-44')).toBeVisible() // 落日の王宮 (美術・思想ハイケイ)
-  expect(getByTestId('table-row-G-3')).toBeVisible() // アテルイ (テキストに剣術を含むイジン)
-  expect(getByTestId('table-row-1-56')).toBeVisible() // リバイバル (テキストに美術を含むマホウ)
-  expect(getByTestId('table-row-B-11')).toBeVisible() // マザーグース (テキストに音楽を含むハイケイ)
-  expect(getByTestId('table-row-2-55')).toBeVisible() // 凱旋門 (テキストに思想を含むハイケイ)
-  expect(getByTestId('table-row-P-5')).toBeVisible() // 渡辺崋山 (テキストに医術を含む【美術】イジン)
-  expect(getByTestId('table-row-3-76')).toBeVisible() // ダンダラ羽織 (テキストに志願を含むマリョク)
+  expect(getByRole('row', { name: '1-10' })).toBeVisible() // 徳川家康 (剣術イジン)
+  expect(getByRole('row', { name: '1-23' })).toBeVisible() // ドナテッロ (美術イジン)
+  expect(getByRole('row', { name: '1-39' })).toBeVisible() // ヨハン・ゼバスティアン・バッハ (音楽イジン)
+  expect(getByRole('row', { name: '3-21' })).toBeVisible() // 木戸孝允 (思想イジン)
+  expect(getByRole('row', { name: '3-44' })).toBeVisible() // 本居宣長 (医術イジン)
+  expect(getByRole('row', { name: '3-43' })).toBeVisible() // 芹沢鴨 (志願イジン)
+  expect(getByRole('row', { name: 'B-9' })).toBeVisible() // モナ・リザ (美術ハイケイ)
+  expect(getByRole('row', { name: '1-51' })).toBeVisible() // 冨嶽三十六景 (美術ハイケイ)
+  expect(getByRole('row', { name: '3-57' })).toBeVisible() // 風神雷神図 (美術ハイケイ)
+  expect(getByRole('row', { name: '2-51' })).toBeVisible() // リヴァイアサン (思想ハイケイ)
+  expect(getByRole('row', { name: '4-44' })).toBeVisible() // 落日の王宮 (美術・思想ハイケイ)
+  expect(getByRole('row', { name: 'G-3' })).toBeVisible() // アテルイ (テキストに剣術を含むイジン)
+  expect(getByRole('row', { name: '1-56' })).toBeVisible() // リバイバル (テキストに美術を含むマホウ)
+  expect(getByRole('row', { name: 'B-11' })).toBeVisible() // マザーグース (テキストに音楽を含むハイケイ)
+  expect(getByRole('row', { name: '2-55' })).toBeVisible() // 凱旋門 (テキストに思想を含むハイケイ)
+  expect(getByRole('row', { name: 'P-5' })).toBeVisible() // 渡辺崋山 (テキストに医術を含む【美術】イジン)
+  expect(getByRole('row', { name: '3-76' })).toBeVisible() // ダンダラ羽織 (テキストに志願を含むマリョク)
 })
 
 test('能力語によるフィルタ', async () => {
@@ -3622,7 +3622,7 @@ test('能力語によるフィルタ', async () => {
   }
   const zoomIn = vi.fn()
   const interruptSimulator = vi.fn()
-  const { rerender, getByRole, getByTestId, queryByTestId } = render(
+  const { rerender, getByRole, queryByRole, getByTestId } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
@@ -3685,22 +3685,22 @@ test('能力語によるフィルタ', async () => {
   expect(buttonTermUnspecified).toBeVisible()
   expect(buttonTermUnspecified).toBeChecked()
 
-  expect(getByTestId('table-row-2-22')).toBeVisible() // 日蓮 (航海持ちハイケイ)
-  expect(getByTestId('table-row-2-39')).toBeVisible() // 陳寿 (執筆持ちハイケイ)
-  expect(getByTestId('table-row-3-56')).toBeVisible() // 志士の藩校 (執筆持ちハイケイ)
-  expect(getByTestId('table-row-2-9')).toBeVisible() // 石田三成 (決起持ちハイケイ)
-  expect(getByTestId('table-row-2-49')).toBeVisible() // 籠城戦 (決起持ちハイケイ)
-  expect(getByTestId('table-row-2-20')).toBeVisible() // 洪秀全 (徴募持ちハイケイ)
-  expect(getByTestId('table-row-4-61')).toBeVisible() // ソリッドビジョンα (赤魔導持ちマホウ)
-  expect(getByTestId('table-row-4-62')).toBeVisible() // ソリッドビジョンδ (青魔導持ちマホウ)
-  expect(getByTestId('table-row-4-63')).toBeVisible() // ソリッドビジョンΩ (緑魔導持ちマホウ)
-  expect(getByTestId('table-row-4-64')).toBeVisible() // ソリッドビジョンβ (黄魔導持ちマホウ)
-  expect(getByTestId('table-row-4-65')).toBeVisible() // ソリッドビジョンγ (紫魔導持ちマホウ)
-  expect(getByTestId('table-row-B-11')).toBeVisible() // フリート (テキストに航海を持つマホウ)
-  expect(getByTestId('table-row-1-68')).toBeVisible() // 万葉集 (テキストに執筆を持つマリョク)
-  expect(getByTestId('table-row-3-4')).toBeVisible() // 吉田松陰 (テキストに決起を持つイジン)
-  expect(getByTestId('table-row-2-55')).toBeVisible() // 凱旋門 (テキストに徴募を持つハイケイ)
-  expect(getByTestId('table-row-4-8')).toBeVisible() // アルキメデス (テキストに魔導を持つイジン)
+  expect(getByRole('row', { name: '2-22' })).toBeVisible() // 日蓮 (航海持ちハイケイ)
+  expect(getByRole('row', { name: '2-39' })).toBeVisible() // 陳寿 (執筆持ちハイケイ)
+  expect(getByRole('row', { name: '3-56' })).toBeVisible() // 志士の藩校 (執筆持ちハイケイ)
+  expect(getByRole('row', { name: '2-9' })).toBeVisible() // 石田三成 (決起持ちハイケイ)
+  expect(getByRole('row', { name: '2-49' })).toBeVisible() // 籠城戦 (決起持ちハイケイ)
+  expect(getByRole('row', { name: '2-20' })).toBeVisible() // 洪秀全 (徴募持ちハイケイ)
+  expect(getByRole('row', { name: '4-61' })).toBeVisible() // ソリッドビジョンα (赤魔導持ちマホウ)
+  expect(getByRole('row', { name: '4-62' })).toBeVisible() // ソリッドビジョンδ (青魔導持ちマホウ)
+  expect(getByRole('row', { name: '4-63' })).toBeVisible() // ソリッドビジョンΩ (緑魔導持ちマホウ)
+  expect(getByRole('row', { name: '4-64' })).toBeVisible() // ソリッドビジョンβ (黄魔導持ちマホウ)
+  expect(getByRole('row', { name: '4-65' })).toBeVisible() // ソリッドビジョンγ (紫魔導持ちマホウ)
+  expect(getByRole('row', { name: 'B-11' })).toBeVisible() // フリート (テキストに航海を持つマホウ)
+  expect(getByRole('row', { name: '1-68' })).toBeVisible() // 万葉集 (テキストに執筆を持つマリョク)
+  expect(getByRole('row', { name: '3-4' })).toBeVisible() // 吉田松陰 (テキストに決起を持つイジン)
+  expect(getByRole('row', { name: '2-55' })).toBeVisible() // 凱旋門 (テキストに徴募を持つハイケイ)
+  expect(getByRole('row', { name: '4-8' })).toBeVisible() // アルキメデス (テキストに魔導を持つイジン)
 
   // 航海ボタンを押す
   let buttonTermSailing = getByRole('radio', { name: '航海' })
@@ -3720,22 +3720,22 @@ test('能力語によるフィルタ', async () => {
   expect(buttonTermSailing).toBeVisible()
   expect(buttonTermSailing).toBeChecked()
 
-  expect(getByTestId('table-row-2-22')).toBeVisible() // 日蓮 (航海持ちハイケイ)
-  expect(queryByTestId('table-row-2-39')).toBeNull() // 陳寿 (執筆持ちハイケイ)
-  expect(queryByTestId('table-row-3-56')).toBeNull() // 志士の藩校 (執筆持ちハイケイ)
-  expect(queryByTestId('table-row-2-9')).toBeNull() // 石田三成 (決起持ちハイケイ)
-  expect(queryByTestId('table-row-2-49')).toBeNull() // 籠城戦 (決起持ちハイケイ)
-  expect(queryByTestId('table-row-2-20')).toBeNull() // 洪秀全 (徴募持ちハイケイ)
-  expect(queryByTestId('table-row-4-61')).toBeNull() // ソリッドビジョンα (赤魔導持ちマホウ)
-  expect(queryByTestId('table-row-4-62')).toBeNull() // ソリッドビジョンδ (青魔導持ちマホウ)
-  expect(queryByTestId('table-row-4-63')).toBeNull() // ソリッドビジョンΩ (緑魔導持ちマホウ)
-  expect(queryByTestId('table-row-4-64')).toBeNull() // ソリッドビジョンβ (黄魔導持ちマホウ)
-  expect(queryByTestId('table-row-4-65')).toBeNull() // ソリッドビジョンγ (紫魔導持ちマホウ)
-  expect(queryByTestId('table-row-B-11')).toBeNull() // フリート (テキストに航海を持つマホウ)
-  expect(queryByTestId('table-row-1-68')).toBeNull() // 万葉集 (テキストに執筆を持つマリョク)
-  expect(queryByTestId('table-row-3-4')).toBeNull() // 吉田松陰 (テキストに決起を持つイジン)
-  expect(queryByTestId('table-row-2-55')).toBeNull() // 凱旋門 (テキストに徴募を持つハイケイ)
-  expect(queryByTestId('table-row-4-8')).toBeNull() // アルキメデス (テキストに魔導を持つイジン)
+  expect(getByRole('row', { name: '2-22' })).toBeVisible() // 日蓮 (航海持ちハイケイ)
+  expect(queryByRole('row', { name: '2-39' })).toBeNull() // 陳寿 (執筆持ちハイケイ)
+  expect(queryByRole('row', { name: '3-56' })).toBeNull() // 志士の藩校 (執筆持ちハイケイ)
+  expect(queryByRole('row', { name: '2-9' })).toBeNull() // 石田三成 (決起持ちハイケイ)
+  expect(queryByRole('row', { name: '2-49' })).toBeNull() // 籠城戦 (決起持ちハイケイ)
+  expect(queryByRole('row', { name: '2-20' })).toBeNull() // 洪秀全 (徴募持ちハイケイ)
+  expect(queryByRole('row', { name: '4-61' })).toBeNull() // ソリッドビジョンα (赤魔導持ちマホウ)
+  expect(queryByRole('row', { name: '4-62' })).toBeNull() // ソリッドビジョンδ (青魔導持ちマホウ)
+  expect(queryByRole('row', { name: '4-63' })).toBeNull() // ソリッドビジョンΩ (緑魔導持ちマホウ)
+  expect(queryByRole('row', { name: '4-64' })).toBeNull() // ソリッドビジョンβ (黄魔導持ちマホウ)
+  expect(queryByRole('row', { name: '4-65' })).toBeNull() // ソリッドビジョンγ (紫魔導持ちマホウ)
+  expect(queryByRole('row', { name: 'B-11' })).toBeNull() // フリート (テキストに航海を持つマホウ)
+  expect(queryByRole('row', { name: '1-68' })).toBeNull() // 万葉集 (テキストに執筆を持つマリョク)
+  expect(queryByRole('row', { name: '3-4' })).toBeNull() // 吉田松陰 (テキストに決起を持つイジン)
+  expect(queryByRole('row', { name: '2-55' })).toBeNull() // 凱旋門 (テキストに徴募を持つハイケイ)
+  expect(queryByRole('row', { name: '4-8' })).toBeNull() // アルキメデス (テキストに魔導を持つイジン)
 
   // 執筆ボタンを押す
   let buttonTermWriting = getByRole('radio', { name: '執筆' })
@@ -3755,22 +3755,22 @@ test('能力語によるフィルタ', async () => {
   expect(buttonTermWriting).toBeVisible()
   expect(buttonTermWriting).toBeChecked()
 
-  expect(queryByTestId('table-row-2-22')).toBeNull() // 日蓮 (航海持ちハイケイ)
-  expect(getByTestId('table-row-2-39')).toBeVisible() // 陳寿 (執筆持ちハイケイ)
-  expect(getByTestId('table-row-3-56')).toBeVisible() // 志士の藩校 (執筆持ちハイケイ)
-  expect(queryByTestId('table-row-2-9')).toBeNull() // 石田三成 (決起持ちハイケイ)
-  expect(queryByTestId('table-row-2-49')).toBeNull() // 籠城戦 (決起持ちハイケイ)
-  expect(queryByTestId('table-row-2-20')).toBeNull() // 洪秀全 (徴募持ちハイケイ)
-  expect(queryByTestId('table-row-4-61')).toBeNull() // ソリッドビジョンα (赤魔導持ちマホウ)
-  expect(queryByTestId('table-row-4-62')).toBeNull() // ソリッドビジョンδ (青魔導持ちマホウ)
-  expect(queryByTestId('table-row-4-63')).toBeNull() // ソリッドビジョンΩ (緑魔導持ちマホウ)
-  expect(queryByTestId('table-row-4-64')).toBeNull() // ソリッドビジョンβ (黄魔導持ちマホウ)
-  expect(queryByTestId('table-row-4-65')).toBeNull() // ソリッドビジョンγ (紫魔導持ちマホウ)
-  expect(queryByTestId('table-row-B-11')).toBeNull() // フリート (テキストに航海を持つマホウ)
-  expect(queryByTestId('table-row-1-68')).toBeNull() // 万葉集 (テキストに執筆を持つマリョク)
-  expect(queryByTestId('table-row-3-4')).toBeNull() // 吉田松陰 (テキストに決起を持つイジン)
-  expect(queryByTestId('table-row-2-55')).toBeNull() // 凱旋門 (テキストに徴募を持つハイケイ)
-  expect(queryByTestId('table-row-4-8')).toBeNull() // アルキメデス (テキストに魔導を持つイジン)
+  expect(queryByRole('row', { name: '2-22' })).toBeNull() // 日蓮 (航海持ちハイケイ)
+  expect(getByRole('row', { name: '2-39' })).toBeVisible() // 陳寿 (執筆持ちハイケイ)
+  expect(getByRole('row', { name: '3-56' })).toBeVisible() // 志士の藩校 (執筆持ちハイケイ)
+  expect(queryByRole('row', { name: '2-9' })).toBeNull() // 石田三成 (決起持ちハイケイ)
+  expect(queryByRole('row', { name: '2-49' })).toBeNull() // 籠城戦 (決起持ちハイケイ)
+  expect(queryByRole('row', { name: '2-20' })).toBeNull() // 洪秀全 (徴募持ちハイケイ)
+  expect(queryByRole('row', { name: '4-61' })).toBeNull() // ソリッドビジョンα (赤魔導持ちマホウ)
+  expect(queryByRole('row', { name: '4-62' })).toBeNull() // ソリッドビジョンδ (青魔導持ちマホウ)
+  expect(queryByRole('row', { name: '4-63' })).toBeNull() // ソリッドビジョンΩ (緑魔導持ちマホウ)
+  expect(queryByRole('row', { name: '4-64' })).toBeNull() // ソリッドビジョンβ (黄魔導持ちマホウ)
+  expect(queryByRole('row', { name: '4-65' })).toBeNull() // ソリッドビジョンγ (紫魔導持ちマホウ)
+  expect(queryByRole('row', { name: 'B-11' })).toBeNull() // フリート (テキストに航海を持つマホウ)
+  expect(queryByRole('row', { name: '1-68' })).toBeNull() // 万葉集 (テキストに執筆を持つマリョク)
+  expect(queryByRole('row', { name: '3-4' })).toBeNull() // 吉田松陰 (テキストに決起を持つイジン)
+  expect(queryByRole('row', { name: '2-55' })).toBeNull() // 凱旋門 (テキストに徴募を持つハイケイ)
+  expect(queryByRole('row', { name: '4-8' })).toBeNull() // アルキメデス (テキストに魔導を持つイジン)
 
   // 決起ボタンを押す
   let buttonTermRising = getByRole('radio', { name: '決起' })
@@ -3790,22 +3790,22 @@ test('能力語によるフィルタ', async () => {
   expect(buttonTermRising).toBeVisible()
   expect(buttonTermRising).toBeChecked()
 
-  expect(queryByTestId('table-row-2-22')).toBeNull() // 日蓮 (航海持ちハイケイ)
-  expect(queryByTestId('table-row-2-39')).toBeNull() // 陳寿 (執筆持ちハイケイ)
-  expect(queryByTestId('table-row-3-56')).toBeNull() // 志士の藩校 (執筆持ちハイケイ)
-  expect(getByTestId('table-row-2-9')).toBeVisible() // 石田三成 (決起持ちハイケイ)
-  expect(getByTestId('table-row-2-49')).toBeVisible() // 籠城戦 (決起持ちハイケイ)
-  expect(queryByTestId('table-row-2-20')).toBeNull() // 洪秀全 (徴募持ちハイケイ)
-  expect(queryByTestId('table-row-4-61')).toBeNull() // ソリッドビジョンα (赤魔導持ちマホウ)
-  expect(queryByTestId('table-row-4-62')).toBeNull() // ソリッドビジョンδ (青魔導持ちマホウ)
-  expect(queryByTestId('table-row-4-63')).toBeNull() // ソリッドビジョンΩ (緑魔導持ちマホウ)
-  expect(queryByTestId('table-row-4-64')).toBeNull() // ソリッドビジョンβ (黄魔導持ちマホウ)
-  expect(queryByTestId('table-row-4-65')).toBeNull() // ソリッドビジョンγ (紫魔導持ちマホウ)
-  expect(queryByTestId('table-row-B-11')).toBeNull() // フリート (テキストに航海を持つマホウ)
-  expect(queryByTestId('table-row-1-68')).toBeNull() // 万葉集 (テキストに執筆を持つマリョク)
-  expect(queryByTestId('table-row-3-4')).toBeNull() // 吉田松陰 (テキストに決起を持つイジン)
-  expect(queryByTestId('table-row-2-55')).toBeNull() // 凱旋門 (テキストに徴募を持つハイケイ)
-  expect(queryByTestId('table-row-4-8')).toBeNull() // アルキメデス (テキストに魔導を持つイジン)
+  expect(queryByRole('row', { name: '2-22' })).toBeNull() // 日蓮 (航海持ちハイケイ)
+  expect(queryByRole('row', { name: '2-39' })).toBeNull() // 陳寿 (執筆持ちハイケイ)
+  expect(queryByRole('row', { name: '3-56' })).toBeNull() // 志士の藩校 (執筆持ちハイケイ)
+  expect(getByRole('row', { name: '2-9' })).toBeVisible() // 石田三成 (決起持ちハイケイ)
+  expect(getByRole('row', { name: '2-49' })).toBeVisible() // 籠城戦 (決起持ちハイケイ)
+  expect(queryByRole('row', { name: '2-20' })).toBeNull() // 洪秀全 (徴募持ちハイケイ)
+  expect(queryByRole('row', { name: '4-61' })).toBeNull() // ソリッドビジョンα (赤魔導持ちマホウ)
+  expect(queryByRole('row', { name: '4-62' })).toBeNull() // ソリッドビジョンδ (青魔導持ちマホウ)
+  expect(queryByRole('row', { name: '4-63' })).toBeNull() // ソリッドビジョンΩ (緑魔導持ちマホウ)
+  expect(queryByRole('row', { name: '4-64' })).toBeNull() // ソリッドビジョンβ (黄魔導持ちマホウ)
+  expect(queryByRole('row', { name: '4-65' })).toBeNull() // ソリッドビジョンγ (紫魔導持ちマホウ)
+  expect(queryByRole('row', { name: 'B-11' })).toBeNull() // フリート (テキストに航海を持つマホウ)
+  expect(queryByRole('row', { name: '1-68' })).toBeNull() // 万葉集 (テキストに執筆を持つマリョク)
+  expect(queryByRole('row', { name: '3-4' })).toBeNull() // 吉田松陰 (テキストに決起を持つイジン)
+  expect(queryByRole('row', { name: '2-55' })).toBeNull() // 凱旋門 (テキストに徴募を持つハイケイ)
+  expect(queryByRole('row', { name: '4-8' })).toBeNull() // アルキメデス (テキストに魔導を持つイジン)
 
   // 徴募ボタンを押す
   let buttonTermRecruitment = getByRole('radio', { name: '徴募' })
@@ -3825,22 +3825,22 @@ test('能力語によるフィルタ', async () => {
   expect(buttonTermRecruitment).toBeVisible()
   expect(buttonTermRecruitment).toBeChecked()
 
-  expect(queryByTestId('table-row-2-22')).toBeNull() // 日蓮 (航海持ちハイケイ)
-  expect(queryByTestId('table-row-2-39')).toBeNull() // 陳寿 (執筆持ちハイケイ)
-  expect(queryByTestId('table-row-3-56')).toBeNull() // 志士の藩校 (執筆持ちハイケイ)
-  expect(queryByTestId('table-row-2-9')).toBeNull() // 石田三成 (決起持ちハイケイ)
-  expect(queryByTestId('table-row-2-49')).toBeNull() // 籠城戦 (決起持ちハイケイ)
-  expect(getByTestId('table-row-2-20')).toBeVisible() // 洪秀全 (徴募持ちハイケイ)
-  expect(queryByTestId('table-row-4-61')).toBeNull() // ソリッドビジョンα (赤魔導持ちマホウ)
-  expect(queryByTestId('table-row-4-62')).toBeNull() // ソリッドビジョンδ (青魔導持ちマホウ)
-  expect(queryByTestId('table-row-4-63')).toBeNull() // ソリッドビジョンΩ (緑魔導持ちマホウ)
-  expect(queryByTestId('table-row-4-64')).toBeNull() // ソリッドビジョンβ (黄魔導持ちマホウ)
-  expect(queryByTestId('table-row-4-65')).toBeNull() // ソリッドビジョンγ (紫魔導持ちマホウ)
-  expect(queryByTestId('table-row-B-11')).toBeNull() // フリート (テキストに航海を持つマホウ)
-  expect(queryByTestId('table-row-1-68')).toBeNull() // 万葉集 (テキストに執筆を持つマリョク)
-  expect(queryByTestId('table-row-3-4')).toBeNull() // 吉田松陰 (テキストに決起を持つイジン)
-  expect(queryByTestId('table-row-2-55')).toBeNull() // 凱旋門 (テキストに徴募を持つハイケイ)
-  expect(queryByTestId('table-row-4-8')).toBeNull() // アルキメデス (テキストに魔導を持つイジン)
+  expect(queryByRole('row', { name: '2-22' })).toBeNull() // 日蓮 (航海持ちハイケイ)
+  expect(queryByRole('row', { name: '2-39' })).toBeNull() // 陳寿 (執筆持ちハイケイ)
+  expect(queryByRole('row', { name: '3-56' })).toBeNull() // 志士の藩校 (執筆持ちハイケイ)
+  expect(queryByRole('row', { name: '2-9' })).toBeNull() // 石田三成 (決起持ちハイケイ)
+  expect(queryByRole('row', { name: '2-49' })).toBeNull() // 籠城戦 (決起持ちハイケイ)
+  expect(getByRole('row', { name: '2-20' })).toBeVisible() // 洪秀全 (徴募持ちハイケイ)
+  expect(queryByRole('row', { name: '4-61' })).toBeNull() // ソリッドビジョンα (赤魔導持ちマホウ)
+  expect(queryByRole('row', { name: '4-62' })).toBeNull() // ソリッドビジョンδ (青魔導持ちマホウ)
+  expect(queryByRole('row', { name: '4-63' })).toBeNull() // ソリッドビジョンΩ (緑魔導持ちマホウ)
+  expect(queryByRole('row', { name: '4-64' })).toBeNull() // ソリッドビジョンβ (黄魔導持ちマホウ)
+  expect(queryByRole('row', { name: '4-65' })).toBeNull() // ソリッドビジョンγ (紫魔導持ちマホウ)
+  expect(queryByRole('row', { name: 'B-11' })).toBeNull() // フリート (テキストに航海を持つマホウ)
+  expect(queryByRole('row', { name: '1-68' })).toBeNull() // 万葉集 (テキストに執筆を持つマリョク)
+  expect(queryByRole('row', { name: '3-4' })).toBeNull() // 吉田松陰 (テキストに決起を持つイジン)
+  expect(queryByRole('row', { name: '2-55' })).toBeNull() // 凱旋門 (テキストに徴募を持つハイケイ)
+  expect(queryByRole('row', { name: '4-8' })).toBeNull() // アルキメデス (テキストに魔導を持つイジン)
 
   // 魔導ボタンを押す
   let buttonTermChromagic = getByRole('radio', { name: '魔導' })
@@ -3860,22 +3860,22 @@ test('能力語によるフィルタ', async () => {
   expect(buttonTermChromagic).toBeVisible()
   expect(buttonTermChromagic).toBeChecked()
 
-  expect(queryByTestId('table-row-2-22')).toBeNull() // 日蓮 (航海持ちハイケイ)
-  expect(queryByTestId('table-row-2-39')).toBeNull() // 陳寿 (執筆持ちハイケイ)
-  expect(queryByTestId('table-row-3-56')).toBeNull() // 志士の藩校 (執筆持ちハイケイ)
-  expect(queryByTestId('table-row-2-9')).toBeNull() // 石田三成 (決起持ちハイケイ)
-  expect(queryByTestId('table-row-2-49')).toBeNull() // 籠城戦 (決起持ちハイケイ)
-  expect(queryByTestId('table-row-2-20')).toBeNull() // 洪秀全 (徴募持ちハイケイ)
-  expect(getByTestId('table-row-4-61')).toBeVisible() // ソリッドビジョンα (赤魔導持ちマホウ)
-  expect(getByTestId('table-row-4-62')).toBeVisible() // ソリッドビジョンδ (青魔導持ちマホウ)
-  expect(getByTestId('table-row-4-63')).toBeVisible() // ソリッドビジョンΩ (緑魔導持ちマホウ)
-  expect(getByTestId('table-row-4-64')).toBeVisible() // ソリッドビジョンβ (黄魔導持ちマホウ)
-  expect(getByTestId('table-row-4-65')).toBeVisible() // ソリッドビジョンγ (紫魔導持ちマホウ)
-  expect(queryByTestId('table-row-B-11')).toBeNull() // フリート (テキストに航海を持つマホウ)
-  expect(queryByTestId('table-row-1-68')).toBeNull() // 万葉集 (テキストに執筆を持つマリョク)
-  expect(queryByTestId('table-row-3-4')).toBeNull() // 吉田松陰 (テキストに決起を持つイジン)
-  expect(queryByTestId('table-row-2-55')).toBeNull() // 凱旋門 (テキストに徴募を持つハイケイ)
-  expect(queryByTestId('table-row-4-8')).toBeNull() // アルキメデス (テキストに魔導を持つイジン)
+  expect(queryByRole('row', { name: '2-22' })).toBeNull() // 日蓮 (航海持ちハイケイ)
+  expect(queryByRole('row', { name: '2-39' })).toBeNull() // 陳寿 (執筆持ちハイケイ)
+  expect(queryByRole('row', { name: '3-56' })).toBeNull() // 志士の藩校 (執筆持ちハイケイ)
+  expect(queryByRole('row', { name: '2-9' })).toBeNull() // 石田三成 (決起持ちハイケイ)
+  expect(queryByRole('row', { name: '2-49' })).toBeNull() // 籠城戦 (決起持ちハイケイ)
+  expect(queryByRole('row', { name: '2-20' })).toBeNull() // 洪秀全 (徴募持ちハイケイ)
+  expect(getByRole('row', { name: '4-61' })).toBeVisible() // ソリッドビジョンα (赤魔導持ちマホウ)
+  expect(getByRole('row', { name: '4-62' })).toBeVisible() // ソリッドビジョンδ (青魔導持ちマホウ)
+  expect(getByRole('row', { name: '4-63' })).toBeVisible() // ソリッドビジョンΩ (緑魔導持ちマホウ)
+  expect(getByRole('row', { name: '4-64' })).toBeVisible() // ソリッドビジョンβ (黄魔導持ちマホウ)
+  expect(getByRole('row', { name: '4-65' })).toBeVisible() // ソリッドビジョンγ (紫魔導持ちマホウ)
+  expect(queryByRole('row', { name: 'B-11' })).toBeNull() // フリート (テキストに航海を持つマホウ)
+  expect(queryByRole('row', { name: '1-68' })).toBeNull() // 万葉集 (テキストに執筆を持つマリョク)
+  expect(queryByRole('row', { name: '3-4' })).toBeNull() // 吉田松陰 (テキストに決起を持つイジン)
+  expect(queryByRole('row', { name: '2-55' })).toBeNull() // 凱旋門 (テキストに徴募を持つハイケイ)
+  expect(queryByRole('row', { name: '4-8' })).toBeNull() // アルキメデス (テキストに魔導を持つイジン)
 
   // 条件すべてをリセットするボタンを押す
   buttonTermUnspecified = getByTestId('button-term-unspecified').querySelector(
@@ -3903,22 +3903,22 @@ test('能力語によるフィルタ', async () => {
   expect(buttonTermUnspecified).toBeVisible()
   expect(buttonTermUnspecified).toBeChecked()
 
-  expect(getByTestId('table-row-2-22')).toBeVisible() // 日蓮 (航海持ちハイケイ)
-  expect(getByTestId('table-row-2-39')).toBeVisible() // 陳寿 (執筆持ちハイケイ)
-  expect(getByTestId('table-row-3-56')).toBeVisible() // 志士の藩校 (執筆持ちハイケイ)
-  expect(getByTestId('table-row-2-9')).toBeVisible() // 石田三成 (決起持ちハイケイ)
-  expect(getByTestId('table-row-2-49')).toBeVisible() // 籠城戦 (決起持ちハイケイ)
-  expect(getByTestId('table-row-2-20')).toBeVisible() // 洪秀全 (徴募持ちハイケイ)
-  expect(getByTestId('table-row-4-61')).toBeVisible() // ソリッドビジョンα (赤魔導持ちマホウ)
-  expect(getByTestId('table-row-4-62')).toBeVisible() // ソリッドビジョンδ (青魔導持ちマホウ)
-  expect(getByTestId('table-row-4-63')).toBeVisible() // ソリッドビジョンΩ (緑魔導持ちマホウ)
-  expect(getByTestId('table-row-4-64')).toBeVisible() // ソリッドビジョンβ (黄魔導持ちマホウ)
-  expect(getByTestId('table-row-4-65')).toBeVisible() // ソリッドビジョンγ (紫魔導持ちマホウ)
-  expect(getByTestId('table-row-B-11')).toBeVisible() // フリート (テキストに航海を持つマホウ)
-  expect(getByTestId('table-row-1-68')).toBeVisible() // 万葉集 (テキストに執筆を持つマリョク)
-  expect(getByTestId('table-row-3-4')).toBeVisible() // 吉田松陰 (テキストに決起を持つイジン)
-  expect(getByTestId('table-row-2-55')).toBeVisible() // 凱旋門 (テキストに徴募を持つハイケイ)
-  expect(getByTestId('table-row-4-8')).toBeVisible() // アルキメデス (テキストに魔導を持つイジン)
+  expect(getByRole('row', { name: '2-22' })).toBeVisible() // 日蓮 (航海持ちハイケイ)
+  expect(getByRole('row', { name: '2-39' })).toBeVisible() // 陳寿 (執筆持ちハイケイ)
+  expect(getByRole('row', { name: '3-56' })).toBeVisible() // 志士の藩校 (執筆持ちハイケイ)
+  expect(getByRole('row', { name: '2-9' })).toBeVisible() // 石田三成 (決起持ちハイケイ)
+  expect(getByRole('row', { name: '2-49' })).toBeVisible() // 籠城戦 (決起持ちハイケイ)
+  expect(getByRole('row', { name: '2-20' })).toBeVisible() // 洪秀全 (徴募持ちハイケイ)
+  expect(getByRole('row', { name: '4-61' })).toBeVisible() // ソリッドビジョンα (赤魔導持ちマホウ)
+  expect(getByRole('row', { name: '4-62' })).toBeVisible() // ソリッドビジョンδ (青魔導持ちマホウ)
+  expect(getByRole('row', { name: '4-63' })).toBeVisible() // ソリッドビジョンΩ (緑魔導持ちマホウ)
+  expect(getByRole('row', { name: '4-64' })).toBeVisible() // ソリッドビジョンβ (黄魔導持ちマホウ)
+  expect(getByRole('row', { name: '4-65' })).toBeVisible() // ソリッドビジョンγ (紫魔導持ちマホウ)
+  expect(getByRole('row', { name: 'B-11' })).toBeVisible() // フリート (テキストに航海を持つマホウ)
+  expect(getByRole('row', { name: '1-68' })).toBeVisible() // 万葉集 (テキストに執筆を持つマリョク)
+  expect(getByRole('row', { name: '3-4' })).toBeVisible() // 吉田松陰 (テキストに決起を持つイジン)
+  expect(getByRole('row', { name: '2-55' })).toBeVisible() // 凱旋門 (テキストに徴募を持つハイケイ)
+  expect(getByRole('row', { name: '4-8' })).toBeVisible() // アルキメデス (テキストに魔導を持つイジン)
 })
 
 test('遺業能力によるフィルタ', async () => {
@@ -3936,7 +3936,7 @@ test('遺業能力によるフィルタ', async () => {
   }
   const zoomIn = vi.fn()
   const interruptSimulator = vi.fn()
-  const { rerender, getByRole, getByTestId, queryByTestId } = render(
+  const { rerender, getByRole, getByTestId, queryByRole } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
@@ -3999,16 +3999,16 @@ test('遺業能力によるフィルタ', async () => {
   expect(buttonLegacyUnspecified).toBeVisible()
   expect(buttonLegacyUnspecified).toBeChecked()
 
-  expect(getByTestId('table-row-4-46')).toBeVisible() // 大日本沿海輿地全図 (魔力化)
-  expect(getByTestId('table-row-4-58')).toBeVisible() // ルーナ (冥府発動)
-  expect(getByTestId('table-row-4-78')).toBeVisible() // ホプロン (復元)
-  expect(getByTestId('table-row-4-15')).toBeVisible() // ねね (反魂)
-  expect(getByTestId('table-row-4-18')).toBeVisible() // ポンパドゥール夫人 (木霊)
-  expect(getByTestId('table-row-4-47')).toBeVisible() // マザーグース (喪神)
-  expect(getByTestId('table-row-4-11')).toBeVisible() // 島津斉彬 (1ドローする)
-  expect(getByTestId('table-row-4-43')).toBeVisible() // 火と氷の大地 (手札に戻す)
-  expect(getByTestId('table-row-4-48')).toBeVisible() // 遠征軍 (山札の上か下に戻す)
-  expect(getByTestId('table-row-3-59')).toBeVisible() // 森閑たる離宮 (ルールテキストに冥府発動を持つハイケイ)
+  expect(getByRole('row', { name: '4-46' })).toBeVisible() // 大日本沿海輿地全図 (魔力化)
+  expect(getByRole('row', { name: '4-58' })).toBeVisible() // ルーナ (冥府発動)
+  expect(getByRole('row', { name: '4-78' })).toBeVisible() // ホプロン (復元)
+  expect(getByRole('row', { name: '4-15' })).toBeVisible() // ねね (反魂)
+  expect(getByRole('row', { name: '4-18' })).toBeVisible() // ポンパドゥール夫人 (木霊)
+  expect(getByRole('row', { name: '4-47' })).toBeVisible() // マザーグース (喪神)
+  expect(getByRole('row', { name: '4-11' })).toBeVisible() // 島津斉彬 (1ドローする)
+  expect(getByRole('row', { name: '4-43' })).toBeVisible() // 火と氷の大地 (手札に戻す)
+  expect(getByRole('row', { name: '4-48' })).toBeVisible() // 遠征軍 (山札の上か下に戻す)
+  expect(getByRole('row', { name: '3-59' })).toBeVisible() // 森閑たる離宮 (ルールテキストに冥府発動を持つハイケイ)
 
   // 魔力化ボタンを押す
   let buttonLegacyMaryokuka = getByRole('radio', { name: '魔力化' })
@@ -4028,16 +4028,16 @@ test('遺業能力によるフィルタ', async () => {
   expect(buttonLegacyMaryokuka).toBeVisible()
   expect(buttonLegacyMaryokuka).toBeChecked()
 
-  expect(getByTestId('table-row-4-46')).toBeVisible() // 大日本沿海輿地全図 (魔力化)
-  expect(queryByTestId('table-row-4-58')).toBeNull() // ルーナ (冥府発動)
-  expect(queryByTestId('table-row-4-78')).toBeNull() // ホプロン (復元)
-  expect(queryByTestId('table-row-4-15')).toBeNull() // ねね (反魂)
-  expect(queryByTestId('table-row-4-18')).toBeNull() // ポンパドゥール夫人 (木霊)
-  expect(queryByTestId('table-row-4-47')).toBeNull() // マザーグース (喪神)
-  expect(queryByTestId('table-row-4-11')).toBeNull() // 島津斉彬 (1ドローする)
-  expect(queryByTestId('table-row-4-43')).toBeNull() // 火と氷の大地 (手札に戻す)
-  expect(queryByTestId('table-row-4-48')).toBeNull() // 遠征軍 (山札の上か下に戻す)
-  expect(queryByTestId('table-row-3-59')).toBeNull() // 森閑たる離宮 (ルールテキストに冥府発動を持つハイケイ)
+  expect(getByRole('row', { name: '4-46' })).toBeVisible() // 大日本沿海輿地全図 (魔力化)
+  expect(queryByRole('row', { name: '4-58' })).toBeNull() // ルーナ (冥府発動)
+  expect(queryByRole('row', { name: '4-78' })).toBeNull() // ホプロン (復元)
+  expect(queryByRole('row', { name: '4-15' })).toBeNull() // ねね (反魂)
+  expect(queryByRole('row', { name: '4-18' })).toBeNull() // ポンパドゥール夫人 (木霊)
+  expect(queryByRole('row', { name: '4-47' })).toBeNull() // マザーグース (喪神)
+  expect(queryByRole('row', { name: '4-11' })).toBeNull() // 島津斉彬 (1ドローする)
+  expect(queryByRole('row', { name: '4-43' })).toBeNull() // 火と氷の大地 (手札に戻す)
+  expect(queryByRole('row', { name: '4-48' })).toBeNull() // 遠征軍 (山札の上か下に戻す)
+  expect(queryByRole('row', { name: '3-59' })).toBeNull() // 森閑たる離宮 (ルールテキストに冥府発動を持つハイケイ)
 
   // 冥府発動ボタンを押す
   let buttonLegacyNether = getByRole('radio', { name: '冥府発動' })
@@ -4057,16 +4057,16 @@ test('遺業能力によるフィルタ', async () => {
   expect(buttonLegacyNether).toBeVisible()
   expect(buttonLegacyNether).toBeChecked()
 
-  expect(queryByTestId('table-row-4-46')).toBeNull() // 大日本沿海輿地全図 (魔力化)
-  expect(getByTestId('table-row-4-58')).toBeVisible() // ルーナ (冥府発動)
-  expect(queryByTestId('table-row-4-78')).toBeNull() // ホプロン (復元)
-  expect(queryByTestId('table-row-4-15')).toBeNull() // ねね (反魂)
-  expect(queryByTestId('table-row-4-18')).toBeNull() // ポンパドゥール夫人 (木霊)
-  expect(queryByTestId('table-row-4-47')).toBeNull() // マザーグース (喪神)
-  expect(queryByTestId('table-row-4-11')).toBeNull() // 島津斉彬 (1ドローする)
-  expect(queryByTestId('table-row-4-43')).toBeNull() // 火と氷の大地 (手札に戻す)
-  expect(queryByTestId('table-row-4-48')).toBeNull() // 遠征軍 (山札の上か下に戻す)
-  expect(queryByTestId('table-row-3-59')).toBeNull() // 森閑たる離宮 (ルールテキストに冥府発動を持つハイケイ)
+  expect(queryByRole('row', { name: '4-46' })).toBeNull() // 大日本沿海輿地全図 (魔力化)
+  expect(getByRole('row', { name: '4-58' })).toBeVisible() // ルーナ (冥府発動)
+  expect(queryByRole('row', { name: '4-78' })).toBeNull() // ホプロン (復元)
+  expect(queryByRole('row', { name: '4-15' })).toBeNull() // ねね (反魂)
+  expect(queryByRole('row', { name: '4-18' })).toBeNull() // ポンパドゥール夫人 (木霊)
+  expect(queryByRole('row', { name: '4-47' })).toBeNull() // マザーグース (喪神)
+  expect(queryByRole('row', { name: '4-11' })).toBeNull() // 島津斉彬 (1ドローする)
+  expect(queryByRole('row', { name: '4-43' })).toBeNull() // 火と氷の大地 (手札に戻す)
+  expect(queryByRole('row', { name: '4-48' })).toBeNull() // 遠征軍 (山札の上か下に戻す)
+  expect(queryByRole('row', { name: '3-59' })).toBeNull() // 森閑たる離宮 (ルールテキストに冥府発動を持つハイケイ)
 
   // 復元ボタンを押す
   let buttonLegacyRestoration = getByRole('radio', { name: '復元' })
@@ -4086,16 +4086,16 @@ test('遺業能力によるフィルタ', async () => {
   expect(buttonLegacyRestoration).toBeVisible()
   expect(buttonLegacyRestoration).toBeChecked()
 
-  expect(queryByTestId('table-row-4-46')).toBeNull() // 大日本沿海輿地全図 (魔力化)
-  expect(queryByTestId('table-row-4-58')).toBeNull() // ルーナ (冥府発動)
-  expect(getByTestId('table-row-4-78')).toBeVisible() // ホプロン (復元)
-  expect(queryByTestId('table-row-4-15')).toBeNull() // ねね (反魂)
-  expect(queryByTestId('table-row-4-18')).toBeNull() // ポンパドゥール夫人 (木霊)
-  expect(queryByTestId('table-row-4-47')).toBeNull() // マザーグース (喪神)
-  expect(queryByTestId('table-row-4-11')).toBeNull() // 島津斉彬 (1ドローする)
-  expect(queryByTestId('table-row-4-43')).toBeNull() // 火と氷の大地 (手札に戻す)
-  expect(queryByTestId('table-row-4-48')).toBeNull() // 遠征軍 (山札の上か下に戻す)
-  expect(queryByTestId('table-row-3-59')).toBeNull() // 森閑たる離宮 (ルールテキストに冥府発動を持つハイケイ)
+  expect(queryByRole('row', { name: '4-46' })).toBeNull() // 大日本沿海輿地全図 (魔力化)
+  expect(queryByRole('row', { name: '4-58' })).toBeNull() // ルーナ (冥府発動)
+  expect(getByRole('row', { name: '4-78' })).toBeVisible() // ホプロン (復元)
+  expect(queryByRole('row', { name: '4-15' })).toBeNull() // ねね (反魂)
+  expect(queryByRole('row', { name: '4-18' })).toBeNull() // ポンパドゥール夫人 (木霊)
+  expect(queryByRole('row', { name: '4-47' })).toBeNull() // マザーグース (喪神)
+  expect(queryByRole('row', { name: '4-11' })).toBeNull() // 島津斉彬 (1ドローする)
+  expect(queryByRole('row', { name: '4-43' })).toBeNull() // 火と氷の大地 (手札に戻す)
+  expect(queryByRole('row', { name: '4-48' })).toBeNull() // 遠征軍 (山札の上か下に戻す)
+  expect(queryByRole('row', { name: '3-59' })).toBeNull() // 森閑たる離宮 (ルールテキストに冥府発動を持つハイケイ)
 
   // 反魂ボタンを押す
   let buttonLegacyResurrection = getByRole('radio', { name: '反魂' })
@@ -4115,16 +4115,16 @@ test('遺業能力によるフィルタ', async () => {
   expect(buttonLegacyResurrection).toBeVisible()
   expect(buttonLegacyResurrection).toBeChecked()
 
-  expect(queryByTestId('table-row-4-46')).toBeNull() // 大日本沿海輿地全図 (魔力化)
-  expect(queryByTestId('table-row-4-58')).toBeNull() // ルーナ (冥府発動)
-  expect(queryByTestId('table-row-4-78')).toBeNull() // ホプロン (復元)
-  expect(getByTestId('table-row-4-15')).toBeVisible() // ねね (反魂)
-  expect(queryByTestId('table-row-4-18')).toBeNull() // ポンパドゥール夫人 (木霊)
-  expect(queryByTestId('table-row-4-47')).toBeNull() // マザーグース (喪神)
-  expect(queryByTestId('table-row-4-11')).toBeNull() // 島津斉彬 (1ドローする)
-  expect(queryByTestId('table-row-4-43')).toBeNull() // 火と氷の大地 (手札に戻す)
-  expect(queryByTestId('table-row-4-48')).toBeNull() // 遠征軍 (山札の上か下に戻す)
-  expect(queryByTestId('table-row-3-59')).toBeNull() // 森閑たる離宮 (ルールテキストに冥府発動を持つハイケイ)
+  expect(queryByRole('row', { name: '4-46' })).toBeNull() // 大日本沿海輿地全図 (魔力化)
+  expect(queryByRole('row', { name: '4-58' })).toBeNull() // ルーナ (冥府発動)
+  expect(queryByRole('row', { name: '4-78' })).toBeNull() // ホプロン (復元)
+  expect(getByRole('row', { name: '4-15' })).toBeVisible() // ねね (反魂)
+  expect(queryByRole('row', { name: '4-18' })).toBeNull() // ポンパドゥール夫人 (木霊)
+  expect(queryByRole('row', { name: '4-47' })).toBeNull() // マザーグース (喪神)
+  expect(queryByRole('row', { name: '4-11' })).toBeNull() // 島津斉彬 (1ドローする)
+  expect(queryByRole('row', { name: '4-43' })).toBeNull() // 火と氷の大地 (手札に戻す)
+  expect(queryByRole('row', { name: '4-48' })).toBeNull() // 遠征軍 (山札の上か下に戻す)
+  expect(queryByRole('row', { name: '3-59' })).toBeNull() // 森閑たる離宮 (ルールテキストに冥府発動を持つハイケイ)
 
   // 木霊ボタンを押す
   let buttonLegacyEcho = getByRole('radio', { name: '木霊' })
@@ -4144,16 +4144,16 @@ test('遺業能力によるフィルタ', async () => {
   expect(buttonLegacyEcho).toBeVisible()
   expect(buttonLegacyEcho).toBeChecked()
 
-  expect(queryByTestId('table-row-4-46')).toBeNull() // 大日本沿海輿地全図 (魔力化)
-  expect(queryByTestId('table-row-4-58')).toBeNull() // ルーナ (冥府発動)
-  expect(queryByTestId('table-row-4-78')).toBeNull() // ホプロン (復元)
-  expect(queryByTestId('table-row-4-15')).toBeNull() // ねね (反魂)
-  expect(getByTestId('table-row-4-18')).toBeVisible() // ポンパドゥール夫人 (木霊)
-  expect(queryByTestId('table-row-4-47')).toBeNull() // マザーグース (喪神)
-  expect(queryByTestId('table-row-4-11')).toBeNull() // 島津斉彬 (1ドローする)
-  expect(queryByTestId('table-row-4-43')).toBeNull() // 火と氷の大地 (手札に戻す)
-  expect(queryByTestId('table-row-4-48')).toBeNull() // 遠征軍 (山札の上か下に戻す)
-  expect(queryByTestId('table-row-3-59')).toBeNull() // 森閑たる離宮 (ルールテキストに冥府発動を持つハイケイ)
+  expect(queryByRole('row', { name: '4-46' })).toBeNull() // 大日本沿海輿地全図 (魔力化)
+  expect(queryByRole('row', { name: '4-58' })).toBeNull() // ルーナ (冥府発動)
+  expect(queryByRole('row', { name: '4-78' })).toBeNull() // ホプロン (復元)
+  expect(queryByRole('row', { name: '4-15' })).toBeNull() // ねね (反魂)
+  expect(getByRole('row', { name: '4-18' })).toBeVisible() // ポンパドゥール夫人 (木霊)
+  expect(queryByRole('row', { name: '4-47' })).toBeNull() // マザーグース (喪神)
+  expect(queryByRole('row', { name: '4-11' })).toBeNull() // 島津斉彬 (1ドローする)
+  expect(queryByRole('row', { name: '4-43' })).toBeNull() // 火と氷の大地 (手札に戻す)
+  expect(queryByRole('row', { name: '4-48' })).toBeNull() // 遠征軍 (山札の上か下に戻す)
+  expect(queryByRole('row', { name: '3-59' })).toBeNull() // 森閑たる離宮 (ルールテキストに冥府発動を持つハイケイ)
 
   // 喪神ボタンを押す
   let buttonLegacyFaint = getByRole('radio', { name: '喪神' })
@@ -4173,16 +4173,16 @@ test('遺業能力によるフィルタ', async () => {
   expect(buttonLegacyFaint).toBeVisible()
   expect(buttonLegacyFaint).toBeChecked()
 
-  expect(queryByTestId('table-row-4-46')).toBeNull() // 大日本沿海輿地全図 (魔力化)
-  expect(queryByTestId('table-row-4-58')).toBeNull() // ルーナ (冥府発動)
-  expect(queryByTestId('table-row-4-78')).toBeNull() // ホプロン (復元)
-  expect(queryByTestId('table-row-4-15')).toBeNull() // ねね (反魂)
-  expect(queryByTestId('table-row-4-18')).toBeNull() // ポンパドゥール夫人 (木霊)
-  expect(getByTestId('table-row-4-47')).toBeVisible() // マザーグース (喪神)
-  expect(queryByTestId('table-row-4-11')).toBeNull() // 島津斉彬 (1ドローする)
-  expect(queryByTestId('table-row-4-43')).toBeNull() // 火と氷の大地 (手札に戻す)
-  expect(queryByTestId('table-row-4-48')).toBeNull() // 遠征軍 (山札の上か下に戻す)
-  expect(queryByTestId('table-row-3-59')).toBeNull() // 森閑たる離宮 (ルールテキストに冥府発動を持つハイケイ)
+  expect(queryByRole('row', { name: '4-46' })).toBeNull() // 大日本沿海輿地全図 (魔力化)
+  expect(queryByRole('row', { name: '4-58' })).toBeNull() // ルーナ (冥府発動)
+  expect(queryByRole('row', { name: '4-78' })).toBeNull() // ホプロン (復元)
+  expect(queryByRole('row', { name: '4-15' })).toBeNull() // ねね (反魂)
+  expect(queryByRole('row', { name: '4-18' })).toBeNull() // ポンパドゥール夫人 (木霊)
+  expect(getByRole('row', { name: '4-47' })).toBeVisible() // マザーグース (喪神)
+  expect(queryByRole('row', { name: '4-11' })).toBeNull() // 島津斉彬 (1ドローする)
+  expect(queryByRole('row', { name: '4-43' })).toBeNull() // 火と氷の大地 (手札に戻す)
+  expect(queryByRole('row', { name: '4-48' })).toBeNull() // 遠征軍 (山札の上か下に戻す)
+  expect(queryByRole('row', { name: '3-59' })).toBeNull() // 森閑たる離宮 (ルールテキストに冥府発動を持つハイケイ)
 
   // 1ドローするボタンを押す
   let buttonLegacyDraw1 = getByRole('radio', { name: '1ドローする' })
@@ -4202,16 +4202,16 @@ test('遺業能力によるフィルタ', async () => {
   expect(buttonLegacyDraw1).toBeVisible()
   expect(buttonLegacyDraw1).toBeChecked()
 
-  expect(queryByTestId('table-row-4-46')).toBeNull() // 大日本沿海輿地全図 (魔力化)
-  expect(queryByTestId('table-row-4-58')).toBeNull() // ルーナ (冥府発動)
-  expect(queryByTestId('table-row-4-78')).toBeNull() // ホプロン (復元)
-  expect(queryByTestId('table-row-4-15')).toBeNull() // ねね (反魂)
-  expect(queryByTestId('table-row-4-18')).toBeNull() // ポンパドゥール夫人 (木霊)
-  expect(queryByTestId('table-row-4-47')).toBeNull() // マザーグース (喪神)
-  expect(getByTestId('table-row-4-11')).toBeVisible() // 島津斉彬 (1ドローする)
-  expect(queryByTestId('table-row-4-43')).toBeNull() // 火と氷の大地 (手札に戻す)
-  expect(queryByTestId('table-row-4-48')).toBeNull() // 遠征軍 (山札の上か下に戻す)
-  expect(queryByTestId('table-row-3-59')).toBeNull() // 森閑たる離宮 (ルールテキストに冥府発動を持つハイケイ)
+  expect(queryByRole('row', { name: '4-46' })).toBeNull() // 大日本沿海輿地全図 (魔力化)
+  expect(queryByRole('row', { name: '4-58' })).toBeNull() // ルーナ (冥府発動)
+  expect(queryByRole('row', { name: '4-78' })).toBeNull() // ホプロン (復元)
+  expect(queryByRole('row', { name: '4-15' })).toBeNull() // ねね (反魂)
+  expect(queryByRole('row', { name: '4-18' })).toBeNull() // ポンパドゥール夫人 (木霊)
+  expect(queryByRole('row', { name: '4-47' })).toBeNull() // マザーグース (喪神)
+  expect(getByRole('row', { name: '4-11' })).toBeVisible() // 島津斉彬 (1ドローする)
+  expect(queryByRole('row', { name: '4-43' })).toBeNull() // 火と氷の大地 (手札に戻す)
+  expect(queryByRole('row', { name: '4-48' })).toBeNull() // 遠征軍 (山札の上か下に戻す)
+  expect(queryByRole('row', { name: '3-59' })).toBeNull() // 森閑たる離宮 (ルールテキストに冥府発動を持つハイケイ)
 
   // 手札に戻すボタンを押す
   let buttonBackToHand = getByRole('radio', { name: '手札に戻す' })
@@ -4231,16 +4231,16 @@ test('遺業能力によるフィルタ', async () => {
   expect(buttonBackToHand).toBeVisible()
   expect(buttonBackToHand).toBeChecked()
 
-  expect(queryByTestId('table-row-4-46')).toBeNull() // 大日本沿海輿地全図 (魔力化)
-  expect(queryByTestId('table-row-4-58')).toBeNull() // ルーナ (冥府発動)
-  expect(queryByTestId('table-row-4-78')).toBeNull() // ホプロン (復元)
-  expect(queryByTestId('table-row-4-15')).toBeNull() // ねね (反魂)
-  expect(queryByTestId('table-row-4-18')).toBeNull() // ポンパドゥール夫人 (木霊)
-  expect(queryByTestId('table-row-4-47')).toBeNull() // マザーグース (喪神)
-  expect(queryByTestId('table-row-4-11')).toBeNull() // 島津斉彬 (1ドローする)
-  expect(getByTestId('table-row-4-43')).toBeVisible() // 火と氷の大地 (手札に戻す)
-  expect(queryByTestId('table-row-4-48')).toBeNull() // 遠征軍 (山札の上か下に戻す)
-  expect(queryByTestId('table-row-3-59')).toBeNull() // 森閑たる離宮 (ルールテキストに冥府発動を持つハイケイ)
+  expect(queryByRole('row', { name: '4-46' })).toBeNull() // 大日本沿海輿地全図 (魔力化)
+  expect(queryByRole('row', { name: '4-58' })).toBeNull() // ルーナ (冥府発動)
+  expect(queryByRole('row', { name: '4-78' })).toBeNull() // ホプロン (復元)
+  expect(queryByRole('row', { name: '4-15' })).toBeNull() // ねね (反魂)
+  expect(queryByRole('row', { name: '4-18' })).toBeNull() // ポンパドゥール夫人 (木霊)
+  expect(queryByRole('row', { name: '4-47' })).toBeNull() // マザーグース (喪神)
+  expect(queryByRole('row', { name: '4-11' })).toBeNull() // 島津斉彬 (1ドローする)
+  expect(getByRole('row', { name: '4-43' })).toBeVisible() // 火と氷の大地 (手札に戻す)
+  expect(queryByRole('row', { name: '4-48' })).toBeNull() // 遠征軍 (山札の上か下に戻す)
+  expect(queryByRole('row', { name: '3-59' })).toBeNull() // 森閑たる離宮 (ルールテキストに冥府発動を持つハイケイ)
 
   // 山札の上か下に戻すボタンを押す
   let buttonBackToStock = getByRole('radio', { name: '山札の上か下に戻す' })
@@ -4260,16 +4260,16 @@ test('遺業能力によるフィルタ', async () => {
   expect(buttonBackToStock).toBeVisible()
   expect(buttonBackToStock).toBeChecked()
 
-  expect(queryByTestId('table-row-4-46')).toBeNull() // 大日本沿海輿地全図 (魔力化)
-  expect(queryByTestId('table-row-4-58')).toBeNull() // ルーナ (冥府発動)
-  expect(queryByTestId('table-row-4-78')).toBeNull() // ホプロン (復元)
-  expect(queryByTestId('table-row-4-15')).toBeNull() // ねね (反魂)
-  expect(queryByTestId('table-row-4-18')).toBeNull() // ポンパドゥール夫人 (木霊)
-  expect(queryByTestId('table-row-4-47')).toBeNull() // マザーグース (喪神)
-  expect(queryByTestId('table-row-4-11')).toBeNull() // 島津斉彬 (1ドローする)
-  expect(queryByTestId('table-row-4-43')).toBeNull() // 火と氷の大地 (手札に戻す)
-  expect(getByTestId('table-row-4-48')).toBeVisible() // 遠征軍 (山札の上か下に戻す)
-  expect(queryByTestId('table-row-3-59')).toBeNull() // 森閑たる離宮 (ルールテキストに冥府発動を持つハイケイ)
+  expect(queryByRole('row', { name: '4-46' })).toBeNull() // 大日本沿海輿地全図 (魔力化)
+  expect(queryByRole('row', { name: '4-58' })).toBeNull() // ルーナ (冥府発動)
+  expect(queryByRole('row', { name: '4-78' })).toBeNull() // ホプロン (復元)
+  expect(queryByRole('row', { name: '4-15' })).toBeNull() // ねね (反魂)
+  expect(queryByRole('row', { name: '4-18' })).toBeNull() // ポンパドゥール夫人 (木霊)
+  expect(queryByRole('row', { name: '4-47' })).toBeNull() // マザーグース (喪神)
+  expect(queryByRole('row', { name: '4-11' })).toBeNull() // 島津斉彬 (1ドローする)
+  expect(queryByRole('row', { name: '4-43' })).toBeNull() // 火と氷の大地 (手札に戻す)
+  expect(getByRole('row', { name: '4-48' })).toBeVisible() // 遠征軍 (山札の上か下に戻す)
+  expect(queryByRole('row', { name: '3-59' })).toBeNull() // 森閑たる離宮 (ルールテキストに冥府発動を持つハイケイ)
 
   // 条件すべてをリセットするボタンを押す
   buttonLegacyUnspecified = getByTestId(
@@ -4297,16 +4297,16 @@ test('遺業能力によるフィルタ', async () => {
   expect(buttonLegacyUnspecified).toBeVisible()
   expect(buttonLegacyUnspecified).toBeChecked()
 
-  expect(getByTestId('table-row-4-46')).toBeVisible() // 大日本沿海輿地全図 (魔力化)
-  expect(getByTestId('table-row-4-58')).toBeVisible() // ルーナ (冥府発動)
-  expect(getByTestId('table-row-4-78')).toBeVisible() // ホプロン (復元)
-  expect(getByTestId('table-row-4-15')).toBeVisible() // ねね (反魂)
-  expect(getByTestId('table-row-4-18')).toBeVisible() // ポンパドゥール夫人 (木霊)
-  expect(getByTestId('table-row-4-47')).toBeVisible() // マザーグース (喪神)
-  expect(getByTestId('table-row-4-11')).toBeVisible() // 島津斉彬 (1ドローする)
-  expect(getByTestId('table-row-4-43')).toBeVisible() // 火と氷の大地 (手札に戻す)
-  expect(getByTestId('table-row-4-48')).toBeVisible() // 遠征軍 (山札の上か下に戻す)
-  expect(getByTestId('table-row-3-59')).toBeVisible() // 森閑たる離宮 (ルールテキストに冥府発動を持つハイケイ)
+  expect(getByRole('row', { name: '4-46' })).toBeVisible() // 大日本沿海輿地全図 (魔力化)
+  expect(getByRole('row', { name: '4-58' })).toBeVisible() // ルーナ (冥府発動)
+  expect(getByRole('row', { name: '4-78' })).toBeVisible() // ホプロン (復元)
+  expect(getByRole('row', { name: '4-15' })).toBeVisible() // ねね (反魂)
+  expect(getByRole('row', { name: '4-18' })).toBeVisible() // ポンパドゥール夫人 (木霊)
+  expect(getByRole('row', { name: '4-47' })).toBeVisible() // マザーグース (喪神)
+  expect(getByRole('row', { name: '4-11' })).toBeVisible() // 島津斉彬 (1ドローする)
+  expect(getByRole('row', { name: '4-43' })).toBeVisible() // 火と氷の大地 (手札に戻す)
+  expect(getByRole('row', { name: '4-48' })).toBeVisible() // 遠征軍 (山札の上か下に戻す)
+  expect(getByRole('row', { name: '3-59' })).toBeVisible() // 森閑たる離宮 (ルールテキストに冥府発動を持つハイケイ)
 })
 
 test('色と種類とレベルによる複合フィルタ', async () => {
@@ -4324,7 +4324,7 @@ test('色と種類とレベルによる複合フィルタ', async () => {
   }
   const zoomIn = vi.fn()
   const interruptSimulator = vi.fn()
-  const { rerender, getByRole, getByTestId, queryByTestId } = render(
+  const { rerender, getByRole, queryByRole, getByTestId } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
@@ -4388,13 +4388,13 @@ test('色と種類とレベルによる複合フィルタ', async () => {
   expect(getByTestId('button-level-ge').querySelector('input')).toBeChecked()
 
   // レベル5以下の赤のイジンを探す
-  expect(getByTestId('table-row-4-15')).toBeVisible() // ねね
-  expect(getByTestId('table-row-2-9')).toBeVisible() // 石田三成
-  expect(getByTestId('table-row-2-13')).toBeVisible() // 毛利輝元 (レベル6)
-  expect(getByTestId('table-row-3-52')).toBeVisible() // 天下分け目の主戦場	(ハイケイ)
-  expect(getByTestId('table-row-R-11')).toBeVisible() // ロイヤリティ (マホウ)
-  expect(getByTestId('table-row-1-61')).toBeVisible() // レッドオーブ (マリョク)
-  expect(getByTestId('table-row-1-75')).toBeVisible() // 衛青 (赤でない)
+  expect(getByRole('row', { name: '4-15' })).toBeVisible() // ねね
+  expect(getByRole('row', { name: '2-9' })).toBeVisible() // 石田三成
+  expect(getByRole('row', { name: '2-13' })).toBeVisible() // 毛利輝元 (レベル6)
+  expect(getByRole('row', { name: '3-52' })).toBeVisible() // 天下分け目の主戦場	(ハイケイ)
+  expect(getByRole('row', { name: 'R-11' })).toBeVisible() // ロイヤリティ (マホウ)
+  expect(getByRole('row', { name: '1-61' })).toBeVisible() // レッドオーブ (マリョク)
+  expect(getByRole('row', { name: '1-75' })).toBeVisible() // 衛青 (赤でない)
 
   await userEvent.click(getByRole('radio', { name: '赤' }))
   rerender(
@@ -4434,13 +4434,13 @@ test('色と種類とレベルによる複合フィルタ', async () => {
   expect(getByTestId('slider-level')).toHaveValue('5')
   expect(getByTestId('button-level-le').querySelector('input')).toBeChecked()
 
-  expect(getByTestId('table-row-4-15')).toBeVisible() // ねね
-  expect(getByTestId('table-row-2-9')).toBeVisible() // 石田三成
-  expect(queryByTestId('table-row-2-13')).toBeNull() // 毛利輝元 (レベル6)
-  expect(queryByTestId('table-row-3-52')).toBeNull() // 天下分け目の主戦場	(ハイケイ)
-  expect(queryByTestId('table-row-R-11')).toBeNull() // ロイヤリティ (マホウ)
-  expect(queryByTestId('table-row-1-61')).toBeNull() // レッドオーブ (マリョク)
-  expect(queryByTestId('table-row-1-75')).toBeNull() // 衛青 (赤でない)
+  expect(getByRole('row', { name: '4-15' })).toBeVisible() // ねね
+  expect(getByRole('row', { name: '2-9' })).toBeVisible() // 石田三成
+  expect(queryByRole('row', { name: '2-13' })).toBeNull() // 毛利輝元 (レベル6)
+  expect(queryByRole('row', { name: '3-52' })).toBeNull() // 天下分け目の主戦場	(ハイケイ)
+  expect(queryByRole('row', { name: 'R-11' })).toBeNull() // ロイヤリティ (マホウ)
+  expect(queryByRole('row', { name: '1-61' })).toBeNull() // レッドオーブ (マリョク)
+  expect(queryByRole('row', { name: '1-75' })).toBeNull() // 衛青 (赤でない)
 
   // 条件すべてをリセットするボタンを押す
   await userEvent.click(
@@ -4462,13 +4462,13 @@ test('色と種類とレベルによる複合フィルタ', async () => {
   expect(getByTestId('slider-level')).toHaveValue('0')
   expect(getByTestId('button-level-ge').querySelector('input')).toBeChecked()
 
-  expect(getByTestId('table-row-4-15')).toBeVisible() // ねね
-  expect(getByTestId('table-row-2-9')).toBeVisible() // 石田三成
-  expect(getByTestId('table-row-2-13')).toBeVisible() // 毛利輝元 (レベル6)
-  expect(getByTestId('table-row-3-52')).toBeVisible() // 天下分け目の主戦場	(ハイケイ)
-  expect(getByTestId('table-row-R-11')).toBeVisible() // ロイヤリティ (マホウ)
-  expect(getByTestId('table-row-1-61')).toBeVisible() // レッドオーブ (マリョク)
-  expect(getByTestId('table-row-1-75')).toBeVisible() // 衛青 (赤でない)
+  expect(getByRole('row', { name: '4-15' })).toBeVisible() // ねね
+  expect(getByRole('row', { name: '2-9' })).toBeVisible() // 石田三成
+  expect(getByRole('row', { name: '2-13' })).toBeVisible() // 毛利輝元 (レベル6)
+  expect(getByRole('row', { name: '3-52' })).toBeVisible() // 天下分け目の主戦場	(ハイケイ)
+  expect(getByRole('row', { name: 'R-11' })).toBeVisible() // ロイヤリティ (マホウ)
+  expect(getByRole('row', { name: '1-61' })).toBeVisible() // レッドオーブ (マリョク)
+  expect(getByRole('row', { name: '1-75' })).toBeVisible() // 衛青 (赤でない)
 })
 
 test('キーワードによるフィルタ', async () => {
@@ -4486,13 +4486,7 @@ test('キーワードによるフィルタ', async () => {
   }
   const zoomIn = vi.fn()
   const interruptSimulator = vi.fn()
-  const {
-    rerender,
-    getByPlaceholderText,
-    getByRole,
-    getByTestId,
-    queryByTestId,
-  } = render(
+  const { rerender, getByPlaceholderText, getByRole, queryByRole } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
@@ -4505,10 +4499,10 @@ test('キーワードによるフィルタ', async () => {
   let textboxSearch = getByPlaceholderText('カード名やルールテキストで検索')
   expect(textboxSearch).toHaveValue('')
 
-  expect(getByTestId('table-row-2-7')).toBeVisible() // 日野富子
-  expect(getByTestId('table-row-3-79')).toBeVisible() // ストーンマスク
-  expect(getByTestId('table-row-1-55')).toBeVisible() // ストーム
-  expect(getByTestId('table-row-2-26')).toBeVisible() // ハリエット・ビーチャー・ストウ
+  expect(getByRole('row', { name: '2-7' })).toBeVisible() // 日野富子
+  expect(getByRole('row', { name: '3-79' })).toBeVisible() // ストーンマスク
+  expect(getByRole('row', { name: '1-55' })).toBeVisible() // ストーム
+  expect(getByRole('row', { name: '2-26' })).toBeVisible() // ハリエット・ビーチャー・ストウ
 
   await userEvent.type(textboxSearch, 'すとーん')
   rerender(
@@ -4524,10 +4518,10 @@ test('キーワードによるフィルタ', async () => {
   expect(textboxSearch).toHaveValue('すとーん')
 
   // ひらがなで検索するとカード名の読み仮名でヒットする
-  expect(queryByTestId('table-row-2-7')).toBeNull() // 日野富子
-  expect(getByTestId('table-row-3-79')).toBeVisible() // ストーンマスク
-  expect(queryByTestId('table-row-1-55')).toBeNull() // ストーム
-  expect(queryByTestId('table-row-2-26')).toBeNull() // ハリエット・ビーチャー・ストウ
+  expect(queryByRole('row', { name: '2-7' })).toBeNull() // 日野富子
+  expect(getByRole('row', { name: '3-79' })).toBeVisible() // ストーンマスク
+  expect(queryByRole('row', { name: '1-55' })).toBeNull() // ストーム
+  expect(queryByRole('row', { name: '2-26' })).toBeNull() // ハリエット・ビーチャー・ストウ
 
   await userEvent.click(getByRole('button', { name: 'クリア' }))
   rerender(
@@ -4555,10 +4549,10 @@ test('キーワードによるフィルタ', async () => {
   expect(textboxSearch).toHaveValue('ストーン')
 
   // ひらがな以外で検索するとカード名またはルールテキストで文字通りにヒットする
-  expect(getByTestId('table-row-2-7')).toBeVisible() // 日野富子
-  expect(getByTestId('table-row-3-79')).toBeVisible() // ストーンマスク
-  expect(queryByTestId('table-row-1-55')).toBeNull() // ストーム
-  expect(queryByTestId('table-row-2-26')).toBeNull() // ハリエット・ビーチャー・ストウ
+  expect(getByRole('row', { name: '2-7' })).toBeVisible() // 日野富子
+  expect(getByRole('row', { name: '3-79' })).toBeVisible() // ストーンマスク
+  expect(queryByRole('row', { name: '1-55' })).toBeNull() // ストーム
+  expect(queryByRole('row', { name: '2-26' })).toBeNull() // ハリエット・ビーチャー・ストウ
 
   await userEvent.click(getByRole('button', { name: 'クリア' }))
   rerender(
@@ -4586,10 +4580,10 @@ test('キーワードによるフィルタ', async () => {
   expect(textboxSearch).toHaveValue('ストー')
 
   // 部分文字列でも同様
-  expect(getByTestId('table-row-2-7')).toBeVisible() // 日野富子
-  expect(getByTestId('table-row-3-79')).toBeVisible() // ストーンマスク
-  expect(getByTestId('table-row-1-55')).toBeVisible() // ストーム
-  expect(queryByTestId('table-row-2-26')).toBeNull() // ハリエット・ビーチャー・ストウ
+  expect(getByRole('row', { name: '2-7' })).toBeVisible() // 日野富子
+  expect(getByRole('row', { name: '3-79' })).toBeVisible() // ストーンマスク
+  expect(getByRole('row', { name: '1-55' })).toBeVisible() // ストーム
+  expect(queryByRole('row', { name: '2-26' })).toBeNull() // ハリエット・ビーチャー・ストウ
 
   // クリアボタンを押す
   await userEvent.click(getByRole('button', { name: 'クリア' }))
@@ -4605,10 +4599,10 @@ test('キーワードによるフィルタ', async () => {
   textboxSearch = getByPlaceholderText('カード名やルールテキストで検索')
   expect(textboxSearch).toHaveValue('')
 
-  expect(getByTestId('table-row-2-7')).toBeVisible() // 日野富子
-  expect(getByTestId('table-row-3-79')).toBeVisible() // ストーンマスク
-  expect(getByTestId('table-row-1-55')).toBeVisible() // ストーム
-  expect(getByTestId('table-row-2-26')).toBeVisible() // ハリエット・ビーチャー・ストウ
+  expect(getByRole('row', { name: '2-7' })).toBeVisible() // 日野富子
+  expect(getByRole('row', { name: '3-79' })).toBeVisible() // ストーンマスク
+  expect(getByRole('row', { name: '1-55' })).toBeVisible() // ストーム
+  expect(getByRole('row', { name: '2-26' })).toBeVisible() // ハリエット・ビーチャー・ストウ
 })
 
 test('複合キーワードによるフィルタ', async () => {
@@ -4626,13 +4620,7 @@ test('複合キーワードによるフィルタ', async () => {
   }
   const zoomIn = vi.fn()
   const interruptSimulator = vi.fn()
-  const {
-    rerender,
-    getByPlaceholderText,
-    getByRole,
-    getByTestId,
-    queryByTestId,
-  } = render(
+  const { rerender, getByPlaceholderText, getByRole, queryByRole } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
@@ -4645,11 +4633,11 @@ test('複合キーワードによるフィルタ', async () => {
   let textboxSearch = getByPlaceholderText('カード名やルールテキストで検索')
   expect(textboxSearch).toHaveValue('')
 
-  expect(getByTestId('table-row-2-46')).toBeVisible() // 孫夫人
-  expect(getByTestId('table-row-2-54')).toBeVisible() // 蒸気機関車
-  expect(getByTestId('table-row-3-76')).toBeVisible() // ダンダラ羽織
-  expect(getByTestId('table-row-R-2')).toBeVisible() // 源義経
-  expect(getByTestId('table-row-3-62')).toBeVisible() // パイロオーラ
+  expect(getByRole('row', { name: '2-46' })).toBeVisible() // 孫夫人
+  expect(getByRole('row', { name: '2-54' })).toBeVisible() // 蒸気機関車
+  expect(getByRole('row', { name: '3-76' })).toBeVisible() // ダンダラ羽織
+  expect(getByRole('row', { name: 'R-2' })).toBeVisible() // 源義経
+  expect(getByRole('row', { name: '3-62' })).toBeVisible() // パイロオーラ
 
   await userEvent.type(textboxSearch, '即応 装備')
   rerender(
@@ -4665,11 +4653,11 @@ test('複合キーワードによるフィルタ', async () => {
   expect(textboxSearch).toHaveValue('即応 装備')
 
   // 複合キーワードはAND検索になる
-  expect(getByTestId('table-row-2-46')).toBeVisible() // 孫夫人
-  expect(getByTestId('table-row-2-54')).toBeVisible() // 蒸気機関車
-  expect(getByTestId('table-row-3-76')).toBeVisible() // ダンダラ羽織
-  expect(queryByTestId('table-row-R-2')).toBeNull() // 源義経
-  expect(queryByTestId('table-row-3-62')).toBeNull() // パイロオーラ
+  expect(getByRole('row', { name: '2-46' })).toBeVisible() // 孫夫人
+  expect(getByRole('row', { name: '2-54' })).toBeVisible() // 蒸気機関車
+  expect(getByRole('row', { name: '3-76' })).toBeVisible() // ダンダラ羽織
+  expect(queryByRole('row', { name: 'R-2' })).toBeNull() // 源義経
+  expect(queryByRole('row', { name: '3-62' })).toBeNull() // パイロオーラ
 
   // クリアボタンを押す
   await userEvent.click(getByRole('button', { name: 'クリア' }))
@@ -4685,11 +4673,11 @@ test('複合キーワードによるフィルタ', async () => {
   textboxSearch = getByPlaceholderText('カード名やルールテキストで検索')
   expect(textboxSearch).toHaveValue('')
 
-  expect(getByTestId('table-row-2-46')).toBeVisible() // 孫夫人
-  expect(getByTestId('table-row-2-54')).toBeVisible() // 蒸気機関車
-  expect(getByTestId('table-row-3-76')).toBeVisible() // ダンダラ羽織
-  expect(getByTestId('table-row-R-2')).toBeVisible() // 源義経
-  expect(getByTestId('table-row-3-62')).toBeVisible() // パイロオーラ
+  expect(getByRole('row', { name: '2-46' })).toBeVisible() // 孫夫人
+  expect(getByRole('row', { name: '2-54' })).toBeVisible() // 蒸気機関車
+  expect(getByRole('row', { name: '3-76' })).toBeVisible() // ダンダラ羽織
+  expect(getByRole('row', { name: 'R-2' })).toBeVisible() // 源義経
+  expect(getByRole('row', { name: '3-62' })).toBeVisible() // パイロオーラ
 })
 
 test('特性と遺業能力を含めるか否か', async () => {
@@ -4707,13 +4695,7 @@ test('特性と遺業能力を含めるか否か', async () => {
   }
   const zoomIn = vi.fn()
   const interruptSimulator = vi.fn()
-  const {
-    rerender,
-    getByPlaceholderText,
-    getByRole,
-    getByTestId,
-    queryByTestId,
-  } = render(
+  const { rerender, getByPlaceholderText, getByRole, queryByRole } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
@@ -4730,9 +4712,9 @@ test('特性と遺業能力を含めるか否か', async () => {
     })
   ).toBeChecked()
 
-  expect(getByTestId('table-row-2-37')).toBeVisible() // 姜維
-  expect(getByTestId('table-row-Y-1')).toBeVisible() // 諸葛亮
-  expect(getByTestId('table-row-Y-9')).toBeVisible() // 英傑集う大河
+  expect(getByRole('row', { name: '2-37' })).toBeVisible() // 姜維
+  expect(getByRole('row', { name: 'Y-1' })).toBeVisible() // 諸葛亮
+  expect(getByRole('row', { name: 'Y-9' })).toBeVisible() // 英傑集う大河
 
   await userEvent.type(
     getByPlaceholderText('カード名やルールテキストで検索'),
@@ -4751,9 +4733,9 @@ test('特性と遺業能力を含めるか否か', async () => {
     '反魂'
   )
 
-  expect(getByTestId('table-row-2-37')).toBeVisible() // 姜維
-  expect(getByTestId('table-row-Y-1')).toBeVisible() // 諸葛亮
-  expect(queryByTestId('table-row-Y-9')).toBeNull() // 英傑集う大河
+  expect(getByRole('row', { name: '2-37' })).toBeVisible() // 姜維
+  expect(getByRole('row', { name: 'Y-1' })).toBeVisible() // 諸葛亮
+  expect(queryByRole('row', { name: 'Y-9' })).toBeNull() // 英傑集う大河
 
   await userEvent.click(
     getByRole('checkbox', {
@@ -4775,9 +4757,9 @@ test('特性と遺業能力を含めるか否か', async () => {
     })
   ).not.toBeChecked()
 
-  expect(getByTestId('table-row-2-37')).toBeVisible() // 姜維
-  expect(queryByTestId('table-row-Y-1')).toBeNull() // 諸葛亮
-  expect(queryByTestId('table-row-Y-9')).toBeNull() // 英傑集う大河
+  expect(getByRole('row', { name: '2-37' })).toBeVisible() // 姜維
+  expect(queryByRole('row', { name: 'Y-1' })).toBeNull() // 諸葛亮
+  expect(queryByRole('row', { name: 'Y-9' })).toBeNull() // 英傑集う大河
 
   // クリアボタンを押す
   await userEvent.click(getByRole('button', { name: 'クリア' }))
@@ -4792,9 +4774,9 @@ test('特性と遺業能力を含めるか否か', async () => {
   )
   expect(getByPlaceholderText('カード名やルールテキストで検索')).toHaveValue('')
 
-  expect(getByTestId('table-row-2-37')).toBeVisible() // 姜維
-  expect(getByTestId('table-row-Y-1')).toBeVisible() // 諸葛亮
-  expect(getByTestId('table-row-Y-9')).toBeVisible() // 英傑集う大河
+  expect(getByRole('row', { name: '2-37' })).toBeVisible() // 姜維
+  expect(getByRole('row', { name: 'Y-1' })).toBeVisible() // 諸葛亮
+  expect(getByRole('row', { name: 'Y-9' })).toBeVisible() // 英傑集う大河
 })
 
 test('キーワードと色と種類の複合によるフィルタ', async () => {
@@ -4812,13 +4794,7 @@ test('キーワードと色と種類の複合によるフィルタ', async () =>
   }
   const zoomIn = vi.fn()
   const interruptSimulator = vi.fn()
-  const {
-    rerender,
-    getByPlaceholderText,
-    getByRole,
-    getByTestId,
-    queryByTestId,
-  } = render(
+  const { rerender, getByPlaceholderText, getByRole, queryByRole } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
@@ -4847,14 +4823,14 @@ test('キーワードと色と種類の複合によるフィルタ', async () =>
     })
   ).toBeVisible()
 
-  expect(getByTestId('table-row-1-10')).toBeVisible() // 徳川家康
-  expect(getByTestId('table-row-1-75')).toBeVisible() // 衛青
-  expect(getByTestId('table-row-1-45')).toBeVisible() // 行基
-  expect(getByTestId('table-row-2-36')).toBeVisible() // 足利義政
-  expect(getByTestId('table-row-3-9')).toBeVisible() // 土方歳三
-  expect(getByTestId('table-row-2-50')).toBeVisible() // 安宅船
-  expect(getByTestId('table-row-2-59')).toBeVisible() // サモン
-  expect(getByTestId('table-row-4-67')).toBeVisible() // レッドサークル
+  expect(getByRole('row', { name: '1-10' })).toBeVisible() // 徳川家康
+  expect(getByRole('row', { name: '1-75' })).toBeVisible() // 衛青
+  expect(getByRole('row', { name: '1-45' })).toBeVisible() // 行基
+  expect(getByRole('row', { name: '2-36' })).toBeVisible() // 足利義政
+  expect(getByRole('row', { name: '3-9' })).toBeVisible() // 土方歳三
+  expect(getByRole('row', { name: '2-50' })).toBeVisible() // 安宅船
+  expect(getByRole('row', { name: '2-59' })).toBeVisible() // サモン
+  expect(getByRole('row', { name: '4-67' })).toBeVisible() // レッドサークル
 
   await userEvent.type(
     getByPlaceholderText('カード名やルールテキストで検索'),
@@ -4873,14 +4849,14 @@ test('キーワードと色と種類の複合によるフィルタ', async () =>
     'イジン召喚権'
   )
 
-  expect(getByTestId('table-row-1-10')).toBeVisible() // 徳川家康
-  expect(getByTestId('table-row-1-75')).toBeVisible() // 衛青
-  expect(getByTestId('table-row-1-45')).toBeVisible() // 行基
-  expect(getByTestId('table-row-2-36')).toBeVisible() // 足利義政
-  expect(getByTestId('table-row-3-9')).toBeVisible() // 土方歳三
-  expect(getByTestId('table-row-2-50')).toBeVisible() // 安宅船
-  expect(getByTestId('table-row-2-59')).toBeVisible() // サモン
-  expect(queryByTestId('table-row-4-67')).toBeNull() // レッドサークル
+  expect(getByRole('row', { name: '1-10' })).toBeVisible() // 徳川家康
+  expect(getByRole('row', { name: '1-75' })).toBeVisible() // 衛青
+  expect(getByRole('row', { name: '1-45' })).toBeVisible() // 行基
+  expect(getByRole('row', { name: '2-36' })).toBeVisible() // 足利義政
+  expect(getByRole('row', { name: '3-9' })).toBeVisible() // 土方歳三
+  expect(getByRole('row', { name: '2-50' })).toBeVisible() // 安宅船
+  expect(getByRole('row', { name: '2-59' })).toBeVisible() // サモン
+  expect(queryByRole('row', { name: '4-67' })).toBeNull() // レッドサークル
 
   // 赤ボタンを押す
   let buttonColorRed = getByRole('radio', { name: '赤' })
@@ -4900,14 +4876,14 @@ test('キーワードと色と種類の複合によるフィルタ', async () =>
   expect(buttonColorRed).toBeVisible()
   expect(buttonColorRed).toBeChecked()
 
-  expect(getByTestId('table-row-1-10')).toBeVisible() // 徳川家康
-  expect(queryByTestId('table-row-1-75')).toBeNull() // 衛青
-  expect(queryByTestId('table-row-1-45')).toBeNull() // 行基
-  expect(queryByTestId('table-row-2-36')).toBeNull() // 足利義政
-  expect(queryByTestId('table-row-3-9')).toBeNull() // 土方歳三
-  expect(getByTestId('table-row-2-50')).toBeVisible() // 安宅船
-  expect(getByTestId('table-row-2-59')).toBeVisible() // サモン
-  expect(queryByTestId('table-row-4-67')).toBeNull() // レッドサークル
+  expect(getByRole('row', { name: '1-10' })).toBeVisible() // 徳川家康
+  expect(queryByRole('row', { name: '1-75' })).toBeNull() // 衛青
+  expect(queryByRole('row', { name: '1-45' })).toBeNull() // 行基
+  expect(queryByRole('row', { name: '2-36' })).toBeNull() // 足利義政
+  expect(queryByRole('row', { name: '3-9' })).toBeNull() // 土方歳三
+  expect(getByRole('row', { name: '2-50' })).toBeVisible() // 安宅船
+  expect(getByRole('row', { name: '2-59' })).toBeVisible() // サモン
+  expect(queryByRole('row', { name: '4-67' })).toBeNull() // レッドサークル
 
   // イジンボタンを押す
   let buttonTypeIjin = getByRole('radio', { name: 'イジン' })
@@ -4927,14 +4903,14 @@ test('キーワードと色と種類の複合によるフィルタ', async () =>
   expect(buttonTypeIjin).toBeVisible()
   expect(buttonTypeIjin).toBeChecked()
 
-  expect(getByTestId('table-row-1-10')).toBeVisible() // 徳川家康
-  expect(queryByTestId('table-row-1-75')).toBeNull() // 衛青
-  expect(queryByTestId('table-row-1-45')).toBeNull() // 行基
-  expect(queryByTestId('table-row-2-36')).toBeNull() // 足利義政
-  expect(queryByTestId('table-row-3-9')).toBeNull() // 土方歳三
-  expect(queryByTestId('table-row-2-50')).toBeNull() // 安宅船
-  expect(queryByTestId('table-row-2-59')).toBeNull() // サモン
-  expect(queryByTestId('table-row-4-67')).toBeNull() // レッドサークル
+  expect(getByRole('row', { name: '1-10' })).toBeVisible() // 徳川家康
+  expect(queryByRole('row', { name: '1-75' })).toBeNull() // 衛青
+  expect(queryByRole('row', { name: '1-45' })).toBeNull() // 行基
+  expect(queryByRole('row', { name: '2-36' })).toBeNull() // 足利義政
+  expect(queryByRole('row', { name: '3-9' })).toBeNull() // 土方歳三
+  expect(queryByRole('row', { name: '2-50' })).toBeNull() // 安宅船
+  expect(queryByRole('row', { name: '2-59' })).toBeNull() // サモン
+  expect(queryByRole('row', { name: '4-67' })).toBeNull() // レッドサークル
 
   // クリアボタンを押す
   await userEvent.click(getByRole('button', { name: 'クリア' }))
@@ -4963,12 +4939,12 @@ test('キーワードと色と種類の複合によるフィルタ', async () =>
     />
   )
 
-  expect(getByTestId('table-row-1-10')).toBeVisible() // 徳川家康
-  expect(getByTestId('table-row-1-75')).toBeVisible() // 衛青
-  expect(getByTestId('table-row-1-45')).toBeVisible() // 行基
-  expect(getByTestId('table-row-2-36')).toBeVisible() // 足利義政
-  expect(getByTestId('table-row-3-9')).toBeVisible() // 土方歳三
-  expect(getByTestId('table-row-2-50')).toBeVisible() // 安宅船
-  expect(getByTestId('table-row-2-59')).toBeVisible() // サモン
-  expect(getByTestId('table-row-4-67')).toBeVisible() // レッドサークル
+  expect(getByRole('row', { name: '1-10' })).toBeVisible() // 徳川家康
+  expect(getByRole('row', { name: '1-75' })).toBeVisible() // 衛青
+  expect(getByRole('row', { name: '1-45' })).toBeVisible() // 行基
+  expect(getByRole('row', { name: '2-36' })).toBeVisible() // 足利義政
+  expect(getByRole('row', { name: '3-9' })).toBeVisible() // 土方歳三
+  expect(getByRole('row', { name: '2-50' })).toBeVisible() // 安宅船
+  expect(getByRole('row', { name: '2-59' })).toBeVisible() // サモン
+  expect(getByRole('row', { name: '4-67' })).toBeVisible() // レッドサークル
 })
