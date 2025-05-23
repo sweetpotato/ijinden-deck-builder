@@ -16,6 +16,68 @@ const TERM_CHROMAGIC_GREEN = enumTerm.CHROMAGIC | enumChromagic.GREEN
 const TERM_CHROMAGIC_YELLOW = enumTerm.CHROMAGIC | enumChromagic.YELLOW
 const TERM_CHROMAGIC_PURPLE = enumTerm.CHROMAGIC | enumChromagic.PURPLE
 
+function defaultRender(id, name, term, color, counterMain, counterSide) {
+  const decrementMain = vi.fn()
+  const incrementMain = vi.fn()
+  const decrementSide = vi.fn()
+  const incrementSide = vi.fn()
+  const dispatchDeck = {
+    decrementMain,
+    incrementMain,
+    decrementSide,
+    incrementSide,
+  }
+  const zoomIn = vi.fn()
+  const interruptSimulator = vi.fn()
+  const { rerender, getByText, getByRole, getAllByRole } = render(
+    <Table>
+      <tbody>
+        <TableRowCard
+          id={id}
+          name={name}
+          term={term}
+          color={color}
+          counterMain={counterMain}
+          counterSide={counterSide}
+          dispatchDeck={dispatchDeck}
+          zoomIn={zoomIn}
+          interruptSimulator={interruptSimulator}
+        />
+      </tbody>
+    </Table>
+  )
+  const defaultRerender = (counterMain, counterSide) =>
+    rerender(
+      <Table>
+        <tbody>
+          <TableRowCard
+            id={id}
+            name={name}
+            term={term}
+            color={color}
+            counterMain={counterMain}
+            counterSide={counterSide}
+            dispatchDeck={dispatchDeck}
+            zoomIn={zoomIn}
+            interruptSimulator={interruptSimulator}
+          />
+        </tbody>
+      </Table>
+    )
+  return {
+    decrementMain,
+    incrementMain,
+    decrementSide,
+    incrementSide,
+    zoomIn,
+    interruptSimulator,
+    defaultRerender,
+    getByText,
+    getByRole,
+    getAllByRole,
+  }
+}
+
 function defaultRenderColor(id, name, term, color) {
   return render(
     <Table>
@@ -46,35 +108,19 @@ function defaultRenderColor(id, name, term, color) {
 afterEach(cleanup)
 
 test('インタラクション', async () => {
-  const decrementMain = vi.fn()
-  const incrementMain = vi.fn()
-  const decrementSide = vi.fn()
-  const incrementSide = vi.fn()
-  const dispatchDeck = {
+  const {
     decrementMain,
     incrementMain,
     decrementSide,
     incrementSide,
-  }
-  const interruptSimulator = vi.fn()
-  const zoomIn = vi.fn()
-  const { rerender, getByText, getByRole, getAllByRole } = render(
-    <Table>
-      <tbody>
-        <TableRowCard
-          id="1-1"
-          name="織田信長"
-          term={0}
-          color={enumColor.RED}
-          counterMain={0}
-          counterSide={0}
-          dispatchDeck={dispatchDeck}
-          zoomIn={zoomIn}
-          interruptSimulator={interruptSimulator}
-        />
-      </tbody>
-    </Table>
-  )
+    zoomIn,
+    interruptSimulator,
+    defaultRerender,
+    getByText,
+    getByRole,
+    getAllByRole,
+  } = defaultRender('1-1', '織田信長', 0, enumColor.RED, 0, 0)
+
   expect(decrementMain.mock.calls.length).toBe(0)
   expect(incrementMain.mock.calls.length).toBe(0)
   expect(decrementSide.mock.calls.length).toBe(0)
@@ -117,23 +163,7 @@ test('インタラクション', async () => {
   expect(interruptSimulator.mock.calls.length).toBe(1) // 呼ばれた
   expect(zoomIn.mock.calls.length).toBe(0)
 
-  rerender(
-    <Table>
-      <tbody>
-        <TableRowCard
-          id="1-1"
-          name="織田信長"
-          term={0}
-          color={enumColor.RED}
-          counterMain={1}
-          counterSide={0}
-          dispatchDeck={dispatchDeck}
-          zoomIn={zoomIn}
-          interruptSimulator={interruptSimulator}
-        />
-      </tbody>
-    </Table>
-  )
+  defaultRerender(1, 0)
 
   buttonZoom = getByRole('button', { name: '🔎' })
   expect(buttonZoom).toBeVisible()
@@ -168,23 +198,7 @@ test('インタラクション', async () => {
   expect(interruptSimulator.mock.calls.length).toBe(1)
   expect(zoomIn.mock.calls.length).toBe(0)
 
-  rerender(
-    <Table>
-      <tbody>
-        <TableRowCard
-          id="1-1"
-          name="織田信長"
-          term={0}
-          color={enumColor.RED}
-          counterMain={1}
-          counterSide={1}
-          dispatchDeck={dispatchDeck}
-          zoomIn={zoomIn}
-          interruptSimulator={interruptSimulator}
-        />
-      </tbody>
-    </Table>
-  )
+  defaultRerender(1, 1)
 
   buttonZoom = getByRole('button', { name: '🔎' })
   expect(buttonZoom).toBeVisible()
@@ -219,23 +233,7 @@ test('インタラクション', async () => {
   expect(interruptSimulator.mock.calls.length).toBe(2) // 呼ばれた
   expect(zoomIn.mock.calls.length).toBe(0)
 
-  rerender(
-    <Table>
-      <tbody>
-        <TableRowCard
-          id="1-1"
-          name="織田信長"
-          term={0}
-          color={enumColor.RED}
-          counterMain={0}
-          counterSide={1}
-          dispatchDeck={dispatchDeck}
-          zoomIn={zoomIn}
-          interruptSimulator={interruptSimulator}
-        />
-      </tbody>
-    </Table>
-  )
+  defaultRerender(0, 1)
 
   buttonZoom = getByRole('button', { name: '🔎' })
   expect(buttonZoom).toBeVisible()
@@ -270,23 +268,7 @@ test('インタラクション', async () => {
   expect(interruptSimulator.mock.calls.length).toBe(2) // 呼ばれていない
   expect(zoomIn.mock.calls.length).toBe(0)
 
-  rerender(
-    <Table>
-      <tbody>
-        <TableRowCard
-          id="1-1"
-          name="織田信長"
-          term={0}
-          color={enumColor.RED}
-          counterMain={0}
-          counterSide={0}
-          dispatchDeck={dispatchDeck}
-          zoomIn={zoomIn}
-          interruptSimulator={interruptSimulator}
-        />
-      </tbody>
-    </Table>
-  )
+  defaultRerender(0, 0)
 
   buttonZoom = getByRole('button', { name: '🔎' })
   expect(buttonZoom).toBeVisible()
