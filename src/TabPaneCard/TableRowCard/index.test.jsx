@@ -16,6 +16,33 @@ const TERM_CHROMAGIC_GREEN = enumTerm.CHROMAGIC | enumChromagic.GREEN
 const TERM_CHROMAGIC_YELLOW = enumTerm.CHROMAGIC | enumChromagic.YELLOW
 const TERM_CHROMAGIC_PURPLE = enumTerm.CHROMAGIC | enumChromagic.PURPLE
 
+function defaultRenderColor(id, name, term, color) {
+  return render(
+    <Table>
+      <tbody>
+        <TableRowCard
+          id={id}
+          name={name}
+          term={term}
+          color={color}
+          counterMain={0}
+          counterSide={0}
+          dispatchDeck={{
+            decrementMain: vi.fn(),
+            incrementMain: vi.fn(),
+            decrementSide: vi.fn(),
+            incrementSide: vi.fn(),
+          }}
+          handleSetDeckMain={vi.fn()}
+          handleSetDeckSide={vi.fn()}
+          zoomIn={vi.fn()}
+          interruptSimulator={vi.fn()}
+        />
+      </tbody>
+    </Table>
+  )
+}
+
 afterEach(cleanup)
 
 test('インタラクション', async () => {
@@ -294,445 +321,161 @@ test('インタラクション', async () => {
 })
 
 test('レンダリング赤', () => {
-  const { getByText } = render(
-    <Table>
-      <tbody>
-        <TableRowCard
-          id="R-1"
-          name="上杉謙信"
-          term={0}
-          color={enumColor.RED}
-          counterMain={0}
-          counterSide={0}
-          dispatchDeck={{
-            decrementMain: vi.fn(),
-            incrementMain: vi.fn(),
-            decrementSide: vi.fn(),
-            incrementSide: vi.fn(),
-          }}
-          handleSetDeckMain={vi.fn()}
-          handleSetDeckSide={vi.fn()}
-          zoomIn={vi.fn()}
-          interruptSimulator={vi.fn()}
-        />
-      </tbody>
-    </Table>
-  )
+  const { getByText } = defaultRenderColor('R-1', '上杉謙信', 0, enumColor.RED)
   expect(getByText('R-1')).toHaveClass('bg-ijinden-red')
 })
 
 test('レンダリング青', () => {
-  const { getByText } = render(
-    <Table>
-      <tbody>
-        <TableRowCard
-          id="B-1"
-          name="レオナルド・ダ・ヴィンチ"
-          term={0}
-          color={enumColor.BLUE}
-          counterMain={0}
-          counterSide={0}
-          dispatchDeck={{
-            decrementMain: vi.fn(),
-            incrementMain: vi.fn(),
-            decrementSide: vi.fn(),
-            incrementSide: vi.fn(),
-          }}
-          zoomIn={vi.fn()}
-          interruptSimulator={vi.fn()}
-        />
-      </tbody>
-    </Table>
+  const { getByText } = defaultRenderColor(
+    'B-1',
+    'レオナルド・ダ・ヴィンチ',
+    0,
+    enumColor.BLUE
   )
   expect(getByText('B-1')).toHaveClass('bg-ijinden-blue')
 })
 
 test('レンダリング緑', () => {
-  const { getByText } = render(
-    <Table>
-      <tbody>
-        <TableRowCard
-          id="G-1"
-          name="出雲の阿国"
-          term={0}
-          color={enumColor.GREEN}
-          counterMain={0}
-          counterSide={0}
-          dispatchDeck={{
-            decrementMain: vi.fn(),
-            incrementMain: vi.fn(),
-            decrementSide: vi.fn(),
-            incrementSide: vi.fn(),
-          }}
-          zoomIn={vi.fn()}
-          interruptSimulator={vi.fn()}
-        />
-      </tbody>
-    </Table>
+  const { getByText } = defaultRenderColor(
+    'G-1',
+    '出雲の阿国',
+    0,
+    enumColor.GREEN
   )
   expect(getByText('G-1')).toHaveClass('bg-ijinden-green')
 })
 
 test('レンダリング黄', () => {
-  const { getByText } = render(
-    <Table>
-      <tbody>
-        <TableRowCard
-          id="Y-1"
-          name="諸葛亮"
-          term={0}
-          color={enumColor.YELLOW}
-          counterMain={0}
-          counterSide={0}
-          dispatchDeck={{
-            decrementMain: vi.fn(),
-            incrementMain: vi.fn(),
-            decrementSide: vi.fn(),
-            incrementSide: vi.fn(),
-          }}
-          zoomIn={vi.fn()}
-          interruptSimulator={vi.fn()}
-        />
-      </tbody>
-    </Table>
-  )
+  const { getByText } = defaultRenderColor('Y-1', '諸葛亮', 0, enumColor.YELLOW)
   expect(getByText('Y-1')).toHaveClass('bg-ijinden-yellow')
 })
 
 test('レンダリング紫', () => {
-  const { getByText } = render(
-    <Table>
-      <tbody>
-        <TableRowCard
-          id="P-1"
-          name="マリ・キュリー"
-          term={0}
-          color={enumColor.PURPLE}
-          counterMain={0}
-          counterSide={0}
-          dispatchDeck={{
-            decrementMain: vi.fn(),
-            incrementMain: vi.fn(),
-            decrementSide: vi.fn(),
-            incrementSide: vi.fn(),
-          }}
-          zoomIn={vi.fn()}
-          interruptSimulator={vi.fn()}
-        />
-      </tbody>
-    </Table>
+  const { getByText } = defaultRenderColor(
+    'P-1',
+    'マリ・キュリー',
+    0,
+    enumColor.PURPLE
   )
   expect(getByText('P-1')).toHaveClass('bg-ijinden-purple')
 })
 
 test('レンダリング赤黄', () => {
-  const { getByText } = render(
-    <Table>
-      <tbody>
-        <TableRowCard
-          id="2-78"
-          name="RYマーブルオーブ"
-          term={0}
-          color={enumColor.RED_YELLOW}
-          counterMain={0}
-          counterSide={0}
-          dispatchDeck={{
-            decrementMain: vi.fn(),
-            incrementMain: vi.fn(),
-            decrementSide: vi.fn(),
-            incrementSide: vi.fn(),
-          }}
-          zoomIn={vi.fn()}
-          interruptSimulator={vi.fn()}
-        />
-      </tbody>
-    </Table>
+  const { getByText } = defaultRenderColor(
+    '2-78',
+    'RYマーブルオーブ',
+    0,
+    enumColor.RED_YELLOW
   )
   expect(getByText('2-78')).toHaveClass('bg-ijinden-red-yellow')
 })
 
 test('レンダリング青黄', () => {
-  const { getByText } = render(
-    <Table>
-      <tbody>
-        <TableRowCard
-          id="2-79"
-          name="BYマーブルオーブ"
-          term={0}
-          color={enumColor.BLUE_YELLOW}
-          counterMain={0}
-          counterSide={0}
-          dispatchDeck={{
-            decrementMain: vi.fn(),
-            incrementMain: vi.fn(),
-            decrementSide: vi.fn(),
-            incrementSide: vi.fn(),
-          }}
-          zoomIn={vi.fn()}
-          interruptSimulator={vi.fn()}
-        />
-      </tbody>
-    </Table>
+  const { getByText } = defaultRenderColor(
+    '2-79',
+    'BYマーブルオーブ',
+    0,
+    enumColor.BLUE_YELLOW
   )
   expect(getByText('2-79')).toHaveClass('bg-ijinden-blue-yellow')
 })
 
 test('レンダリング青黄', () => {
-  const { getByText } = render(
-    <Table>
-      <tbody>
-        <TableRowCard
-          id="2-80"
-          name="GYマーブルオーブ"
-          term={0}
-          color={enumColor.GREEN_YELLOW}
-          counterMain={0}
-          counterSide={0}
-          dispatchDeck={{
-            decrementMain: vi.fn(),
-            incrementMain: vi.fn(),
-            decrementSide: vi.fn(),
-            incrementSide: vi.fn(),
-          }}
-          zoomIn={vi.fn()}
-          interruptSimulator={vi.fn()}
-        />
-      </tbody>
-    </Table>
+  const { getByText } = defaultRenderColor(
+    '2-80',
+    'GYマーブルオーブ',
+    0,
+    enumColor.GREEN_YELLOW
   )
   expect(getByText('2-80')).toHaveClass('bg-ijinden-green-yellow')
 })
 
 test('レンダリング赤の黄魔導', () => {
-  const { getByText } = render(
-    <Table>
-      <tbody>
-        <TableRowCard
-          id="2-57"
-          name="スペクター"
-          term={TERM_CHROMAGIC_YELLOW}
-          color={enumColor.RED}
-          counterMain={0}
-          counterSide={0}
-          dispatchDeck={{
-            decrementMain: vi.fn(),
-            incrementMain: vi.fn(),
-            decrementSide: vi.fn(),
-            incrementSide: vi.fn(),
-          }}
-          zoomIn={vi.fn()}
-          interruptSimulator={vi.fn()}
-        />
-      </tbody>
-    </Table>
+  const { getByText } = defaultRenderColor(
+    '2-57',
+    'スペクター',
+    TERM_CHROMAGIC_YELLOW,
+    enumColor.RED
   )
   expect(getByText('2-57')).toHaveClass('bg-chromagic-red-yellow')
 })
 
 test('レンダリング黄の赤魔導', () => {
-  const { getByText } = render(
-    <Table>
-      <tbody>
-        <TableRowCard
-          id="2-69"
-          name="スカーレット"
-          term={TERM_CHROMAGIC_RED}
-          color={enumColor.YELLOW}
-          counterMain={0}
-          counterSide={0}
-          dispatchDeck={{
-            decrementMain: vi.fn(),
-            incrementMain: vi.fn(),
-            decrementSide: vi.fn(),
-            incrementSide: vi.fn(),
-          }}
-          zoomIn={vi.fn()}
-          interruptSimulator={vi.fn()}
-        />
-      </tbody>
-    </Table>
+  const { getByText } = defaultRenderColor(
+    '2-69',
+    'スカーレット',
+    TERM_CHROMAGIC_RED,
+    enumColor.YELLOW
   )
   expect(getByText('2-69')).toHaveClass('bg-chromagic-yellow-red')
 })
 
 test('レンダリング黄の青魔導', () => {
-  const { getByText } = render(
-    <Table>
-      <tbody>
-        <TableRowCard
-          id="2-70"
-          name="ピーコック"
-          term={TERM_CHROMAGIC_BLUE}
-          color={enumColor.YELLOW}
-          counterMain={0}
-          counterSide={0}
-          dispatchDeck={{
-            decrementMain: vi.fn(),
-            incrementMain: vi.fn(),
-            decrementSide: vi.fn(),
-            incrementSide: vi.fn(),
-          }}
-          zoomIn={vi.fn()}
-          interruptSimulator={vi.fn()}
-        />
-      </tbody>
-    </Table>
+  const { getByText } = defaultRenderColor(
+    '2-70',
+    'ピーコック',
+    TERM_CHROMAGIC_BLUE,
+    enumColor.YELLOW
   )
   expect(getByText('2-70')).toHaveClass('bg-chromagic-yellow-blue')
 })
 
 test('レンダリング黄の緑魔導', () => {
-  const { getByText } = render(
-    <Table>
-      <tbody>
-        <TableRowCard
-          id="2-71"
-          name="シャトルーズ"
-          term={TERM_CHROMAGIC_GREEN}
-          color={enumColor.YELLOW}
-          counterMain={0}
-          counterSide={0}
-          dispatchDeck={{
-            decrementMain: vi.fn(),
-            incrementMain: vi.fn(),
-            decrementSide: vi.fn(),
-            incrementSide: vi.fn(),
-          }}
-          zoomIn={vi.fn()}
-          interruptSimulator={vi.fn()}
-        />
-      </tbody>
-    </Table>
+  const { getByText } = defaultRenderColor(
+    '2-71',
+    'シャトルーズ',
+    TERM_CHROMAGIC_GREEN,
+    enumColor.YELLOW
   )
   expect(getByText('2-71')).toHaveClass('bg-chromagic-yellow-green')
 })
 
 test('レンダリング無色の赤魔導', () => {
-  const { getByText } = render(
-    <Table>
-      <tbody>
-        <TableRowCard
-          id="4-61"
-          name="ソリッドビジョンα"
-          term={TERM_CHROMAGIC_RED}
-          color={enumColor.COLORLESS}
-          counterMain={0}
-          counterSide={0}
-          dispatchDeck={{
-            decrementMain: vi.fn(),
-            incrementMain: vi.fn(),
-            decrementSide: vi.fn(),
-            incrementSide: vi.fn(),
-          }}
-          zoomIn={vi.fn()}
-          interruptSimulator={vi.fn()}
-        />
-      </tbody>
-    </Table>
+  const { getByText } = defaultRenderColor(
+    '4-61',
+    'ソリッドビジョンα',
+    TERM_CHROMAGIC_RED,
+    enumColor.COLORLESS
   )
   expect(getByText('4-61')).toHaveClass('bg-chromagic-colorless-red')
 })
 
 test('レンダリング無色の青魔導', () => {
-  const { getByText } = render(
-    <Table>
-      <tbody>
-        <TableRowCard
-          id="4-62"
-          name="ソリッドビジョンδ"
-          term={TERM_CHROMAGIC_BLUE}
-          color={enumColor.COLORLESS}
-          counterMain={0}
-          counterSide={0}
-          dispatchDeck={{
-            decrementMain: vi.fn(),
-            incrementMain: vi.fn(),
-            decrementSide: vi.fn(),
-            incrementSide: vi.fn(),
-          }}
-          zoomIn={vi.fn()}
-          interruptSimulator={vi.fn()}
-        />
-      </tbody>
-    </Table>
+  const { getByText } = defaultRenderColor(
+    '4-62',
+    'ソリッドビジョンδ',
+    TERM_CHROMAGIC_BLUE,
+    enumColor.COLORLESS
   )
   expect(getByText('4-62')).toHaveClass('bg-chromagic-colorless-blue')
 })
 
 test('レンダリング無色の緑魔導', () => {
-  const { getByText } = render(
-    <Table>
-      <tbody>
-        <TableRowCard
-          id="4-63"
-          name="ソリッドビジョンΩ"
-          term={TERM_CHROMAGIC_GREEN}
-          color={enumColor.COLORLESS}
-          counterMain={0}
-          counterSide={0}
-          dispatchDeck={{
-            decrementMain: vi.fn(),
-            incrementMain: vi.fn(),
-            decrementSide: vi.fn(),
-            incrementSide: vi.fn(),
-          }}
-          zoomIn={vi.fn()}
-          interruptSimulator={vi.fn()}
-        />
-      </tbody>
-    </Table>
+  const { getByText } = defaultRenderColor(
+    '4-63',
+    'ソリッドビジョンΩ',
+    TERM_CHROMAGIC_GREEN,
+    enumColor.COLORLESS
   )
   expect(getByText('4-63')).toHaveClass('bg-chromagic-colorless-green')
 })
 
 test('レンダリング無色の黄魔導', () => {
-  const { getByText } = render(
-    <Table>
-      <tbody>
-        <TableRowCard
-          id="4-64"
-          name="ソリッドビジョンβ"
-          term={TERM_CHROMAGIC_YELLOW}
-          color={enumColor.COLORLESS}
-          counterMain={0}
-          counterSide={0}
-          dispatchDeck={{
-            decrementMain: vi.fn(),
-            incrementMain: vi.fn(),
-            decrementSide: vi.fn(),
-            incrementSide: vi.fn(),
-          }}
-          zoomIn={vi.fn()}
-          interruptSimulator={vi.fn()}
-        />
-      </tbody>
-    </Table>
+  const { getByText } = defaultRenderColor(
+    '4-64',
+    'ソリッドビジョンβ',
+    TERM_CHROMAGIC_YELLOW,
+    enumColor.COLORLESS
   )
   expect(getByText('4-64')).toHaveClass('bg-chromagic-colorless-yellow')
 })
 
 test('レンダリング無色の紫魔導', () => {
-  const { getByText } = render(
-    <Table>
-      <tbody>
-        <TableRowCard
-          id="4-65"
-          name="ソリッドビジョンγ"
-          term={TERM_CHROMAGIC_PURPLE}
-          color={enumColor.COLORLESS}
-          counterMain={0}
-          counterSide={0}
-          dispatchDeck={{
-            decrementMain: vi.fn(),
-            incrementMain: vi.fn(),
-            decrementSide: vi.fn(),
-            incrementSide: vi.fn(),
-          }}
-          zoomIn={vi.fn()}
-          interruptSimulator={vi.fn()}
-        />
-      </tbody>
-    </Table>
+  const { getByText } = defaultRenderColor(
+    '4-65',
+    'ソリッドビジョンγ',
+    TERM_CHROMAGIC_PURPLE,
+    enumColor.COLORLESS
   )
   expect(getByText('4-65')).toHaveClass('bg-chromagic-colorless-purple')
 })
