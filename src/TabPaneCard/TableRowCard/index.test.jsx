@@ -2,7 +2,7 @@
 
 import { Table } from 'react-bootstrap'
 import { afterEach, expect, test, vi } from 'vitest'
-import { cleanup, render } from '@testing-library/react'
+import { cleanup, render, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import enumChromagic from '../enumChromagic'
@@ -16,9 +16,7 @@ const TERM_CHROMAGIC_GREEN = enumTerm.CHROMAGIC | enumChromagic.GREEN
 const TERM_CHROMAGIC_YELLOW = enumTerm.CHROMAGIC | enumChromagic.YELLOW
 const TERM_CHROMAGIC_PURPLE = enumTerm.CHROMAGIC | enumChromagic.PURPLE
 
-afterEach(cleanup)
-
-test('インタラクション', async () => {
+function defaultRender(id, name, term, color, counterMain, counterSide) {
   const decrementMain = vi.fn()
   const incrementMain = vi.fn()
   const decrementSide = vi.fn()
@@ -29,19 +27,18 @@ test('インタラクション', async () => {
     decrementSide,
     incrementSide,
   }
-  const interruptSimulator = vi.fn()
   const zoomIn = vi.fn()
-  const { rerender, getByText, getByRole, getAllByRole } = render(
+  const interruptSimulator = vi.fn()
+  const { rerender, getByRole, getAllByRole } = render(
     <Table>
       <tbody>
         <TableRowCard
-          key="1-1"
-          id="1-1"
-          name="織田信長"
-          term={0}
-          color={enumColor.RED}
-          counterMain={0}
-          counterSide={0}
+          id={id}
+          name={name}
+          term={term}
+          color={color}
+          counterMain={counterMain}
+          counterSide={counterSide}
           dispatchDeck={dispatchDeck}
           zoomIn={zoomIn}
           interruptSimulator={interruptSimulator}
@@ -49,265 +46,46 @@ test('インタラクション', async () => {
       </tbody>
     </Table>
   )
-  expect(decrementMain.mock.calls.length).toBe(0)
-  expect(incrementMain.mock.calls.length).toBe(0)
-  expect(decrementSide.mock.calls.length).toBe(0)
-  expect(incrementSide.mock.calls.length).toBe(0)
-  expect(interruptSimulator.mock.calls.length).toBe(0)
-  expect(zoomIn.mock.calls.length).toBe(0)
-  expect(getByText('1-1')).toBeVisible()
-  expect(getByText('織田信長')).toBeVisible()
+  const defaultRerender = (counterMain, counterSide) =>
+    rerender(
+      <Table>
+        <tbody>
+          <TableRowCard
+            id={id}
+            name={name}
+            term={term}
+            color={color}
+            counterMain={counterMain}
+            counterSide={counterSide}
+            dispatchDeck={dispatchDeck}
+            zoomIn={zoomIn}
+            interruptSimulator={interruptSimulator}
+          />
+        </tbody>
+      </Table>
+    )
+  return {
+    decrementMain,
+    incrementMain,
+    decrementSide,
+    incrementSide,
+    zoomIn,
+    interruptSimulator,
+    defaultRerender,
+    getByRole,
+    getAllByRole,
+  }
+}
 
-  let buttonZoom = getByRole('button', { name: '🔎' })
-  expect(buttonZoom).toBeVisible()
-  let buttonMinusMain = getAllByRole('button', { name: '-' })[0]
-  expect(buttonMinusMain).toBeVisible()
-  expect(buttonMinusMain).toBeDisabled() // 0枚なので無効
-  let textboxMain = getAllByRole('spinbutton')[0]
-  expect(textboxMain).toBeVisible()
-  expect(textboxMain).toHaveAttribute('readonly')
-  expect(textboxMain).toHaveValue(0)
-  let buttonPlusMain = getAllByRole('button', { name: '+' })[0]
-  expect(buttonPlusMain).toBeVisible()
-  let textboxSide = getAllByRole('spinbutton')[1]
-  expect(textboxSide).toBeVisible()
-  expect(textboxSide).toHaveAttribute('readonly')
-  expect(textboxSide).toHaveValue(0)
-  let buttonMinusSide = getAllByRole('button', { name: '-' })[1]
-  expect(buttonMinusSide).toBeVisible()
-  expect(buttonMinusSide).toBeDisabled() // 0枚なので無効
-  let buttonPlusSide = getAllByRole('button', { name: '+' })[1]
-  expect(buttonPlusSide).toBeVisible()
-
-  // メインのプラスボタンを押す
-  await userEvent.click(buttonPlusMain)
-
-  expect(decrementMain.mock.calls.length).toBe(0)
-  expect(incrementMain.mock.calls.length).toBe(1) // 呼ばれた
-  expect(incrementMain.mock.lastCall.length).toBe(1)
-  expect(incrementMain.mock.lastCall[0]).toBe('1-1')
-  expect(decrementSide.mock.calls.length).toBe(0)
-  expect(incrementSide.mock.calls.length).toBe(0)
-  expect(interruptSimulator.mock.calls.length).toBe(1) // 呼ばれた
-  expect(zoomIn.mock.calls.length).toBe(0)
-
-  rerender(
+function defaultRenderColor(term, color) {
+  return render(
     <Table>
       <tbody>
         <TableRowCard
-          key="1-1"
-          id="1-1"
-          name="織田信長"
-          term={0}
-          color={enumColor.RED}
-          counterMain={1}
-          counterSide={0}
-          dispatchDeck={dispatchDeck}
-          zoomIn={zoomIn}
-          interruptSimulator={interruptSimulator}
-        />
-      </tbody>
-    </Table>
-  )
-
-  buttonZoom = getByRole('button', { name: '🔎' })
-  expect(buttonZoom).toBeVisible()
-  buttonMinusMain = getAllByRole('button', { name: '-' })[0]
-  expect(buttonMinusMain).toBeVisible()
-  expect(buttonMinusMain).not.toBeDisabled()
-  textboxMain = getAllByRole('spinbutton')[0]
-  expect(textboxMain).toBeVisible()
-  expect(textboxMain).toHaveAttribute('readonly')
-  expect(textboxMain).toHaveValue(1) // 増えた
-  buttonPlusMain = getAllByRole('button', { name: '+' })[0]
-  expect(buttonPlusMain).toBeVisible()
-  textboxSide = getAllByRole('spinbutton')[1]
-  expect(textboxSide).toBeVisible()
-  expect(textboxSide).toHaveAttribute('readonly')
-  expect(textboxSide).toHaveValue(0)
-  buttonMinusSide = getAllByRole('button', { name: '-' })[1]
-  expect(buttonMinusSide).toBeVisible()
-  expect(buttonMinusSide).toBeDisabled() // 0枚なので無効
-  buttonPlusSide = getAllByRole('button', { name: '+' })[1]
-  expect(buttonPlusSide).toBeVisible()
-
-  // サイドのプラスボタンを押す
-  await userEvent.click(buttonPlusSide)
-
-  expect(decrementMain.mock.calls.length).toBe(0)
-  expect(incrementMain.mock.calls.length).toBe(1)
-  expect(decrementSide.mock.calls.length).toBe(0)
-  expect(incrementSide.mock.calls.length).toBe(1) // 呼ばれた
-  expect(incrementSide.mock.lastCall.length).toBe(1)
-  expect(incrementSide.mock.lastCall[0]).toBe('1-1')
-  expect(interruptSimulator.mock.calls.length).toBe(1)
-  expect(zoomIn.mock.calls.length).toBe(0)
-
-  rerender(
-    <Table>
-      <tbody>
-        <TableRowCard
-          key="1-1"
-          id="1-1"
-          name="織田信長"
-          term={0}
-          color={enumColor.RED}
-          counterMain={1}
-          counterSide={1}
-          dispatchDeck={dispatchDeck}
-          zoomIn={zoomIn}
-          interruptSimulator={interruptSimulator}
-        />
-      </tbody>
-    </Table>
-  )
-
-  buttonZoom = getByRole('button', { name: '🔎' })
-  expect(buttonZoom).toBeVisible()
-  buttonMinusMain = getAllByRole('button', { name: '-' })[0]
-  expect(buttonMinusMain).toBeVisible()
-  expect(buttonMinusMain).not.toBeDisabled()
-  textboxMain = getAllByRole('spinbutton')[0]
-  expect(textboxMain).toBeVisible()
-  expect(textboxMain).toHaveAttribute('readonly')
-  expect(textboxMain).toHaveValue(1)
-  buttonPlusMain = getAllByRole('button', { name: '+' })[0]
-  expect(buttonPlusMain).toBeVisible()
-  textboxSide = getAllByRole('spinbutton')[1]
-  expect(textboxSide).toBeVisible()
-  expect(textboxSide).toHaveAttribute('readonly')
-  expect(textboxSide).toHaveValue(1) // 増えた
-  buttonMinusSide = getAllByRole('button', { name: '-' })[1]
-  expect(buttonMinusSide).toBeVisible()
-  expect(buttonMinusSide).not.toBeDisabled()
-  buttonPlusSide = getAllByRole('button', { name: '+' })[1]
-  expect(buttonPlusSide).toBeVisible()
-
-  // メインのマイナスボタンを押す
-  await userEvent.click(buttonMinusMain)
-
-  expect(decrementMain.mock.calls.length).toBe(1) // 呼ばれた
-  expect(decrementMain.mock.lastCall.length).toBe(1)
-  expect(decrementMain.mock.lastCall[0]).toBe('1-1')
-  expect(incrementMain.mock.calls.length).toBe(1)
-  expect(decrementSide.mock.calls.length).toBe(0)
-  expect(incrementSide.mock.calls.length).toBe(1)
-  expect(interruptSimulator.mock.calls.length).toBe(2) // 呼ばれた
-  expect(zoomIn.mock.calls.length).toBe(0)
-
-  rerender(
-    <Table>
-      <tbody>
-        <TableRowCard
-          key="1-1"
-          id="1-1"
-          name="織田信長"
-          term={0}
-          color={enumColor.RED}
-          counterMain={0}
-          counterSide={1}
-          dispatchDeck={dispatchDeck}
-          zoomIn={zoomIn}
-          interruptSimulator={interruptSimulator}
-        />
-      </tbody>
-    </Table>
-  )
-
-  buttonZoom = getByRole('button', { name: '🔎' })
-  expect(buttonZoom).toBeVisible()
-  buttonMinusMain = getAllByRole('button', { name: '-' })[0]
-  expect(buttonMinusMain).toBeVisible()
-  expect(buttonMinusMain).toBeDisabled() // 0枚なので無効
-  textboxMain = getAllByRole('spinbutton')[0]
-  expect(textboxMain).toBeVisible()
-  expect(textboxMain).toHaveAttribute('readonly')
-  expect(textboxMain).toHaveValue(0) // 減った
-  buttonPlusMain = getAllByRole('button', { name: '+' })[0]
-  expect(buttonPlusMain).toBeVisible()
-  textboxSide = getAllByRole('spinbutton')[1]
-  expect(textboxSide).toBeVisible()
-  expect(textboxSide).toHaveAttribute('readonly')
-  expect(textboxSide).toHaveValue(1)
-  buttonMinusSide = getAllByRole('button', { name: '-' })[1]
-  expect(buttonMinusSide).toBeVisible()
-  expect(buttonMinusSide).not.toBeDisabled()
-  buttonPlusSide = getAllByRole('button', { name: '+' })[1]
-  expect(buttonPlusSide).toBeVisible()
-
-  // サイドのマイナスボタンを押す
-  await userEvent.click(buttonMinusSide)
-
-  expect(decrementMain.mock.calls.length).toBe(1)
-  expect(incrementMain.mock.calls.length).toBe(1)
-  expect(decrementSide.mock.calls.length).toBe(1) // 呼ばれた
-  expect(decrementSide.mock.lastCall.length).toBe(1)
-  expect(decrementSide.mock.lastCall[0]).toBe('1-1')
-  expect(incrementSide.mock.calls.length).toBe(1)
-  expect(interruptSimulator.mock.calls.length).toBe(2) // 呼ばれていない
-  expect(zoomIn.mock.calls.length).toBe(0)
-
-  rerender(
-    <Table>
-      <tbody>
-        <TableRowCard
-          key="1-1"
-          id="1-1"
-          name="織田信長"
-          term={0}
-          color={enumColor.RED}
-          counterMain={0}
-          counterSide={0}
-          dispatchDeck={dispatchDeck}
-          zoomIn={zoomIn}
-          interruptSimulator={interruptSimulator}
-        />
-      </tbody>
-    </Table>
-  )
-
-  buttonZoom = getByRole('button', { name: '🔎' })
-  expect(buttonZoom).toBeVisible()
-  buttonMinusMain = getAllByRole('button', { name: '-' })[0]
-  expect(buttonMinusMain).toBeVisible()
-  expect(buttonMinusMain).toBeDisabled() // 0枚なので無効
-  textboxMain = getAllByRole('spinbutton')[0]
-  expect(textboxMain).toBeVisible()
-  expect(textboxMain).toHaveAttribute('readonly')
-  expect(textboxMain).toHaveValue(0)
-  buttonPlusMain = getAllByRole('button', { name: '+' })[0]
-  expect(buttonPlusMain).toBeVisible()
-  textboxSide = getAllByRole('spinbutton')[1]
-  expect(textboxSide).toBeVisible()
-  expect(textboxSide).toHaveAttribute('readonly')
-  expect(textboxSide).toHaveValue(0) // 減った
-  buttonMinusSide = getAllByRole('button', { name: '-' })[1]
-  expect(buttonMinusSide).toBeVisible()
-  expect(buttonMinusSide).toBeDisabled() // 0枚なので無効
-  buttonPlusSide = getAllByRole('button', { name: '+' })[1]
-  expect(buttonPlusSide).toBeVisible()
-
-  // 虫眼鏡ボタンを押す
-  await userEvent.click(buttonZoom)
-
-  expect(decrementMain.mock.calls.length).toBe(1)
-  expect(incrementMain.mock.calls.length).toBe(1)
-  expect(decrementSide.mock.calls.length).toBe(1)
-  expect(incrementSide.mock.calls.length).toBe(1)
-  expect(interruptSimulator.mock.calls.length).toBe(2)
-  expect(zoomIn.mock.calls.length).toBe(1) // 呼ばれた
-})
-
-test('レンダリング赤', async () => {
-  const { getByText } = render(
-    <Table>
-      <tbody>
-        <TableRowCard
-          key="R-1"
-          id="R-1"
-          name="上杉謙信"
-          term={0}
-          color={enumColor.RED}
+          id="X-1"
+          name="ダミー"
+          term={term}
+          color={color}
           counterMain={0}
           counterSide={0}
           dispatchDeck={{
@@ -324,505 +102,632 @@ test('レンダリング赤', async () => {
       </tbody>
     </Table>
   )
-  expect(getByText('上杉謙信')).toBeVisible()
+}
 
-  const columnId = getByText('R-1')
+afterEach(cleanup)
+
+test('デフォルトのレンダリング', () => {
+  const { getByRole } = defaultRender('1-1', '織田信長', 0, enumColor.RED, 0, 0)
+
+  // 表の行としてレンダリングされる
+  const row = getByRole('row')
+  expect(row).toBeVisible()
+  // 列は4つある
+  const columns = within(row).getAllByRole('cell')
+  expect(columns.length).toBe(4)
+  // 1列目 (1-origin, 以下同様) には ID が表示される
+  const columnId = columns[0]
   expect(columnId).toBeVisible()
-  expect(columnId).toHaveClass('bg-ijinden-red')
+  expect(columnId).toHaveTextContent('1-1')
+  // 2列目にはカード名が表示される
+  const columnName = columns[1]
+  expect(columnName).toBeVisible()
+  expect(columnName).toHaveTextContent('織田信長')
+  // 2列目にはさらに虫眼鏡ボタンがある
+  const buttonZoom = within(columns[1]).getByRole('button')
+  expect(buttonZoom).toBeVisible()
+  expect(buttonZoom).toHaveTextContent('🔎')
+  // 3列目には (メインデッキの) カウンターがある
+  const columnMain = columns[2]
+  expect(columnMain).toBeVisible()
+  const buttonMinusMain = within(columnMain).getByRole('button', { name: '-' })
+  expect(buttonMinusMain).toBeVisible()
+  expect(buttonMinusMain).toBeDisabled() // 無効
+  const spinMain = within(columnMain).getByRole('spinbutton')
+  expect(spinMain).toBeVisible()
+  expect(spinMain).toHaveAttribute('readonly')
+  expect(spinMain).toHaveValue(0)
+  const buttonPlusMain = within(columnMain).getByRole('button', { name: '+' })
+  expect(buttonPlusMain).toBeVisible()
+  expect(buttonPlusMain).toBeEnabled()
+  // 4列目には (サイドデッキの) カウンターがある
+  const columnSide = columns[3]
+  expect(columnSide).toBeVisible()
+  const buttonMinusSide = within(columnSide).getByRole('button', { name: '-' })
+  expect(buttonMinusSide).toBeVisible()
+  expect(buttonMinusSide).toBeDisabled() // 無効
+  const spinSide = within(columnSide).getByRole('spinbutton')
+  expect(spinSide).toBeVisible()
+  expect(spinSide).toHaveAttribute('readonly')
+  expect(spinSide).toHaveValue(0)
+  const buttonPlusSide = within(columnSide).getByRole('button', { name: '+' })
+  expect(buttonPlusSide).toBeVisible()
+  expect(buttonPlusSide).toBeEnabled()
 })
 
-test('レンダリング青', async () => {
-  const { getByText } = render(
-    <Table>
-      <tbody>
-        <TableRowCard
-          key="B-1"
-          id="B-1"
-          name="レオナルド・ダ・ヴィンチ"
-          term={0}
-          color={enumColor.BLUE}
-          counterMain={0}
-          counterSide={0}
-          dispatchDeck={{
-            decrementMain: vi.fn(),
-            incrementMain: vi.fn(),
-            decrementSide: vi.fn(),
-            incrementSide: vi.fn(),
-          }}
-          zoomIn={vi.fn()}
-          interruptSimulator={vi.fn()}
-        />
-      </tbody>
-    </Table>
-  )
-  expect(getByText('レオナルド・ダ・ヴィンチ')).toBeVisible()
+test('虫眼鏡ボタンを押す', async () => {
+  const id = '1-1'
+  const {
+    decrementMain,
+    incrementMain,
+    decrementSide,
+    incrementSide,
+    zoomIn,
+    interruptSimulator,
+    defaultRerender,
+    getByRole,
+  } = defaultRender(id, '織田信長', 0, enumColor.RED, 0, 0)
 
-  const columnId = getByText('B-1')
-  expect(columnId).toBeVisible()
-  expect(columnId).toHaveClass('bg-ijinden-blue')
+  await userEvent.click(getByRole('button', { name: '🔎' }))
+  defaultRerender(0, 0)
+
+  expect(decrementMain.mock.calls.length).toBe(0)
+  expect(incrementMain.mock.calls.length).toBe(0)
+  expect(decrementSide.mock.calls.length).toBe(0)
+  expect(incrementSide.mock.calls.length).toBe(0)
+  expect(zoomIn.mock.calls.length).toBe(1) // 呼ばれた
+  expect(zoomIn.mock.lastCall.length).toBe(1)
+  expect(zoomIn.mock.lastCall[0]).toBe(id)
+  expect(interruptSimulator.mock.calls.length).toBe(0)
 })
 
-test('レンダリング緑', async () => {
-  const { getByText } = render(
-    <Table>
-      <tbody>
-        <TableRowCard
-          key="G-1"
-          id="G-1"
-          name="出雲の阿国"
-          term={0}
-          color={enumColor.GREEN}
-          counterMain={0}
-          counterSide={0}
-          dispatchDeck={{
-            decrementMain: vi.fn(),
-            incrementMain: vi.fn(),
-            decrementSide: vi.fn(),
-            incrementSide: vi.fn(),
-          }}
-          zoomIn={vi.fn()}
-          interruptSimulator={vi.fn()}
-        />
-      </tbody>
-    </Table>
-  )
-  expect(getByText('出雲の阿国')).toBeVisible()
+test('メインデッキのカウンターを0から1に増やす', async () => {
+  const id = '1-1'
+  const {
+    decrementMain,
+    incrementMain,
+    decrementSide,
+    incrementSide,
+    zoomIn,
+    interruptSimulator,
+    defaultRerender,
+    getByRole,
+  } = defaultRender(id, '織田信長', 0, enumColor.RED, 0, 0)
+  let main = within(within(getByRole('row')).getAllByRole('cell')[2])
+  let side = within(within(getByRole('row')).getAllByRole('cell')[3])
 
-  const columnId = getByText('G-1')
-  expect(columnId).toBeVisible()
-  expect(columnId).toHaveClass('bg-ijinden-green')
+  expect(main.getByRole('button', { name: '-' })).toBeDisabled() // 無効
+  expect(main.getByRole('spinbutton')).toHaveValue(0)
+  expect(main.getByRole('button', { name: '+' })).toBeEnabled()
+  expect(side.getByRole('button', { name: '-' })).toBeDisabled() // 無効
+  expect(side.getByRole('spinbutton')).toHaveValue(0)
+  expect(side.getByRole('button', { name: '+' })).toBeEnabled()
+
+  // メインデッキのプラスボタンを押す
+  await userEvent.click(main.getByRole('button', { name: '+' }))
+
+  expect(decrementMain.mock.calls.length).toBe(0)
+  expect(incrementMain.mock.calls.length).toBe(1) // 呼ばれた
+  expect(incrementMain.mock.lastCall.length).toBe(1)
+  expect(incrementMain.mock.lastCall[0]).toBe(id)
+  expect(decrementSide.mock.calls.length).toBe(0)
+  expect(incrementSide.mock.calls.length).toBe(0)
+  expect(zoomIn.mock.calls.length).toBe(0)
+  expect(interruptSimulator.mock.calls.length).toBe(1) // 呼ばれた
+  expect(interruptSimulator.mock.lastCall.length).toBe(0)
+
+  defaultRerender(1, 0)
+  main = within(within(getByRole('row')).getAllByRole('cell')[2])
+  side = within(within(getByRole('row')).getAllByRole('cell')[3])
+
+  expect(main.getByRole('button', { name: '-' })).toBeEnabled() // 有効になった
+  expect(main.getByRole('spinbutton')).toHaveValue(1)
+  expect(main.getByRole('button', { name: '+' })).toBeEnabled()
+  expect(side.getByRole('button', { name: '-' })).toBeDisabled()
+  expect(side.getByRole('spinbutton')).toHaveValue(0)
+  expect(side.getByRole('button', { name: '+' })).toBeEnabled()
 })
 
-test('レンダリング黄', async () => {
-  const { getByText } = render(
-    <Table>
-      <tbody>
-        <TableRowCard
-          key="Y-1"
-          id="Y-1"
-          name="諸葛亮"
-          term={0}
-          color={enumColor.YELLOW}
-          counterMain={0}
-          counterSide={0}
-          dispatchDeck={{
-            decrementMain: vi.fn(),
-            incrementMain: vi.fn(),
-            decrementSide: vi.fn(),
-            incrementSide: vi.fn(),
-          }}
-          zoomIn={vi.fn()}
-          interruptSimulator={vi.fn()}
-        />
-      </tbody>
-    </Table>
-  )
-  expect(getByText('諸葛亮')).toBeVisible()
+test('メインデッキのカウンターを1から2に増やす', async () => {
+  const id = '1-1'
+  const {
+    decrementMain,
+    incrementMain,
+    decrementSide,
+    incrementSide,
+    zoomIn,
+    interruptSimulator,
+    defaultRerender,
+    getByRole,
+  } = defaultRender(id, '織田信長', 0, enumColor.RED, 1, 1)
+  let main = within(within(getByRole('row')).getAllByRole('cell')[2])
+  let side = within(within(getByRole('row')).getAllByRole('cell')[3])
 
-  const columnId = getByText('Y-1')
-  expect(columnId).toBeVisible()
-  expect(columnId).toHaveClass('bg-ijinden-yellow')
+  expect(main.getByRole('button', { name: '-' })).toBeEnabled()
+  expect(main.getByRole('spinbutton')).toHaveValue(1)
+  expect(main.getByRole('button', { name: '+' })).toBeEnabled()
+  expect(side.getByRole('button', { name: '-' })).toBeEnabled()
+  expect(side.getByRole('spinbutton')).toHaveValue(1)
+  expect(side.getByRole('button', { name: '+' })).toBeEnabled()
+
+  // メインデッキのプラスボタンを押す
+  await userEvent.click(main.getByRole('button', { name: '+' }))
+
+  expect(decrementMain.mock.calls.length).toBe(0)
+  expect(incrementMain.mock.calls.length).toBe(1) // 呼ばれた
+  expect(incrementMain.mock.lastCall.length).toBe(1)
+  expect(incrementMain.mock.lastCall[0]).toBe(id)
+  expect(decrementSide.mock.calls.length).toBe(0)
+  expect(incrementSide.mock.calls.length).toBe(0)
+  expect(zoomIn.mock.calls.length).toBe(0)
+  expect(interruptSimulator.mock.calls.length).toBe(1) // 呼ばれた
+  expect(interruptSimulator.mock.lastCall.length).toBe(0)
+
+  defaultRerender(2, 1)
+  main = within(within(getByRole('row')).getAllByRole('cell')[2])
+  side = within(within(getByRole('row')).getAllByRole('cell')[3])
+
+  expect(main.getByRole('button', { name: '-' })).toBeEnabled()
+  expect(main.getByRole('spinbutton')).toHaveValue(2)
+  expect(main.getByRole('button', { name: '+' })).toBeEnabled()
+  expect(side.getByRole('button', { name: '-' })).toBeEnabled()
+  expect(side.getByRole('spinbutton')).toHaveValue(1)
+  expect(side.getByRole('button', { name: '+' })).toBeEnabled()
 })
 
-test('レンダリング紫', async () => {
-  const { getByText } = render(
-    <Table>
-      <tbody>
-        <TableRowCard
-          key="P-1"
-          id="P-1"
-          name="マリ・キュリー"
-          term={0}
-          color={enumColor.PURPLE}
-          counterMain={0}
-          counterSide={0}
-          dispatchDeck={{
-            decrementMain: vi.fn(),
-            incrementMain: vi.fn(),
-            decrementSide: vi.fn(),
-            incrementSide: vi.fn(),
-          }}
-          zoomIn={vi.fn()}
-          interruptSimulator={vi.fn()}
-        />
-      </tbody>
-    </Table>
-  )
-  expect(getByText('マリ・キュリー')).toBeVisible()
+test('メインデッキのカウンターを2から1に減らす', async () => {
+  const id = '1-1'
+  const {
+    decrementMain,
+    incrementMain,
+    decrementSide,
+    incrementSide,
+    zoomIn,
+    interruptSimulator,
+    defaultRerender,
+    getByRole,
+  } = defaultRender(id, '織田信長', 0, enumColor.RED, 2, 2)
+  let main = within(within(getByRole('row')).getAllByRole('cell')[2])
+  let side = within(within(getByRole('row')).getAllByRole('cell')[3])
 
-  const columnId = getByText('P-1')
-  expect(columnId).toBeVisible()
-  expect(columnId).toHaveClass('bg-ijinden-purple')
+  expect(main.getByRole('button', { name: '-' })).toBeEnabled()
+  expect(main.getByRole('spinbutton')).toHaveValue(2)
+  expect(main.getByRole('button', { name: '+' })).toBeEnabled()
+  expect(side.getByRole('button', { name: '-' })).toBeEnabled()
+  expect(side.getByRole('spinbutton')).toHaveValue(2)
+  expect(side.getByRole('button', { name: '+' })).toBeEnabled()
+
+  // メインデッキのマイナスボタンを押す
+  await userEvent.click(main.getByRole('button', { name: '-' }))
+
+  expect(decrementMain.mock.calls.length).toBe(1) // 呼ばれた
+  expect(decrementMain.mock.lastCall.length).toBe(1)
+  expect(decrementMain.mock.lastCall[0]).toBe(id)
+  expect(incrementMain.mock.calls.length).toBe(0)
+  expect(decrementSide.mock.calls.length).toBe(0)
+  expect(incrementSide.mock.calls.length).toBe(0)
+  expect(zoomIn.mock.calls.length).toBe(0)
+  expect(interruptSimulator.mock.calls.length).toBe(1) // 呼ばれた
+  expect(interruptSimulator.mock.lastCall.length).toBe(0)
+
+  defaultRerender(1, 2)
+  main = within(within(getByRole('row')).getAllByRole('cell')[2])
+  side = within(within(getByRole('row')).getAllByRole('cell')[3])
+
+  expect(main.getByRole('button', { name: '-' })).toBeEnabled()
+  expect(main.getByRole('spinbutton')).toHaveValue(1)
+  expect(main.getByRole('button', { name: '+' })).toBeEnabled()
+  expect(side.getByRole('button', { name: '-' })).toBeEnabled()
+  expect(side.getByRole('spinbutton')).toHaveValue(2)
+  expect(side.getByRole('button', { name: '+' })).toBeEnabled()
 })
 
-test('レンダリング赤黄', async () => {
-  const { getByText } = render(
-    <Table>
-      <tbody>
-        <TableRowCard
-          key="2-78"
-          id="2-78"
-          name="RYマーブルオーブ"
-          term={0}
-          color={enumColor.RED_YELLOW}
-          counterMain={0}
-          counterSide={0}
-          dispatchDeck={{
-            decrementMain: vi.fn(),
-            incrementMain: vi.fn(),
-            decrementSide: vi.fn(),
-            incrementSide: vi.fn(),
-          }}
-          zoomIn={vi.fn()}
-          interruptSimulator={vi.fn()}
-        />
-      </tbody>
-    </Table>
-  )
-  expect(getByText('RYマーブルオーブ')).toBeVisible()
+test('メインデッキのカウンターを1から0に減らす', async () => {
+  const id = '1-1'
+  const {
+    decrementMain,
+    incrementMain,
+    decrementSide,
+    incrementSide,
+    zoomIn,
+    interruptSimulator,
+    defaultRerender,
+    getByRole,
+  } = defaultRender(id, '織田信長', 0, enumColor.RED, 1, 1)
+  let main = within(within(getByRole('row')).getAllByRole('cell')[2])
+  let side = within(within(getByRole('row')).getAllByRole('cell')[3])
 
-  const columnId = getByText('2-78')
-  expect(columnId).toBeVisible()
-  expect(columnId).toHaveClass('bg-ijinden-red-yellow')
+  expect(main.getByRole('button', { name: '-' })).toBeEnabled()
+  expect(main.getByRole('spinbutton')).toHaveValue(1)
+  expect(main.getByRole('button', { name: '+' })).toBeEnabled()
+  expect(side.getByRole('button', { name: '-' })).toBeEnabled()
+  expect(side.getByRole('spinbutton')).toHaveValue(1)
+  expect(side.getByRole('button', { name: '+' })).toBeEnabled()
+
+  // メインデッキのマイナスボタンを押す
+  await userEvent.click(main.getByRole('button', { name: '-' }))
+
+  expect(decrementMain.mock.calls.length).toBe(1) // 呼ばれた
+  expect(decrementMain.mock.lastCall.length).toBe(1)
+  expect(decrementMain.mock.lastCall[0]).toBe(id)
+  expect(incrementMain.mock.calls.length).toBe(0)
+  expect(decrementSide.mock.calls.length).toBe(0)
+  expect(incrementSide.mock.calls.length).toBe(0)
+  expect(zoomIn.mock.calls.length).toBe(0)
+  expect(interruptSimulator.mock.calls.length).toBe(1) // 呼ばれた
+  expect(interruptSimulator.mock.lastCall.length).toBe(0)
+
+  defaultRerender(0, 1)
+  main = within(within(getByRole('row')).getAllByRole('cell')[2])
+  side = within(within(getByRole('row')).getAllByRole('cell')[3])
+
+  expect(main.getByRole('button', { name: '-' })).toBeDisabled() // 無効になった
+  expect(main.getByRole('spinbutton')).toHaveValue(0)
+  expect(main.getByRole('button', { name: '+' })).toBeEnabled()
+  expect(side.getByRole('button', { name: '-' })).toBeEnabled()
+  expect(side.getByRole('spinbutton')).toHaveValue(1)
+  expect(side.getByRole('button', { name: '+' })).toBeEnabled()
 })
 
-test('レンダリング青黄', async () => {
-  const { getByText } = render(
-    <Table>
-      <tbody>
-        <TableRowCard
-          key="2-79"
-          id="2-79"
-          name="BYマーブルオーブ"
-          term={0}
-          color={enumColor.BLUE_YELLOW}
-          counterMain={0}
-          counterSide={0}
-          dispatchDeck={{
-            decrementMain: vi.fn(),
-            incrementMain: vi.fn(),
-            decrementSide: vi.fn(),
-            incrementSide: vi.fn(),
-          }}
-          zoomIn={vi.fn()}
-          interruptSimulator={vi.fn()}
-        />
-      </tbody>
-    </Table>
-  )
-  expect(getByText('BYマーブルオーブ')).toBeVisible()
+test('サイドデッキのカウンターを0から1に増やす', async () => {
+  const id = '1-1'
+  const {
+    decrementMain,
+    incrementMain,
+    decrementSide,
+    incrementSide,
+    zoomIn,
+    interruptSimulator,
+    defaultRerender,
+    getByRole,
+  } = defaultRender(id, '織田信長', 0, enumColor.RED, 0, 0)
+  let main = within(within(getByRole('row')).getAllByRole('cell')[2])
+  let side = within(within(getByRole('row')).getAllByRole('cell')[3])
 
-  const columnId = getByText('2-79')
-  expect(columnId).toBeVisible()
-  expect(columnId).toHaveClass('bg-ijinden-blue-yellow')
+  expect(main.getByRole('button', { name: '-' })).toBeDisabled() // 無効
+  expect(main.getByRole('spinbutton')).toHaveValue(0)
+  expect(main.getByRole('button', { name: '+' })).toBeEnabled()
+  expect(side.getByRole('button', { name: '-' })).toBeDisabled() // 無効
+  expect(side.getByRole('spinbutton')).toHaveValue(0)
+  expect(side.getByRole('button', { name: '+' })).toBeEnabled()
+
+  // サイドデッキのプラスボタンを押す
+  await userEvent.click(side.getByRole('button', { name: '+' }))
+
+  expect(decrementMain.mock.calls.length).toBe(0)
+  expect(incrementMain.mock.calls.length).toBe(0)
+  expect(decrementSide.mock.calls.length).toBe(0)
+  expect(incrementSide.mock.calls.length).toBe(1) // 呼ばれた
+  expect(incrementSide.mock.lastCall.length).toBe(1)
+  expect(incrementSide.mock.lastCall[0]).toBe(id)
+  expect(zoomIn.mock.calls.length).toBe(0)
+  expect(interruptSimulator.mock.calls.length).toBe(0)
+
+  defaultRerender(0, 1)
+  main = within(within(getByRole('row')).getAllByRole('cell')[2])
+  side = within(within(getByRole('row')).getAllByRole('cell')[3])
+
+  expect(main.getByRole('button', { name: '-' })).toBeDisabled()
+  expect(main.getByRole('spinbutton')).toHaveValue(0)
+  expect(main.getByRole('button', { name: '+' })).toBeEnabled()
+  expect(side.getByRole('button', { name: '-' })).toBeEnabled() // 有効になった
+  expect(side.getByRole('spinbutton')).toHaveValue(1)
+  expect(side.getByRole('button', { name: '+' })).toBeEnabled()
 })
 
-test('レンダリング青黄', async () => {
-  const { getByText } = render(
-    <Table>
-      <tbody>
-        <TableRowCard
-          key="2-80"
-          id="2-80"
-          name="GYマーブルオーブ"
-          term={0}
-          color={enumColor.GREEN_YELLOW}
-          counterMain={0}
-          counterSide={0}
-          dispatchDeck={{
-            decrementMain: vi.fn(),
-            incrementMain: vi.fn(),
-            decrementSide: vi.fn(),
-            incrementSide: vi.fn(),
-          }}
-          zoomIn={vi.fn()}
-          interruptSimulator={vi.fn()}
-        />
-      </tbody>
-    </Table>
-  )
-  expect(getByText('GYマーブルオーブ')).toBeVisible()
+test('サイドデッキのカウンターを1から2に増やす', async () => {
+  const id = '1-1'
+  const {
+    decrementMain,
+    incrementMain,
+    decrementSide,
+    incrementSide,
+    zoomIn,
+    interruptSimulator,
+    defaultRerender,
+    getByRole,
+  } = defaultRender(id, '織田信長', 0, enumColor.RED, 1, 1)
+  let main = within(within(getByRole('row')).getAllByRole('cell')[2])
+  let side = within(within(getByRole('row')).getAllByRole('cell')[3])
 
-  const columnId = getByText('2-80')
-  expect(columnId).toBeVisible()
-  expect(columnId).toHaveClass('bg-ijinden-green-yellow')
+  expect(main.getByRole('button', { name: '-' })).toBeEnabled()
+  expect(main.getByRole('spinbutton')).toHaveValue(1)
+  expect(main.getByRole('button', { name: '+' })).toBeEnabled()
+  expect(side.getByRole('button', { name: '-' })).toBeEnabled()
+  expect(side.getByRole('spinbutton')).toHaveValue(1)
+  expect(side.getByRole('button', { name: '+' })).toBeEnabled()
+
+  // サイドデッキのプラスボタンを押す
+  await userEvent.click(side.getByRole('button', { name: '+' }))
+
+  expect(decrementMain.mock.calls.length).toBe(0)
+  expect(incrementMain.mock.calls.length).toBe(0)
+  expect(decrementSide.mock.calls.length).toBe(0)
+  expect(incrementSide.mock.calls.length).toBe(1) // 呼ばれた
+  expect(incrementSide.mock.lastCall.length).toBe(1)
+  expect(incrementSide.mock.lastCall[0]).toBe(id)
+  expect(zoomIn.mock.calls.length).toBe(0)
+  expect(interruptSimulator.mock.calls.length).toBe(0)
+
+  defaultRerender(1, 2)
+  main = within(within(getByRole('row')).getAllByRole('cell')[2])
+  side = within(within(getByRole('row')).getAllByRole('cell')[3])
+
+  expect(main.getByRole('button', { name: '-' })).toBeEnabled()
+  expect(main.getByRole('spinbutton')).toHaveValue(1)
+  expect(main.getByRole('button', { name: '+' })).toBeEnabled()
+  expect(side.getByRole('button', { name: '-' })).toBeEnabled()
+  expect(side.getByRole('spinbutton')).toHaveValue(2)
+  expect(side.getByRole('button', { name: '+' })).toBeEnabled()
 })
 
-test('レンダリング赤の黄魔導', async () => {
-  const { getByText } = render(
-    <Table>
-      <tbody>
-        <TableRowCard
-          key="2-57"
-          id="2-57"
-          name="スペクター"
-          term={TERM_CHROMAGIC_YELLOW}
-          color={enumColor.RED}
-          counterMain={0}
-          counterSide={0}
-          dispatchDeck={{
-            decrementMain: vi.fn(),
-            incrementMain: vi.fn(),
-            decrementSide: vi.fn(),
-            incrementSide: vi.fn(),
-          }}
-          zoomIn={vi.fn()}
-          interruptSimulator={vi.fn()}
-        />
-      </tbody>
-    </Table>
-  )
-  expect(getByText('スペクター')).toBeVisible()
+test('サイドデッキのカウンターを2から1に減らす', async () => {
+  const id = '1-1'
+  const {
+    decrementMain,
+    incrementMain,
+    decrementSide,
+    incrementSide,
+    zoomIn,
+    interruptSimulator,
+    defaultRerender,
+    getByRole,
+  } = defaultRender(id, '織田信長', 0, enumColor.RED, 2, 2)
+  let main = within(within(getByRole('row')).getAllByRole('cell')[2])
+  let side = within(within(getByRole('row')).getAllByRole('cell')[3])
 
-  const columnId = getByText('2-57')
-  expect(columnId).toBeVisible()
-  expect(columnId).toHaveClass('bg-chromagic-red-yellow')
+  expect(main.getByRole('button', { name: '-' })).toBeEnabled()
+  expect(main.getByRole('spinbutton')).toHaveValue(2)
+  expect(main.getByRole('button', { name: '+' })).toBeEnabled()
+  expect(side.getByRole('button', { name: '-' })).toBeEnabled()
+  expect(side.getByRole('spinbutton')).toHaveValue(2)
+  expect(side.getByRole('button', { name: '+' })).toBeEnabled()
+
+  // サイドデッキのマイナスボタンを押す
+  await userEvent.click(side.getByRole('button', { name: '-' }))
+
+  expect(decrementMain.mock.calls.length).toBe(0)
+  expect(incrementMain.mock.calls.length).toBe(0)
+  expect(decrementSide.mock.calls.length).toBe(1) // 呼ばれた
+  expect(decrementSide.mock.lastCall.length).toBe(1)
+  expect(decrementSide.mock.lastCall[0]).toBe(id)
+  expect(incrementSide.mock.calls.length).toBe(0)
+  expect(zoomIn.mock.calls.length).toBe(0)
+  expect(interruptSimulator.mock.calls.length).toBe(0)
+
+  defaultRerender(2, 1)
+  main = within(within(getByRole('row')).getAllByRole('cell')[2])
+  side = within(within(getByRole('row')).getAllByRole('cell')[3])
+
+  expect(main.getByRole('button', { name: '-' })).toBeEnabled()
+  expect(main.getByRole('spinbutton')).toHaveValue(2)
+  expect(main.getByRole('button', { name: '+' })).toBeEnabled()
+  expect(side.getByRole('button', { name: '-' })).toBeEnabled()
+  expect(side.getByRole('spinbutton')).toHaveValue(1)
+  expect(side.getByRole('button', { name: '+' })).toBeEnabled()
 })
 
-test('レンダリング黄の赤魔導', async () => {
-  const { getByText } = render(
-    <Table>
-      <tbody>
-        <TableRowCard
-          key="2-69"
-          id="2-69"
-          name="スカーレット"
-          term={TERM_CHROMAGIC_RED}
-          color={enumColor.YELLOW}
-          counterMain={0}
-          counterSide={0}
-          dispatchDeck={{
-            decrementMain: vi.fn(),
-            incrementMain: vi.fn(),
-            decrementSide: vi.fn(),
-            incrementSide: vi.fn(),
-          }}
-          zoomIn={vi.fn()}
-          interruptSimulator={vi.fn()}
-        />
-      </tbody>
-    </Table>
-  )
-  expect(getByText('スカーレット')).toBeVisible()
+test('サイドデッキのカウンターを1から0に減らす', async () => {
+  const id = '1-1'
+  const {
+    decrementMain,
+    incrementMain,
+    decrementSide,
+    incrementSide,
+    zoomIn,
+    interruptSimulator,
+    defaultRerender,
+    getByRole,
+  } = defaultRender(id, '織田信長', 0, enumColor.RED, 1, 1)
+  let main = within(within(getByRole('row')).getAllByRole('cell')[2])
+  let side = within(within(getByRole('row')).getAllByRole('cell')[3])
 
-  const columnId = getByText('2-69')
-  expect(columnId).toBeVisible()
-  expect(columnId).toHaveClass('bg-chromagic-yellow-red')
+  expect(main.getByRole('button', { name: '-' })).toBeEnabled()
+  expect(main.getByRole('spinbutton')).toHaveValue(1)
+  expect(main.getByRole('button', { name: '+' })).toBeEnabled()
+  expect(side.getByRole('button', { name: '-' })).toBeEnabled()
+  expect(side.getByRole('spinbutton')).toHaveValue(1)
+  expect(side.getByRole('button', { name: '+' })).toBeEnabled()
+
+  // サイドデッキのマイナスボタンを押す
+  await userEvent.click(side.getByRole('button', { name: '-' }))
+
+  expect(decrementMain.mock.calls.length).toBe(0)
+  expect(incrementMain.mock.calls.length).toBe(0)
+  expect(decrementSide.mock.calls.length).toBe(1) // 呼ばれた
+  expect(decrementSide.mock.lastCall.length).toBe(1)
+  expect(decrementSide.mock.lastCall[0]).toBe(id)
+  expect(incrementSide.mock.calls.length).toBe(0)
+  expect(zoomIn.mock.calls.length).toBe(0)
+  expect(interruptSimulator.mock.calls.length).toBe(0)
+
+  defaultRerender(1, 0)
+  main = within(within(getByRole('row')).getAllByRole('cell')[2])
+  side = within(within(getByRole('row')).getAllByRole('cell')[3])
+
+  expect(main.getByRole('button', { name: '-' })).toBeEnabled()
+  expect(main.getByRole('spinbutton')).toHaveValue(1)
+  expect(main.getByRole('button', { name: '+' })).toBeEnabled()
+  expect(side.getByRole('button', { name: '-' })).toBeDisabled() // 無効になった
+  expect(side.getByRole('spinbutton')).toHaveValue(0)
+  expect(side.getByRole('button', { name: '+' })).toBeEnabled()
 })
 
-test('レンダリング黄の青魔導', async () => {
-  const { getByText } = render(
-    <Table>
-      <tbody>
-        <TableRowCard
-          key="2-70"
-          id="2-70"
-          name="ピーコック"
-          term={TERM_CHROMAGIC_BLUE}
-          color={enumColor.YELLOW}
-          counterMain={0}
-          counterSide={0}
-          dispatchDeck={{
-            decrementMain: vi.fn(),
-            incrementMain: vi.fn(),
-            decrementSide: vi.fn(),
-            incrementSide: vi.fn(),
-          }}
-          zoomIn={vi.fn()}
-          interruptSimulator={vi.fn()}
-        />
-      </tbody>
-    </Table>
+test('ボタンを押さずにメインデッキのカウンターを0から4に増やす', async () => {
+  const { defaultRerender, getByRole } = defaultRender(
+    '1-1',
+    '織田信長',
+    0,
+    enumColor.RED,
+    0,
+    0
   )
-  expect(getByText('ピーコック')).toBeVisible()
+  let main = within(within(getByRole('row')).getAllByRole('cell')[2])
+  let side = within(within(getByRole('row')).getAllByRole('cell')[3])
 
-  const columnId = getByText('2-70')
-  expect(columnId).toBeVisible()
-  expect(columnId).toHaveClass('bg-chromagic-yellow-blue')
+  expect(main.getByRole('button', { name: '-' })).toBeDisabled() // 無効
+  expect(main.getByRole('spinbutton')).toHaveValue(0)
+  expect(main.getByRole('button', { name: '+' })).toBeEnabled()
+  expect(side.getByRole('button', { name: '-' })).toBeDisabled() // 無効
+  expect(side.getByRole('spinbutton')).toHaveValue(0)
+  expect(side.getByRole('button', { name: '+' })).toBeEnabled()
+
+  defaultRerender(4, 0)
+  main = within(within(getByRole('row')).getAllByRole('cell')[2])
+  side = within(within(getByRole('row')).getAllByRole('cell')[3])
+
+  expect(main.getByRole('button', { name: '-' })).toBeEnabled() // 有効になった
+  expect(main.getByRole('spinbutton')).toHaveValue(4)
+  expect(main.getByRole('button', { name: '+' })).toBeEnabled()
+  expect(side.getByRole('button', { name: '-' })).toBeDisabled()
+  expect(side.getByRole('spinbutton')).toHaveValue(0)
+  expect(side.getByRole('button', { name: '+' })).toBeEnabled()
 })
 
-test('レンダリング黄の緑魔導', async () => {
-  const { getByText } = render(
-    <Table>
-      <tbody>
-        <TableRowCard
-          key="2-71"
-          id="2-71"
-          name="シャトルーズ"
-          term={TERM_CHROMAGIC_GREEN}
-          color={enumColor.YELLOW}
-          counterMain={0}
-          counterSide={0}
-          dispatchDeck={{
-            decrementMain: vi.fn(),
-            incrementMain: vi.fn(),
-            decrementSide: vi.fn(),
-            incrementSide: vi.fn(),
-          }}
-          zoomIn={vi.fn()}
-          interruptSimulator={vi.fn()}
-        />
-      </tbody>
-    </Table>
+test('ボタンを押さずにメインデッキのカウンターを4から0に減らす', async () => {
+  const { defaultRerender, getByRole } = defaultRender(
+    '1-1',
+    '織田信長',
+    0,
+    enumColor.RED,
+    4,
+    4
   )
-  expect(getByText('シャトルーズ')).toBeVisible()
+  let main = within(within(getByRole('row')).getAllByRole('cell')[2])
+  let side = within(within(getByRole('row')).getAllByRole('cell')[3])
 
-  const columnId = getByText('2-71')
-  expect(columnId).toBeVisible()
-  expect(columnId).toHaveClass('bg-chromagic-yellow-green')
+  expect(main.getByRole('button', { name: '-' })).toBeEnabled()
+  expect(main.getByRole('spinbutton')).toHaveValue(4)
+  expect(main.getByRole('button', { name: '+' })).toBeEnabled()
+  expect(side.getByRole('button', { name: '-' })).toBeEnabled()
+  expect(side.getByRole('spinbutton')).toHaveValue(4)
+  expect(side.getByRole('button', { name: '+' })).toBeEnabled()
+
+  defaultRerender(0, 4)
+  main = within(within(getByRole('row')).getAllByRole('cell')[2])
+  side = within(within(getByRole('row')).getAllByRole('cell')[3])
+
+  expect(main.getByRole('button', { name: '-' })).toBeDisabled() // 無効になった
+  expect(main.getByRole('spinbutton')).toHaveValue(0)
+  expect(main.getByRole('button', { name: '+' })).toBeEnabled()
+  expect(side.getByRole('button', { name: '-' })).toBeEnabled()
+  expect(side.getByRole('spinbutton')).toHaveValue(4)
+  expect(side.getByRole('button', { name: '+' })).toBeEnabled()
 })
 
-test('レンダリング無色の赤魔導', async () => {
-  const { getByText } = render(
-    <Table>
-      <tbody>
-        <TableRowCard
-          key="4-61"
-          id="4-61"
-          name="ソリッドビジョンα"
-          term={TERM_CHROMAGIC_RED}
-          color={enumColor.COLORLESS}
-          counterMain={0}
-          counterSide={0}
-          dispatchDeck={{
-            decrementMain: vi.fn(),
-            incrementMain: vi.fn(),
-            decrementSide: vi.fn(),
-            incrementSide: vi.fn(),
-          }}
-          zoomIn={vi.fn()}
-          interruptSimulator={vi.fn()}
-        />
-      </tbody>
-    </Table>
+test('ボタンを押さずにサイドデッキのカウンターを0から4に増やす', async () => {
+  const { defaultRerender, getByRole } = defaultRender(
+    '1-1',
+    '織田信長',
+    0,
+    enumColor.RED,
+    0,
+    0
   )
-  expect(getByText('ソリッドビジョンα')).toBeVisible()
+  let main = within(within(getByRole('row')).getAllByRole('cell')[2])
+  let side = within(within(getByRole('row')).getAllByRole('cell')[3])
 
-  const columnId = getByText('4-61')
-  expect(columnId).toBeVisible()
-  expect(columnId).toHaveClass('bg-chromagic-colorless-red')
+  expect(main.getByRole('button', { name: '-' })).toBeDisabled() // 無効
+  expect(main.getByRole('spinbutton')).toHaveValue(0)
+  expect(main.getByRole('button', { name: '+' })).toBeEnabled()
+  expect(side.getByRole('button', { name: '-' })).toBeDisabled() // 無効
+  expect(side.getByRole('spinbutton')).toHaveValue(0)
+  expect(side.getByRole('button', { name: '+' })).toBeEnabled()
+
+  defaultRerender(0, 4)
+  main = within(within(getByRole('row')).getAllByRole('cell')[2])
+  side = within(within(getByRole('row')).getAllByRole('cell')[3])
+
+  expect(main.getByRole('button', { name: '-' })).toBeDisabled()
+  expect(main.getByRole('spinbutton')).toHaveValue(0)
+  expect(main.getByRole('button', { name: '+' })).toBeEnabled()
+  expect(side.getByRole('button', { name: '-' })).toBeEnabled() // 有効になった
+  expect(side.getByRole('spinbutton')).toHaveValue(4)
+  expect(side.getByRole('button', { name: '+' })).toBeEnabled()
 })
 
-test('レンダリング無色の青魔導', async () => {
-  const { getByText } = render(
-    <Table>
-      <tbody>
-        <TableRowCard
-          key="4-62"
-          id="4-62"
-          name="ソリッドビジョンδ"
-          term={TERM_CHROMAGIC_BLUE}
-          color={enumColor.COLORLESS}
-          counterMain={0}
-          counterSide={0}
-          dispatchDeck={{
-            decrementMain: vi.fn(),
-            incrementMain: vi.fn(),
-            decrementSide: vi.fn(),
-            incrementSide: vi.fn(),
-          }}
-          zoomIn={vi.fn()}
-          interruptSimulator={vi.fn()}
-        />
-      </tbody>
-    </Table>
+test('ボタンを押さずにサイドデッキのカウンターを4から0に減らす', async () => {
+  const { defaultRerender, getByRole } = defaultRender(
+    '1-1',
+    '織田信長',
+    0,
+    enumColor.RED,
+    4,
+    4
   )
-  expect(getByText('ソリッドビジョンδ')).toBeVisible()
+  let main = within(within(getByRole('row')).getAllByRole('cell')[2])
+  let side = within(within(getByRole('row')).getAllByRole('cell')[3])
 
-  const columnId = getByText('4-62')
-  expect(columnId).toBeVisible()
-  expect(columnId).toHaveClass('bg-chromagic-colorless-blue')
+  expect(main.getByRole('button', { name: '-' })).toBeEnabled()
+  expect(main.getByRole('spinbutton')).toHaveValue(4)
+  expect(main.getByRole('button', { name: '+' })).toBeEnabled()
+  expect(side.getByRole('button', { name: '-' })).toBeEnabled()
+  expect(side.getByRole('spinbutton')).toHaveValue(4)
+  expect(side.getByRole('button', { name: '+' })).toBeEnabled()
+
+  defaultRerender(4, 0)
+  main = within(within(getByRole('row')).getAllByRole('cell')[2])
+  side = within(within(getByRole('row')).getAllByRole('cell')[3])
+
+  expect(main.getByRole('button', { name: '-' })).toBeEnabled()
+  expect(main.getByRole('spinbutton')).toHaveValue(4)
+  expect(main.getByRole('button', { name: '+' })).toBeEnabled()
+  expect(side.getByRole('button', { name: '-' })).toBeDisabled() // 無効になった
+  expect(side.getByRole('spinbutton')).toHaveValue(0)
+  expect(side.getByRole('button', { name: '+' })).toBeEnabled()
 })
 
-test('レンダリング無色の緑魔導', async () => {
-  const { getByText } = render(
-    <Table>
-      <tbody>
-        <TableRowCard
-          key="4-63"
-          id="4-63"
-          name="ソリッドビジョンΩ"
-          term={TERM_CHROMAGIC_GREEN}
-          color={enumColor.COLORLESS}
-          counterMain={0}
-          counterSide={0}
-          dispatchDeck={{
-            decrementMain: vi.fn(),
-            incrementMain: vi.fn(),
-            decrementSide: vi.fn(),
-            incrementSide: vi.fn(),
-          }}
-          zoomIn={vi.fn()}
-          interruptSimulator={vi.fn()}
-        />
-      </tbody>
-    </Table>
+test('ボタンを押さずにメインデッキとサイドデッキのカウンターを同時に増減させる', async () => {
+  const { defaultRerender, getByRole } = defaultRender(
+    '1-1',
+    '織田信長',
+    0,
+    enumColor.RED,
+    2,
+    2
   )
-  expect(getByText('ソリッドビジョンΩ')).toBeVisible()
+  let main = within(within(getByRole('row')).getAllByRole('cell')[2])
+  let side = within(within(getByRole('row')).getAllByRole('cell')[3])
 
-  const columnId = getByText('4-63')
-  expect(columnId).toBeVisible()
-  expect(columnId).toHaveClass('bg-chromagic-colorless-green')
+  expect(main.getByRole('button', { name: '-' })).toBeEnabled()
+  expect(main.getByRole('spinbutton')).toHaveValue(2)
+  expect(main.getByRole('button', { name: '+' })).toBeEnabled()
+  expect(side.getByRole('button', { name: '-' })).toBeEnabled()
+  expect(side.getByRole('spinbutton')).toHaveValue(2)
+  expect(side.getByRole('button', { name: '+' })).toBeEnabled()
+
+  defaultRerender(3, 1)
+  main = within(within(getByRole('row')).getAllByRole('cell')[2])
+  side = within(within(getByRole('row')).getAllByRole('cell')[3])
+
+  expect(main.getByRole('button', { name: '-' })).toBeEnabled()
+  expect(main.getByRole('spinbutton')).toHaveValue(3)
+  expect(main.getByRole('button', { name: '+' })).toBeEnabled()
+  expect(side.getByRole('button', { name: '-' })).toBeEnabled()
+  expect(side.getByRole('spinbutton')).toHaveValue(1)
+  expect(side.getByRole('button', { name: '+' })).toBeEnabled()
 })
 
-test('レンダリング無色の黄魔導', async () => {
-  const { getByText } = render(
-    <Table>
-      <tbody>
-        <TableRowCard
-          key="4-64"
-          id="4-64"
-          name="ソリッドビジョンβ"
-          term={TERM_CHROMAGIC_YELLOW}
-          color={enumColor.COLORLESS}
-          counterMain={0}
-          counterSide={0}
-          dispatchDeck={{
-            decrementMain: vi.fn(),
-            incrementMain: vi.fn(),
-            decrementSide: vi.fn(),
-            incrementSide: vi.fn(),
-          }}
-          zoomIn={vi.fn()}
-          interruptSimulator={vi.fn()}
-        />
-      </tbody>
-    </Table>
-  )
-  expect(getByText('ソリッドビジョンβ')).toBeVisible()
-
-  const columnId = getByText('4-64')
-  expect(columnId).toBeVisible()
-  expect(columnId).toHaveClass('bg-chromagic-colorless-yellow')
-})
-
-test('レンダリング無色の紫魔導', async () => {
-  const { getByText } = render(
-    <Table>
-      <tbody>
-        <TableRowCard
-          key="4-65"
-          id="4-65"
-          name="ソリッドビジョンγ"
-          term={TERM_CHROMAGIC_PURPLE}
-          color={enumColor.COLORLESS}
-          counterMain={0}
-          counterSide={0}
-          dispatchDeck={{
-            decrementMain: vi.fn(),
-            incrementMain: vi.fn(),
-            decrementSide: vi.fn(),
-            incrementSide: vi.fn(),
-          }}
-          zoomIn={vi.fn()}
-          interruptSimulator={vi.fn()}
-        />
-      </tbody>
-    </Table>
-  )
-  expect(getByText('ソリッドビジョンγ')).toBeVisible()
-
-  const columnId = getByText('4-65')
-  expect(columnId).toBeVisible()
-  expect(columnId).toHaveClass('bg-chromagic-colorless-purple')
+// prettier-ignore
+test.each([
+  ['赤', 0, enumColor.RED, 'bg-ijinden-red'],
+  ['青', 0, enumColor.BLUE, 'bg-ijinden-blue'],
+  ['緑', 0, enumColor.GREEN, 'bg-ijinden-green'],
+  ['黄', 0, enumColor.YELLOW, 'bg-ijinden-yellow'],
+  ['紫', 0, enumColor.PURPLE, 'bg-ijinden-purple'],
+  ['赤黄', 0, enumColor.RED_YELLOW, 'bg-ijinden-red-yellow'],
+  ['青黄', 0, enumColor.BLUE_YELLOW, 'bg-ijinden-blue-yellow'],
+  ['緑黄', 0, enumColor.GREEN_YELLOW, 'bg-ijinden-green-yellow'],
+  ['赤の黄魔導', TERM_CHROMAGIC_YELLOW, enumColor.RED, 'bg-chromagic-red-yellow'],
+  ['黄の赤魔導', TERM_CHROMAGIC_RED, enumColor.YELLOW, 'bg-chromagic-yellow-red'],
+  ['黄の青魔導', TERM_CHROMAGIC_BLUE, enumColor.YELLOW, 'bg-chromagic-yellow-blue'],
+  ['黄の緑魔導', TERM_CHROMAGIC_GREEN, enumColor.YELLOW, 'bg-chromagic-yellow-green'],
+  ['無色の赤魔導', TERM_CHROMAGIC_RED, enumColor.COLORLESS, 'bg-chromagic-colorless-red'],
+  ['無色の青魔導', TERM_CHROMAGIC_BLUE, enumColor.COLORLESS, 'bg-chromagic-colorless-blue'],
+  ['無色の緑魔導', TERM_CHROMAGIC_GREEN, enumColor.COLORLESS, 'bg-chromagic-colorless-green'],
+  ['無色の黄魔導', TERM_CHROMAGIC_YELLOW, enumColor.COLORLESS, 'bg-chromagic-colorless-yellow'],
+  ['無色の紫魔導', TERM_CHROMAGIC_PURPLE, enumColor.COLORLESS, 'bg-chromagic-colorless-purple'],
+])('レンダリング%s', (_, term, color, expected) => {
+  const { getAllByRole } = defaultRenderColor(term, color)
+  expect(getAllByRole('cell')[0]).toHaveClass(expected)
 })
