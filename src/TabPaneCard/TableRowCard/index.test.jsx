@@ -156,6 +156,218 @@ test('デフォルトのレンダリング', () => {
   expect(buttonPlusSide).toBeEnabled()
 })
 
+test('虫眼鏡ボタンを押す', async () => {
+  const id = '1-1'
+  const {
+    decrementMain,
+    incrementMain,
+    decrementSide,
+    incrementSide,
+    zoomIn,
+    interruptSimulator,
+    defaultRerender,
+    getByRole,
+  } = defaultRender(id, '織田信長', 0, enumColor.RED, 0, 0)
+
+  await userEvent.click(getByRole('button', { name: '🔎' }))
+  defaultRerender(0, 0)
+
+  expect(decrementMain.mock.calls.length).toBe(0)
+  expect(incrementMain.mock.calls.length).toBe(0)
+  expect(decrementSide.mock.calls.length).toBe(0)
+  expect(incrementSide.mock.calls.length).toBe(0)
+  expect(zoomIn.mock.calls.length).toBe(1) // 呼ばれた
+  expect(zoomIn.mock.lastCall.length).toBe(1)
+  expect(zoomIn.mock.lastCall[0]).toBe(id)
+  expect(interruptSimulator.mock.calls.length).toBe(0)
+})
+
+test('メインデッキのカウンターを0から1に増やす', async () => {
+  const id = '1-1'
+  const {
+    decrementMain,
+    incrementMain,
+    decrementSide,
+    incrementSide,
+    zoomIn,
+    interruptSimulator,
+    defaultRerender,
+    getByRole,
+  } = defaultRender(id, '織田信長', 0, enumColor.RED, 0, 0)
+  let main = within(within(getByRole('row')).getAllByRole('cell')[2])
+  let side = within(within(getByRole('row')).getAllByRole('cell')[3])
+
+  expect(main.getByRole('button', { name: '-' })).toBeDisabled() // 無効
+  expect(main.getByRole('spinbutton')).toHaveValue(0)
+  expect(main.getByRole('button', { name: '+' })).toBeEnabled()
+  expect(side.getByRole('button', { name: '-' })).toBeDisabled() // 無効
+  expect(side.getByRole('spinbutton')).toHaveValue(0)
+  expect(side.getByRole('button', { name: '+' })).toBeEnabled()
+
+  // メインデッキのプラスボタンを押す
+  await userEvent.click(main.getByRole('button', { name: '+' }))
+
+  expect(decrementMain.mock.calls.length).toBe(0)
+  expect(incrementMain.mock.calls.length).toBe(1) // 呼ばれた
+  expect(incrementMain.mock.lastCall.length).toBe(1)
+  expect(incrementMain.mock.lastCall[0]).toBe(id)
+  expect(decrementSide.mock.calls.length).toBe(0)
+  expect(incrementSide.mock.calls.length).toBe(0)
+  expect(zoomIn.mock.calls.length).toBe(0)
+  expect(interruptSimulator.mock.calls.length).toBe(1) // 呼ばれた
+  expect(interruptSimulator.mock.lastCall.length).toBe(0)
+
+  defaultRerender(1, 0)
+  main = within(within(getByRole('row')).getAllByRole('cell')[2])
+  side = within(within(getByRole('row')).getAllByRole('cell')[3])
+
+  expect(main.getByRole('button', { name: '-' })).toBeEnabled() // 有効になった
+  expect(main.getByRole('spinbutton')).toHaveValue(1)
+  expect(main.getByRole('button', { name: '+' })).toBeEnabled()
+  expect(side.getByRole('button', { name: '-' })).toBeDisabled()
+  expect(side.getByRole('spinbutton')).toHaveValue(0)
+  expect(side.getByRole('button', { name: '+' })).toBeEnabled()
+})
+
+test('メインデッキのカウンターを1から0に減らす', async () => {
+  const id = '1-1'
+  const {
+    decrementMain,
+    incrementMain,
+    decrementSide,
+    incrementSide,
+    zoomIn,
+    interruptSimulator,
+    defaultRerender,
+    getByRole,
+  } = defaultRender(id, '織田信長', 0, enumColor.RED, 1, 1)
+  let main = within(within(getByRole('row')).getAllByRole('cell')[2])
+  let side = within(within(getByRole('row')).getAllByRole('cell')[3])
+
+  expect(main.getByRole('button', { name: '-' })).toBeEnabled()
+  expect(main.getByRole('spinbutton')).toHaveValue(1)
+  expect(main.getByRole('button', { name: '+' })).toBeEnabled()
+  expect(side.getByRole('button', { name: '-' })).toBeEnabled()
+  expect(side.getByRole('spinbutton')).toHaveValue(1)
+  expect(side.getByRole('button', { name: '+' })).toBeEnabled()
+
+  // メインデッキのマイナスボタンを押す
+  await userEvent.click(main.getByRole('button', { name: '-' }))
+
+  expect(decrementMain.mock.calls.length).toBe(1) // 呼ばれた
+  expect(decrementMain.mock.lastCall.length).toBe(1)
+  expect(decrementMain.mock.lastCall[0]).toBe(id)
+  expect(incrementMain.mock.calls.length).toBe(0)
+  expect(decrementSide.mock.calls.length).toBe(0)
+  expect(incrementSide.mock.calls.length).toBe(0)
+  expect(zoomIn.mock.calls.length).toBe(0)
+  expect(interruptSimulator.mock.calls.length).toBe(1) // 呼ばれた
+  expect(interruptSimulator.mock.lastCall.length).toBe(0)
+
+  defaultRerender(0, 1)
+  main = within(within(getByRole('row')).getAllByRole('cell')[2])
+  side = within(within(getByRole('row')).getAllByRole('cell')[3])
+
+  expect(main.getByRole('button', { name: '-' })).toBeDisabled() // 無効になった
+  expect(main.getByRole('spinbutton')).toHaveValue(0)
+  expect(main.getByRole('button', { name: '+' })).toBeEnabled()
+  expect(side.getByRole('button', { name: '-' })).toBeEnabled()
+  expect(side.getByRole('spinbutton')).toHaveValue(1)
+  expect(side.getByRole('button', { name: '+' })).toBeEnabled()
+})
+
+test('サイドデッキのカウンターを0から1に増やす', async () => {
+  const id = '1-1'
+  const {
+    decrementMain,
+    incrementMain,
+    decrementSide,
+    incrementSide,
+    zoomIn,
+    interruptSimulator,
+    defaultRerender,
+    getByRole,
+  } = defaultRender(id, '織田信長', 0, enumColor.RED, 0, 0)
+  let main = within(within(getByRole('row')).getAllByRole('cell')[2])
+  let side = within(within(getByRole('row')).getAllByRole('cell')[3])
+
+  expect(main.getByRole('button', { name: '-' })).toBeDisabled() // 無効
+  expect(main.getByRole('spinbutton')).toHaveValue(0)
+  expect(main.getByRole('button', { name: '+' })).toBeEnabled()
+  expect(side.getByRole('button', { name: '-' })).toBeDisabled() // 無効
+  expect(side.getByRole('spinbutton')).toHaveValue(0)
+  expect(side.getByRole('button', { name: '+' })).toBeEnabled()
+
+  // サイドデッキのプラスボタンを押す
+  await userEvent.click(side.getByRole('button', { name: '+' }))
+
+  expect(decrementMain.mock.calls.length).toBe(0)
+  expect(incrementMain.mock.calls.length).toBe(0)
+  expect(decrementSide.mock.calls.length).toBe(0)
+  expect(incrementSide.mock.calls.length).toBe(1) // 呼ばれた
+  expect(incrementSide.mock.lastCall.length).toBe(1)
+  expect(incrementSide.mock.lastCall[0]).toBe(id)
+  expect(zoomIn.mock.calls.length).toBe(0)
+  expect(interruptSimulator.mock.calls.length).toBe(0)
+
+  defaultRerender(0, 1)
+  main = within(within(getByRole('row')).getAllByRole('cell')[2])
+  side = within(within(getByRole('row')).getAllByRole('cell')[3])
+
+  expect(main.getByRole('button', { name: '-' })).toBeDisabled()
+  expect(main.getByRole('spinbutton')).toHaveValue(0)
+  expect(main.getByRole('button', { name: '+' })).toBeEnabled()
+  expect(side.getByRole('button', { name: '-' })).toBeEnabled() // 有効になった
+  expect(side.getByRole('spinbutton')).toHaveValue(1)
+  expect(side.getByRole('button', { name: '+' })).toBeEnabled()
+})
+
+test('サイドデッキのカウンターを1から0に減らす', async () => {
+  const id = '1-1'
+  const {
+    decrementMain,
+    incrementMain,
+    decrementSide,
+    incrementSide,
+    zoomIn,
+    interruptSimulator,
+    defaultRerender,
+    getByRole,
+  } = defaultRender(id, '織田信長', 0, enumColor.RED, 1, 1)
+  let main = within(within(getByRole('row')).getAllByRole('cell')[2])
+  let side = within(within(getByRole('row')).getAllByRole('cell')[3])
+
+  expect(main.getByRole('button', { name: '-' })).toBeEnabled()
+  expect(main.getByRole('spinbutton')).toHaveValue(1)
+  expect(main.getByRole('button', { name: '+' })).toBeEnabled()
+  expect(side.getByRole('button', { name: '-' })).toBeEnabled()
+  expect(side.getByRole('spinbutton')).toHaveValue(1)
+  expect(side.getByRole('button', { name: '+' })).toBeEnabled()
+
+  // サイドデッキのマイナスボタンを押す
+  await userEvent.click(side.getByRole('button', { name: '-' }))
+
+  expect(decrementMain.mock.calls.length).toBe(0)
+  expect(incrementMain.mock.calls.length).toBe(0)
+  expect(decrementSide.mock.calls.length).toBe(1) // 呼ばれた
+  expect(decrementSide.mock.lastCall.length).toBe(1)
+  expect(decrementSide.mock.lastCall[0]).toBe(id)
+  expect(incrementSide.mock.calls.length).toBe(0)
+  expect(zoomIn.mock.calls.length).toBe(0)
+  expect(interruptSimulator.mock.calls.length).toBe(0)
+
+  defaultRerender(1, 0)
+  main = within(within(getByRole('row')).getAllByRole('cell')[2])
+  side = within(within(getByRole('row')).getAllByRole('cell')[3])
+
+  expect(main.getByRole('button', { name: '-' })).toBeEnabled()
+  expect(main.getByRole('spinbutton')).toHaveValue(1)
+  expect(main.getByRole('button', { name: '+' })).toBeEnabled()
+  expect(side.getByRole('button', { name: '-' })).toBeDisabled() // 無効になった
+  expect(side.getByRole('spinbutton')).toHaveValue(0)
+  expect(side.getByRole('button', { name: '+' })).toBeEnabled()
+})
+
 test('インタラクション', async () => {
   const {
     decrementMain,
