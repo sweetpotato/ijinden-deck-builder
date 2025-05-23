@@ -2,7 +2,7 @@
 
 import { Table } from 'react-bootstrap'
 import { afterEach, expect, test, vi } from 'vitest'
-import { cleanup, render } from '@testing-library/react'
+import { cleanup, render, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import enumChromagic from '../enumChromagic'
@@ -106,6 +106,55 @@ function defaultRenderColor(id, name, term, color) {
 }
 
 afterEach(cleanup)
+
+test('デフォルトのレンダリング', () => {
+  const { getByRole } = defaultRender('1-1', '織田信長', 0, enumColor.RED, 0, 0)
+
+  // 表の行としてレンダリングされる
+  const row = getByRole('row')
+  expect(row).toBeVisible()
+  // 列は4つある
+  const columns = within(row).getAllByRole('cell')
+  expect(columns.length).toBe(4)
+  // 1列目 (1-origin, 以下同様) には ID が表示される
+  const columnId = columns[0]
+  expect(columnId).toBeVisible()
+  expect(columnId).toHaveTextContent('1-1')
+  // 2列目にはカード名が表示される
+  const columnName = columns[1]
+  expect(columnName).toBeVisible()
+  expect(columnName).toHaveTextContent('織田信長')
+  // 2列目にはさらに虫眼鏡ボタンがある
+  const buttonZoom = within(columns[1]).getByRole('button')
+  expect(buttonZoom).toBeVisible()
+  expect(buttonZoom).toHaveTextContent('🔎')
+  // 3列目には (メインデッキの) カウンターがある
+  const columnMain = columns[2]
+  expect(columnMain).toBeVisible()
+  const buttonMinusMain = within(columnMain).getByRole('button', { name: '-' })
+  expect(buttonMinusMain).toBeVisible()
+  expect(buttonMinusMain).toBeDisabled() // 無効
+  const spinMain = within(columnMain).getByRole('spinbutton')
+  expect(spinMain).toBeVisible()
+  expect(spinMain).toHaveAttribute('readonly')
+  expect(spinMain).toHaveValue(0)
+  const buttonPlusMain = within(columnMain).getByRole('button', { name: '+' })
+  expect(buttonPlusMain).toBeVisible()
+  expect(buttonPlusMain).toBeEnabled()
+  // 4列目には (サイドデッキの) カウンターがある
+  const columnSide = columns[3]
+  expect(columnSide).toBeVisible()
+  const buttonMinusSide = within(columnSide).getByRole('button', { name: '-' })
+  expect(buttonMinusSide).toBeVisible()
+  expect(buttonMinusSide).toBeDisabled() // 無効
+  const spinSide = within(columnSide).getByRole('spinbutton')
+  expect(spinSide).toBeVisible()
+  expect(spinSide).toHaveAttribute('readonly')
+  expect(spinSide).toHaveValue(0)
+  const buttonPlusSide = within(columnSide).getByRole('button', { name: '+' })
+  expect(buttonPlusSide).toBeVisible()
+  expect(buttonPlusSide).toBeEnabled()
+})
 
 test('インタラクション', async () => {
   const {
