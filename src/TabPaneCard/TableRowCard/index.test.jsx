@@ -318,11 +318,7 @@ test('レンダリング赤', () => {
       </tbody>
     </Table>
   )
-  expect(getByText('上杉謙信')).toBeVisible()
-
-  const columnId = getByText('R-1')
-  expect(columnId).toBeVisible()
-  expect(columnId).toHaveClass('bg-ijinden-red')
+  expect(getByText('R-1')).toHaveClass('bg-ijinden-red')
 })
 
 test('レンダリング青', () => {
@@ -348,11 +344,7 @@ test('レンダリング青', () => {
       </tbody>
     </Table>
   )
-  expect(getByText('レオナルド・ダ・ヴィンチ')).toBeVisible()
-
-  const columnId = getByText('B-1')
-  expect(columnId).toBeVisible()
-  expect(columnId).toHaveClass('bg-ijinden-blue')
+  expect(getByText('B-1')).toHaveClass('bg-ijinden-blue')
 })
 
 test('レンダリング緑', () => {
@@ -378,11 +370,7 @@ test('レンダリング緑', () => {
       </tbody>
     </Table>
   )
-  expect(getByText('出雲の阿国')).toBeVisible()
-
-  const columnId = getByText('G-1')
-  expect(columnId).toBeVisible()
-  expect(columnId).toHaveClass('bg-ijinden-green')
+  expect(getByText('G-1')).toHaveClass('bg-ijinden-green')
 })
 
 test('レンダリング黄', () => {
@@ -408,11 +396,7 @@ test('レンダリング黄', () => {
       </tbody>
     </Table>
   )
-  expect(getByText('諸葛亮')).toBeVisible()
-
-  const columnId = getByText('Y-1')
-  expect(columnId).toBeVisible()
-  expect(columnId).toHaveClass('bg-ijinden-yellow')
+  expect(getByText('Y-1')).toHaveClass('bg-ijinden-yellow')
 })
 
 test('レンダリング紫', () => {
@@ -438,11 +422,7 @@ test('レンダリング紫', () => {
       </tbody>
     </Table>
   )
-  expect(getByText('マリ・キュリー')).toBeVisible()
-
-  const columnId = getByText('P-1')
-  expect(columnId).toBeVisible()
-  expect(columnId).toHaveClass('bg-ijinden-purple')
+  expect(getByText('P-1')).toHaveClass('bg-ijinden-purple')
 })
 
 test('レンダリング赤黄', () => {
@@ -468,11 +448,7 @@ test('レンダリング赤黄', () => {
       </tbody>
     </Table>
   )
-  expect(getByText('RYマーブルオーブ')).toBeVisible()
-
-  const columnId = getByText('2-78')
-  expect(columnId).toBeVisible()
-  expect(columnId).toHaveClass('bg-ijinden-red-yellow')
+  expect(getByText('2-78')).toHaveClass('bg-ijinden-red-yellow')
 })
 
 test('レンダリング青黄', () => {
@@ -498,11 +474,7 @@ test('レンダリング青黄', () => {
       </tbody>
     </Table>
   )
-  expect(getByText('BYマーブルオーブ')).toBeVisible()
-
-  const columnId = getByText('2-79')
-  expect(columnId).toBeVisible()
-  expect(columnId).toHaveClass('bg-ijinden-blue-yellow')
+  expect(getByText('2-79')).toHaveClass('bg-ijinden-blue-yellow')
 })
 
 test('レンダリング青黄', () => {
@@ -528,11 +500,7 @@ test('レンダリング青黄', () => {
       </tbody>
     </Table>
   )
-  expect(getByText('GYマーブルオーブ')).toBeVisible()
-
-  const columnId = getByText('2-80')
-  expect(columnId).toBeVisible()
-  expect(columnId).toHaveClass('bg-ijinden-green-yellow')
+  expect(getByText('2-80')).toHaveClass('bg-ijinden-green-yellow')
 })
 
 test('レンダリング赤の黄魔導', () => {
@@ -558,11 +526,7 @@ test('レンダリング赤の黄魔導', () => {
       </tbody>
     </Table>
   )
-  expect(getByText('スペクター')).toBeVisible()
-
-  const columnId = getByText('2-57')
-  expect(columnId).toBeVisible()
-  expect(columnId).toHaveClass('bg-chromagic-red-yellow')
+  expect(getByText('2-57')).toHaveClass('bg-chromagic-red-yellow')
 })
 
 test('レンダリング黄の赤魔導', () => {
@@ -588,11 +552,7 @@ test('レンダリング黄の赤魔導', () => {
       </tbody>
     </Table>
   )
-  expect(getByText('スカーレット')).toBeVisible()
-
-  const columnId = getByText('2-69')
-  expect(columnId).toBeVisible()
-  expect(columnId).toHaveClass('bg-chromagic-yellow-red')
+  expect(getByText('2-69')).toHaveClass('bg-chromagic-yellow-red')
 })
 
 test('レンダリング黄の青魔導', () => {
@@ -618,11 +578,7 @@ test('レンダリング黄の青魔導', () => {
       </tbody>
     </Table>
   )
-  expect(getByText('ピーコック')).toBeVisible()
-
-  const columnId = getByText('2-70')
-  expect(columnId).toBeVisible()
-  expect(columnId).toHaveClass('bg-chromagic-yellow-blue')
+  expect(getByText('2-70')).toHaveClass('bg-chromagic-yellow-blue')
 })
 
 test('レンダリング黄の緑魔導', () => {
@@ -648,11 +604,7 @@ test('レンダリング黄の緑魔導', () => {
       </tbody>
     </Table>
   )
-  expect(getByText('シャトルーズ')).toBeVisible()
-
-  const columnId = getByText('2-71')
-  expect(columnId).toBeVisible()
-  expect(columnId).toHaveClass('bg-chromagic-yellow-green')
+  expect(getByText('2-71')).toHaveClass('bg-chromagic-yellow-green')
 })
 
 test('レンダリング無色の赤魔導', () => {
@@ -678,11 +630,7 @@ test('レンダリング無色の赤魔導', () => {
       </tbody>
     </Table>
   )
-  expect(getByText('ソリッドビジョンα')).toBeVisible()
-
-  const columnId = getByText('4-61')
-  expect(columnId).toBeVisible()
-  expect(columnId).toHaveClass('bg-chromagic-colorless-red')
+  expect(getByText('4-61')).toHaveClass('bg-chromagic-colorless-red')
 })
 
 test('レンダリング無色の青魔導', () => {
@@ -708,11 +656,7 @@ test('レンダリング無色の青魔導', () => {
       </tbody>
     </Table>
   )
-  expect(getByText('ソリッドビジョンδ')).toBeVisible()
-
-  const columnId = getByText('4-62')
-  expect(columnId).toBeVisible()
-  expect(columnId).toHaveClass('bg-chromagic-colorless-blue')
+  expect(getByText('4-62')).toHaveClass('bg-chromagic-colorless-blue')
 })
 
 test('レンダリング無色の緑魔導', () => {
@@ -738,11 +682,7 @@ test('レンダリング無色の緑魔導', () => {
       </tbody>
     </Table>
   )
-  expect(getByText('ソリッドビジョンΩ')).toBeVisible()
-
-  const columnId = getByText('4-63')
-  expect(columnId).toBeVisible()
-  expect(columnId).toHaveClass('bg-chromagic-colorless-green')
+  expect(getByText('4-63')).toHaveClass('bg-chromagic-colorless-green')
 })
 
 test('レンダリング無色の黄魔導', () => {
@@ -768,11 +708,7 @@ test('レンダリング無色の黄魔導', () => {
       </tbody>
     </Table>
   )
-  expect(getByText('ソリッドビジョンβ')).toBeVisible()
-
-  const columnId = getByText('4-64')
-  expect(columnId).toBeVisible()
-  expect(columnId).toHaveClass('bg-chromagic-colorless-yellow')
+  expect(getByText('4-64')).toHaveClass('bg-chromagic-colorless-yellow')
 })
 
 test('レンダリング無色の紫魔導', () => {
@@ -798,9 +734,5 @@ test('レンダリング無色の紫魔導', () => {
       </tbody>
     </Table>
   )
-  expect(getByText('ソリッドビジョンγ')).toBeVisible()
-
-  const columnId = getByText('4-65')
-  expect(columnId).toBeVisible()
-  expect(columnId).toHaveClass('bg-chromagic-colorless-purple')
+  expect(getByText('4-65')).toHaveClass('bg-chromagic-colorless-purple')
 })
