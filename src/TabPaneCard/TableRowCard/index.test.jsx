@@ -293,7 +293,7 @@ test('インタラクション', async () => {
   expect(zoomIn.mock.calls.length).toBe(1) // 呼ばれた
 })
 
-test('レンダリング赤', async () => {
+test('レンダリング赤', () => {
   const { getByText } = render(
     <Table>
       <tbody>
@@ -325,7 +325,7 @@ test('レンダリング赤', async () => {
   expect(columnId).toHaveClass('bg-ijinden-red')
 })
 
-test('レンダリング青', async () => {
+test('レンダリング青', () => {
   const { getByText } = render(
     <Table>
       <tbody>
@@ -355,7 +355,7 @@ test('レンダリング青', async () => {
   expect(columnId).toHaveClass('bg-ijinden-blue')
 })
 
-test('レンダリング緑', async () => {
+test('レンダリング緑', () => {
   const { getByText } = render(
     <Table>
       <tbody>
@@ -385,7 +385,7 @@ test('レンダリング緑', async () => {
   expect(columnId).toHaveClass('bg-ijinden-green')
 })
 
-test('レンダリング黄', async () => {
+test('レンダリング黄', () => {
   const { getByText } = render(
     <Table>
       <tbody>
@@ -415,7 +415,7 @@ test('レンダリング黄', async () => {
   expect(columnId).toHaveClass('bg-ijinden-yellow')
 })
 
-test('レンダリング紫', async () => {
+test('レンダリング紫', () => {
   const { getByText } = render(
     <Table>
       <tbody>
@@ -445,7 +445,7 @@ test('レンダリング紫', async () => {
   expect(columnId).toHaveClass('bg-ijinden-purple')
 })
 
-test('レンダリング赤黄', async () => {
+test('レンダリング赤黄', () => {
   const { getByText } = render(
     <Table>
       <tbody>
@@ -475,7 +475,7 @@ test('レンダリング赤黄', async () => {
   expect(columnId).toHaveClass('bg-ijinden-red-yellow')
 })
 
-test('レンダリング青黄', async () => {
+test('レンダリング青黄', () => {
   const { getByText } = render(
     <Table>
       <tbody>
@@ -505,7 +505,7 @@ test('レンダリング青黄', async () => {
   expect(columnId).toHaveClass('bg-ijinden-blue-yellow')
 })
 
-test('レンダリング青黄', async () => {
+test('レンダリング青黄', () => {
   const { getByText } = render(
     <Table>
       <tbody>
@@ -535,7 +535,7 @@ test('レンダリング青黄', async () => {
   expect(columnId).toHaveClass('bg-ijinden-green-yellow')
 })
 
-test('レンダリング赤の黄魔導', async () => {
+test('レンダリング赤の黄魔導', () => {
   const { getByText } = render(
     <Table>
       <tbody>
@@ -565,7 +565,7 @@ test('レンダリング赤の黄魔導', async () => {
   expect(columnId).toHaveClass('bg-chromagic-red-yellow')
 })
 
-test('レンダリング黄の赤魔導', async () => {
+test('レンダリング黄の赤魔導', () => {
   const { getByText } = render(
     <Table>
       <tbody>
@@ -595,7 +595,7 @@ test('レンダリング黄の赤魔導', async () => {
   expect(columnId).toHaveClass('bg-chromagic-yellow-red')
 })
 
-test('レンダリング黄の青魔導', async () => {
+test('レンダリング黄の青魔導', () => {
   const { getByText } = render(
     <Table>
       <tbody>
@@ -625,7 +625,7 @@ test('レンダリング黄の青魔導', async () => {
   expect(columnId).toHaveClass('bg-chromagic-yellow-blue')
 })
 
-test('レンダリング黄の緑魔導', async () => {
+test('レンダリング黄の緑魔導', () => {
   const { getByText } = render(
     <Table>
       <tbody>
@@ -655,7 +655,7 @@ test('レンダリング黄の緑魔導', async () => {
   expect(columnId).toHaveClass('bg-chromagic-yellow-green')
 })
 
-test('レンダリング無色の赤魔導', async () => {
+test('レンダリング無色の赤魔導', () => {
   const { getByText } = render(
     <Table>
       <tbody>
@@ -685,7 +685,7 @@ test('レンダリング無色の赤魔導', async () => {
   expect(columnId).toHaveClass('bg-chromagic-colorless-red')
 })
 
-test('レンダリング無色の青魔導', async () => {
+test('レンダリング無色の青魔導', () => {
   const { getByText } = render(
     <Table>
       <tbody>
@@ -715,7 +715,7 @@ test('レンダリング無色の青魔導', async () => {
   expect(columnId).toHaveClass('bg-chromagic-colorless-blue')
 })
 
-test('レンダリング無色の緑魔導', async () => {
+test('レンダリング無色の緑魔導', () => {
   const { getByText } = render(
     <Table>
       <tbody>
@@ -745,7 +745,7 @@ test('レンダリング無色の緑魔導', async () => {
   expect(columnId).toHaveClass('bg-chromagic-colorless-green')
 })
 
-test('レンダリング無色の黄魔導', async () => {
+test('レンダリング無色の黄魔導', () => {
   const { getByText } = render(
     <Table>
       <tbody>
@@ -775,7 +775,7 @@ test('レンダリング無色の黄魔導', async () => {
   expect(columnId).toHaveClass('bg-chromagic-colorless-yellow')
 })
 
-test('レンダリング無色の紫魔導', async () => {
+test('レンダリング無色の紫魔導', () => {
   const { getByText } = render(
     <Table>
       <tbody>
