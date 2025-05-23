@@ -6,16 +6,20 @@ import userEvent from '@testing-library/user-event'
 
 import useContainerTextSearch from '.'
 
-function defaultRender() {
+function defaultRenderHook() {
   const { result } = renderHook(() => useContainerTextSearch())
-  const { rerender, getByRole } = render(result.current[2]())
-  const defaultRerender = () => rerender(result.current[2]())
-  return { result, defaultRerender, getByRole }
+  const defaultRender = () => {
+    const { rerender, getByRole } = render(result.current[2]())
+    const defaultRerender = () => rerender(result.current[2]())
+    return { defaultRerender, getByRole }
+  }
+  return { result, defaultRender }
 }
 
 afterEach(cleanup)
 
 test('デフォルトのレンダリング', () => {
+  const { defaultRender } = defaultRenderHook()
   const { getByRole } = defaultRender()
 
   // (キーワードを入力する) テキストボックスがある
@@ -32,8 +36,9 @@ test('デフォルトのレンダリング', () => {
 })
 
 test('キーワードの入力とクリア', async () => {
-  const { result, defaultRerender, getByRole } = defaultRender()
+  const { result, defaultRender } = defaultRenderHook()
   await waitFor(() => expect(result.current[0]).toEqual([]))
+  const { defaultRerender, getByRole } = defaultRender()
   expect(getByRole('textbox')).toHaveValue('')
 
   // テキストボックスに「けんしん」と入力する
@@ -50,8 +55,9 @@ test('キーワードの入力とクリア', async () => {
 })
 
 test('チェックボックスの切り替え', async () => {
-  const { result, defaultRerender, getByRole } = defaultRender()
+  const { result, defaultRender } = defaultRenderHook()
   expect(result.current[1]).toBe(true)
+  const { defaultRerender, getByRole } = defaultRender()
   expect(getByRole('checkbox')).toBeChecked()
 
   // チェックを外す
@@ -62,8 +68,9 @@ test('チェックボックスの切り替え', async () => {
 })
 
 test('スペース区切りのキーワード列', async () => {
-  const { result, defaultRerender, getByRole } = defaultRender()
+  const { result, defaultRender } = defaultRenderHook()
   await waitFor(() => expect(result.current[0]).toEqual([]))
+  const { defaultRerender, getByRole } = defaultRender()
   expect(getByRole('textbox')).toHaveValue('')
 
   // テキストボックスに「_ハイケイ__ドロー_」と入力する (アンダーバーは空白文字)
