@@ -9,6 +9,7 @@ import enumTerm from '../enumTerm'
 import InputGroupCounter from './InputGroupCounter'
 
 import './index.css'
+import { useId } from 'react'
 
 const dataColorsToCss = [
   { color: enumColor.RED, css: 'bg-ijinden-red' },
@@ -87,6 +88,7 @@ function TableRowCard({
   zoomIn,
   interruptSimulator,
 }) {
+  const rowId = useId()
   let classesColor
   if ((term & enumTerm.CHROMAGIC) === enumTerm.CHROMAGIC) {
     classesColor = classNames(
@@ -110,8 +112,10 @@ function TableRowCard({
      * 実際のユーザはID列を見て一意に識別できるため、
      * アクセシビリティとしては問題ないはずである。
      */
-    <tr data-testid={`table-row-${id}`}>
-      <td className={classesColor}>{id}</td>
+    <tr aria-labelledby={rowId}>
+      <td className={classesColor} id={rowId}>
+        {id}
+      </td>
       <td>
         <Button
           variant="secondary-outline"

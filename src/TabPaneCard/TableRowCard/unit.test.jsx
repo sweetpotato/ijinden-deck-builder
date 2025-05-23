@@ -155,6 +155,66 @@ test('デフォルトのレンダリング', () => {
   expect(buttonPlusSide).toBeEnabled()
 })
 
+test('各行のアクセシブル名はIDである', async () => {
+  // デフォルトレンダラは使わない
+  const { getByRole } = render(
+    <Table>
+      <tbody>
+        <TableRowCard
+          id="1-1"
+          name="織田信長"
+          term={0}
+          color={enumColor.RED}
+          counterMain={1}
+          counterSide={2}
+          dispatchDeck={{
+            decrementMain: vi.fn(),
+            incrementMain: vi.fn(),
+            decrementSide: vi.fn(),
+            incrementSide: vi.fn(),
+          }}
+          zoomIn={vi.fn()}
+          interruptSimulator={vi.fn()}
+        />
+        <TableRowCard
+          id="1-2"
+          name="クレオパトラ"
+          term={0}
+          color={enumColor.RED}
+          counterMain={3}
+          counterSide={4}
+          dispatchDeck={{
+            decrementMain: vi.fn(),
+            incrementMain: vi.fn(),
+            decrementSide: vi.fn(),
+            incrementSide: vi.fn(),
+          }}
+          zoomIn={vi.fn()}
+          interruptSimulator={vi.fn()}
+        />
+      </tbody>
+    </Table>
+  )
+
+  const row1 = getByRole('row', { name: '1-1' })
+  expect(row1).toBeVisible()
+  const columns1 = within(row1).getAllByRole('cell')
+  expect(columns1.length).toBe(4)
+  expect(columns1[0]).toHaveTextContent('1-1')
+  expect(columns1[1]).toHaveTextContent('織田信長')
+  expect(within(columns1[2]).getByRole('spinbutton')).toHaveValue(1)
+  expect(within(columns1[3]).getByRole('spinbutton')).toHaveValue(2)
+
+  const row2 = getByRole('row', { name: '1-2' })
+  expect(row2).toBeVisible()
+  const columns2 = within(row2).getAllByRole('cell')
+  expect(columns2.length).toBe(4)
+  expect(columns2[0]).toHaveTextContent('1-2')
+  expect(columns2[1]).toHaveTextContent('クレオパトラ')
+  expect(within(columns2[2]).getByRole('spinbutton')).toHaveValue(3)
+  expect(within(columns2[3]).getByRole('spinbutton')).toHaveValue(4)
+})
+
 test('虫眼鏡ボタンを押す', async () => {
   const id = '1-1'
   const {
