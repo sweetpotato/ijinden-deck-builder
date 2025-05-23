@@ -21,6 +21,7 @@ function AccordionItemLevelFilter({
   handleChangeLevel,
   handleChangeComparator,
 }) {
+  const itemId = useId()
   const name = useId()
   const { activeEventKey } = useContext(AccordionContext)
   const expanded = isAccordionItemSelected(activeEventKey, eventKey)
@@ -33,15 +34,24 @@ function AccordionItemLevelFilter({
   const enphasized = level !== 0 || comparator != enumComparator.GE
 
   return (
-    <AccordionItem eventKey={eventKey}>
+    <AccordionItem eventKey={eventKey} role="listitem" aria-labelledby={itemId}>
       <AccordionHeader as="h3">
         {expanded ? (
-          `➖ レベル`
+          <>
+            ➖&nbsp;
+            <span id={itemId}>レベル</span>
+          </>
         ) : !enphasized ? (
-          `➕ レベル ― ${label}`
+          <>
+            ➕&nbsp;
+            <span id={itemId}>レベル</span>
+            &nbsp;―&nbsp;
+            {label}
+          </>
         ) : (
           <>
-            {`➕ レベル`}
+            ➕&nbsp;
+            <span id={itemId}>レベル</span>
             &nbsp;―&nbsp;
             <b>{label}</b>
           </>
@@ -51,7 +61,6 @@ function AccordionItemLevelFilter({
         <div>
           <div>{level}</div>
           <FormRange
-            data-testid="slider-level"
             min={constLevel.MIN}
             max={constLevel.MAX}
             value={level}
@@ -59,45 +68,39 @@ function AccordionItemLevelFilter({
           />
         </div>
         <div className="container-button">
-          <span data-testid="button-level-ge">
-            <ToggleButton
-              type="radio"
-              variant="outline-primary"
-              id={`${name}-${enumComparator.GE}`}
-              name={name}
-              value={enumComparator.GE}
-              onChange={handleChangeComparator}
-              checked={comparator === enumComparator.GE}
-            >
-              以上
-            </ToggleButton>
-          </span>
-          <span data-testid="button-level-le">
-            <ToggleButton
-              type="radio"
-              variant="outline-primary"
-              id={`${name}-${enumComparator.LE}`}
-              name={name}
-              value={enumComparator.LE}
-              onChange={handleChangeComparator}
-              checked={comparator === enumComparator.LE}
-            >
-              以下
-            </ToggleButton>
-          </span>
-          <span data-testid="button-level-eq">
-            <ToggleButton
-              type="radio"
-              variant="outline-primary"
-              id={`${name}-${enumComparator.EQ}`}
-              name={name}
-              value={enumComparator.EQ}
-              onChange={handleChangeComparator}
-              checked={comparator === enumComparator.EQ}
-            >
-              等しい
-            </ToggleButton>
-          </span>
+          <ToggleButton
+            type="radio"
+            variant="outline-primary"
+            id={`${name}-${enumComparator.GE}`}
+            name={name}
+            value={enumComparator.GE}
+            onChange={handleChangeComparator}
+            checked={comparator === enumComparator.GE}
+          >
+            以上
+          </ToggleButton>
+          <ToggleButton
+            type="radio"
+            variant="outline-primary"
+            id={`${name}-${enumComparator.LE}`}
+            name={name}
+            value={enumComparator.LE}
+            onChange={handleChangeComparator}
+            checked={comparator === enumComparator.LE}
+          >
+            以下
+          </ToggleButton>
+          <ToggleButton
+            type="radio"
+            variant="outline-primary"
+            id={`${name}-${enumComparator.EQ}`}
+            name={name}
+            value={enumComparator.EQ}
+            onChange={handleChangeComparator}
+            checked={comparator === enumComparator.EQ}
+          >
+            等しい
+          </ToggleButton>
         </div>
       </AccordionBody>
     </AccordionItem>
