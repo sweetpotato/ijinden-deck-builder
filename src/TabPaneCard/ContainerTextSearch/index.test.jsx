@@ -1,124 +1,81 @@
 // SPDX-License-Identifier: MIT
 
 import { afterEach, expect, test } from 'vitest'
-import { cleanup, render, renderHook } from '@testing-library/react'
+import { cleanup, render, renderHook, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import useContainerTextSearch from '.'
 
+function defaultRenderHook() {
+  const { result } = renderHook(() => useContainerTextSearch())
+  const defaultRender = () => {
+    const { rerender, getByRole } = render(result.current[2]())
+    const defaultRerender = () => rerender(result.current[2]())
+    return { defaultRerender, getByRole }
+  }
+  return { result, defaultRender }
+}
+
 afterEach(cleanup)
 
-test('レンダリング', async () => {
-  const { result } = renderHook(() => useContainerTextSearch())
-  let [keywords, includesTraitAndLegacy, renderContainer] = result.current
-  expect(keywords).toEqual([])
-  expect(includesTraitAndLegacy).toBe(true)
+test('デフォルトのレンダリング', () => {
+  const { defaultRender } = defaultRenderHook()
+  const { getByRole } = defaultRender()
 
-  const { rerender, getByRole } = render(renderContainer())
-  let textbox = getByRole('textbox')
+  // (キーワードを入力する) テキストボックスがある
+  const textbox = getByRole('textbox')
   expect(textbox).toBeVisible()
   expect(textbox).toHaveValue('')
-  let buttonClear = getByRole('button')
+  // (クリア) ボタンがある
+  const buttonClear = getByRole('button')
   expect(buttonClear).toBeVisible()
-  let checkbox = getByRole('checkbox')
+  // (特性や遺業能力を含めるか否かの) チェックボックスがある
+  const checkbox = getByRole('checkbox')
   expect(checkbox).toBeVisible()
-  // デフォルトではチェックされている
   expect(checkbox).toBeChecked()
+})
+
+test('キーワードの入力とクリア', async () => {
+  const { result, defaultRender } = defaultRenderHook()
+  await waitFor(() => expect(result.current[0]).toEqual([]))
+  const { defaultRerender, getByRole } = defaultRender()
+  expect(getByRole('textbox')).toHaveValue('')
 
   // テキストボックスに「けんしん」と入力する
-  await userEvent.type(textbox, 'けんしん') // 4文字
-  ;[keywords, includesTraitAndLegacy, renderContainer] = result.current
-  expect(keywords).toEqual(['けんしん'])
-  expect(includesTraitAndLegacy).toBe(true)
-
-  rerender(renderContainer())
-  textbox = getByRole('textbox')
-  expect(textbox).toBeVisible()
-  expect(textbox).toHaveValue('けんしん')
-  buttonClear = getByRole('button')
-  expect(buttonClear).toBeVisible()
-  checkbox = getByRole('checkbox')
-  expect(checkbox).toBeVisible()
-  expect(checkbox).toBeChecked()
-
-  // チェックボックスをタップする
-  await userEvent.click(checkbox)
-  ;[keywords, includesTraitAndLegacy, renderContainer] = result.current
-  expect(keywords).toEqual(['けんしん'])
-  expect(includesTraitAndLegacy).toBe(false)
-
-  rerender(renderContainer())
-  textbox = getByRole('textbox')
-  expect(textbox).toBeVisible()
-  expect(textbox).toHaveValue('けんしん')
-  buttonClear = getByRole('button')
-  expect(buttonClear).toBeVisible()
-  checkbox = getByRole('checkbox')
-  expect(checkbox).toBeVisible()
-  expect(checkbox).not.toBeChecked()
+  await userEvent.type(getByRole('textbox'), 'けんしん')
+  await waitFor(() => expect(result.current[0]).toEqual(['けんしん']))
+  defaultRerender()
+  expect(getByRole('textbox')).toHaveValue('けんしん')
 
   // クリアボタンを押す
-  await userEvent.click(buttonClear)
-  ;[keywords, includesTraitAndLegacy, renderContainer] = result.current
-  expect(keywords).toEqual([])
-  expect(includesTraitAndLegacy).toBe(false)
+  await userEvent.click(getByRole('button'))
+  await waitFor(() => expect(result.current[0]).toEqual([]))
+  defaultRerender()
+  expect(getByRole('textbox')).toHaveValue('')
+})
 
-  rerender(renderContainer())
-  textbox = getByRole('textbox')
-  expect(textbox).toBeVisible()
-  expect(textbox).toHaveValue('')
-  buttonClear = getByRole('button')
-  expect(buttonClear).toBeVisible()
-  checkbox = getByRole('checkbox')
-  expect(checkbox).toBeVisible()
-  expect(checkbox).not.toBeChecked()
+test('チェックボックスの切り替え', async () => {
+  const { result, defaultRender } = defaultRenderHook()
+  expect(result.current[1]).toBe(true)
+  const { defaultRerender, getByRole } = defaultRender()
+  expect(getByRole('checkbox')).toBeChecked()
+
+  // チェックを外す
+  await userEvent.click(getByRole('checkbox'))
+  expect(result.current[1]).toBe(false)
+  defaultRerender()
+  expect(getByRole('checkbox')).not.toBeChecked()
 })
 
 test('スペース区切りのキーワード列', async () => {
-  const { result } = renderHook(() => useContainerTextSearch())
-  let [keywords, includesTraitAndLegacy, renderContainer] = result.current
-  expect(keywords).toEqual([])
-  expect(includesTraitAndLegacy).toBe(true)
+  const { result, defaultRender } = defaultRenderHook()
+  await waitFor(() => expect(result.current[0]).toEqual([]))
+  const { defaultRerender, getByRole } = defaultRender()
+  expect(getByRole('textbox')).toHaveValue('')
 
-  const { rerender, getByRole } = render(renderContainer())
-  let textbox = getByRole('textbox')
-  expect(textbox).toBeVisible()
-  expect(textbox).toHaveValue('')
-  let buttonClear = getByRole('button')
-  expect(buttonClear).toBeVisible()
-  let checkbox = getByRole('checkbox')
-  expect(checkbox).toBeVisible()
-  expect(checkbox).toBeChecked()
-
-  // テキストボックスに「ハイケイ ドロー 」と入力する (末尾の空白文字に注意)
-  await userEvent.type(textbox, 'ハイケイ ドロー ')
-  ;[keywords, includesTraitAndLegacy, renderContainer] = result.current
-  expect(keywords).toEqual(['ハイケイ', 'ドロー'])
-  expect(includesTraitAndLegacy).toBe(true)
-
-  rerender(renderContainer())
-  textbox = getByRole('textbox')
-  expect(textbox).toBeVisible()
-  expect(textbox).toHaveValue('ハイケイ ドロー ')
-  buttonClear = getByRole('button')
-  expect(buttonClear).toBeVisible()
-  checkbox = getByRole('checkbox')
-  expect(checkbox).toBeVisible()
-  expect(checkbox).toBeChecked()
-
-  // クリアボタンを押す
-  await userEvent.click(buttonClear)
-  ;[keywords, includesTraitAndLegacy, renderContainer] = result.current
-  expect(keywords).toEqual([])
-  expect(includesTraitAndLegacy).toBe(true)
-
-  rerender(renderContainer())
-  textbox = getByRole('textbox')
-  expect(textbox).toBeVisible()
-  expect(textbox).toHaveValue('')
-  buttonClear = getByRole('button')
-  expect(buttonClear).toBeVisible()
-  checkbox = getByRole('checkbox')
-  expect(checkbox).toBeVisible()
-  expect(checkbox).toBeChecked()
+  // テキストボックスに「_ハイケイ__ドロー_」と入力する (アンダーバーは空白文字)
+  await userEvent.type(getByRole('textbox'), ' ハイケイ  ドロー ')
+  await waitFor(() => expect(result.current[0]).toEqual(['ハイケイ', 'ドロー']))
+  defaultRerender()
+  expect(getByRole('textbox')).toHaveValue(' ハイケイ  ドロー ')
 })
