@@ -368,114 +368,26 @@ test('サイドデッキのカウンターを1から0に減らす', async () => 
   expect(side.getByRole('button', { name: '+' })).toBeEnabled()
 })
 
-test('レンダリング赤', () => {
-  const { getAllByRole } = defaultRenderColor(0, enumColor.RED)
-  expect(getAllByRole('cell')[0]).toHaveClass('bg-ijinden-red')
-})
-
-test('レンダリング青', () => {
-  const { getAllByRole } = defaultRenderColor(0, enumColor.BLUE)
-  expect(getAllByRole('cell')[0]).toHaveClass('bg-ijinden-blue')
-})
-
-test('レンダリング緑', () => {
-  const { getAllByRole } = defaultRenderColor(0, enumColor.GREEN)
-  expect(getAllByRole('cell')[0]).toHaveClass('bg-ijinden-green')
-})
-
-test('レンダリング黄', () => {
-  const { getAllByRole } = defaultRenderColor(0, enumColor.YELLOW)
-  expect(getAllByRole('cell')[0]).toHaveClass('bg-ijinden-yellow')
-})
-
-test('レンダリング紫', () => {
-  const { getAllByRole } = defaultRenderColor(0, enumColor.PURPLE)
-  expect(getAllByRole('cell')[0]).toHaveClass('bg-ijinden-purple')
-})
-
-test('レンダリング赤黄', () => {
-  const { getAllByRole } = defaultRenderColor(0, enumColor.RED_YELLOW)
-  expect(getAllByRole('cell')[0]).toHaveClass('bg-ijinden-red-yellow')
-})
-
-test('レンダリング青黄', () => {
-  const { getAllByRole } = defaultRenderColor(0, enumColor.BLUE_YELLOW)
-  expect(getAllByRole('cell')[0]).toHaveClass('bg-ijinden-blue-yellow')
-})
-
-test('レンダリング青黄', () => {
-  const { getAllByRole } = defaultRenderColor(0, enumColor.GREEN_YELLOW)
-  expect(getAllByRole('cell')[0]).toHaveClass('bg-ijinden-green-yellow')
-})
-
-test('レンダリング赤の黄魔導', () => {
-  const { getAllByRole } = defaultRenderColor(
-    TERM_CHROMAGIC_YELLOW,
-    enumColor.RED
-  )
-  expect(getAllByRole('cell')[0]).toHaveClass('bg-chromagic-red-yellow')
-})
-
-test('レンダリング黄の赤魔導', () => {
-  const { getAllByRole } = defaultRenderColor(
-    TERM_CHROMAGIC_RED,
-    enumColor.YELLOW
-  )
-  expect(getAllByRole('cell')[0]).toHaveClass('bg-chromagic-yellow-red')
-})
-
-test('レンダリング黄の青魔導', () => {
-  const { getAllByRole } = defaultRenderColor(
-    TERM_CHROMAGIC_BLUE,
-    enumColor.YELLOW
-  )
-  expect(getAllByRole('cell')[0]).toHaveClass('bg-chromagic-yellow-blue')
-})
-
-test('レンダリング黄の緑魔導', () => {
-  const { getAllByRole } = defaultRenderColor(
-    TERM_CHROMAGIC_GREEN,
-    enumColor.YELLOW
-  )
-  expect(getAllByRole('cell')[0]).toHaveClass('bg-chromagic-yellow-green')
-})
-
-test('レンダリング無色の赤魔導', () => {
-  const { getAllByRole } = defaultRenderColor(
-    TERM_CHROMAGIC_RED,
-    enumColor.COLORLESS
-  )
-  expect(getAllByRole('cell')[0]).toHaveClass('bg-chromagic-colorless-red')
-})
-
-test('レンダリング無色の青魔導', () => {
-  const { getAllByRole } = defaultRenderColor(
-    TERM_CHROMAGIC_BLUE,
-    enumColor.COLORLESS
-  )
-  expect(getAllByRole('cell')[0]).toHaveClass('bg-chromagic-colorless-blue')
-})
-
-test('レンダリング無色の緑魔導', () => {
-  const { getAllByRole } = defaultRenderColor(
-    TERM_CHROMAGIC_GREEN,
-    enumColor.COLORLESS
-  )
-  expect(getAllByRole('cell')[0]).toHaveClass('bg-chromagic-colorless-green')
-})
-
-test('レンダリング無色の黄魔導', () => {
-  const { getAllByRole } = defaultRenderColor(
-    TERM_CHROMAGIC_YELLOW,
-    enumColor.COLORLESS
-  )
-  expect(getAllByRole('cell')[0]).toHaveClass('bg-chromagic-colorless-yellow')
-})
-
-test('レンダリング無色の紫魔導', () => {
-  const { getAllByRole } = defaultRenderColor(
-    TERM_CHROMAGIC_PURPLE,
-    enumColor.COLORLESS
-  )
-  expect(getAllByRole('cell')[0]).toHaveClass('bg-chromagic-colorless-purple')
+// prettier-ignore
+test.each([
+  ['赤', 0, enumColor.RED, 'bg-ijinden-red'],
+  ['青', 0, enumColor.BLUE, 'bg-ijinden-blue'],
+  ['緑', 0, enumColor.GREEN, 'bg-ijinden-green'],
+  ['黄', 0, enumColor.YELLOW, 'bg-ijinden-yellow'],
+  ['紫', 0, enumColor.PURPLE, 'bg-ijinden-purple'],
+  ['赤黄', 0, enumColor.RED_YELLOW, 'bg-ijinden-red-yellow'],
+  ['青黄', 0, enumColor.BLUE_YELLOW, 'bg-ijinden-blue-yellow'],
+  ['緑黄', 0, enumColor.GREEN_YELLOW, 'bg-ijinden-green-yellow'],
+  ['赤の黄魔導', TERM_CHROMAGIC_YELLOW, enumColor.RED, 'bg-chromagic-red-yellow'],
+  ['黄の赤魔導', TERM_CHROMAGIC_RED, enumColor.YELLOW, 'bg-chromagic-yellow-red'],
+  ['黄の青魔導', TERM_CHROMAGIC_BLUE, enumColor.YELLOW, 'bg-chromagic-yellow-blue'],
+  ['黄の緑魔導', TERM_CHROMAGIC_GREEN, enumColor.YELLOW, 'bg-chromagic-yellow-green'],
+  ['無色の赤魔導', TERM_CHROMAGIC_RED, enumColor.COLORLESS, 'bg-chromagic-colorless-red'],
+  ['無色の青魔導', TERM_CHROMAGIC_BLUE, enumColor.COLORLESS, 'bg-chromagic-colorless-blue'],
+  ['無色の緑魔導', TERM_CHROMAGIC_GREEN, enumColor.COLORLESS, 'bg-chromagic-colorless-green'],
+  ['無色の黄魔導', TERM_CHROMAGIC_YELLOW, enumColor.COLORLESS, 'bg-chromagic-colorless-yellow'],
+  ['無色の紫魔導', TERM_CHROMAGIC_PURPLE, enumColor.COLORLESS, 'bg-chromagic-colorless-purple'],
+])('レンダリング%s', (_, term, color, expected) => {
+  const { getAllByRole } = defaultRenderColor(term, color)
+  expect(getAllByRole('cell')[0]).toHaveClass(expected)
 })
