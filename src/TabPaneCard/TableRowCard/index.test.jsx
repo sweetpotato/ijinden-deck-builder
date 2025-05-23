@@ -35,7 +35,6 @@ test('インタラクション', async () => {
     <Table>
       <tbody>
         <TableRowCard
-          key="1-1"
           id="1-1"
           name="織田信長"
           term={0}
@@ -95,7 +94,6 @@ test('インタラクション', async () => {
     <Table>
       <tbody>
         <TableRowCard
-          key="1-1"
           id="1-1"
           name="織田信長"
           term={0}
@@ -147,7 +145,6 @@ test('インタラクション', async () => {
     <Table>
       <tbody>
         <TableRowCard
-          key="1-1"
           id="1-1"
           name="織田信長"
           term={0}
@@ -199,7 +196,6 @@ test('インタラクション', async () => {
     <Table>
       <tbody>
         <TableRowCard
-          key="1-1"
           id="1-1"
           name="織田信長"
           term={0}
@@ -251,7 +247,6 @@ test('インタラクション', async () => {
     <Table>
       <tbody>
         <TableRowCard
-          key="1-1"
           id="1-1"
           name="織田信長"
           term={0}
@@ -303,7 +298,6 @@ test('レンダリング赤', async () => {
     <Table>
       <tbody>
         <TableRowCard
-          key="R-1"
           id="R-1"
           name="上杉謙信"
           term={0}
@@ -336,7 +330,6 @@ test('レンダリング青', async () => {
     <Table>
       <tbody>
         <TableRowCard
-          key="B-1"
           id="B-1"
           name="レオナルド・ダ・ヴィンチ"
           term={0}
@@ -367,7 +360,6 @@ test('レンダリング緑', async () => {
     <Table>
       <tbody>
         <TableRowCard
-          key="G-1"
           id="G-1"
           name="出雲の阿国"
           term={0}
@@ -398,7 +390,6 @@ test('レンダリング黄', async () => {
     <Table>
       <tbody>
         <TableRowCard
-          key="Y-1"
           id="Y-1"
           name="諸葛亮"
           term={0}
@@ -429,7 +420,6 @@ test('レンダリング紫', async () => {
     <Table>
       <tbody>
         <TableRowCard
-          key="P-1"
           id="P-1"
           name="マリ・キュリー"
           term={0}
@@ -460,7 +450,6 @@ test('レンダリング赤黄', async () => {
     <Table>
       <tbody>
         <TableRowCard
-          key="2-78"
           id="2-78"
           name="RYマーブルオーブ"
           term={0}
@@ -491,7 +480,6 @@ test('レンダリング青黄', async () => {
     <Table>
       <tbody>
         <TableRowCard
-          key="2-79"
           id="2-79"
           name="BYマーブルオーブ"
           term={0}
@@ -522,7 +510,6 @@ test('レンダリング青黄', async () => {
     <Table>
       <tbody>
         <TableRowCard
-          key="2-80"
           id="2-80"
           name="GYマーブルオーブ"
           term={0}
@@ -553,7 +540,6 @@ test('レンダリング赤の黄魔導', async () => {
     <Table>
       <tbody>
         <TableRowCard
-          key="2-57"
           id="2-57"
           name="スペクター"
           term={TERM_CHROMAGIC_YELLOW}
@@ -584,7 +570,6 @@ test('レンダリング黄の赤魔導', async () => {
     <Table>
       <tbody>
         <TableRowCard
-          key="2-69"
           id="2-69"
           name="スカーレット"
           term={TERM_CHROMAGIC_RED}
@@ -615,7 +600,6 @@ test('レンダリング黄の青魔導', async () => {
     <Table>
       <tbody>
         <TableRowCard
-          key="2-70"
           id="2-70"
           name="ピーコック"
           term={TERM_CHROMAGIC_BLUE}
@@ -646,7 +630,6 @@ test('レンダリング黄の緑魔導', async () => {
     <Table>
       <tbody>
         <TableRowCard
-          key="2-71"
           id="2-71"
           name="シャトルーズ"
           term={TERM_CHROMAGIC_GREEN}
@@ -677,7 +660,6 @@ test('レンダリング無色の赤魔導', async () => {
     <Table>
       <tbody>
         <TableRowCard
-          key="4-61"
           id="4-61"
           name="ソリッドビジョンα"
           term={TERM_CHROMAGIC_RED}
@@ -708,7 +690,6 @@ test('レンダリング無色の青魔導', async () => {
     <Table>
       <tbody>
         <TableRowCard
-          key="4-62"
           id="4-62"
           name="ソリッドビジョンδ"
           term={TERM_CHROMAGIC_BLUE}
@@ -739,7 +720,6 @@ test('レンダリング無色の緑魔導', async () => {
     <Table>
       <tbody>
         <TableRowCard
-          key="4-63"
           id="4-63"
           name="ソリッドビジョンΩ"
           term={TERM_CHROMAGIC_GREEN}
@@ -770,7 +750,6 @@ test('レンダリング無色の黄魔導', async () => {
     <Table>
       <tbody>
         <TableRowCard
-          key="4-64"
           id="4-64"
           name="ソリッドビジョンβ"
           term={TERM_CHROMAGIC_YELLOW}
@@ -801,7 +780,6 @@ test('レンダリング無色の紫魔導', async () => {
     <Table>
       <tbody>
         <TableRowCard
-          key="4-65"
           id="4-65"
           name="ソリッドビジョンγ"
           term={TERM_CHROMAGIC_PURPLE}
