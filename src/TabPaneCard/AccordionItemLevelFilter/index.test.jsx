@@ -22,228 +22,104 @@ function defaultRenderHook() {
 
 afterEach(cleanup)
 
+test('デフォルトのレンダリング', () => {
+  const { defaultRender } = defaultRenderHook()
+  const { getByRole } = defaultRender()
+
+  // スライダーがある
+  const slider = getByRole('slider')
+  expect(slider).toBeVisible()
+  expect(slider).toHaveValue('0')
+  // 「以上」「以下」「等しい」ボタンがある
+  const buttonGe = getByRole('radio', { name: '以上' })
+  expect(buttonGe).toBeVisible()
+  expect(buttonGe).toBeChecked() // 選択されている
+  const buttonLe = getByRole('radio', { name: '以下' })
+  expect(buttonLe).toBeVisible()
+  expect(buttonLe).not.toBeChecked()
+  const buttonEq = getByRole('radio', { name: '等しい' })
+  expect(buttonEq).toBeVisible()
+  expect(buttonEq).not.toBeChecked()
+})
+
 test('ボタンの選択', async () => {
+  // 初期状態では「以上」が選択されている
   const { result, defaultRender } = defaultRenderHook()
-  let [level, comparator, reset] = result.current
-  expect(level).toBe(0)
-  expect(comparator).toBe(enumComparator.GE)
+  expect(result.current[1]).toBe(enumComparator.GE)
   const { defaultRerender, getByRole } = defaultRender()
+  expect(getByRole('radio', { name: '以上' })).toBeChecked()
+  expect(getByRole('radio', { name: '以下' })).not.toBeChecked()
+  expect(getByRole('radio', { name: '等しい' })).not.toBeChecked()
 
-  let slider = getByRole('slider')
-  expect(slider).toBeVisible()
-  expect(slider).toHaveValue('0')
-  let buttonGE = getByRole('radio', { name: '以上' })
-  expect(buttonGE).toBeVisible()
-  expect(buttonGE).toBeChecked() // 選択されている
-  let buttonLE = getByRole('radio', { name: '以下' })
-  expect(buttonLE).toBeVisible()
-  expect(buttonLE).not.toBeChecked()
-  let buttonEQ = getByRole('radio', { name: '等しい' })
-  expect(buttonEQ).toBeVisible()
-  expect(buttonEQ).not.toBeChecked()
-
-  // 以下を選択する
-  await userEvent.click(buttonLE)
-  ;[level, comparator, reset] = result.current
-  expect(level).toBe(0)
-  expect(comparator).toBe(enumComparator.LE)
+  // 「以下」を選択する
+  await userEvent.click(getByRole('radio', { name: '以下' }))
+  expect(result.current[1]).toBe(enumComparator.LE)
   defaultRerender()
+  expect(getByRole('radio', { name: '以上' })).not.toBeChecked()
+  expect(getByRole('radio', { name: '以下' })).toBeChecked()
+  expect(getByRole('radio', { name: '等しい' })).not.toBeChecked()
 
-  slider = getByRole('slider')
-  expect(slider).toBeVisible()
-  expect(slider).toHaveValue('0')
-  buttonGE = getByRole('radio', { name: '以上' })
-  expect(buttonGE).toBeVisible()
-  expect(buttonGE).not.toBeChecked()
-  buttonLE = getByRole('radio', { name: '以下' })
-  expect(buttonLE).toBeVisible() // 選択されている
-  expect(buttonLE).toBeChecked()
-  buttonEQ = getByRole('radio', { name: '等しい' })
-  expect(buttonEQ).toBeVisible()
-  expect(buttonEQ).not.toBeChecked()
-
-  // 等しいを選択する
-  await userEvent.click(buttonEQ)
-  ;[level, comparator, reset] = result.current
-  expect(level).toBe(0)
-  expect(comparator).toBe(enumComparator.EQ)
+  // 「等しい」を選択する
+  await userEvent.click(getByRole('radio', { name: '等しい' }))
+  expect(result.current[1]).toBe(enumComparator.EQ)
   defaultRerender()
+  expect(getByRole('radio', { name: '以上' })).not.toBeChecked()
+  expect(getByRole('radio', { name: '以下' })).not.toBeChecked()
+  expect(getByRole('radio', { name: '等しい' })).toBeChecked()
 
-  slider = getByRole('slider')
-  expect(slider).toBeVisible()
-  expect(slider).toHaveValue('0')
-  buttonGE = getByRole('radio', { name: '以上' })
-  expect(buttonGE).toBeVisible()
-  expect(buttonGE).not.toBeChecked()
-  buttonLE = getByRole('radio', { name: '以下' })
-  expect(buttonLE).toBeVisible()
-  expect(buttonLE).not.toBeChecked()
-  buttonEQ = getByRole('radio', { name: '等しい' })
-  expect(buttonEQ).toBeVisible()
-  expect(buttonEQ).toBeChecked() // 選択されている
-
-  // 状態をリセットする
-  await act(() => reset())
-  ;[level, comparator, reset] = result.current
-  expect(level).toBe(0)
-  expect(comparator).toBe(enumComparator.GE)
+  // リセットすると「以上」ボタンが選択される
+  await act(() => result.current[2]())
+  expect(result.current[1]).toBe(enumComparator.GE)
   defaultRerender()
-
-  slider = getByRole('slider')
-  expect(slider).toBeVisible()
-  expect(slider).toHaveValue('0')
-  buttonGE = getByRole('radio', { name: '以上' })
-  expect(buttonGE).toBeVisible()
-  expect(buttonGE).toBeChecked() // 以上が選択されている
-  buttonLE = getByRole('radio', { name: '以下' })
-  expect(buttonLE).toBeVisible()
-  expect(buttonLE).not.toBeChecked()
-  buttonEQ = getByRole('radio', { name: '等しい' })
-  expect(buttonEQ).toBeVisible()
-  expect(buttonEQ).not.toBeChecked()
+  expect(getByRole('radio', { name: '以上' })).toBeChecked()
+  expect(getByRole('radio', { name: '以下' })).not.toBeChecked()
+  expect(getByRole('radio', { name: '等しい' })).not.toBeChecked()
 })
 
 test('スライダーの選択', async () => {
+  // 初期値は0である
   const { result, defaultRender } = defaultRenderHook()
-  let [level, comparator, reset] = result.current
-  expect(level).toBe(0)
-  expect(comparator).toBe(enumComparator.GE)
+  expect(result.current[0]).toBe(0)
   const { defaultRerender, getByRole } = defaultRender()
-
-  let slider = getByRole('slider')
-  expect(slider).toBeVisible()
-  expect(slider).toHaveValue('0')
-  let buttonGE = getByRole('radio', { name: '以上' })
-  expect(buttonGE).toBeVisible()
-  expect(buttonGE).toBeChecked() // 選択されている
-  let buttonLE = getByRole('radio', { name: '以下' })
-  expect(buttonLE).toBeVisible()
-  expect(buttonLE).not.toBeChecked()
-  let buttonEQ = getByRole('radio', { name: '等しい' })
-  expect(buttonEQ).toBeVisible()
-  expect(buttonEQ).not.toBeChecked()
+  expect(getByRole('slider')).toHaveValue('0')
 
   // 値を1にする
   // userEvent は slider に未対応とのこと。
   // See: https://github.com/testing-library/user-event/issues/871
-  fireEvent.change(slider, { target: { value: '1' } })
-  ;[level, comparator, reset] = result.current
-  expect(level).toBe(1) // 1になっている
-  expect(comparator).toBe(enumComparator.GE)
+  fireEvent.change(getByRole('slider'), { target: { value: '1' } })
+  expect(result.current[0]).toBe(1)
   defaultRerender()
-
-  slider = getByRole('slider')
-  expect(slider).toBeVisible()
-  expect(slider).toHaveValue('1') // 1になっている
-  buttonGE = getByRole('radio', { name: '以上' })
-  expect(buttonGE).toBeVisible()
-  expect(buttonGE).toBeChecked()
-  buttonLE = getByRole('radio', { name: '以下' })
-  expect(buttonLE).toBeVisible()
-  expect(buttonLE).not.toBeChecked()
-  buttonEQ = getByRole('radio', { name: '等しい' })
-  expect(buttonEQ).toBeVisible()
-  expect(buttonEQ).not.toBeChecked()
+  expect(getByRole('slider')).toHaveValue('1')
 
   // 値を10にする
-  fireEvent.change(slider, { target: { value: '10' } })
-  ;[level, comparator, reset] = result.current
-  expect(level).toBe(10) // 10になっている
-  expect(comparator).toBe(enumComparator.GE)
+  fireEvent.change(getByRole('slider'), { target: { value: '10' } })
+  expect(result.current[0]).toBe(10)
   defaultRerender()
+  expect(getByRole('slider')).toHaveValue('10')
 
-  slider = getByRole('slider')
-  expect(slider).toBeVisible()
-  expect(slider).toHaveValue('10') // 10になっている
-  buttonGE = getByRole('radio', { name: '以上' })
-  expect(buttonGE).toBeVisible()
-  expect(buttonGE).toBeChecked()
-  buttonLE = getByRole('radio', { name: '以下' })
-  expect(buttonLE).toBeVisible()
-  expect(buttonLE).not.toBeChecked()
-  buttonEQ = getByRole('radio', { name: '等しい' })
-  expect(buttonEQ).toBeVisible()
-  expect(buttonEQ).not.toBeChecked()
-
-  // 値を11にしようとする
-  fireEvent.change(slider, { target: { value: '11' } })
-  ;[level, comparator, reset] = result.current
-  expect(level).toBe(10) // 11ではなく10になっている
-  expect(comparator).toBe(enumComparator.GE)
+  // 値を11にしようとすると10になる
+  fireEvent.change(getByRole('slider'), { target: { value: '11' } })
+  expect(result.current[0]).toBe(10)
   defaultRerender()
-
-  slider = getByRole('slider')
-  expect(slider).toBeVisible()
-  expect(slider).toHaveValue('10') // 11ではなく10になっている
-  buttonGE = getByRole('radio', { name: '以上' })
-  expect(buttonGE).toBeVisible()
-  expect(buttonGE).toBeChecked()
-  buttonLE = getByRole('radio', { name: '以下' })
-  expect(buttonLE).toBeVisible()
-  expect(buttonLE).not.toBeChecked()
-  buttonEQ = getByRole('radio', { name: '等しい' })
-  expect(buttonEQ).toBeVisible()
-  expect(buttonEQ).not.toBeChecked()
+  expect(getByRole('slider')).toHaveValue('10')
 
   // 値を17にする
-  fireEvent.change(slider, { target: { value: '17' } })
-  ;[level, comparator, reset] = result.current
-  expect(level).toBe(17) // 17になっている
-  expect(comparator).toBe(enumComparator.GE)
+  fireEvent.change(getByRole('slider'), { target: { value: '17' } })
+  expect(result.current[0]).toBe(17)
   defaultRerender()
+  expect(getByRole('slider')).toHaveValue('17')
 
-  slider = getByRole('slider')
-  expect(slider).toBeVisible()
-  expect(slider).toHaveValue('17') // 17になっている
-  buttonGE = getByRole('radio', { name: '以上' })
-  expect(buttonGE).toBeVisible()
-  expect(buttonGE).toBeChecked()
-  buttonLE = getByRole('radio', { name: '以下' })
-  expect(buttonLE).toBeVisible()
-  expect(buttonLE).not.toBeChecked()
-  buttonEQ = getByRole('radio', { name: '等しい' })
-  expect(buttonEQ).toBeVisible()
-  expect(buttonEQ).not.toBeChecked()
-
-  // 値を16にしようとする
-  fireEvent.change(slider, { target: { value: '16' } })
-  ;[level, comparator, reset] = result.current
-  expect(level).toBe(17) // 16ではなく17になっている
-  expect(comparator).toBe(enumComparator.GE)
+  // 値を16にしようとすると17になる
+  fireEvent.change(getByRole('slider'), { target: { value: '16' } })
+  expect(result.current[0]).toBe(17)
   defaultRerender()
+  expect(getByRole('slider')).toHaveValue('17')
 
-  slider = getByRole('slider')
-  expect(slider).toBeVisible()
-  expect(slider).toHaveValue('17') // 16ではなく17になっている
-  buttonGE = getByRole('radio', { name: '以上' })
-  expect(buttonGE).toBeVisible()
-  expect(buttonGE).toBeChecked()
-  buttonLE = getByRole('radio', { name: '以下' })
-  expect(buttonLE).toBeVisible()
-  expect(buttonLE).not.toBeChecked()
-  buttonEQ = getByRole('radio', { name: '等しい' })
-  expect(buttonEQ).toBeVisible()
-  expect(buttonEQ).not.toBeChecked()
-
-  // 状態をリセットする
-  await act(() => reset())
-  ;[level, comparator, reset] = result.current
-  expect(level).toBe(0) // 0になっている
-  expect(comparator).toBe(enumComparator.GE) // 以上になっている
+  // リセットすると値は0になる
+  await act(() => result.current[2]())
+  expect(result.current[0]).toBe(0)
   defaultRerender()
-
-  slider = getByRole('slider')
-  expect(slider).toBeVisible()
-  expect(slider).toHaveValue('0') // 0になっている
-  buttonGE = getByRole('radio', { name: '以上' })
-  expect(buttonGE).toBeVisible()
-  expect(buttonGE).toBeChecked() // 選択されている
-  buttonLE = getByRole('radio', { name: '以下' })
-  expect(buttonLE).toBeVisible()
-  expect(buttonLE).not.toBeChecked()
-  buttonEQ = getByRole('radio', { name: '等しい' })
-  expect(buttonEQ).toBeVisible()
-  expect(buttonEQ).not.toBeChecked()
+  expect(getByRole('slider')).toHaveValue('0')
 })
 
 test('getByTestId による選択', async () => {
