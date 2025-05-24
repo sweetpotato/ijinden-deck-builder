@@ -8,17 +8,43 @@ import enumComparator from '../enumComparator'
 import enumType from '../enumType'
 import useAccordionItemTypeFilter from '.'
 
+function defaultRenderHook() {
+  const { result } = renderHook(() => useAccordionItemTypeFilter())
+  const defaultRender = () => {
+    const { rerender, getByRole } = render(
+      <Accordion alwaysOpen>{result.current[4]('0')}</Accordion>
+    )
+    const defaultRerender = () =>
+      rerender(<Accordion alwaysOpen>{result.current[4]('0')}</Accordion>)
+    return { defaultRerender, getByRole }
+  }
+  return { result, defaultRender }
+}
+
+function getType(result) {
+  return result.current[0]
+}
+
+function getPower(result) {
+  return result.current[1]
+}
+
+function getComparator(result) {
+  return result.current[2]
+}
+
+function getResetFn(result) {
+  return result.current[3]
+}
+
 afterEach(cleanup)
 
 test('イジン以外選択時のレンダリングとインタラクション', async () => {
-  const { result } = renderHook(() => useAccordionItemTypeFilter())
-  let [type, power, comparator, reset, renderItem] = result.current
-  expect(type).toBe(0)
-  expect(power).toBe(0)
-  expect(comparator).toBe(enumComparator.GE)
-  const { rerender, getByRole } = render(
-    <Accordion alwaysOpen>{renderItem('0')}</Accordion>
-  )
+  const { result, defaultRender } = defaultRenderHook()
+  expect(getType(result)).toBe(0)
+  expect(getPower(result)).toBe(0)
+  expect(getComparator(result)).toBe(enumComparator.GE)
+  const { defaultRerender, getByRole } = defaultRender()
 
   let buttonAll = getByRole('radio', { name: 'すべて' })
   expect(buttonAll).toBeVisible()
@@ -50,11 +76,10 @@ test('イジン以外選択時のレンダリングとインタラクション',
 
   // ハイケイを選択する
   await userEvent.click(buttonHaikei)
-  ;[type, power, comparator, reset, renderItem] = result.current
-  expect(type).toBe(enumType.HAIKEI)
-  expect(power).toBe(0)
-  expect(comparator).toBe(enumComparator.GE)
-  rerender(<Accordion alwaysOpen>{renderItem('0')}</Accordion>)
+  expect(getType(result)).toBe(enumType.HAIKEI)
+  expect(getPower(result)).toBe(0)
+  expect(getComparator(result)).toBe(enumComparator.GE)
+  defaultRerender()
 
   buttonAll = getByRole('radio', { name: 'すべて' })
   expect(buttonAll).toBeVisible()
@@ -86,11 +111,10 @@ test('イジン以外選択時のレンダリングとインタラクション',
 
   // マホウを選択する
   await userEvent.click(buttonMahou)
-  ;[type, power, comparator, reset, renderItem] = result.current
-  expect(type).toBe(enumType.MAHOU)
-  expect(power).toBe(0)
-  expect(comparator).toBe(enumComparator.GE)
-  rerender(<Accordion alwaysOpen>{renderItem('0')}</Accordion>)
+  expect(getType(result)).toBe(enumType.MAHOU)
+  expect(getPower(result)).toBe(0)
+  expect(getComparator(result)).toBe(enumComparator.GE)
+  defaultRerender()
 
   buttonAll = getByRole('radio', { name: 'すべて' })
   expect(buttonAll).toBeVisible()
@@ -122,11 +146,10 @@ test('イジン以外選択時のレンダリングとインタラクション',
 
   // マリョクを選択する
   await userEvent.click(buttonMaryoku)
-  ;[type, power, comparator, reset, renderItem] = result.current
-  expect(type).toBe(enumType.MARYOKU)
-  expect(power).toBe(0)
-  expect(comparator).toBe(enumComparator.GE)
-  rerender(<Accordion alwaysOpen>{renderItem('0')}</Accordion>)
+  expect(getType(result)).toBe(enumType.MARYOKU)
+  expect(getPower(result)).toBe(0)
+  expect(getComparator(result)).toBe(enumComparator.GE)
+  defaultRerender()
 
   buttonAll = getByRole('radio', { name: 'すべて' })
   expect(buttonAll).toBeVisible()
@@ -158,12 +181,11 @@ test('イジン以外選択時のレンダリングとインタラクション',
   expect(buttonEQ).not.toBeEnabled()
 
   // 状態をリセットする
-  act(() => reset())
-  ;[type, power, comparator, reset, renderItem] = result.current
-  expect(type).toBe(0) // すべて
-  expect(power).toBe(0)
-  expect(comparator).toBe(enumComparator.GE)
-  rerender(<Accordion alwaysOpen>{renderItem('0')}</Accordion>)
+  act(() => getResetFn(result)())
+  expect(getType(result)).toBe(0)
+  expect(getPower(result)).toBe(0)
+  expect(getComparator(result)).toBe(enumComparator.GE)
+  defaultRerender()
 
   buttonAll = getByRole('radio', { name: 'すべて' })
   expect(buttonAll).toBeVisible()
@@ -195,15 +217,11 @@ test('イジン以外選択時のレンダリングとインタラクション',
 })
 
 test('イジン選択時のレンダリングとインタラクション', async () => {
-  const { result } = renderHook(() => useAccordionItemTypeFilter())
-  let [type, power, comparator, resetState, renderAccordionItem] =
-    result.current
-  expect(type).toBe(0)
-  expect(power).toBe(0)
-  expect(comparator).toBe(enumComparator.GE)
-  const { rerender, getByRole } = render(
-    <Accordion alwaysOpen>{renderAccordionItem('0')}</Accordion>
-  )
+  const { result, defaultRender } = defaultRenderHook()
+  expect(getType(result)).toBe(0)
+  expect(getPower(result)).toBe(0)
+  expect(getComparator(result)).toBe(enumComparator.GE)
+  const { defaultRerender, getByRole } = defaultRender()
 
   let buttonAll = getByRole('radio', { name: 'すべて' })
   expect(buttonAll).toBeVisible()
@@ -236,11 +254,10 @@ test('イジン選択時のレンダリングとインタラクション', async
 
   // イジンを選択する
   await userEvent.click(buttonIjin)
-  ;[type, power, comparator, resetState, renderAccordionItem] = result.current
-  expect(type).toBe(enumType.IJIN)
-  expect(power).toBe(0)
-  expect(comparator).toBe(enumComparator.GE)
-  rerender(<Accordion alwaysOpen>{renderAccordionItem('0')}</Accordion>)
+  expect(getType(result)).toBe(enumType.IJIN)
+  expect(getPower(result)).toBe(0)
+  expect(getComparator(result)).toBe(enumComparator.GE)
+  defaultRerender()
 
   buttonAll = getByRole('radio', { name: 'すべて' })
   expect(buttonAll).toBeVisible()
@@ -280,11 +297,10 @@ test('イジン選択時のレンダリングとインタラクション', async
 
   // スライダーを500にする
   fireEvent.change(slider, { target: { value: '500' } })
-  ;[type, power, comparator, resetState, renderAccordionItem] = result.current
-  expect(type).toBe(enumType.IJIN)
-  expect(power).toBe(500)
-  expect(comparator).toBe(enumComparator.GE)
-  rerender(<Accordion alwaysOpen>{renderAccordionItem('0')}</Accordion>)
+  expect(getType(result)).toBe(enumType.IJIN)
+  expect(getPower(result)).toBe(500)
+  expect(getComparator(result)).toBe(enumComparator.GE)
+  defaultRerender()
 
   buttonAll = getByRole('radio', { name: 'すべて' })
   expect(buttonAll).toBeVisible()
@@ -319,11 +335,10 @@ test('イジン選択時のレンダリングとインタラクション', async
 
   // スライダーを10000にする
   fireEvent.change(slider, { target: { value: '10000' } })
-  ;[type, power, comparator, resetState, renderAccordionItem] = result.current
-  expect(type).toBe(enumType.IJIN)
-  expect(power).toBe(10000)
-  expect(comparator).toBe(enumComparator.GE)
-  rerender(<Accordion alwaysOpen>{renderAccordionItem('0')}</Accordion>)
+  expect(getType(result)).toBe(enumType.IJIN)
+  expect(getPower(result)).toBe(10000)
+  expect(getComparator(result)).toBe(enumComparator.GE)
+  defaultRerender()
 
   buttonAll = getByRole('radio', { name: 'すべて' })
   expect(buttonAll).toBeVisible()
@@ -358,11 +373,10 @@ test('イジン選択時のレンダリングとインタラクション', async
 
   // 以下ボタンを押す
   await userEvent.click(buttonLE)
-  ;[type, power, comparator, resetState, renderAccordionItem] = result.current
-  expect(type).toBe(enumType.IJIN)
-  expect(power).toBe(10000)
-  expect(comparator).toBe(enumComparator.LE)
-  rerender(<Accordion alwaysOpen>{renderAccordionItem('0')}</Accordion>)
+  expect(getType(result)).toBe(enumType.IJIN)
+  expect(getPower(result)).toBe(10000)
+  expect(getComparator(result)).toBe(enumComparator.LE)
+  defaultRerender()
 
   buttonAll = getByRole('radio', { name: 'すべて' })
   expect(buttonAll).toBeVisible()
@@ -398,11 +412,10 @@ test('イジン選択時のレンダリングとインタラクション', async
 
   // 等しいボタンを押す
   await userEvent.click(buttonEQ)
-  ;[type, power, comparator, resetState, renderAccordionItem] = result.current
-  expect(type).toBe(enumType.IJIN)
-  expect(power).toBe(10000)
-  expect(comparator).toBe(enumComparator.EQ)
-  rerender(<Accordion alwaysOpen>{renderAccordionItem('0')}</Accordion>)
+  expect(getType(result)).toBe(enumType.IJIN)
+  expect(getPower(result)).toBe(10000)
+  expect(getComparator(result)).toBe(enumComparator.EQ)
+  defaultRerender()
 
   buttonAll = getByRole('radio', { name: 'すべて' })
   expect(buttonAll).toBeVisible()
@@ -437,12 +450,11 @@ test('イジン選択時のレンダリングとインタラクション', async
   expect(buttonEQ).toBeChecked()
 
   // 状態をリセットする
-  act(() => resetState())
-  ;[type, power, comparator, resetState, renderAccordionItem] = result.current
-  expect(type).toBe(0) // すべて
-  expect(power).toBe(0)
-  expect(comparator).toBe(enumComparator.GE)
-  rerender(<Accordion alwaysOpen>{renderAccordionItem('0')}</Accordion>)
+  act(() => getResetFn(result)())
+  expect(getType(result)).toBe(0)
+  expect(getPower(result)).toBe(0)
+  expect(getComparator(result)).toBe(enumComparator.GE)
+  defaultRerender()
 
   buttonAll = getByRole('radio', { name: 'すべて' })
   expect(buttonAll).toBeVisible()
