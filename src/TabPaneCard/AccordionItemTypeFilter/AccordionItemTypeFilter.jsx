@@ -49,6 +49,7 @@ function AccordionItemTypeFilter({
   handleChangePower,
   handleChangeComparator,
 }) {
+  const itemId = useId()
   const nameType = useId()
   const nameComparator = useId()
   const { activeEventKey } = useContext(AccordionContext)
@@ -57,15 +58,24 @@ function AccordionItemTypeFilter({
   const powerEnabled = type === enumType.IJIN
 
   return (
-    <AccordionItem eventKey={eventKey}>
+    <AccordionItem eventKey={eventKey} role="listitem" aria-labelledby={itemId}>
       <AccordionHeader as="h3">
         {expanded ? (
-          `➖ 種類とパワー`
+          <>
+            ➖&nbsp;
+            <span id={itemId}>種類とパワー</span>
+          </>
         ) : type === 0 ? (
-          `➕ 種類とパワー ― ${label}`
+          <>
+            ➕&nbsp;
+            <span id={itemId}>種類とパワー</span>
+            &nbsp;―&nbsp;
+            {label}
+          </>
         ) : (
           <>
-            {'➕ 種類とパワー'}
+            ➕&nbsp;
+            <span id={itemId}>種類とパワー</span>
             &nbsp;―&nbsp;
             <b>{label}</b>
           </>
@@ -73,71 +83,61 @@ function AccordionItemTypeFilter({
       </AccordionHeader>
       <AccordionBody>
         <div className="container-button">
-          <span data-testid="button-type-all">
-            <ToggleButton
-              type="radio"
-              variant="outline-primary"
-              id={`${nameType}-0`}
-              name={nameType}
-              value={0}
-              onChange={handleChangeType}
-              checked={type === 0}
-            >
-              すべて
-            </ToggleButton>
-          </span>
-          <span>
-            <ToggleButton
-              type="radio"
-              variant="outline-primary"
-              id={`${nameType}-${enumType.IJIN}`}
-              name={nameType}
-              value={enumType.IJIN}
-              onChange={handleChangeType}
-              checked={type === enumType.IJIN}
-            >
-              イジン
-            </ToggleButton>
-          </span>
-          <span>
-            <ToggleButton
-              type="radio"
-              variant="outline-primary"
-              id={`${nameType}-${enumType.HAIKEI}`}
-              name={nameType}
-              value={enumType.HAIKEI}
-              onChange={handleChangeType}
-              checked={type === enumType.HAIKEI}
-            >
-              ハイケイ
-            </ToggleButton>
-          </span>
-          <span>
-            <ToggleButton
-              type="radio"
-              variant="outline-primary"
-              id={`${nameType}-${enumType.MAHOU}`}
-              name={nameType}
-              value={enumType.MAHOU}
-              onChange={handleChangeType}
-              checked={type === enumType.MAHOU}
-            >
-              マホウ
-            </ToggleButton>
-          </span>
-          <span>
-            <ToggleButton
-              type="radio"
-              variant="outline-primary"
-              id={`${nameType}-${enumType.MARYOKU}`}
-              name={nameType}
-              value={enumType.MARYOKU}
-              onChange={handleChangeType}
-              checked={type === enumType.MARYOKU}
-            >
-              マリョク
-            </ToggleButton>
-          </span>
+          <ToggleButton
+            type="radio"
+            variant="outline-primary"
+            id={`${nameType}-0`}
+            name={nameType}
+            value={0}
+            onChange={handleChangeType}
+            checked={type === 0}
+          >
+            すべて
+          </ToggleButton>
+          <ToggleButton
+            type="radio"
+            variant="outline-primary"
+            id={`${nameType}-${enumType.IJIN}`}
+            name={nameType}
+            value={enumType.IJIN}
+            onChange={handleChangeType}
+            checked={type === enumType.IJIN}
+          >
+            イジン
+          </ToggleButton>
+          <ToggleButton
+            type="radio"
+            variant="outline-primary"
+            id={`${nameType}-${enumType.HAIKEI}`}
+            name={nameType}
+            value={enumType.HAIKEI}
+            onChange={handleChangeType}
+            checked={type === enumType.HAIKEI}
+          >
+            ハイケイ
+          </ToggleButton>
+          <ToggleButton
+            type="radio"
+            variant="outline-primary"
+            id={`${nameType}-${enumType.MAHOU}`}
+            name={nameType}
+            value={enumType.MAHOU}
+            onChange={handleChangeType}
+            checked={type === enumType.MAHOU}
+          >
+            マホウ
+          </ToggleButton>
+          <ToggleButton
+            type="radio"
+            variant="outline-primary"
+            id={`${nameType}-${enumType.MARYOKU}`}
+            name={nameType}
+            value={enumType.MARYOKU}
+            onChange={handleChangeType}
+            checked={type === enumType.MARYOKU}
+          >
+            マリョク
+          </ToggleButton>
         </div>
         <div>
           <div
@@ -147,7 +147,6 @@ function AccordionItemTypeFilter({
             パワー{power}
           </div>
           <FormRange
-            data-testid="slider-power"
             min={0}
             max={10000}
             step={500}
@@ -157,48 +156,42 @@ function AccordionItemTypeFilter({
           />
         </div>
         <div className="container-button">
-          <span data-testid="button-power-ge">
-            <ToggleButton
-              type="radio"
-              variant={powerEnabled ? 'outline-primary' : 'outline-secondary'}
-              id={`${nameComparator}-${enumComparator.GE}`}
-              name={nameComparator}
-              value={enumComparator.GE}
-              onChange={handleChangeComparator}
-              disabled={!powerEnabled}
-              checked={comparator === enumComparator.GE}
-            >
-              以上
-            </ToggleButton>
-          </span>
-          <span data-testid="button-power-le">
-            <ToggleButton
-              type="radio"
-              variant={powerEnabled ? 'outline-primary' : 'outline-secondary'}
-              id={`${nameComparator}-${enumComparator.LE}`}
-              name={nameComparator}
-              value={enumComparator.LE}
-              onChange={handleChangeComparator}
-              disabled={!powerEnabled}
-              checked={comparator === enumComparator.LE}
-            >
-              以下
-            </ToggleButton>
-          </span>
-          <span data-testid="button-power-eq">
-            <ToggleButton
-              type="radio"
-              variant={powerEnabled ? 'outline-primary' : 'outline-secondary'}
-              id={`${nameComparator}-${enumComparator.EQ}`}
-              name={nameComparator}
-              value={enumComparator.EQ}
-              onChange={handleChangeComparator}
-              disabled={!powerEnabled}
-              checked={comparator === enumComparator.EQ}
-            >
-              等しい
-            </ToggleButton>
-          </span>
+          <ToggleButton
+            type="radio"
+            variant={powerEnabled ? 'outline-primary' : 'outline-secondary'}
+            id={`${nameComparator}-${enumComparator.GE}`}
+            name={nameComparator}
+            value={enumComparator.GE}
+            onChange={handleChangeComparator}
+            disabled={!powerEnabled}
+            checked={comparator === enumComparator.GE}
+          >
+            以上
+          </ToggleButton>
+          <ToggleButton
+            type="radio"
+            variant={powerEnabled ? 'outline-primary' : 'outline-secondary'}
+            id={`${nameComparator}-${enumComparator.LE}`}
+            name={nameComparator}
+            value={enumComparator.LE}
+            onChange={handleChangeComparator}
+            disabled={!powerEnabled}
+            checked={comparator === enumComparator.LE}
+          >
+            以下
+          </ToggleButton>
+          <ToggleButton
+            type="radio"
+            variant={powerEnabled ? 'outline-primary' : 'outline-secondary'}
+            id={`${nameComparator}-${enumComparator.EQ}`}
+            name={nameComparator}
+            value={enumComparator.EQ}
+            onChange={handleChangeComparator}
+            disabled={!powerEnabled}
+            checked={comparator === enumComparator.EQ}
+          >
+            等しい
+          </ToggleButton>
         </div>
       </AccordionBody>
     </AccordionItem>

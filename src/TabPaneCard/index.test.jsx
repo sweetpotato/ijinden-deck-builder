@@ -6,6 +6,16 @@ import userEvent from '@testing-library/user-event'
 
 import TabPaneCard from '.'
 
+function getSliderInItem(getByRole, itemName) {
+  return within(getByRole('listitem', { name: itemName })).getByRole('slider')
+}
+
+function getRadioInItem(getByRole, itemName, radioName) {
+  return within(getByRole('listitem', { name: itemName })).getByRole('radio', {
+    name: radioName,
+  })
+}
+
 afterEach(cleanup)
 
 test('フィルタの初期状態', async () => {
@@ -122,19 +132,14 @@ test('フィルタの初期状態', async () => {
 
   expect(
     getByRole('button', {
-      name: '➖ 種類とパワー',
+      name: /種類とパワー/,
       expanded: true,
     })
   ).toBeVisible()
 
-  const spanTypeAll = getByTestId('button-color-all')
-  expect(spanTypeAll).toBeVisible()
-  const buttonTypeAll = spanTypeAll.querySelector('input')
+  const buttonTypeAll = getRadioInItem(getByRole, '種類とパワー', 'すべて')
   expect(buttonTypeAll).toBeVisible()
   expect(buttonTypeAll).toBeChecked()
-  const labelTypeAll = spanTypeAll.querySelector('label')
-  expect(labelTypeAll).toBeVisible()
-  expect(labelTypeAll.textContent).toBe('すべて')
 
   const buttonTypeIjin = getByRole('radio', { name: 'イジン' })
   expect(buttonTypeIjin).toBeVisible()
@@ -149,16 +154,16 @@ test('フィルタの初期状態', async () => {
   expect(buttonTypeMaryoku).toBeVisible()
   expect(buttonTypeMaryoku).not.toBeChecked()
 
-  const sliderPower = getByTestId('slider-power')
+  const sliderPower = getSliderInItem(getByRole, '種類とパワー')
   expect(sliderPower).toBeVisible()
   expect(sliderPower).not.toBeEnabled()
-  const buttonPowerGE = getByTestId('button-power-ge').querySelector('input')
+  const buttonPowerGE = getRadioInItem(getByRole, '種類とパワー', '以上')
   expect(buttonPowerGE).toBeVisible()
   expect(buttonPowerGE).not.toBeEnabled()
-  const buttonPowerLE = getByTestId('button-power-le').querySelector('input')
+  const buttonPowerLE = getRadioInItem(getByRole, '種類とパワー', '以下')
   expect(buttonPowerLE).toBeVisible()
   expect(buttonPowerLE).not.toBeEnabled()
-  const buttonPowerEQ = getByTestId('button-power-eq').querySelector('input')
+  const buttonPowerEQ = getRadioInItem(getByRole, '種類とパワー', '等しい')
   expect(buttonPowerEQ).toBeVisible()
   expect(buttonPowerEQ).not.toBeEnabled()
 
@@ -215,10 +220,10 @@ test('フィルタの初期状態', async () => {
 
   const spanExpansionAll = getByTestId('button-expansion-all')
   expect(spanExpansionAll).toBeVisible()
-  const buttonExpansionAll = spanTypeAll.querySelector('input')
+  const buttonExpansionAll = spanExpansionAll.querySelector('input')
   expect(buttonExpansionAll).toBeVisible()
   expect(buttonExpansionAll).toBeChecked()
-  const labelExpansionAll = spanTypeAll.querySelector('label')
+  const labelExpansionAll = spanExpansionAll.querySelector('label')
   expect(labelExpansionAll).toBeVisible()
   expect(labelExpansionAll.textContent).toBe('すべて')
 
@@ -275,10 +280,10 @@ test('フィルタの初期状態', async () => {
 
   const spanRarityAll = getByTestId('button-expansion-all')
   expect(spanRarityAll).toBeVisible()
-  const buttonRarityAll = spanTypeAll.querySelector('input')
+  const buttonRarityAll = spanRarityAll.querySelector('input')
   expect(buttonRarityAll).toBeVisible()
   expect(buttonRarityAll).toBeChecked()
-  const labelRarityAll = spanTypeAll.querySelector('label')
+  const labelRarityAll = spanRarityAll.querySelector('label')
   expect(labelRarityAll).toBeVisible()
   expect(labelRarityAll.textContent).toBe('すべて')
 
@@ -321,19 +326,16 @@ test('フィルタの初期状態', async () => {
     })
   ).toBeVisible()
 
-  const level = getByRole('listitem', { name: 'レベル' })
-  const sliderLevel = within(level).getByRole('slider')
+  const sliderLevel = getSliderInItem(getByRole, 'レベル')
   expect(sliderLevel).toBeVisible()
   expect(sliderLevel).toHaveValue('0')
-  const buttonLevelGE = within(level).getByRole('radio', { name: '以上' })
+  const buttonLevelGE = getRadioInItem(getByRole, 'レベル', '以上')
   expect(buttonLevelGE).toBeVisible()
   expect(buttonLevelGE).toBeChecked()
-  const buttonLevelLE = within(level).getByRole('radio', { name: '以下' })
+  const buttonLevelLE = getRadioInItem(getByRole, 'レベル', '以下')
   expect(buttonLevelLE).toBeVisible()
   expect(buttonLevelLE).not.toBeChecked()
-  const buttonLevelEQ = within(level).getByRole('radio', {
-    name: '等しい',
-  })
+  const buttonLevelEQ = getRadioInItem(getByRole, 'レベル', '等しい')
   expect(buttonLevelEQ).toBeVisible()
   expect(buttonLevelEQ).not.toBeChecked()
 
@@ -2260,7 +2262,7 @@ test('種類によるフィルタ', async () => {
   }
   const zoomIn = vi.fn()
   const interruptSimulator = vi.fn()
-  const { rerender, getByRole, queryByRole, getByTestId } = render(
+  const { rerender, getByRole, queryByRole } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
@@ -2296,13 +2298,13 @@ test('種類によるフィルタ', async () => {
   // 種類とパワーアコーディオンアイテムは既に開いている
   expect(
     getByRole('button', {
-      name: '➖ 種類とパワー',
+      name: /種類とパワー/,
       expanded: true,
     })
   ).toBeVisible()
 
   // 初期状態ではすべてボタンが選択されている
-  let buttonTypeAll = getByTestId('button-type-all').querySelector('input')
+  let buttonTypeAll = getRadioInItem(getByRole, '種類とパワー', 'すべて')
   expect(buttonTypeAll).toBeVisible()
   expect(buttonTypeAll).toBeChecked()
 
@@ -2404,9 +2406,8 @@ test('種類によるフィルタ', async () => {
   expect(getByRole('row', { name: 'B-13' })).toBeVisible()
 
   // 条件すべてをリセットするボタンを押す
-  buttonTypeAll = getByTestId('button-type-all').querySelector('input')
-  expect(buttonTypeAll).toBeVisible()
-  expect(buttonTypeAll).not.toBeChecked()
+  expect(getRadioInItem(getByRole, '種類とパワー', 'すべて')).toBeVisible()
+  expect(getRadioInItem(getByRole, '種類とパワー', 'すべて')).not.toBeChecked()
   await userEvent.click(
     getByRole('button', {
       name: '条件すべてをリセットする',
@@ -2421,9 +2422,8 @@ test('種類によるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  buttonTypeAll = getByTestId('button-type-all').querySelector('input')
-  expect(buttonTypeAll).toBeVisible()
-  expect(buttonTypeAll).toBeChecked()
+  expect(getRadioInItem(getByRole, '種類とパワー', 'すべて')).toBeVisible()
+  expect(getRadioInItem(getByRole, '種類とパワー', 'すべて')).toBeChecked()
 
   expect(getByRole('row', { name: 'B-2' })).toBeVisible()
   expect(getByRole('row', { name: 'B-9' })).toBeVisible()
@@ -2446,7 +2446,7 @@ test('イジンのパワーによるフィルタ', async () => {
   }
   const zoomIn = vi.fn()
   const interruptSimulator = vi.fn()
-  const { rerender, getByRole, queryByRole, getByTestId } = render(
+  const { rerender, getByRole, queryByRole } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
@@ -2482,27 +2482,19 @@ test('イジンのパワーによるフィルタ', async () => {
   // 種類とパワーアコーディオンアイテムは既に開いている
   expect(
     getByRole('button', {
-      name: '➖ 種類とパワー',
+      name: /種類とパワー/,
       expanded: true,
     })
   ).toBeVisible()
 
   // 初期状態ではすべてボタンが選択されている
-  expect(
-    getByTestId('button-type-all').querySelector('input[type="radio"]')
-  ).toBeChecked()
+  expect(getRadioInItem(getByRole, '種類とパワー', 'すべて')).toBeChecked()
 
   // パワーに関するフォームは無効化されている
-  expect(getByTestId('slider-power')).not.toBeEnabled()
-  expect(
-    getByTestId('button-power-ge').querySelector('input')
-  ).not.toBeEnabled()
-  expect(
-    getByTestId('button-power-le').querySelector('input')
-  ).not.toBeEnabled()
-  expect(
-    getByTestId('button-power-eq').querySelector('input')
-  ).not.toBeEnabled()
+  expect(getSliderInItem(getByRole, '種類とパワー')).not.toBeEnabled()
+  expect(getRadioInItem(getByRole, '種類とパワー', '以上')).not.toBeEnabled()
+  expect(getRadioInItem(getByRole, '種類とパワー', '以下')).not.toBeEnabled()
+  expect(getRadioInItem(getByRole, '種類とパワー', '等しい')).not.toBeEnabled()
 
   // イジンボタンを押す
   let buttonTypeIjin = getByRole('radio', { name: 'イジン' })
@@ -2523,17 +2515,16 @@ test('イジンのパワーによるフィルタ', async () => {
   expect(buttonTypeIjin).toBeChecked()
 
   // パワーに関するフォームが有効化される
-  let sliderPower = getByTestId('slider-power')
+  let sliderPower = getSliderInItem(getByRole, '種類とパワー')
   expect(sliderPower).toBeEnabled()
   expect(sliderPower).toHaveValue('0')
-  let buttonPowerGE = getByTestId('button-power-ge').querySelector('input')
+  let buttonPowerGE = getRadioInItem(getByRole, '種類とパワー', '以上')
   expect(buttonPowerGE).toBeEnabled()
   expect(buttonPowerGE).toBeChecked() // 以上がチェックされている
-  let buttonPowerLE = getByTestId('button-power-le').querySelector('input')
+  let buttonPowerLE = getRadioInItem(getByRole, '種類とパワー', '以下')
   expect(buttonPowerLE).toBeEnabled()
   expect(buttonPowerLE).not.toBeChecked()
-  expect(getByTestId('button-power-eq').querySelector('input')).toBeEnabled()
-  let buttonPowerEQ = getByTestId('button-power-eq').querySelector('input')
+  let buttonPowerEQ = getRadioInItem(getByRole, '種類とパワー', '等しい')
   expect(buttonPowerEQ).toBeEnabled()
   expect(buttonPowerEQ).not.toBeChecked()
 
@@ -2543,7 +2534,7 @@ test('イジンのパワーによるフィルタ', async () => {
   expect(getByRole('row', { name: '2-8' })).toBeVisible() // 豊臣秀吉 (10000)
 
   // 以下ボタンを押す
-  await userEvent.click(getByTestId('button-power-le').querySelector('input'))
+  await userEvent.click(getRadioInItem(getByRole, '種類とパワー', '以下'))
   rerender(
     <TabPaneCard
       deckMain={deckMain}
@@ -2553,7 +2544,7 @@ test('イジンのパワーによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  expect(getByTestId('button-power-le').querySelector('input')).toBeChecked()
+  expect(getRadioInItem(getByRole, '種類とパワー', '以下')).toBeChecked()
 
   expect(getByRole('row', { name: '4-37' })).toBeVisible() // フローレンス・ナイチンゲール (0)
   expect(queryByRole('row', { name: 'G-2' })).toBeNull() // 卑弥呼 (500)
@@ -2561,7 +2552,7 @@ test('イジンのパワーによるフィルタ', async () => {
   expect(queryByRole('row', { name: '2-8' })).toBeNull() // 豊臣秀吉 (10000)
 
   // 等しいボタンを押す
-  await userEvent.click(getByTestId('button-power-eq').querySelector('input'))
+  await userEvent.click(getRadioInItem(getByRole, '種類とパワー', '等しい'))
   rerender(
     <TabPaneCard
       deckMain={deckMain}
@@ -2571,10 +2562,10 @@ test('イジンのパワーによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  expect(getByTestId('button-power-eq').querySelector('input')).toBeChecked()
+  expect(getRadioInItem(getByRole, '種類とパワー', '等しい')).toBeChecked()
 
   // 以上ボタンを押して、スライダーを500にする
-  await userEvent.click(getByTestId('button-power-ge').querySelector('input'))
+  await userEvent.click(getRadioInItem(getByRole, '種類とパワー', '以上'))
   rerender(
     <TabPaneCard
       deckMain={deckMain}
@@ -2584,8 +2575,10 @@ test('イジンのパワーによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  expect(getByTestId('button-power-ge').querySelector('input')).toBeChecked()
-  fireEvent.change(getByTestId('slider-power'), { target: { value: '500' } })
+  expect(getRadioInItem(getByRole, '種類とパワー', '以上')).toBeChecked()
+  fireEvent.change(getSliderInItem(getByRole, '種類とパワー'), {
+    target: { value: '500' },
+  })
   rerender(
     <TabPaneCard
       deckMain={deckMain}
@@ -2595,7 +2588,7 @@ test('イジンのパワーによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  expect(getByTestId('slider-power')).toHaveValue('500')
+  expect(getSliderInItem(getByRole, '種類とパワー')).toHaveValue('500')
 
   expect(queryByRole('row', { name: '4-37' })).toBeNull() // フローレンス・ナイチンゲール (0)
   expect(getByRole('row', { name: 'G-2' })).toBeVisible() // 卑弥呼 (500)
@@ -2603,7 +2596,7 @@ test('イジンのパワーによるフィルタ', async () => {
   expect(getByRole('row', { name: '2-8' })).toBeVisible() // 豊臣秀吉 (10000)
 
   // 以下ボタンを押す
-  await userEvent.click(getByTestId('button-power-le').querySelector('input'))
+  await userEvent.click(getRadioInItem(getByRole, '種類とパワー', '以下'))
   rerender(
     <TabPaneCard
       deckMain={deckMain}
@@ -2613,7 +2606,7 @@ test('イジンのパワーによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  expect(getByTestId('button-power-le').querySelector('input')).toBeChecked()
+  expect(getRadioInItem(getByRole, '種類とパワー', '以下')).toBeChecked()
 
   expect(getByRole('row', { name: '4-37' })).toBeVisible() // フローレンス・ナイチンゲール (0)
   expect(getByRole('row', { name: 'G-2' })).toBeVisible() // 卑弥呼 (500)
@@ -2621,7 +2614,7 @@ test('イジンのパワーによるフィルタ', async () => {
   expect(queryByRole('row', { name: '2-8' })).toBeNull() // 豊臣秀吉 (10000)
 
   // 等しいボタンを押す
-  await userEvent.click(getByTestId('button-power-eq').querySelector('input'))
+  await userEvent.click(getRadioInItem(getByRole, '種類とパワー', '等しい'))
   rerender(
     <TabPaneCard
       deckMain={deckMain}
@@ -2631,7 +2624,7 @@ test('イジンのパワーによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  expect(getByTestId('button-power-eq').querySelector('input')).toBeChecked()
+  expect(getRadioInItem(getByRole, '種類とパワー', '等しい')).toBeChecked()
 
   expect(queryByRole('row', { name: '4-37' })).toBeNull() // フローレンス・ナイチンゲール (0)
   expect(getByRole('row', { name: 'G-2' })).toBeVisible() // 卑弥呼 (500)
@@ -2639,7 +2632,7 @@ test('イジンのパワーによるフィルタ', async () => {
   expect(queryByRole('row', { name: '2-8' })).toBeNull() // 豊臣秀吉 (10000)
 
   // 以上ボタンを押して、スライダーを5000にする
-  await userEvent.click(getByTestId('button-power-ge').querySelector('input'))
+  await userEvent.click(getRadioInItem(getByRole, '種類とパワー', '以上'))
   rerender(
     <TabPaneCard
       deckMain={deckMain}
@@ -2649,8 +2642,10 @@ test('イジンのパワーによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  expect(getByTestId('button-power-ge').querySelector('input')).toBeChecked()
-  fireEvent.change(getByTestId('slider-power'), { target: { value: '5000' } })
+  expect(getRadioInItem(getByRole, '種類とパワー', '以上')).toBeChecked()
+  fireEvent.change(getSliderInItem(getByRole, '種類とパワー'), {
+    target: { value: '5000' },
+  })
   rerender(
     <TabPaneCard
       deckMain={deckMain}
@@ -2660,7 +2655,7 @@ test('イジンのパワーによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  expect(getByTestId('slider-power')).toHaveValue('5000')
+  expect(getSliderInItem(getByRole, '種類とパワー')).toHaveValue('5000')
 
   expect(queryByRole('row', { name: '4-37' })).toBeNull() // フローレンス・ナイチンゲール (0)
   expect(queryByRole('row', { name: 'G-2' })).toBeNull() // 卑弥呼 (500)
@@ -2668,7 +2663,7 @@ test('イジンのパワーによるフィルタ', async () => {
   expect(getByRole('row', { name: '2-8' })).toBeVisible() // 豊臣秀吉 (10000)
 
   // 以下ボタンを押す
-  await userEvent.click(getByTestId('button-power-le').querySelector('input'))
+  await userEvent.click(getRadioInItem(getByRole, '種類とパワー', '以下'))
   rerender(
     <TabPaneCard
       deckMain={deckMain}
@@ -2678,7 +2673,7 @@ test('イジンのパワーによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  expect(getByTestId('button-power-le').querySelector('input')).toBeChecked()
+  expect(getRadioInItem(getByRole, '種類とパワー', '以下')).toBeChecked()
 
   expect(getByRole('row', { name: '4-37' })).toBeVisible() // フローレンス・ナイチンゲール (0)
   expect(getByRole('row', { name: 'G-2' })).toBeVisible() // 卑弥呼 (500)
@@ -2686,7 +2681,7 @@ test('イジンのパワーによるフィルタ', async () => {
   expect(queryByRole('row', { name: '2-8' })).toBeNull() // 豊臣秀吉 (10000)
 
   // 等しいボタンを押す
-  await userEvent.click(getByTestId('button-power-eq').querySelector('input'))
+  await userEvent.click(getRadioInItem(getByRole, '種類とパワー', '等しい'))
   rerender(
     <TabPaneCard
       deckMain={deckMain}
@@ -2696,7 +2691,7 @@ test('イジンのパワーによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  expect(getByTestId('button-power-eq').querySelector('input')).toBeChecked()
+  expect(getRadioInItem(getByRole, '種類とパワー', '等しい')).toBeChecked()
 
   expect(queryByRole('row', { name: '4-37' })).toBeNull() // フローレンス・ナイチンゲール (0)
   expect(queryByRole('row', { name: 'G-2' })).toBeNull() // 卑弥呼 (500)
@@ -2704,7 +2699,7 @@ test('イジンのパワーによるフィルタ', async () => {
   expect(queryByRole('row', { name: '2-8' })).toBeNull() // 豊臣秀吉 (10000)
 
   // 以上ボタンを押して、スライダーを10000にする
-  await userEvent.click(getByTestId('button-power-ge').querySelector('input'))
+  await userEvent.click(getRadioInItem(getByRole, '種類とパワー', '以上'))
   rerender(
     <TabPaneCard
       deckMain={deckMain}
@@ -2714,8 +2709,10 @@ test('イジンのパワーによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  expect(getByTestId('button-power-ge').querySelector('input')).toBeChecked()
-  fireEvent.change(getByTestId('slider-power'), { target: { value: '10000' } })
+  expect(getRadioInItem(getByRole, '種類とパワー', '以上')).toBeChecked()
+  fireEvent.change(getSliderInItem(getByRole, '種類とパワー'), {
+    target: { value: '10000' },
+  })
   rerender(
     <TabPaneCard
       deckMain={deckMain}
@@ -2725,7 +2722,7 @@ test('イジンのパワーによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  expect(getByTestId('slider-power')).toHaveValue('10000')
+  expect(getSliderInItem(getByRole, '種類とパワー')).toHaveValue('10000')
 
   expect(queryByRole('row', { name: '4-37' })).toBeNull() // フローレンス・ナイチンゲール (0)
   expect(queryByRole('row', { name: 'G-2' })).toBeNull() // 卑弥呼 (500)
@@ -2733,7 +2730,7 @@ test('イジンのパワーによるフィルタ', async () => {
   expect(getByRole('row', { name: '2-8' })).toBeVisible() // 豊臣秀吉 (10000)
 
   // 以下ボタンを押す
-  await userEvent.click(getByTestId('button-power-le').querySelector('input'))
+  await userEvent.click(getRadioInItem(getByRole, '種類とパワー', '以下'))
   rerender(
     <TabPaneCard
       deckMain={deckMain}
@@ -2743,7 +2740,7 @@ test('イジンのパワーによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  expect(getByTestId('button-power-le').querySelector('input')).toBeChecked()
+  expect(getRadioInItem(getByRole, '種類とパワー', '以下')).toBeChecked()
 
   expect(getByRole('row', { name: '4-37' })).toBeVisible() // フローレンス・ナイチンゲール (0)
   expect(getByRole('row', { name: 'G-2' })).toBeVisible() // 卑弥呼 (500)
@@ -2751,7 +2748,7 @@ test('イジンのパワーによるフィルタ', async () => {
   expect(getByRole('row', { name: '2-8' })).toBeVisible() // 豊臣秀吉 (10000)
 
   // 等しいボタンを押す
-  await userEvent.click(getByTestId('button-power-eq').querySelector('input'))
+  await userEvent.click(getRadioInItem(getByRole, '種類とパワー', '等しい'))
   rerender(
     <TabPaneCard
       deckMain={deckMain}
@@ -2761,7 +2758,7 @@ test('イジンのパワーによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  expect(getByTestId('button-power-eq').querySelector('input')).toBeChecked()
+  expect(getRadioInItem(getByRole, '種類とパワー', '等しい')).toBeChecked()
 
   expect(queryByRole('row', { name: '4-37' })).toBeNull() // フローレンス・ナイチンゲール (0)
   expect(queryByRole('row', { name: 'G-2' })).toBeNull() // 卑弥呼 (500)
@@ -2783,18 +2780,12 @@ test('イジンのパワーによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  expect(getByTestId('button-type-all').querySelector('input')).toBeChecked()
+  expect(getRadioInItem(getByRole, '種類とパワー', 'すべて')).toBeChecked()
   // パワーに関するフォームは無効化されている
-  expect(getByTestId('slider-power')).not.toBeEnabled()
-  expect(
-    getByTestId('button-power-ge').querySelector('input')
-  ).not.toBeEnabled()
-  expect(
-    getByTestId('button-power-le').querySelector('input')
-  ).not.toBeEnabled()
-  expect(
-    getByTestId('button-power-eq').querySelector('input')
-  ).not.toBeEnabled()
+  expect(getSliderInItem(getByRole, '種類とパワー')).not.toBeEnabled()
+  expect(getRadioInItem(getByRole, '種類とパワー', '以上')).not.toBeEnabled()
+  expect(getRadioInItem(getByRole, '種類とパワー', '以下')).not.toBeEnabled()
+  expect(getRadioInItem(getByRole, '種類とパワー', '等しい')).not.toBeEnabled()
 
   expect(getByRole('row', { name: '4-37' })).toBeVisible() // フローレンス・ナイチンゲール (0)
   expect(getByRole('row', { name: 'G-2' })).toBeVisible() // 卑弥呼 (500)
@@ -2874,11 +2865,10 @@ test('レベルによるフィルタ', async () => {
   ).toBeVisible()
 
   // 初期状態では値は0で以上ボタンが選択されている
-  let level = getByRole('listitem', { name: 'レベル' })
-  let sliderLevel = within(level).getByRole('slider')
+  let sliderLevel = getSliderInItem(getByRole, 'レベル')
   expect(sliderLevel).toBeVisible()
   expect(sliderLevel).toHaveValue('0')
-  let buttonLevelGE = within(level).getByRole('radio', { name: '以上' })
+  let buttonLevelGE = getRadioInItem(getByRole, 'レベル', '以上')
   expect(buttonLevelGE).toBeVisible()
   expect(buttonLevelGE).toBeChecked()
 
@@ -2890,7 +2880,7 @@ test('レベルによるフィルタ', async () => {
   expect(getByRole('row', { name: '4-46' })).toBeVisible() // 大日本沿海輿地全図 (レベル17)
 
   // 0以下
-  let buttonLevelLE = within(level).getByRole('radio', { name: '以下' })
+  let buttonLevelLE = getRadioInItem(getByRole, 'レベル', '以下')
   expect(buttonLevelLE).toBeVisible()
   expect(buttonLevelLE).not.toBeChecked()
   await userEvent.click(buttonLevelLE)
@@ -2903,7 +2893,7 @@ test('レベルによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  buttonLevelLE = within(level).getByRole('radio', { name: '以下' })
+  buttonLevelLE = getRadioInItem(getByRole, 'レベル', '以下')
   expect(buttonLevelLE).toBeVisible()
   expect(buttonLevelLE).toBeChecked()
 
@@ -2915,7 +2905,7 @@ test('レベルによるフィルタ', async () => {
   expect(queryByRole('row', { name: '4-46' })).toBeNull() // 大日本沿海輿地全図 (レベル17)
 
   // 0に等しい
-  let buttonLevelEQ = within(level).getByRole('radio', { name: '等しい' })
+  let buttonLevelEQ = getRadioInItem(getByRole, 'レベル', '等しい')
   expect(buttonLevelEQ).toBeVisible()
   expect(buttonLevelEQ).not.toBeChecked()
   await userEvent.click(buttonLevelEQ)
@@ -2928,7 +2918,7 @@ test('レベルによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  buttonLevelEQ = within(level).getByRole('radio', { name: '等しい' })
+  buttonLevelEQ = getRadioInItem(getByRole, 'レベル', '等しい')
   expect(buttonLevelEQ).toBeVisible()
   expect(buttonLevelEQ).toBeChecked()
 
@@ -2940,9 +2930,8 @@ test('レベルによるフィルタ', async () => {
   expect(queryByRole('row', { name: '4-46' })).toBeNull() // 大日本沿海輿地全図 (レベル17)
 
   // 5以上
-  sliderLevel = within(getByRole('listitem', { name: 'レベル' })).getByRole(
-    'slider'
-  )
+  sliderLevel = getSliderInItem(getByRole, 'レベル')
+
   expect(sliderLevel).toBeVisible()
   expect(sliderLevel).toHaveValue('0')
   // userEvent は slider に未対応とのこと。
@@ -2957,11 +2946,10 @@ test('レベルによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  level = getByRole('listitem', { name: 'レベル' })
-  sliderLevel = within(level).getByRole('slider')
+  sliderLevel = getSliderInItem(getByRole, 'レベル')
   expect(sliderLevel).toBeVisible()
   expect(sliderLevel).toHaveValue('5')
-  buttonLevelGE = within(level).getByRole('radio', { name: '以上' })
+  buttonLevelGE = getRadioInItem(getByRole, 'レベル', '以上')
   expect(buttonLevelGE).toBeVisible()
   expect(buttonLevelGE).not.toBeChecked()
   await userEvent.click(buttonLevelGE)
@@ -2974,7 +2962,7 @@ test('レベルによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  buttonLevelGE = within(level).getByRole('radio', { name: '以上' })
+  buttonLevelGE = getRadioInItem(getByRole, 'レベル', '以上')
   expect(buttonLevelGE).toBeVisible()
   expect(buttonLevelGE).toBeChecked()
 
@@ -2986,7 +2974,7 @@ test('レベルによるフィルタ', async () => {
   expect(getByRole('row', { name: '4-46' })).toBeVisible() // 大日本沿海輿地全図 (レベル17)
 
   // 5以下
-  buttonLevelLE = within(level).getByRole('radio', { name: '以下' })
+  buttonLevelLE = getRadioInItem(getByRole, 'レベル', '以下')
   expect(buttonLevelLE).toBeVisible()
   expect(buttonLevelLE).not.toBeChecked()
   await userEvent.click(buttonLevelLE)
@@ -2999,7 +2987,7 @@ test('レベルによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  buttonLevelLE = within(level).getByRole('radio', { name: '以下' })
+  buttonLevelLE = getRadioInItem(getByRole, 'レベル', '以下')
   expect(buttonLevelLE).toBeVisible()
   expect(buttonLevelLE).toBeChecked()
 
@@ -3011,7 +2999,7 @@ test('レベルによるフィルタ', async () => {
   expect(queryByRole('row', { name: '4-46' })).toBeNull() // 大日本沿海輿地全図 (レベル17)
 
   // 5に等しい
-  buttonLevelEQ = within(level).getByRole('radio', { name: '等しい' })
+  buttonLevelEQ = getRadioInItem(getByRole, 'レベル', '等しい')
   expect(buttonLevelEQ).toBeVisible()
   expect(buttonLevelEQ).not.toBeChecked()
   await userEvent.click(buttonLevelEQ)
@@ -3024,7 +3012,7 @@ test('レベルによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  buttonLevelEQ = within(level).getByRole('radio', { name: '等しい' })
+  buttonLevelEQ = getRadioInItem(getByRole, 'レベル', '等しい')
   expect(buttonLevelEQ).toBeVisible()
   expect(buttonLevelEQ).toBeChecked()
 
@@ -3036,8 +3024,7 @@ test('レベルによるフィルタ', async () => {
   expect(queryByRole('row', { name: '4-46' })).toBeNull() // 大日本沿海輿地全図 (レベル17)
 
   // 10以上
-  level = getByRole('listitem', { name: 'レベル' })
-  sliderLevel = within(level).getByRole('slider')
+  sliderLevel = getSliderInItem(getByRole, 'レベル')
   expect(sliderLevel).toBeVisible()
   expect(sliderLevel).toHaveValue('5')
   // userEvent は slider に未対応とのこと。
@@ -3052,11 +3039,10 @@ test('レベルによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  level = getByRole('listitem', { name: 'レベル' })
-  sliderLevel = within(level).getByRole('slider')
+  sliderLevel = getSliderInItem(getByRole, 'レベル')
   expect(sliderLevel).toBeVisible()
   expect(sliderLevel).toHaveValue('10')
-  buttonLevelGE = within(level).getByRole('radio', { name: '以上' })
+  buttonLevelGE = getRadioInItem(getByRole, 'レベル', '以上')
   expect(buttonLevelGE).toBeVisible()
   expect(buttonLevelGE).not.toBeChecked()
   await userEvent.click(buttonLevelGE)
@@ -3069,7 +3055,7 @@ test('レベルによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  buttonLevelGE = within(level).getByRole('radio', { name: '以上' })
+  buttonLevelGE = getRadioInItem(getByRole, 'レベル', '以上')
   expect(buttonLevelGE).toBeVisible()
   expect(buttonLevelGE).toBeChecked()
 
@@ -3081,7 +3067,7 @@ test('レベルによるフィルタ', async () => {
   expect(getByRole('row', { name: '4-46' })).toBeVisible() // 大日本沿海輿地全図 (レベル17)
 
   // 10以下
-  buttonLevelLE = within(level).getByRole('radio', { name: '以下' })
+  buttonLevelLE = getRadioInItem(getByRole, 'レベル', '以下')
   expect(buttonLevelLE).toBeVisible()
   expect(buttonLevelLE).not.toBeChecked()
   await userEvent.click(buttonLevelLE)
@@ -3094,7 +3080,7 @@ test('レベルによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  buttonLevelLE = within(level).getByRole('radio', { name: '以下' })
+  buttonLevelLE = getRadioInItem(getByRole, 'レベル', '以下')
   expect(buttonLevelLE).toBeVisible()
   expect(buttonLevelLE).toBeChecked()
 
@@ -3106,7 +3092,7 @@ test('レベルによるフィルタ', async () => {
   expect(queryByRole('row', { name: '4-46' })).toBeNull() // 大日本沿海輿地全図 (レベル17)
 
   // 10に等しい
-  buttonLevelEQ = within(level).getByRole('radio', { name: '等しい' })
+  buttonLevelEQ = getRadioInItem(getByRole, 'レベル', '等しい')
   expect(buttonLevelEQ).toBeVisible()
   expect(buttonLevelEQ).not.toBeChecked()
   await userEvent.click(buttonLevelEQ)
@@ -3119,7 +3105,7 @@ test('レベルによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  buttonLevelEQ = within(level).getByRole('radio', { name: '等しい' })
+  buttonLevelEQ = getRadioInItem(getByRole, 'レベル', '等しい')
   expect(buttonLevelEQ).toBeVisible()
   expect(buttonLevelEQ).toBeChecked()
 
@@ -3131,8 +3117,7 @@ test('レベルによるフィルタ', async () => {
   expect(queryByRole('row', { name: '4-46' })).toBeNull() // 大日本沿海輿地全図 (レベル17)
 
   // 17以上
-  level = getByRole('listitem', { name: 'レベル' })
-  sliderLevel = within(level).getByRole('slider')
+  sliderLevel = getSliderInItem(getByRole, 'レベル')
   expect(sliderLevel).toBeVisible()
   expect(sliderLevel).toHaveValue('10')
   // userEvent は slider に未対応とのこと。
@@ -3147,11 +3132,10 @@ test('レベルによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  level = getByRole('listitem', { name: 'レベル' })
-  sliderLevel = within(level).getByRole('slider')
+  sliderLevel = getSliderInItem(getByRole, 'レベル')
   expect(sliderLevel).toBeVisible()
   expect(sliderLevel).toHaveValue('17')
-  buttonLevelGE = within(level).getByRole('radio', { name: '以上' })
+  buttonLevelGE = getRadioInItem(getByRole, 'レベル', '以上')
   expect(buttonLevelGE).toBeVisible()
   expect(buttonLevelGE).not.toBeChecked()
   await userEvent.click(buttonLevelGE)
@@ -3164,7 +3148,7 @@ test('レベルによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  buttonLevelGE = within(level).getByRole('radio', { name: '以上' })
+  buttonLevelGE = getRadioInItem(getByRole, 'レベル', '以上')
   expect(buttonLevelGE).toBeVisible()
   expect(buttonLevelGE).toBeChecked()
 
@@ -3176,7 +3160,7 @@ test('レベルによるフィルタ', async () => {
   expect(getByRole('row', { name: '4-46' })).toBeVisible() // 大日本沿海輿地全図 (レベル17)
 
   // 17以下
-  buttonLevelLE = within(level).getByRole('radio', { name: '以下' })
+  buttonLevelLE = getRadioInItem(getByRole, 'レベル', '以下')
   expect(buttonLevelLE).toBeVisible()
   expect(buttonLevelLE).not.toBeChecked()
   await userEvent.click(buttonLevelLE)
@@ -3189,7 +3173,7 @@ test('レベルによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  buttonLevelLE = within(level).getByRole('radio', { name: '以下' })
+  buttonLevelLE = getRadioInItem(getByRole, 'レベル', '以下')
   expect(buttonLevelLE).toBeVisible()
   expect(buttonLevelLE).toBeChecked()
 
@@ -3201,7 +3185,7 @@ test('レベルによるフィルタ', async () => {
   expect(getByRole('row', { name: '4-46' })).toBeVisible() // 大日本沿海輿地全図 (レベル17)
 
   // 17に等しい
-  buttonLevelEQ = within(level).getByRole('radio', { name: '等しい' })
+  buttonLevelEQ = getRadioInItem(getByRole, 'レベル', '等しい')
   expect(buttonLevelEQ).toBeVisible()
   expect(buttonLevelEQ).not.toBeChecked()
   await userEvent.click(buttonLevelEQ)
@@ -3214,7 +3198,7 @@ test('レベルによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  buttonLevelEQ = within(level).getByRole('radio', { name: '等しい' })
+  buttonLevelEQ = getRadioInItem(getByRole, 'レベル', '等しい')
   expect(buttonLevelEQ).toBeVisible()
   expect(buttonLevelEQ).toBeChecked()
 
@@ -3226,11 +3210,10 @@ test('レベルによるフィルタ', async () => {
   expect(getByRole('row', { name: '4-46' })).toBeVisible() // 大日本沿海輿地全図 (レベル17)
 
   // 条件すべてをリセットするボタンを押す
-  level = getByRole('listitem', { name: 'レベル' })
-  sliderLevel = within(level).getByRole('slider')
+  sliderLevel = getSliderInItem(getByRole, 'レベル')
   expect(sliderLevel).toBeVisible()
   expect(sliderLevel).toHaveValue('17')
-  buttonLevelGE = within(level).getByRole('radio', { name: '以上' })
+  buttonLevelGE = getRadioInItem(getByRole, 'レベル', '以上')
   expect(buttonLevelGE).toBeVisible()
   expect(buttonLevelGE).not.toBeChecked()
   await userEvent.click(
@@ -3247,11 +3230,10 @@ test('レベルによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  level = getByRole('listitem', { name: 'レベル' })
-  sliderLevel = within(level).getByRole('slider')
+  sliderLevel = getSliderInItem(getByRole, 'レベル')
   expect(sliderLevel).toBeVisible()
   expect(sliderLevel).toHaveValue('0')
-  buttonLevelGE = within(level).getByRole('radio', { name: '以上' })
+  buttonLevelGE = getRadioInItem(getByRole, 'レベル', '以上')
   expect(buttonLevelGE).toBeVisible()
   expect(buttonLevelGE).toBeChecked()
 
@@ -4381,7 +4363,7 @@ test('色と種類とレベルによる複合フィルタ', async () => {
   // 種類とパワーアコーディオンアイテムは既に開いている
   expect(
     getByRole('button', {
-      name: '➖ 種類とパワー',
+      name: /種類とパワー/,
       expanded: true,
     })
   ).toBeVisible()
@@ -4394,15 +4376,9 @@ test('色と種類とレベルによる複合フィルタ', async () => {
 
   // 初期状態のチェック
   expect(getByTestId('button-color-all').querySelector('input')).toBeChecked()
-  expect(getByTestId('button-type-all').querySelector('input')).toBeChecked()
-  expect(
-    within(getByRole('listitem', { name: 'レベル' })).getByRole('slider')
-  ).toHaveValue('0')
-  expect(
-    within(getByRole('listitem', { name: 'レベル' })).getByRole('radio', {
-      name: '以上',
-    })
-  ).toBeChecked()
+  expect(getRadioInItem(getByRole, '種類とパワー', 'すべて')).toBeChecked()
+  expect(getSliderInItem(getByRole, 'レベル')).toHaveValue('0')
+  expect(getRadioInItem(getByRole, 'レベル', '以上')).toBeChecked()
 
   // レベル5以下の赤のイジンを探す
   expect(getByRole('row', { name: '4-15' })).toBeVisible() // ねね
@@ -4436,10 +4412,9 @@ test('色と種類とレベルによる複合フィルタ', async () => {
   // userEvent は slider に未対応とのこと。
   // See: https://github.com/testing-library/user-event/issues/871
 
-  fireEvent.change(
-    within(getByRole('listitem', { name: 'レベル' })).getByRole('slider'),
-    { target: { value: '5' } }
-  )
+  fireEvent.change(getSliderInItem(getByRole, 'レベル'), {
+    target: { value: '5' },
+  })
   rerender(
     <TabPaneCard
       deckMain={deckMain}
@@ -4449,21 +4424,11 @@ test('色と種類とレベルによる複合フィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  await userEvent.click(
-    within(getByRole('listitem', { name: 'レベル' })).getByRole('radio', {
-      name: '以下',
-    })
-  )
+  await userEvent.click(getRadioInItem(getByRole, 'レベル', '以下'))
   expect(getByRole('radio', { name: '赤' })).toBeChecked()
   expect(getByRole('radio', { name: 'イジン' })).toBeChecked()
-  expect(
-    within(getByRole('listitem', { name: 'レベル' })).getByRole('slider')
-  ).toHaveValue('5')
-  expect(
-    within(getByRole('listitem', { name: 'レベル' })).getByRole('radio', {
-      name: '以下',
-    })
-  ).toBeChecked()
+  expect(getSliderInItem(getByRole, 'レベル')).toHaveValue('5')
+  expect(getRadioInItem(getByRole, 'レベル', '以下')).toBeChecked()
 
   expect(getByRole('row', { name: '4-15' })).toBeVisible() // ねね
   expect(getByRole('row', { name: '2-9' })).toBeVisible() // 石田三成
@@ -4489,15 +4454,9 @@ test('色と種類とレベルによる複合フィルタ', async () => {
     />
   )
   expect(getByTestId('button-color-all').querySelector('input')).toBeChecked()
-  expect(getByTestId('button-type-all').querySelector('input')).toBeChecked()
-  expect(
-    within(getByRole('listitem', { name: 'レベル' })).getByRole('slider')
-  ).toHaveValue('0')
-  expect(
-    within(getByRole('listitem', { name: 'レベル' })).getByRole('radio', {
-      name: '以上',
-    })
-  ).toBeChecked()
+  expect(getRadioInItem(getByRole, '種類とパワー', 'すべて')).toBeChecked()
+  expect(getSliderInItem(getByRole, 'レベル')).toHaveValue('0')
+  expect(getRadioInItem(getByRole, 'レベル', '以上')).toBeChecked()
 
   expect(getByRole('row', { name: '4-15' })).toBeVisible() // ねね
   expect(getByRole('row', { name: '2-9' })).toBeVisible() // 石田三成
@@ -4855,7 +4814,7 @@ test('キーワードと色と種類の複合によるフィルタ', async () =>
   // 種類とパワーアコーディオンアイテムは既に開いている
   expect(
     getByRole('button', {
-      name: '➖ 種類とパワー',
+      name: /種類とパワー/,
       expanded: true,
     })
   ).toBeVisible()
