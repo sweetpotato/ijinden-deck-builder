@@ -122,19 +122,16 @@ test('フィルタの初期状態', async () => {
 
   expect(
     getByRole('button', {
-      name: '➖ 種類とパワー',
+      name: /種類とパワー/,
       expanded: true,
     })
   ).toBeVisible()
 
-  const spanTypeAll = getByTestId('button-color-all')
-  expect(spanTypeAll).toBeVisible()
-  const buttonTypeAll = spanTypeAll.querySelector('input')
+  const buttonTypeAll = within(
+    getByRole('listitem', { name: '種類とパワー' })
+  ).getByRole('radio', { name: 'すべて' })
   expect(buttonTypeAll).toBeVisible()
   expect(buttonTypeAll).toBeChecked()
-  const labelTypeAll = spanTypeAll.querySelector('label')
-  expect(labelTypeAll).toBeVisible()
-  expect(labelTypeAll.textContent).toBe('すべて')
 
   const buttonTypeIjin = getByRole('radio', { name: 'イジン' })
   expect(buttonTypeIjin).toBeVisible()
@@ -149,16 +146,30 @@ test('フィルタの初期状態', async () => {
   expect(buttonTypeMaryoku).toBeVisible()
   expect(buttonTypeMaryoku).not.toBeChecked()
 
-  const sliderPower = getByTestId('slider-power')
+  const sliderPower = within(
+    getByRole('listitem', { name: '種類とパワー' })
+  ).getByRole('slider')
   expect(sliderPower).toBeVisible()
   expect(sliderPower).not.toBeEnabled()
-  const buttonPowerGE = getByTestId('button-power-ge').querySelector('input')
+  const buttonPowerGE = within(
+    getByRole('listitem', { name: '種類とパワー' })
+  ).getByRole('radio', {
+    name: '以上',
+  })
   expect(buttonPowerGE).toBeVisible()
   expect(buttonPowerGE).not.toBeEnabled()
-  const buttonPowerLE = getByTestId('button-power-le').querySelector('input')
+  const buttonPowerLE = within(
+    getByRole('listitem', { name: '種類とパワー' })
+  ).getByRole('radio', {
+    name: '以下',
+  })
   expect(buttonPowerLE).toBeVisible()
   expect(buttonPowerLE).not.toBeEnabled()
-  const buttonPowerEQ = getByTestId('button-power-eq').querySelector('input')
+  const buttonPowerEQ = within(
+    getByRole('listitem', { name: '種類とパワー' })
+  ).getByRole('radio', {
+    name: '等しい',
+  })
   expect(buttonPowerEQ).toBeVisible()
   expect(buttonPowerEQ).not.toBeEnabled()
 
@@ -215,10 +226,10 @@ test('フィルタの初期状態', async () => {
 
   const spanExpansionAll = getByTestId('button-expansion-all')
   expect(spanExpansionAll).toBeVisible()
-  const buttonExpansionAll = spanTypeAll.querySelector('input')
+  const buttonExpansionAll = spanExpansionAll.querySelector('input')
   expect(buttonExpansionAll).toBeVisible()
   expect(buttonExpansionAll).toBeChecked()
-  const labelExpansionAll = spanTypeAll.querySelector('label')
+  const labelExpansionAll = spanExpansionAll.querySelector('label')
   expect(labelExpansionAll).toBeVisible()
   expect(labelExpansionAll.textContent).toBe('すべて')
 
@@ -275,10 +286,10 @@ test('フィルタの初期状態', async () => {
 
   const spanRarityAll = getByTestId('button-expansion-all')
   expect(spanRarityAll).toBeVisible()
-  const buttonRarityAll = spanTypeAll.querySelector('input')
+  const buttonRarityAll = spanRarityAll.querySelector('input')
   expect(buttonRarityAll).toBeVisible()
   expect(buttonRarityAll).toBeChecked()
-  const labelRarityAll = spanTypeAll.querySelector('label')
+  const labelRarityAll = spanRarityAll.querySelector('label')
   expect(labelRarityAll).toBeVisible()
   expect(labelRarityAll.textContent).toBe('すべて')
 
@@ -2260,7 +2271,7 @@ test('種類によるフィルタ', async () => {
   }
   const zoomIn = vi.fn()
   const interruptSimulator = vi.fn()
-  const { rerender, getByRole, queryByRole, getByTestId } = render(
+  const { rerender, getByRole, queryByRole } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
@@ -2296,13 +2307,15 @@ test('種類によるフィルタ', async () => {
   // 種類とパワーアコーディオンアイテムは既に開いている
   expect(
     getByRole('button', {
-      name: '➖ 種類とパワー',
+      name: /種類とパワー/,
       expanded: true,
     })
   ).toBeVisible()
 
   // 初期状態ではすべてボタンが選択されている
-  let buttonTypeAll = getByTestId('button-type-all').querySelector('input')
+  let buttonTypeAll = within(
+    getByRole('listitem', { name: '種類とパワー' })
+  ).getByRole('radio', { name: 'すべて' })
   expect(buttonTypeAll).toBeVisible()
   expect(buttonTypeAll).toBeChecked()
 
@@ -2404,9 +2417,16 @@ test('種類によるフィルタ', async () => {
   expect(getByRole('row', { name: 'B-13' })).toBeVisible()
 
   // 条件すべてをリセットするボタンを押す
-  buttonTypeAll = getByTestId('button-type-all').querySelector('input')
-  expect(buttonTypeAll).toBeVisible()
-  expect(buttonTypeAll).not.toBeChecked()
+  expect(
+    within(getByRole('listitem', { name: '種類とパワー' })).getByRole('radio', {
+      name: 'すべて',
+    })
+  ).toBeVisible()
+  expect(
+    within(getByRole('listitem', { name: '種類とパワー' })).getByRole('radio', {
+      name: 'すべて',
+    })
+  ).not.toBeChecked()
   await userEvent.click(
     getByRole('button', {
       name: '条件すべてをリセットする',
@@ -2421,9 +2441,16 @@ test('種類によるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  buttonTypeAll = getByTestId('button-type-all').querySelector('input')
-  expect(buttonTypeAll).toBeVisible()
-  expect(buttonTypeAll).toBeChecked()
+  expect(
+    within(getByRole('listitem', { name: '種類とパワー' })).getByRole('radio', {
+      name: 'すべて',
+    })
+  ).toBeVisible()
+  expect(
+    within(getByRole('listitem', { name: '種類とパワー' })).getByRole('radio', {
+      name: 'すべて',
+    })
+  ).toBeChecked()
 
   expect(getByRole('row', { name: 'B-2' })).toBeVisible()
   expect(getByRole('row', { name: 'B-9' })).toBeVisible()
@@ -2446,7 +2473,7 @@ test('イジンのパワーによるフィルタ', async () => {
   }
   const zoomIn = vi.fn()
   const interruptSimulator = vi.fn()
-  const { rerender, getByRole, queryByRole, getByTestId } = render(
+  const { rerender, getByRole, queryByRole } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
@@ -2482,26 +2509,36 @@ test('イジンのパワーによるフィルタ', async () => {
   // 種類とパワーアコーディオンアイテムは既に開いている
   expect(
     getByRole('button', {
-      name: '➖ 種類とパワー',
+      name: /種類とパワー/,
       expanded: true,
     })
   ).toBeVisible()
 
   // 初期状態ではすべてボタンが選択されている
   expect(
-    getByTestId('button-type-all').querySelector('input[type="radio"]')
+    within(getByRole('listitem', { name: '種類とパワー' })).getByRole('radio', {
+      name: 'すべて',
+    })
   ).toBeChecked()
 
   // パワーに関するフォームは無効化されている
-  expect(getByTestId('slider-power')).not.toBeEnabled()
   expect(
-    getByTestId('button-power-ge').querySelector('input')
+    within(getByRole('listitem', { name: '種類とパワー' })).getByRole('slider')
   ).not.toBeEnabled()
   expect(
-    getByTestId('button-power-le').querySelector('input')
+    within(getByRole('listitem', { name: '種類とパワー' })).getByRole('radio', {
+      name: '以上',
+    })
   ).not.toBeEnabled()
   expect(
-    getByTestId('button-power-eq').querySelector('input')
+    within(getByRole('listitem', { name: '種類とパワー' })).getByRole('radio', {
+      name: '以下',
+    })
+  ).not.toBeEnabled()
+  expect(
+    within(getByRole('listitem', { name: '種類とパワー' })).getByRole('radio', {
+      name: '等しい',
+    })
   ).not.toBeEnabled()
 
   // イジンボタンを押す
@@ -2523,17 +2560,33 @@ test('イジンのパワーによるフィルタ', async () => {
   expect(buttonTypeIjin).toBeChecked()
 
   // パワーに関するフォームが有効化される
-  let sliderPower = getByTestId('slider-power')
+  let sliderPower = within(
+    getByRole('listitem', { name: '種類とパワー' })
+  ).getByRole('slider')
   expect(sliderPower).toBeEnabled()
   expect(sliderPower).toHaveValue('0')
-  let buttonPowerGE = getByTestId('button-power-ge').querySelector('input')
+  let buttonPowerGE = within(
+    getByRole('listitem', { name: '種類とパワー' })
+  ).getByRole('radio', {
+    name: '以上',
+  })
+
   expect(buttonPowerGE).toBeEnabled()
   expect(buttonPowerGE).toBeChecked() // 以上がチェックされている
-  let buttonPowerLE = getByTestId('button-power-le').querySelector('input')
+  let buttonPowerLE = within(
+    getByRole('listitem', { name: '種類とパワー' })
+  ).getByRole('radio', {
+    name: '以下',
+  })
+
   expect(buttonPowerLE).toBeEnabled()
   expect(buttonPowerLE).not.toBeChecked()
-  expect(getByTestId('button-power-eq').querySelector('input')).toBeEnabled()
-  let buttonPowerEQ = getByTestId('button-power-eq').querySelector('input')
+  let buttonPowerEQ = within(
+    getByRole('listitem', { name: '種類とパワー' })
+  ).getByRole('radio', {
+    name: '等しい',
+  })
+
   expect(buttonPowerEQ).toBeEnabled()
   expect(buttonPowerEQ).not.toBeChecked()
 
@@ -2543,7 +2596,11 @@ test('イジンのパワーによるフィルタ', async () => {
   expect(getByRole('row', { name: '2-8' })).toBeVisible() // 豊臣秀吉 (10000)
 
   // 以下ボタンを押す
-  await userEvent.click(getByTestId('button-power-le').querySelector('input'))
+  await userEvent.click(
+    within(getByRole('listitem', { name: '種類とパワー' })).getByRole('radio', {
+      name: '以下',
+    })
+  )
   rerender(
     <TabPaneCard
       deckMain={deckMain}
@@ -2553,7 +2610,11 @@ test('イジンのパワーによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  expect(getByTestId('button-power-le').querySelector('input')).toBeChecked()
+  expect(
+    within(getByRole('listitem', { name: '種類とパワー' })).getByRole('radio', {
+      name: '以下',
+    })
+  ).toBeChecked()
 
   expect(getByRole('row', { name: '4-37' })).toBeVisible() // フローレンス・ナイチンゲール (0)
   expect(queryByRole('row', { name: 'G-2' })).toBeNull() // 卑弥呼 (500)
@@ -2561,7 +2622,11 @@ test('イジンのパワーによるフィルタ', async () => {
   expect(queryByRole('row', { name: '2-8' })).toBeNull() // 豊臣秀吉 (10000)
 
   // 等しいボタンを押す
-  await userEvent.click(getByTestId('button-power-eq').querySelector('input'))
+  await userEvent.click(
+    within(getByRole('listitem', { name: '種類とパワー' })).getByRole('radio', {
+      name: '等しい',
+    })
+  )
   rerender(
     <TabPaneCard
       deckMain={deckMain}
@@ -2571,10 +2636,18 @@ test('イジンのパワーによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  expect(getByTestId('button-power-eq').querySelector('input')).toBeChecked()
+  expect(
+    within(getByRole('listitem', { name: '種類とパワー' })).getByRole('radio', {
+      name: '等しい',
+    })
+  ).toBeChecked()
 
   // 以上ボタンを押して、スライダーを500にする
-  await userEvent.click(getByTestId('button-power-ge').querySelector('input'))
+  await userEvent.click(
+    within(getByRole('listitem', { name: '種類とパワー' })).getByRole('radio', {
+      name: '以上',
+    })
+  )
   rerender(
     <TabPaneCard
       deckMain={deckMain}
@@ -2584,8 +2657,15 @@ test('イジンのパワーによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  expect(getByTestId('button-power-ge').querySelector('input')).toBeChecked()
-  fireEvent.change(getByTestId('slider-power'), { target: { value: '500' } })
+  expect(
+    within(getByRole('listitem', { name: '種類とパワー' })).getByRole('radio', {
+      name: '以上',
+    })
+  ).toBeChecked()
+  fireEvent.change(
+    within(getByRole('listitem', { name: '種類とパワー' })).getByRole('slider'),
+    { target: { value: '500' } }
+  )
   rerender(
     <TabPaneCard
       deckMain={deckMain}
@@ -2595,7 +2675,9 @@ test('イジンのパワーによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  expect(getByTestId('slider-power')).toHaveValue('500')
+  expect(
+    within(getByRole('listitem', { name: '種類とパワー' })).getByRole('slider')
+  ).toHaveValue('500')
 
   expect(queryByRole('row', { name: '4-37' })).toBeNull() // フローレンス・ナイチンゲール (0)
   expect(getByRole('row', { name: 'G-2' })).toBeVisible() // 卑弥呼 (500)
@@ -2603,7 +2685,11 @@ test('イジンのパワーによるフィルタ', async () => {
   expect(getByRole('row', { name: '2-8' })).toBeVisible() // 豊臣秀吉 (10000)
 
   // 以下ボタンを押す
-  await userEvent.click(getByTestId('button-power-le').querySelector('input'))
+  await userEvent.click(
+    within(getByRole('listitem', { name: '種類とパワー' })).getByRole('radio', {
+      name: '以下',
+    })
+  )
   rerender(
     <TabPaneCard
       deckMain={deckMain}
@@ -2613,7 +2699,11 @@ test('イジンのパワーによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  expect(getByTestId('button-power-le').querySelector('input')).toBeChecked()
+  expect(
+    within(getByRole('listitem', { name: '種類とパワー' })).getByRole('radio', {
+      name: '以下',
+    })
+  ).toBeChecked()
 
   expect(getByRole('row', { name: '4-37' })).toBeVisible() // フローレンス・ナイチンゲール (0)
   expect(getByRole('row', { name: 'G-2' })).toBeVisible() // 卑弥呼 (500)
@@ -2621,7 +2711,11 @@ test('イジンのパワーによるフィルタ', async () => {
   expect(queryByRole('row', { name: '2-8' })).toBeNull() // 豊臣秀吉 (10000)
 
   // 等しいボタンを押す
-  await userEvent.click(getByTestId('button-power-eq').querySelector('input'))
+  await userEvent.click(
+    within(getByRole('listitem', { name: '種類とパワー' })).getByRole('radio', {
+      name: '等しい',
+    })
+  )
   rerender(
     <TabPaneCard
       deckMain={deckMain}
@@ -2631,7 +2725,11 @@ test('イジンのパワーによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  expect(getByTestId('button-power-eq').querySelector('input')).toBeChecked()
+  expect(
+    within(getByRole('listitem', { name: '種類とパワー' })).getByRole('radio', {
+      name: '等しい',
+    })
+  ).toBeChecked()
 
   expect(queryByRole('row', { name: '4-37' })).toBeNull() // フローレンス・ナイチンゲール (0)
   expect(getByRole('row', { name: 'G-2' })).toBeVisible() // 卑弥呼 (500)
@@ -2639,7 +2737,11 @@ test('イジンのパワーによるフィルタ', async () => {
   expect(queryByRole('row', { name: '2-8' })).toBeNull() // 豊臣秀吉 (10000)
 
   // 以上ボタンを押して、スライダーを5000にする
-  await userEvent.click(getByTestId('button-power-ge').querySelector('input'))
+  await userEvent.click(
+    within(getByRole('listitem', { name: '種類とパワー' })).getByRole('radio', {
+      name: '以上',
+    })
+  )
   rerender(
     <TabPaneCard
       deckMain={deckMain}
@@ -2649,8 +2751,15 @@ test('イジンのパワーによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  expect(getByTestId('button-power-ge').querySelector('input')).toBeChecked()
-  fireEvent.change(getByTestId('slider-power'), { target: { value: '5000' } })
+  expect(
+    within(getByRole('listitem', { name: '種類とパワー' })).getByRole('radio', {
+      name: '以上',
+    })
+  ).toBeChecked()
+  fireEvent.change(
+    within(getByRole('listitem', { name: '種類とパワー' })).getByRole('slider'),
+    { target: { value: '5000' } }
+  )
   rerender(
     <TabPaneCard
       deckMain={deckMain}
@@ -2660,7 +2769,9 @@ test('イジンのパワーによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  expect(getByTestId('slider-power')).toHaveValue('5000')
+  expect(
+    within(getByRole('listitem', { name: '種類とパワー' })).getByRole('slider')
+  ).toHaveValue('5000')
 
   expect(queryByRole('row', { name: '4-37' })).toBeNull() // フローレンス・ナイチンゲール (0)
   expect(queryByRole('row', { name: 'G-2' })).toBeNull() // 卑弥呼 (500)
@@ -2668,7 +2779,11 @@ test('イジンのパワーによるフィルタ', async () => {
   expect(getByRole('row', { name: '2-8' })).toBeVisible() // 豊臣秀吉 (10000)
 
   // 以下ボタンを押す
-  await userEvent.click(getByTestId('button-power-le').querySelector('input'))
+  await userEvent.click(
+    within(getByRole('listitem', { name: '種類とパワー' })).getByRole('radio', {
+      name: '以下',
+    })
+  )
   rerender(
     <TabPaneCard
       deckMain={deckMain}
@@ -2678,7 +2793,11 @@ test('イジンのパワーによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  expect(getByTestId('button-power-le').querySelector('input')).toBeChecked()
+  expect(
+    within(getByRole('listitem', { name: '種類とパワー' })).getByRole('radio', {
+      name: '以下',
+    })
+  ).toBeChecked()
 
   expect(getByRole('row', { name: '4-37' })).toBeVisible() // フローレンス・ナイチンゲール (0)
   expect(getByRole('row', { name: 'G-2' })).toBeVisible() // 卑弥呼 (500)
@@ -2686,7 +2805,11 @@ test('イジンのパワーによるフィルタ', async () => {
   expect(queryByRole('row', { name: '2-8' })).toBeNull() // 豊臣秀吉 (10000)
 
   // 等しいボタンを押す
-  await userEvent.click(getByTestId('button-power-eq').querySelector('input'))
+  await userEvent.click(
+    within(getByRole('listitem', { name: '種類とパワー' })).getByRole('radio', {
+      name: '等しい',
+    })
+  )
   rerender(
     <TabPaneCard
       deckMain={deckMain}
@@ -2696,7 +2819,11 @@ test('イジンのパワーによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  expect(getByTestId('button-power-eq').querySelector('input')).toBeChecked()
+  expect(
+    within(getByRole('listitem', { name: '種類とパワー' })).getByRole('radio', {
+      name: '等しい',
+    })
+  ).toBeChecked()
 
   expect(queryByRole('row', { name: '4-37' })).toBeNull() // フローレンス・ナイチンゲール (0)
   expect(queryByRole('row', { name: 'G-2' })).toBeNull() // 卑弥呼 (500)
@@ -2704,7 +2831,11 @@ test('イジンのパワーによるフィルタ', async () => {
   expect(queryByRole('row', { name: '2-8' })).toBeNull() // 豊臣秀吉 (10000)
 
   // 以上ボタンを押して、スライダーを10000にする
-  await userEvent.click(getByTestId('button-power-ge').querySelector('input'))
+  await userEvent.click(
+    within(getByRole('listitem', { name: '種類とパワー' })).getByRole('radio', {
+      name: '以上',
+    })
+  )
   rerender(
     <TabPaneCard
       deckMain={deckMain}
@@ -2714,8 +2845,15 @@ test('イジンのパワーによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  expect(getByTestId('button-power-ge').querySelector('input')).toBeChecked()
-  fireEvent.change(getByTestId('slider-power'), { target: { value: '10000' } })
+  expect(
+    within(getByRole('listitem', { name: '種類とパワー' })).getByRole('radio', {
+      name: '以上',
+    })
+  ).toBeChecked()
+  fireEvent.change(
+    within(getByRole('listitem', { name: '種類とパワー' })).getByRole('slider'),
+    { target: { value: '10000' } }
+  )
   rerender(
     <TabPaneCard
       deckMain={deckMain}
@@ -2725,7 +2863,9 @@ test('イジンのパワーによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  expect(getByTestId('slider-power')).toHaveValue('10000')
+  expect(
+    within(getByRole('listitem', { name: '種類とパワー' })).getByRole('slider')
+  ).toHaveValue('10000')
 
   expect(queryByRole('row', { name: '4-37' })).toBeNull() // フローレンス・ナイチンゲール (0)
   expect(queryByRole('row', { name: 'G-2' })).toBeNull() // 卑弥呼 (500)
@@ -2733,7 +2873,11 @@ test('イジンのパワーによるフィルタ', async () => {
   expect(getByRole('row', { name: '2-8' })).toBeVisible() // 豊臣秀吉 (10000)
 
   // 以下ボタンを押す
-  await userEvent.click(getByTestId('button-power-le').querySelector('input'))
+  await userEvent.click(
+    within(getByRole('listitem', { name: '種類とパワー' })).getByRole('radio', {
+      name: '以下',
+    })
+  )
   rerender(
     <TabPaneCard
       deckMain={deckMain}
@@ -2743,7 +2887,11 @@ test('イジンのパワーによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  expect(getByTestId('button-power-le').querySelector('input')).toBeChecked()
+  expect(
+    within(getByRole('listitem', { name: '種類とパワー' })).getByRole('radio', {
+      name: '以下',
+    })
+  ).toBeChecked()
 
   expect(getByRole('row', { name: '4-37' })).toBeVisible() // フローレンス・ナイチンゲール (0)
   expect(getByRole('row', { name: 'G-2' })).toBeVisible() // 卑弥呼 (500)
@@ -2751,7 +2899,11 @@ test('イジンのパワーによるフィルタ', async () => {
   expect(getByRole('row', { name: '2-8' })).toBeVisible() // 豊臣秀吉 (10000)
 
   // 等しいボタンを押す
-  await userEvent.click(getByTestId('button-power-eq').querySelector('input'))
+  await userEvent.click(
+    within(getByRole('listitem', { name: '種類とパワー' })).getByRole('radio', {
+      name: '等しい',
+    })
+  )
   rerender(
     <TabPaneCard
       deckMain={deckMain}
@@ -2761,7 +2913,11 @@ test('イジンのパワーによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  expect(getByTestId('button-power-eq').querySelector('input')).toBeChecked()
+  expect(
+    within(getByRole('listitem', { name: '種類とパワー' })).getByRole('radio', {
+      name: '等しい',
+    })
+  ).toBeChecked()
 
   expect(queryByRole('row', { name: '4-37' })).toBeNull() // フローレンス・ナイチンゲール (0)
   expect(queryByRole('row', { name: 'G-2' })).toBeNull() // 卑弥呼 (500)
@@ -2783,17 +2939,29 @@ test('イジンのパワーによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  expect(getByTestId('button-type-all').querySelector('input')).toBeChecked()
+  expect(
+    within(getByRole('listitem', { name: '種類とパワー' })).getByRole('radio', {
+      name: 'すべて',
+    })
+  ).toBeChecked()
   // パワーに関するフォームは無効化されている
-  expect(getByTestId('slider-power')).not.toBeEnabled()
   expect(
-    getByTestId('button-power-ge').querySelector('input')
+    within(getByRole('listitem', { name: '種類とパワー' })).getByRole('slider')
   ).not.toBeEnabled()
   expect(
-    getByTestId('button-power-le').querySelector('input')
+    within(getByRole('listitem', { name: '種類とパワー' })).getByRole('radio', {
+      name: '以上',
+    })
   ).not.toBeEnabled()
   expect(
-    getByTestId('button-power-eq').querySelector('input')
+    within(getByRole('listitem', { name: '種類とパワー' })).getByRole('radio', {
+      name: '以下',
+    })
+  ).not.toBeEnabled()
+  expect(
+    within(getByRole('listitem', { name: '種類とパワー' })).getByRole('radio', {
+      name: '等しい',
+    })
   ).not.toBeEnabled()
 
   expect(getByRole('row', { name: '4-37' })).toBeVisible() // フローレンス・ナイチンゲール (0)
@@ -4381,7 +4549,7 @@ test('色と種類とレベルによる複合フィルタ', async () => {
   // 種類とパワーアコーディオンアイテムは既に開いている
   expect(
     getByRole('button', {
-      name: '➖ 種類とパワー',
+      name: /種類とパワー/,
       expanded: true,
     })
   ).toBeVisible()
@@ -4393,8 +4561,16 @@ test('色と種類とレベルによる複合フィルタ', async () => {
   expect(getByRole('button', { name: /レベル/, expanded: true })).toBeVisible()
 
   // 初期状態のチェック
-  expect(getByTestId('button-color-all').querySelector('input')).toBeChecked()
-  expect(getByTestId('button-type-all').querySelector('input')).toBeChecked()
+  expect(
+    within(getByRole('listitem', { name: '種類とパワー' })).getByRole('radio', {
+      name: 'すべて',
+    })
+  ).toBeChecked()
+  expect(
+    within(getByRole('listitem', { name: '種類とパワー' })).getByRole('radio', {
+      name: 'すべて',
+    })
+  ).toBeChecked()
   expect(
     within(getByRole('listitem', { name: 'レベル' })).getByRole('slider')
   ).toHaveValue('0')
@@ -4489,7 +4665,11 @@ test('色と種類とレベルによる複合フィルタ', async () => {
     />
   )
   expect(getByTestId('button-color-all').querySelector('input')).toBeChecked()
-  expect(getByTestId('button-type-all').querySelector('input')).toBeChecked()
+  expect(
+    within(getByRole('listitem', { name: '種類とパワー' })).getByRole('radio', {
+      name: 'すべて',
+    })
+  ).toBeChecked()
   expect(
     within(getByRole('listitem', { name: 'レベル' })).getByRole('slider')
   ).toHaveValue('0')
@@ -4855,7 +5035,7 @@ test('キーワードと色と種類の複合によるフィルタ', async () =>
   // 種類とパワーアコーディオンアイテムは既に開いている
   expect(
     getByRole('button', {
-      name: '➖ 種類とパワー',
+      name: /種類とパワー/,
       expanded: true,
     })
   ).toBeVisible()

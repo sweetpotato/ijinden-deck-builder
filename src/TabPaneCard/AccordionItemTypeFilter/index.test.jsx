@@ -1,7 +1,13 @@
 import { act } from 'react'
 import { Accordion } from 'react-bootstrap'
 import { afterEach, expect, test } from 'vitest'
-import { cleanup, fireEvent, render, renderHook } from '@testing-library/react'
+import {
+  cleanup,
+  fireEvent,
+  render,
+  renderHook,
+  within,
+} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import enumComparator from '../enumComparator'
@@ -375,4 +381,30 @@ test('イジンを選択して比較方法ボタンを選択する', async () =>
   expect(getByRole('radio', { name: '以下' })).not.toBeChecked()
   expect(getByRole('radio', { name: '等しい' })).toBeDisabled()
   expect(getByRole('radio', { name: '等しい' })).not.toBeChecked()
+})
+
+// prettier-ignore
+test('アクセシブル名はヘッダに含まれている', () => {
+  const { defaultRender } = defaultRenderHook()
+  const { getByRole } = defaultRender()
+
+  // リストアイテムとして取得できる
+  const item = getByRole('listitem', { name: '種類とパワー' })
+  expect(item).toBeVisible()
+  // スライダーとボタンが取得できる
+  expect(within(item).getByRole('radio', { name: 'すべて' })).toBeChecked()
+  expect(within(item).getByRole('radio', { name: 'イジン' })).not.toBeChecked()
+  expect(within(item).getByRole('radio', { name: 'ハイケイ' })).not.toBeChecked()
+  expect(within(item).getByRole('radio', { name: 'マホウ' })).not.toBeChecked()
+  expect(within(item).getByRole('radio', { name: 'マリョク' })).not.toBeChecked()
+  expect(within(item).getByRole('slider')).toBeDisabled()
+  expect(within(item).getByRole('radio', { name: '以上' })).toBeDisabled()
+  expect(within(item).getByRole('radio', { name: '以上' })).toBeChecked()
+  expect(within(item).getByRole('radio', { name: '以下' })).toBeDisabled()
+  expect(within(item).getByRole('radio', { name: '以下' })).not.toBeChecked()
+  expect(within(item).getByRole('radio', { name: '等しい' })).toBeDisabled()
+  expect(within(item).getByRole('radio', { name: '等しい' })).not.toBeChecked()
+  // ヘッダ部分はボタンとして取得できる
+  // TODO 正規表現でなく部分文字列マッチさせたい
+  expect(getByRole('button', { name: /種類とパワー/ })).toBeVisible()
 })
