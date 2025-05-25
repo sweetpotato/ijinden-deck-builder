@@ -3,497 +3,225 @@
 import { act } from 'react'
 import { Accordion } from 'react-bootstrap'
 import { afterEach, expect, test } from 'vitest'
-import { cleanup, render, renderHook } from '@testing-library/react'
+import { cleanup, render, renderHook, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import useAccordionItemGenericFilter from '.'
 
+const dataPhases = [
+  { value: 0, label: 'すべて' },
+  { value: 1, label: 'スタート' },
+  { value: 2, label: 'ドロー' },
+  { value: 3, label: 'メイン' },
+  { value: 4, label: 'エンド' },
+]
+
+const dataAreas = [
+  { value: 0, label: '指定なし' },
+  { value: 1, label: '山札' },
+  { value: 2, label: '手札' },
+  { value: 4, label: '魔力ゾーン' },
+  { value: 8, label: '戦場' },
+  { value: 16, label: '墓地' },
+]
+
+function getState(result) {
+  return result.current[0]
+}
+
+function getResetFn(result) {
+  return result.current[1]
+}
+
+function getRenderFn(result) {
+  return result.current[2]
+}
+
+function defaultRenderHoook(id, title, data) {
+  const { result } = renderHook(() =>
+    useAccordionItemGenericFilter(id, title, data)
+  )
+  const defaultRender = () => {
+    const { rerender, getByRole } = render(
+      <Accordion alwaysOpen>{getRenderFn(result)('0')}</Accordion>
+    )
+    const defaultRerender = () =>
+      rerender(<Accordion alwaysOpen>{getRenderFn(result)('0')}</Accordion>)
+    return { defaultRerender, getByRole }
+  }
+  return { result, defaultRender }
+}
+
 afterEach(cleanup)
 
-const dataExpansionsForTest = [
-  { value: 0, label: 'すべて' },
-  { value: 10, label: '伝説の武将' },
-  { value: 11, label: '美と知の革命' },
-  { value: 12, label: '日本の大天才' },
-  { value: 20, label: '三国の英傑' },
-  { value: 30, label: '発展する医学' },
-]
-
-const dataColors = [
-  { value: 0, label: 'すべて' },
-  { value: 1, label: '赤' },
-  { value: 2, label: '青' },
-  { value: 4, label: '緑' },
-  { value: 8, label: '黄' },
-  { value: 16, label: '紫' },
-  { value: 32, label: '多色' },
-  { value: 64, label: '無色' },
-]
-
-test('エキスパンションのようにビットセットでないフィルタ', async () => {
-  const { result } = renderHook(() =>
-    useAccordionItemGenericFilter(
-      'button-expansion-all',
-      '種類',
-      dataExpansionsForTest
-    )
+test('デフォルトのレンダリング1', () => {
+  // 初期状態はゼロ
+  const { result, defaultRender } = defaultRenderHoook(
+    'button-phase-all',
+    'フェイズ',
+    dataPhases
   )
-  let [state, reset, renderItem] = result.current
-  expect(state).toBe(0)
-  const { rerender, getByRole } = render(
-    <Accordion alwaysOpen>{renderItem('0')}</Accordion>
-  )
+  expect(getState(result)).toBe(0)
 
-  let buttonExpansionAll = getByRole('radio', { name: 'すべて' })
-  expect(buttonExpansionAll).toBeVisible()
-  expect(buttonExpansionAll).toBeChecked() // 選択されている
-  let buttonExpansionRed = getByRole('radio', { name: '伝説の武将' })
-  expect(buttonExpansionRed).toBeVisible()
-  expect(buttonExpansionRed).not.toBeChecked()
-  let buttonExpansionBlue = getByRole('radio', { name: '美と知の革命' })
-  expect(buttonExpansionBlue).toBeVisible()
-  expect(buttonExpansionBlue).not.toBeChecked()
-  let buttonExpansionGreen = getByRole('radio', { name: '日本の大天才' })
-  expect(buttonExpansionGreen).toBeVisible()
-  expect(buttonExpansionGreen).not.toBeChecked()
-  let buttonExpansionYellow = getByRole('radio', { name: '三国の英傑' })
-  expect(buttonExpansionYellow).toBeVisible()
-  expect(buttonExpansionYellow).not.toBeChecked()
-  let buttonExpansionPurple = getByRole('radio', { name: '発展する医学' })
-  expect(buttonExpansionPurple).toBeVisible()
-  expect(buttonExpansionPurple).not.toBeChecked()
+  // ラジオボタンが並んでいる
+  const { getByRole } = defaultRender()
+  expect(getByRole('radio', { name: 'すべて' })).toBeVisible()
+  expect(getByRole('radio', { name: 'すべて' })).toBeChecked()
+  expect(getByRole('radio', { name: 'スタート' })).toBeVisible()
+  expect(getByRole('radio', { name: 'スタート' })).not.toBeChecked()
+  expect(getByRole('radio', { name: 'ドロー' })).toBeVisible()
+  expect(getByRole('radio', { name: 'ドロー' })).not.toBeChecked()
+  expect(getByRole('radio', { name: 'メイン' })).toBeVisible()
+  expect(getByRole('radio', { name: 'メイン' })).not.toBeChecked()
+  expect(getByRole('radio', { name: 'エンド' })).toBeVisible()
+  expect(getByRole('radio', { name: 'エンド' })).not.toBeChecked()
 
-  // 伝説の武将を選択する
-  await userEvent.click(buttonExpansionRed)
-  ;[state, reset, renderItem] = result.current
-  expect(state).toBe(10) // 伝説の武将
-  rerender(<Accordion alwaysOpen>{renderItem('0')}</Accordion>)
+  // 最初のラジオボタンを得る
+  const item = getByRole('listitem', { name: 'フェイズ' })
+  expect(within(item).getByRole('radio', { name: 'すべて' })).toBeVisible()
+  expect(within(item).getByRole('radio', { name: 'すべて' })).toBeChecked()
 
-  buttonExpansionAll = getByRole('radio', { name: 'すべて' })
-  expect(buttonExpansionAll).toBeVisible()
-  expect(buttonExpansionAll).not.toBeChecked()
-  buttonExpansionRed = getByRole('radio', { name: '伝説の武将' })
-  expect(buttonExpansionRed).toBeVisible()
-  expect(buttonExpansionRed).toBeChecked() // 選択されている
-  buttonExpansionBlue = getByRole('radio', { name: '美と知の革命' })
-  expect(buttonExpansionBlue).toBeVisible()
-  expect(buttonExpansionBlue).not.toBeChecked()
-  buttonExpansionGreen = getByRole('radio', { name: '日本の大天才' })
-  expect(buttonExpansionGreen).toBeVisible()
-  expect(buttonExpansionGreen).not.toBeChecked()
-  buttonExpansionYellow = getByRole('radio', { name: '三国の英傑' })
-  expect(buttonExpansionYellow).toBeVisible()
-  expect(buttonExpansionYellow).not.toBeChecked()
-  buttonExpansionPurple = getByRole('radio', { name: '発展する医学' })
-  expect(buttonExpansionPurple).toBeVisible()
-  expect(buttonExpansionPurple).not.toBeChecked()
-
-  // 美と知の革命を選択する
-  await userEvent.click(buttonExpansionBlue)
-  ;[state, reset, renderItem] = result.current
-  expect(state).toBe(11) // 美と知の革命
-  rerender(<Accordion alwaysOpen>{renderItem('0')}</Accordion>)
-
-  buttonExpansionAll = getByRole('radio', { name: 'すべて' })
-  expect(buttonExpansionAll).toBeVisible()
-  expect(buttonExpansionAll).not.toBeChecked()
-  buttonExpansionRed = getByRole('radio', { name: '伝説の武将' })
-  expect(buttonExpansionRed).toBeVisible()
-  expect(buttonExpansionRed).not.toBeChecked()
-  buttonExpansionBlue = getByRole('radio', { name: '美と知の革命' })
-  expect(buttonExpansionBlue).toBeVisible()
-  expect(buttonExpansionBlue).toBeChecked() // 選択されている
-  buttonExpansionGreen = getByRole('radio', { name: '日本の大天才' })
-  expect(buttonExpansionGreen).toBeVisible()
-  expect(buttonExpansionGreen).not.toBeChecked()
-  buttonExpansionYellow = getByRole('radio', { name: '三国の英傑' })
-  expect(buttonExpansionYellow).toBeVisible()
-  expect(buttonExpansionYellow).not.toBeChecked()
-  buttonExpansionPurple = getByRole('radio', { name: '発展する医学' })
-  expect(buttonExpansionPurple).toBeVisible()
-  expect(buttonExpansionPurple).not.toBeChecked()
-
-  // 日本の大天才を選択する
-  await userEvent.click(buttonExpansionGreen)
-  ;[state, reset, renderItem] = result.current
-  expect(state).toBe(12) // 日本の大天才
-  rerender(<Accordion alwaysOpen>{renderItem('0')}</Accordion>)
-
-  buttonExpansionAll = getByRole('radio', { name: 'すべて' })
-  expect(buttonExpansionAll).toBeVisible()
-  expect(buttonExpansionAll).not.toBeChecked()
-  buttonExpansionRed = getByRole('radio', { name: '伝説の武将' })
-  expect(buttonExpansionRed).toBeVisible()
-  expect(buttonExpansionRed).not.toBeChecked()
-  buttonExpansionBlue = getByRole('radio', { name: '美と知の革命' })
-  expect(buttonExpansionBlue).toBeVisible()
-  expect(buttonExpansionBlue).not.toBeChecked()
-  buttonExpansionGreen = getByRole('radio', { name: '日本の大天才' })
-  expect(buttonExpansionGreen).toBeVisible()
-  expect(buttonExpansionGreen).toBeChecked() // // 選択されている
-  buttonExpansionYellow = getByRole('radio', { name: '三国の英傑' })
-  expect(buttonExpansionYellow).toBeVisible()
-  expect(buttonExpansionYellow).not.toBeChecked()
-  buttonExpansionPurple = getByRole('radio', { name: '発展する医学' })
-  expect(buttonExpansionPurple).toBeVisible()
-  expect(buttonExpansionPurple).not.toBeChecked()
-
-  // 三国の英傑を選択する
-  await userEvent.click(buttonExpansionYellow)
-  ;[state, reset, renderItem] = result.current
-  expect(state).toBe(20) // 三国の英傑
-  rerender(<Accordion alwaysOpen>{renderItem('0')}</Accordion>)
-
-  buttonExpansionAll = getByRole('radio', { name: 'すべて' })
-  expect(buttonExpansionAll).toBeVisible()
-  expect(buttonExpansionAll).not.toBeChecked()
-  buttonExpansionRed = getByRole('radio', { name: '伝説の武将' })
-  expect(buttonExpansionRed).toBeVisible()
-  expect(buttonExpansionRed).not.toBeChecked()
-  buttonExpansionBlue = getByRole('radio', { name: '美と知の革命' })
-  expect(buttonExpansionBlue).toBeVisible()
-  expect(buttonExpansionBlue).not.toBeChecked()
-  buttonExpansionGreen = getByRole('radio', { name: '日本の大天才' })
-  expect(buttonExpansionGreen).toBeVisible()
-  expect(buttonExpansionGreen).not.toBeChecked()
-  buttonExpansionYellow = getByRole('radio', { name: '三国の英傑' })
-  expect(buttonExpansionYellow).toBeVisible()
-  expect(buttonExpansionYellow).toBeChecked() // 選択されている
-  buttonExpansionPurple = getByRole('radio', { name: '発展する医学' })
-  expect(buttonExpansionPurple).toBeVisible()
-  expect(buttonExpansionPurple).not.toBeChecked()
-
-  // 発展する医学を選択する
-  await userEvent.click(buttonExpansionPurple)
-  ;[state, reset, renderItem] = result.current
-  expect(state).toBe(30) // 発展する医学
-  rerender(<Accordion alwaysOpen>{renderItem('0')}</Accordion>)
-
-  buttonExpansionAll = getByRole('radio', { name: 'すべて' })
-  expect(buttonExpansionAll).toBeVisible()
-  expect(buttonExpansionAll).not.toBeChecked()
-  buttonExpansionRed = getByRole('radio', { name: '伝説の武将' })
-  expect(buttonExpansionRed).toBeVisible()
-  expect(buttonExpansionRed).not.toBeChecked()
-  buttonExpansionBlue = getByRole('radio', { name: '美と知の革命' })
-  expect(buttonExpansionBlue).toBeVisible()
-  expect(buttonExpansionBlue).not.toBeChecked()
-  buttonExpansionGreen = getByRole('radio', { name: '日本の大天才' })
-  expect(buttonExpansionGreen).toBeVisible()
-  expect(buttonExpansionGreen).not.toBeChecked()
-  buttonExpansionYellow = getByRole('radio', { name: '三国の英傑' })
-  expect(buttonExpansionYellow).toBeVisible()
-  expect(buttonExpansionYellow).not.toBeChecked()
-  buttonExpansionPurple = getByRole('radio', { name: '発展する医学' })
-  expect(buttonExpansionPurple).toBeVisible()
-  expect(buttonExpansionPurple).toBeChecked() // 選択されている
-
-  // 状態をリセットする
-  await act(() => reset())
-  ;[state, reset, renderItem] = result.current
-  expect(state).toBe(0) // すべて
-  rerender(<Accordion alwaysOpen>{renderItem('0')}</Accordion>)
-
-  buttonExpansionAll = getByRole('radio', { name: 'すべて' })
-  expect(buttonExpansionAll).toBeVisible()
-  expect(buttonExpansionAll).toBeChecked() // 選択されている
-  buttonExpansionRed = getByRole('radio', { name: '伝説の武将' })
-  expect(buttonExpansionRed).toBeVisible()
-  expect(buttonExpansionRed).not.toBeChecked()
-  buttonExpansionBlue = getByRole('radio', { name: '美と知の革命' })
-  expect(buttonExpansionBlue).toBeVisible()
-  expect(buttonExpansionBlue).not.toBeChecked()
-  buttonExpansionGreen = getByRole('radio', { name: '日本の大天才' })
-  expect(buttonExpansionGreen).toBeVisible()
-  expect(buttonExpansionGreen).not.toBeChecked()
-  buttonExpansionYellow = getByRole('radio', { name: '三国の英傑' })
-  expect(buttonExpansionYellow).toBeVisible()
-  expect(buttonExpansionYellow).not.toBeChecked()
-  buttonExpansionPurple = getByRole('radio', { name: '発展する医学' })
-  expect(buttonExpansionPurple).toBeVisible()
-  expect(buttonExpansionPurple).not.toBeChecked()
+  // 開閉箇所はボタンとして得られる
+  expect(getByRole('button'), {
+    name: /フェイズ/,
+    expanded: false,
+  }).toBeVisible()
 })
 
-test('色のようにビットセットであるフィルタ', async () => {
-  const { result } = renderHook(() =>
-    useAccordionItemGenericFilter('button-color-all', '色', dataColors)
+test('デフォルトのレンダリング2', () => {
+  // 初期状態はゼロ
+  const { result, defaultRender } = defaultRenderHoook(
+    'button-area-unspecified',
+    '場所',
+    dataAreas
   )
-  let [state, reset, renderItem] = result.current
-  expect(state).toBe(0) // すべて
-  const { rerender, getByRole } = render(
-    <Accordion alwaysOpen>{renderItem('0')}</Accordion>
+  expect(getState(result)).toBe(0)
+
+  // ラジオボタンが並んでいる
+  const { getByRole } = defaultRender()
+  expect(getByRole('radio', { name: '指定なし' })).toBeVisible()
+  expect(getByRole('radio', { name: '指定なし' })).toBeChecked()
+  expect(getByRole('radio', { name: '山札' })).toBeVisible()
+  expect(getByRole('radio', { name: '山札' })).not.toBeChecked()
+  expect(getByRole('radio', { name: '手札' })).toBeVisible()
+  expect(getByRole('radio', { name: '手札' })).not.toBeChecked()
+  expect(getByRole('radio', { name: '魔力ゾーン' })).toBeVisible()
+  expect(getByRole('radio', { name: '魔力ゾーン' })).not.toBeChecked()
+  expect(getByRole('radio', { name: '戦場' })).toBeVisible()
+  expect(getByRole('radio', { name: '戦場' })).not.toBeChecked()
+  expect(getByRole('radio', { name: '墓地' })).toBeVisible()
+  expect(getByRole('radio', { name: '墓地' })).not.toBeChecked()
+
+  // 最初のラジオボタンを得る
+  const item = getByRole('listitem', { name: '場所' })
+  expect(within(item).getByRole('radio', { name: '指定なし' })).toBeVisible()
+  expect(within(item).getByRole('radio', { name: '指定なし' })).toBeChecked()
+
+  // 開閉箇所はボタンとして得られる
+  expect(getByRole('button'), {
+    name: /場所/,
+    expanded: false,
+  }).toBeVisible()
+})
+
+test('ボタンを選択する', async () => {
+  // 初期状態では「すべて」が選択されている
+  const { result, defaultRender } = defaultRenderHoook(
+    'button-phase-all',
+    'フェイズ',
+    dataPhases
   )
+  expect(getState(result)).toBe(0)
+  const { defaultRerender, getByRole } = defaultRender()
+  expect(getByRole('radio', { name: 'すべて' })).toBeChecked()
+  expect(getByRole('radio', { name: 'スタート' })).not.toBeChecked()
+  expect(getByRole('radio', { name: 'ドロー' })).not.toBeChecked()
+  expect(getByRole('radio', { name: 'メイン' })).not.toBeChecked()
+  expect(getByRole('radio', { name: 'エンド' })).not.toBeChecked()
 
-  let buttonColorAll = getByRole('radio', { name: 'すべて' })
-  expect(buttonColorAll).toBeVisible()
-  expect(buttonColorAll).toBeChecked() // 選択されている
-  let buttonColorRed = getByRole('radio', { name: '赤' })
-  expect(buttonColorRed).toBeVisible()
-  expect(buttonColorRed).not.toBeChecked()
-  let buttonColorBlue = getByRole('radio', { name: '青' })
-  expect(buttonColorBlue).toBeVisible()
-  expect(buttonColorBlue).not.toBeChecked()
-  let buttonColorGreen = getByRole('radio', { name: '緑' })
-  expect(buttonColorGreen).toBeVisible()
-  expect(buttonColorGreen).not.toBeChecked()
-  let buttonColorYellow = getByRole('radio', { name: '黄' })
-  expect(buttonColorYellow).toBeVisible()
-  expect(buttonColorYellow).not.toBeChecked()
-  let buttonColorPurple = getByRole('radio', { name: '紫' })
-  expect(buttonColorPurple).toBeVisible()
-  expect(buttonColorPurple).not.toBeChecked()
-  let buttonColorMulticolor = getByRole('radio', { name: '多色' })
-  expect(buttonColorMulticolor).toBeVisible()
-  expect(buttonColorMulticolor).not.toBeChecked()
-  let buttonColorColorless = getByRole('radio', { name: '無色' })
-  expect(buttonColorColorless).toBeVisible()
-  expect(buttonColorColorless).not.toBeChecked()
+  // スタートを選択する
+  await userEvent.click(getByRole('radio', { name: 'スタート' }))
+  expect(getState(result)).toBe(1)
+  defaultRerender()
+  expect(getByRole('radio', { name: 'すべて' })).not.toBeChecked()
+  expect(getByRole('radio', { name: 'スタート' })).toBeChecked()
+  expect(getByRole('radio', { name: 'ドロー' })).not.toBeChecked()
+  expect(getByRole('radio', { name: 'メイン' })).not.toBeChecked()
+  expect(getByRole('radio', { name: 'エンド' })).not.toBeChecked()
 
-  // 赤を選択する
-  await userEvent.click(buttonColorRed)
-  ;[state, reset, renderItem] = result.current
-  expect(state).toBe(1) // 赤
-  rerender(<Accordion alwaysOpen>{renderItem('0')}</Accordion>)
+  // ドローを選択する
+  await userEvent.click(getByRole('radio', { name: 'ドロー' }))
+  expect(getState(result)).toBe(2)
+  defaultRerender()
+  expect(getByRole('radio', { name: 'すべて' })).not.toBeChecked()
+  expect(getByRole('radio', { name: 'スタート' })).not.toBeChecked()
+  expect(getByRole('radio', { name: 'ドロー' })).toBeChecked()
+  expect(getByRole('radio', { name: 'メイン' })).not.toBeChecked()
+  expect(getByRole('radio', { name: 'エンド' })).not.toBeChecked()
 
-  buttonColorAll = getByRole('radio', { name: 'すべて' })
-  expect(buttonColorAll).toBeVisible()
-  expect(buttonColorAll).not.toBeChecked()
-  buttonColorRed = getByRole('radio', { name: '赤' })
-  expect(buttonColorRed).toBeVisible()
-  expect(buttonColorRed).toBeChecked() // 選択されている
-  buttonColorBlue = getByRole('radio', { name: '青' })
-  expect(buttonColorBlue).toBeVisible()
-  expect(buttonColorBlue).not.toBeChecked()
-  buttonColorGreen = getByRole('radio', { name: '緑' })
-  expect(buttonColorGreen).toBeVisible()
-  expect(buttonColorGreen).not.toBeChecked()
-  buttonColorYellow = getByRole('radio', { name: '黄' })
-  expect(buttonColorYellow).toBeVisible()
-  expect(buttonColorYellow).not.toBeChecked()
-  buttonColorPurple = getByRole('radio', { name: '紫' })
-  expect(buttonColorPurple).toBeVisible()
-  expect(buttonColorPurple).not.toBeChecked()
-  buttonColorMulticolor = getByRole('radio', { name: '多色' })
-  expect(buttonColorMulticolor).toBeVisible()
-  expect(buttonColorMulticolor).not.toBeChecked()
-  buttonColorColorless = getByRole('radio', { name: '無色' })
-  expect(buttonColorColorless).toBeVisible()
-  expect(buttonColorColorless).not.toBeChecked()
+  // メインを選択する
+  await userEvent.click(getByRole('radio', { name: 'メイン' }))
+  expect(getState(result)).toBe(3)
+  defaultRerender()
+  expect(getByRole('radio', { name: 'すべて' })).not.toBeChecked()
+  expect(getByRole('radio', { name: 'スタート' })).not.toBeChecked()
+  expect(getByRole('radio', { name: 'ドロー' })).not.toBeChecked()
+  expect(getByRole('radio', { name: 'メイン' })).toBeChecked()
+  expect(getByRole('radio', { name: 'エンド' })).not.toBeChecked()
 
-  // 青を選択する
-  await userEvent.click(buttonColorBlue)
-  ;[state, reset, renderItem] = result.current
-  expect(state).toBe(2) // 青
-  rerender(<Accordion alwaysOpen>{renderItem('0')}</Accordion>)
+  // エンドを選択する
+  await userEvent.click(getByRole('radio', { name: 'エンド' }))
+  expect(getState(result)).toBe(4)
+  defaultRerender()
+  expect(getByRole('radio', { name: 'すべて' })).not.toBeChecked()
+  expect(getByRole('radio', { name: 'スタート' })).not.toBeChecked()
+  expect(getByRole('radio', { name: 'ドロー' })).not.toBeChecked()
+  expect(getByRole('radio', { name: 'メイン' })).not.toBeChecked()
+  expect(getByRole('radio', { name: 'エンド' })).toBeChecked()
 
-  buttonColorAll = getByRole('radio', { name: 'すべて' })
-  expect(buttonColorAll).toBeVisible()
-  expect(buttonColorAll).not.toBeChecked()
-  buttonColorRed = getByRole('radio', { name: '赤' })
-  expect(buttonColorRed).toBeVisible()
-  expect(buttonColorRed).not.toBeChecked()
-  buttonColorBlue = getByRole('radio', { name: '青' })
-  expect(buttonColorBlue).toBeVisible() // 選択されている
-  expect(buttonColorBlue).toBeChecked()
-  buttonColorGreen = getByRole('radio', { name: '緑' })
-  expect(buttonColorGreen).toBeVisible()
-  expect(buttonColorGreen).not.toBeChecked()
-  buttonColorYellow = getByRole('radio', { name: '黄' })
-  expect(buttonColorYellow).toBeVisible()
-  expect(buttonColorYellow).not.toBeChecked()
-  buttonColorPurple = getByRole('radio', { name: '紫' })
-  expect(buttonColorPurple).toBeVisible()
-  expect(buttonColorPurple).not.toBeChecked()
-  buttonColorMulticolor = getByRole('radio', { name: '多色' })
-  expect(buttonColorMulticolor).toBeVisible()
-  expect(buttonColorMulticolor).not.toBeChecked()
-  buttonColorColorless = getByRole('radio', { name: '無色' })
-  expect(buttonColorColorless).toBeVisible()
-  expect(buttonColorColorless).not.toBeChecked()
+  // 「すべて」を再度選択する
+  await userEvent.click(getByRole('radio', { name: 'すべて' }))
+  expect(getState(result)).toBe(0)
+  defaultRerender()
+  expect(getByRole('radio', { name: 'すべて' })).toBeChecked()
+  expect(getByRole('radio', { name: 'スタート' })).not.toBeChecked()
+  expect(getByRole('radio', { name: 'ドロー' })).not.toBeChecked()
+  expect(getByRole('radio', { name: 'メイン' })).not.toBeChecked()
+  expect(getByRole('radio', { name: 'エンド' })).not.toBeChecked()
+})
 
-  // 緑を選択する
-  await userEvent.click(buttonColorGreen)
-  ;[state, reset, renderItem] = result.current
-  expect(state).toBe(4) // 緑
-  rerender(<Accordion alwaysOpen>{renderItem('0')}</Accordion>)
+test('状態をリセットする', async () => {
+  // 初期状態では「すべて」が選択されている
+  const { result, defaultRender } = defaultRenderHoook(
+    'button-phase-all',
+    'フェイズ',
+    dataPhases
+  )
+  expect(getState(result)).toBe(0)
+  const { defaultRerender, getByRole } = defaultRender()
+  expect(getByRole('radio', { name: 'すべて' })).toBeChecked()
+  expect(getByRole('radio', { name: 'スタート' })).not.toBeChecked()
+  expect(getByRole('radio', { name: 'ドロー' })).not.toBeChecked()
+  expect(getByRole('radio', { name: 'メイン' })).not.toBeChecked()
+  expect(getByRole('radio', { name: 'エンド' })).not.toBeChecked()
 
-  buttonColorAll = getByRole('radio', { name: 'すべて' })
-  expect(buttonColorAll).toBeVisible()
-  expect(buttonColorAll).not.toBeChecked()
-  buttonColorRed = getByRole('radio', { name: '赤' })
-  expect(buttonColorRed).toBeVisible()
-  expect(buttonColorRed).not.toBeChecked()
-  buttonColorBlue = getByRole('radio', { name: '青' })
-  expect(buttonColorBlue).toBeVisible()
-  expect(buttonColorBlue).not.toBeChecked()
-  buttonColorGreen = getByRole('radio', { name: '緑' })
-  expect(buttonColorGreen).toBeVisible() // 選択されている
-  expect(buttonColorGreen).toBeChecked()
-  buttonColorYellow = getByRole('radio', { name: '黄' })
-  expect(buttonColorYellow).toBeVisible()
-  expect(buttonColorYellow).not.toBeChecked()
-  buttonColorPurple = getByRole('radio', { name: '紫' })
-  expect(buttonColorPurple).toBeVisible()
-  expect(buttonColorPurple).not.toBeChecked()
-  buttonColorMulticolor = getByRole('radio', { name: '多色' })
-  expect(buttonColorMulticolor).toBeVisible()
-  expect(buttonColorMulticolor).not.toBeChecked()
-  buttonColorColorless = getByRole('radio', { name: '無色' })
-  expect(buttonColorColorless).toBeVisible()
-  expect(buttonColorColorless).not.toBeChecked()
+  // 適当なボタンとしてスタートを選択する
+  await userEvent.click(getByRole('radio', { name: 'スタート' }))
+  expect(getState(result)).toBe(1)
+  defaultRerender()
+  expect(getByRole('radio', { name: 'すべて' })).not.toBeChecked()
+  expect(getByRole('radio', { name: 'スタート' })).toBeChecked()
+  expect(getByRole('radio', { name: 'ドロー' })).not.toBeChecked()
+  expect(getByRole('radio', { name: 'メイン' })).not.toBeChecked()
+  expect(getByRole('radio', { name: 'エンド' })).not.toBeChecked()
 
-  // 黄を選択する
-  await userEvent.click(buttonColorYellow)
-  ;[state, reset, renderItem] = result.current
-  expect(state).toBe(8) // 黄
-  rerender(<Accordion alwaysOpen>{renderItem('0')}</Accordion>)
-
-  buttonColorAll = getByRole('radio', { name: 'すべて' })
-  expect(buttonColorAll).toBeVisible()
-  expect(buttonColorAll).not.toBeChecked()
-  buttonColorRed = getByRole('radio', { name: '赤' })
-  expect(buttonColorRed).toBeVisible()
-  expect(buttonColorRed).not.toBeChecked()
-  buttonColorBlue = getByRole('radio', { name: '青' })
-  expect(buttonColorBlue).toBeVisible()
-  expect(buttonColorBlue).not.toBeChecked()
-  buttonColorGreen = getByRole('radio', { name: '緑' })
-  expect(buttonColorGreen).toBeVisible()
-  expect(buttonColorGreen).not.toBeChecked()
-  buttonColorYellow = getByRole('radio', { name: '黄' })
-  expect(buttonColorYellow).toBeVisible() // 選択されている
-  expect(buttonColorYellow).toBeChecked()
-  buttonColorPurple = getByRole('radio', { name: '紫' })
-  expect(buttonColorPurple).toBeVisible()
-  expect(buttonColorPurple).not.toBeChecked()
-  buttonColorMulticolor = getByRole('radio', { name: '多色' })
-  expect(buttonColorMulticolor).toBeVisible()
-  expect(buttonColorMulticolor).not.toBeChecked()
-  buttonColorColorless = getByRole('radio', { name: '無色' })
-  expect(buttonColorColorless).toBeVisible()
-  expect(buttonColorColorless).not.toBeChecked()
-
-  // 紫を選択する
-  await userEvent.click(buttonColorPurple)
-  ;[state, reset, renderItem] = result.current
-  expect(state).toBe(16) // 紫
-  rerender(<Accordion alwaysOpen>{renderItem('0')}</Accordion>)
-
-  buttonColorAll = getByRole('radio', { name: 'すべて' })
-  expect(buttonColorAll).toBeVisible()
-  expect(buttonColorAll).not.toBeChecked()
-  buttonColorRed = getByRole('radio', { name: '赤' })
-  expect(buttonColorRed).toBeVisible()
-  expect(buttonColorRed).not.toBeChecked()
-  buttonColorBlue = getByRole('radio', { name: '青' })
-  expect(buttonColorBlue).toBeVisible()
-  expect(buttonColorBlue).not.toBeChecked()
-  buttonColorGreen = getByRole('radio', { name: '緑' })
-  expect(buttonColorGreen).toBeVisible()
-  expect(buttonColorGreen).not.toBeChecked()
-  buttonColorYellow = getByRole('radio', { name: '黄' })
-  expect(buttonColorYellow).toBeVisible()
-  expect(buttonColorYellow).not.toBeChecked()
-  buttonColorPurple = getByRole('radio', { name: '紫' })
-  expect(buttonColorPurple).toBeVisible() // 選択されている
-  expect(buttonColorPurple).toBeChecked()
-  buttonColorMulticolor = getByRole('radio', { name: '多色' })
-  expect(buttonColorMulticolor).toBeVisible()
-  expect(buttonColorMulticolor).not.toBeChecked()
-  buttonColorColorless = getByRole('radio', { name: '無色' })
-  expect(buttonColorColorless).toBeVisible()
-  expect(buttonColorColorless).not.toBeChecked()
-
-  // 多色を選択する
-  await userEvent.click(buttonColorMulticolor)
-  ;[state, reset, renderItem] = result.current
-  expect(state).toBe(32) // 多色
-  rerender(<Accordion alwaysOpen>{renderItem('0')}</Accordion>)
-
-  buttonColorAll = getByRole('radio', { name: 'すべて' })
-  expect(buttonColorAll).toBeVisible()
-  expect(buttonColorAll).not.toBeChecked()
-  buttonColorRed = getByRole('radio', { name: '赤' })
-  expect(buttonColorRed).toBeVisible()
-  expect(buttonColorRed).not.toBeChecked()
-  buttonColorBlue = getByRole('radio', { name: '青' })
-  expect(buttonColorBlue).toBeVisible()
-  expect(buttonColorBlue).not.toBeChecked()
-  buttonColorGreen = getByRole('radio', { name: '緑' })
-  expect(buttonColorGreen).toBeVisible()
-  expect(buttonColorGreen).not.toBeChecked()
-  buttonColorYellow = getByRole('radio', { name: '黄' })
-  expect(buttonColorYellow).toBeVisible()
-  expect(buttonColorYellow).not.toBeChecked()
-  buttonColorPurple = getByRole('radio', { name: '紫' })
-  expect(buttonColorPurple).toBeVisible()
-  expect(buttonColorPurple).not.toBeChecked()
-  buttonColorMulticolor = getByRole('radio', { name: '多色' })
-  expect(buttonColorMulticolor).toBeVisible() // 選択されている
-  expect(buttonColorMulticolor).toBeChecked()
-  buttonColorColorless = getByRole('radio', { name: '無色' })
-  expect(buttonColorColorless).toBeVisible()
-  expect(buttonColorColorless).not.toBeChecked()
-
-  // 無色を選択する
-  await userEvent.click(buttonColorColorless)
-  ;[state, reset, renderItem] = result.current
-  expect(state).toBe(64) // 無色
-  rerender(<Accordion alwaysOpen>{renderItem('0')}</Accordion>)
-
-  buttonColorAll = getByRole('radio', { name: 'すべて' })
-  expect(buttonColorAll).toBeVisible()
-  expect(buttonColorAll).not.toBeChecked()
-  buttonColorRed = getByRole('radio', { name: '赤' })
-  expect(buttonColorRed).toBeVisible()
-  expect(buttonColorRed).not.toBeChecked()
-  buttonColorBlue = getByRole('radio', { name: '青' })
-  expect(buttonColorBlue).toBeVisible()
-  expect(buttonColorBlue).not.toBeChecked()
-  buttonColorGreen = getByRole('radio', { name: '緑' })
-  expect(buttonColorGreen).toBeVisible()
-  expect(buttonColorGreen).not.toBeChecked()
-  buttonColorYellow = getByRole('radio', { name: '黄' })
-  expect(buttonColorYellow).toBeVisible()
-  expect(buttonColorYellow).not.toBeChecked()
-  buttonColorPurple = getByRole('radio', { name: '紫' })
-  expect(buttonColorPurple).toBeVisible()
-  expect(buttonColorPurple).not.toBeChecked()
-  buttonColorMulticolor = getByRole('radio', { name: '多色' })
-  expect(buttonColorMulticolor).toBeVisible()
-  expect(buttonColorMulticolor).not.toBeChecked()
-  buttonColorColorless = getByRole('radio', { name: '無色' })
-  expect(buttonColorColorless).toBeVisible() // 選択されている
-  expect(buttonColorColorless).toBeChecked()
-
-  // 状態をリセットする
-  await act(() => reset())
-  ;[state, reset, renderItem] = result.current
-  expect(state).toBe(0) // すべて
-  rerender(<Accordion alwaysOpen>{renderItem('0')}</Accordion>)
-
-  buttonColorAll = getByRole('radio', { name: 'すべて' })
-  expect(buttonColorAll).toBeVisible()
-  expect(buttonColorAll).toBeChecked() // 選択されている
-  buttonColorRed = getByRole('radio', { name: '赤' })
-  expect(buttonColorRed).toBeVisible()
-  expect(buttonColorRed).not.toBeChecked()
-  buttonColorBlue = getByRole('radio', { name: '青' })
-  expect(buttonColorBlue).toBeVisible()
-  expect(buttonColorBlue).not.toBeChecked()
-  buttonColorGreen = getByRole('radio', { name: '緑' })
-  expect(buttonColorGreen).toBeVisible()
-  expect(buttonColorGreen).not.toBeChecked()
-  buttonColorYellow = getByRole('radio', { name: '黄' })
-  expect(buttonColorYellow).toBeVisible()
-  expect(buttonColorYellow).not.toBeChecked()
-  buttonColorPurple = getByRole('radio', { name: '紫' })
-  expect(buttonColorPurple).toBeVisible()
-  expect(buttonColorPurple).not.toBeChecked()
-  buttonColorMulticolor = getByRole('radio', { name: '多色' })
-  expect(buttonColorMulticolor).toBeVisible()
-  expect(buttonColorMulticolor).not.toBeChecked()
-  buttonColorColorless = getByRole('radio', { name: '無色' })
-  expect(buttonColorColorless).toBeVisible()
-  expect(buttonColorColorless).not.toBeChecked()
+  // リセットすると「すべて」が選択される
+  await act(() => getResetFn(result)())
+  expect(getState(result)).toBe(0)
+  defaultRerender()
+  expect(getByRole('radio', { name: 'すべて' })).toBeChecked()
+  expect(getByRole('radio', { name: 'スタート' })).not.toBeChecked()
+  expect(getByRole('radio', { name: 'ドロー' })).not.toBeChecked()
+  expect(getByRole('radio', { name: 'メイン' })).not.toBeChecked()
+  expect(getByRole('radio', { name: 'エンド' })).not.toBeChecked()
 })
