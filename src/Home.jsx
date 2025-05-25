@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { Alert } from 'react-bootstrap'
 import Tab from 'react-bootstrap/Tab'
 import Tabs from 'react-bootstrap/Tabs'
@@ -40,9 +40,9 @@ function Home() {
   const [activeDeckSaved, expandAccordion] = useState(null)
   const [interruptSimulator, renderTabPaneSimulator] = useTabPaneSimulator()
 
-  function moveToDeck() {
+  const moveToDeck = useCallback(() => {
     setActiveTab(enumTabPane.DECK)
-  }
+  }, [setActiveTab])
 
   function moveToLoad() {
     setActiveTab(enumTabPane.LOAD)
