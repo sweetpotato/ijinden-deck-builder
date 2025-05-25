@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-import { useCallback, useState } from 'react'
+import { useCallback, useDeferredValue, useState } from 'react'
 
 import constLevel from '../constLevel'
 import enumComparator from '../enumComparator'
@@ -9,6 +9,9 @@ import AccordionItemLevelFilter from './AccordionItemLevelFilter'
 function useAccordionItemLevelFilter() {
   const [level, setLevel] = useState(constLevel.MIN)
   const [comparator, setComparator] = useState(enumComparator.GE)
+  // See AccordionItemGenericFilter
+  const defferedLevel = useDeferredValue(level)
+  const defferedComparator = useDeferredValue(comparator)
 
   const handleChangeLevel = useCallback(
     (e) => {
@@ -46,8 +49,7 @@ function useAccordionItemLevelFilter() {
       />
     )
   }
-
-  return [level, comparator, reset, render]
+  return [defferedLevel, defferedComparator, reset, render]
 }
 
 export default useAccordionItemLevelFilter

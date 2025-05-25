@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-import { useCallback, useState } from 'react'
+import { useCallback, useDeferredValue, useState } from 'react'
 
 import enumComparator from '../enumComparator'
 import AccordionItemTypeFilter from './AccordionItemTypeFilter'
@@ -9,6 +9,10 @@ function useAccordionItemTypeFilter() {
   const [type, setType] = useState(0)
   const [power, setPower] = useState(0)
   const [comparator, setComparator] = useState(enumComparator.GE)
+  // See AccordionItemGenericFilter
+  const defferedType = useDeferredValue(type)
+  const defferedPower = useDeferredValue(power)
+  const defferedComparator = useDeferredValue(comparator)
   const handleChangeType = useCallback(
     (e) => setType(Number(e.currentTarget.value)),
     [setType]
@@ -38,7 +42,7 @@ function useAccordionItemTypeFilter() {
       handleChangeComparator={handleChangeComparator}
     />
   )
-  return [type, power, comparator, reset, render]
+  return [defferedType, defferedPower, defferedComparator, reset, render]
 }
 
 export default useAccordionItemTypeFilter
