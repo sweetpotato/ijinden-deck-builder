@@ -9,7 +9,7 @@ import enumTerm from '../enumTerm'
 import InputGroupCounter from './InputGroupCounter'
 
 import './index.css'
-import { useId } from 'react'
+import { memo, useId } from 'react'
 
 const dataColorsToCss = [
   { color: enumColor.RED, css: 'bg-ijinden-red' },
@@ -77,7 +77,7 @@ const dataChromagicsToCss = [
   },
 ]
 
-function TableRowCard({
+const TableRowCard = memo(function TableRowCard({
   id,
   name,
   color,
@@ -146,6 +146,6 @@ function TableRowCard({
       </td>
     </tr>
   )
-}
+})
 
 export default TableRowCard
