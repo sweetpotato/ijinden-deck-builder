@@ -37,9 +37,9 @@ function getRenderFn(result) {
   return result.current[2]
 }
 
-function defaultRenderHoook(id, title, data) {
+function defaultRenderHoook(title, data) {
   const { result } = renderHook(() =>
-    useAccordionItemGenericFilter(id, title, data)
+    useAccordionItemGenericFilter(title, data)
   )
   const defaultRender = () => {
     const { rerender, getByRole } = render(
@@ -56,11 +56,7 @@ afterEach(cleanup)
 
 test('デフォルトのレンダリング1', () => {
   // 初期状態はゼロ
-  const { result, defaultRender } = defaultRenderHoook(
-    'button-phase-all',
-    'フェイズ',
-    dataPhases
-  )
+  const { result, defaultRender } = defaultRenderHoook('フェイズ', dataPhases)
   expect(getState(result)).toBe(0)
 
   // ラジオボタンが並んでいる
@@ -90,11 +86,7 @@ test('デフォルトのレンダリング1', () => {
 
 test('デフォルトのレンダリング2', () => {
   // 初期状態はゼロ
-  const { result, defaultRender } = defaultRenderHoook(
-    'button-area-unspecified',
-    '場所',
-    dataAreas
-  )
+  const { result, defaultRender } = defaultRenderHoook('場所', dataAreas)
   expect(getState(result)).toBe(0)
 
   // ラジオボタンが並んでいる
@@ -126,11 +118,7 @@ test('デフォルトのレンダリング2', () => {
 
 test('ボタンを選択する', async () => {
   // 初期状態では「すべて」が選択されている
-  const { result, defaultRender } = defaultRenderHoook(
-    'button-phase-all',
-    'フェイズ',
-    dataPhases
-  )
+  const { result, defaultRender } = defaultRenderHoook('フェイズ', dataPhases)
   expect(getState(result)).toBe(0)
   const { defaultRerender, getByRole } = defaultRender()
   expect(getByRole('radio', { name: 'すべて' })).toBeChecked()
@@ -192,11 +180,7 @@ test('ボタンを選択する', async () => {
 
 test('状態をリセットする', async () => {
   // 初期状態では「すべて」が選択されている
-  const { result, defaultRender } = defaultRenderHoook(
-    'button-phase-all',
-    'フェイズ',
-    dataPhases
-  )
+  const { result, defaultRender } = defaultRenderHoook('フェイズ', dataPhases)
   expect(getState(result)).toBe(0)
   const { defaultRerender, getByRole } = defaultRender()
   expect(getByRole('radio', { name: 'すべて' })).toBeChecked()

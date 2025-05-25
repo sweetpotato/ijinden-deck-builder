@@ -96,18 +96,12 @@ function TabPaneCard({
   interruptSimulator,
 }) {
   const [expansion, resetExpansion, renderExpansion] =
-    useAccordionItemGenericFilter(
-      'button-expansion-all',
-      'エキスパンション',
-      dataExpansions
-    )
+    useAccordionItemGenericFilter('エキスパンション', dataExpansions)
   const [rarity, resetRarity, renderRarity] = useAccordionItemGenericFilter(
-    'button-rarity-all',
     'レアリティ',
     dataRarities
   )
   const [color, resetColor, renderColor] = useAccordionItemGenericFilter(
-    'button-color-all',
     '色',
     dataColors
   )
@@ -116,17 +110,14 @@ function TabPaneCard({
   const [level, levelComparator, resetLevel, renderLevel] =
     useAccordionItemLevelFilter()
   const [trait, resetTrait, renderTrait] = useAccordionItemGenericFilter(
-    'button-trait-unspecified',
     '特性',
     dataTraits
   )
   const [term, resetTerm, renderTerm] = useAccordionItemGenericFilter(
-    'button-term-unspecified',
     '能力語',
     dataTerms
   )
   const [legacy, resetLegacy, renderLegacy] = useAccordionItemGenericFilter(
-    'button-legacy-unspecified',
     '遺業能力',
     dataLegacies
   )

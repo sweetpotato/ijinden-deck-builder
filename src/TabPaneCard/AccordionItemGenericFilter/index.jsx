@@ -4,13 +4,12 @@ import { useState } from 'react'
 
 import AccordionItemGenericFilter from './AccordionItemGenericFilter'
 
-function useAccordionItemGenericFilter(testIdForButton0, title, data) {
+function useAccordionItemGenericFilter(title, data) {
   const [state, setState] = useState(0)
   const reset = () => setState(0)
   const render = (eventKey) => (
     <AccordionItemGenericFilter
       eventKey={eventKey}
-      testIdForButton0={testIdForButton0}
       title={title}
       state={state}
       handleChangeState={(e) => setState(Number(e.currentTarget.value))}
