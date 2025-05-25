@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-import { useState } from 'react'
+import { memo, useState } from 'react'
 import {
   Alert,
   Button,
@@ -188,7 +188,7 @@ function ContainerDeckPart({
   )
 }
 
-function ContainerDeckCard({
+const ContainerDeckCard = memo(function ContainerDeckCard({
   id,
   imageUrl,
   name,
@@ -260,6 +260,6 @@ function ContainerDeckCard({
       </Button>
     </ImageCard>
   )
-}
+})
 
 export default TabPaneDeck
