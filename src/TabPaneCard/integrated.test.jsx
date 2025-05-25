@@ -33,6 +33,10 @@ function getRadioInItem(getByRole, itemName, radioName) {
   })
 }
 
+function getAllRadioInItem(getByRole, itemName) {
+  return within(getByRole('listitem', { name: itemName })).getAllByRole('radio')
+}
+
 function getSliderInItem(getByRole, itemName) {
   return within(getByRole('listitem', { name: itemName })).getByRole('slider')
 }
@@ -41,7 +45,13 @@ function defaultRender() {
   const { result } = renderHook(() => useDeck())
   const zoomIn = vi.fn()
   const interruptSimulator = vi.fn()
-  const { rerender, getByPlaceholderText, getByRole, queryByRole } = render(
+  const {
+    rerender,
+    getByPlaceholderText,
+    getByRole,
+    getAllByRole,
+    queryByRole,
+  } = render(
     <TabPaneCard
       deckMain={result.current[0]}
       deckSide={result.current[1]}
@@ -61,10 +71,306 @@ function defaultRender() {
       />
     )
   }
-  return { defaultRerender, getByPlaceholderText, getByRole, queryByRole }
+  return {
+    defaultRerender,
+    getByPlaceholderText,
+    getByRole,
+    getAllByRole,
+    queryByRole,
+  }
 }
 
 afterEach(cleanup)
+
+test('フィルタの初期状態', async () => {
+  const { defaultRerender, getByPlaceholderText, getAllByRole, getByRole } =
+    defaultRender()
+
+  // アコーディオンすべてを開く
+  // 「条件で絞り込む」を開く
+  await userEvent.click(getCollapsedButton(getByRole, '条件で絞り込む'))
+  defaultRerender()
+  expect(getExpandedButton(getByRole, '条件で絞り込む')).toBeVisible()
+  // エキスパンションを開く
+  await userEvent.click(getCollapsedButton(getByRole, /エキスパンション/))
+  defaultRerender()
+  expect(getExpandedButton(getByRole, /エキスパンション/)).toBeVisible()
+  // レアリティを開く
+  await userEvent.click(getCollapsedButton(getByRole, /レアリティ/))
+  defaultRerender()
+  expect(getExpandedButton(getByRole, /レアリティ/)).toBeVisible()
+  // 色は既に開いている
+  expect(getExpandedButton(getByRole, /色/)).toBeVisible()
+  // 種類とパワーは既に開いている
+  expect(getExpandedButton(getByRole, /種類とパワー/)).toBeVisible()
+  // レベルを開く
+  await userEvent.click(getCollapsedButton(getByRole, /レベル/))
+  defaultRerender()
+  expect(getExpandedButton(getByRole, /レベル/)).toBeVisible()
+  // 特性を開く
+  await userEvent.click(getCollapsedButton(getByRole, /特性/))
+  defaultRerender()
+  expect(getExpandedButton(getByRole, /特性/)).toBeVisible()
+  // 能力語を開く
+  await userEvent.click(getCollapsedButton(getByRole, /能力語/))
+  defaultRerender()
+  expect(getExpandedButton(getByRole, /能力語/)).toBeVisible()
+  // 遺業能力を開く
+  await userEvent.click(getCollapsedButton(getByRole, /遺業能力/))
+  defaultRerender()
+  expect(getExpandedButton(getByRole, /遺業能力/)).toBeVisible()
+
+  // 画面上部のコンポーネント
+  expect(getByPlaceholderText('カード名やルールテキストで検索')).toBeVisible()
+  expect(getByPlaceholderText('カード名やルールテキストで検索')).toHaveValue('')
+  expect(getByRole('button', { name: 'クリア' })).toBeVisible()
+  // prettier-ignore
+  expect(getByRole('checkbox', { name: '特性と遺業能力も検索する' })).toBeVisible()
+  // prettier-ignore
+  expect(getByRole('checkbox', { name: '特性と遺業能力も検索する' })).toBeChecked()
+  // 「条件で絞り込む」の中にあるボタン
+  // prettier-ignore
+  expect(getByRole('button', { name: '条件すべてをリセットする' })).toBeVisible()
+  // フィルタの種類数
+  expect(getAllByRole('listitem').length).toBe(8)
+
+  // エキスパンション
+  expect(getAllRadioInItem(getByRole, 'エキスパンション').length).toBe(10)
+  expect(getRadioInItem(getByRole, 'エキスパンション', 'すべて')).toBeVisible()
+  expect(getRadioInItem(getByRole, 'エキスパンション', 'すべて')).toBeChecked()
+  expect(getByRole('radio', { name: '伝説の武将' })).toBeVisible()
+  expect(getByRole('radio', { name: '伝説の武将' })).not.toBeChecked()
+  expect(getByRole('radio', { name: '美と知の革命' })).toBeVisible()
+  expect(getByRole('radio', { name: '美と知の革命' })).not.toBeChecked()
+  expect(getByRole('radio', { name: '日本の大天才' })).toBeVisible()
+  expect(getByRole('radio', { name: '日本の大天才' })).not.toBeChecked()
+  expect(getByRole('radio', { name: '第１弾ブースター' })).toBeVisible()
+  expect(getByRole('radio', { name: '第１弾ブースター' })).not.toBeChecked()
+  expect(getByRole('radio', { name: '三国の英傑' })).toBeVisible()
+  expect(getByRole('radio', { name: '三国の英傑' })).not.toBeChecked()
+  expect(getByRole('radio', { name: '第２弾ブースター' })).toBeVisible()
+  expect(getByRole('radio', { name: '第２弾ブースター' })).not.toBeChecked()
+  expect(getByRole('radio', { name: '発展する医学' })).toBeVisible()
+  expect(getByRole('radio', { name: '発展する医学' })).not.toBeChecked()
+  expect(getByRole('radio', { name: '第３弾ブースター' })).toBeVisible()
+  expect(getByRole('radio', { name: '第３弾ブースター' })).not.toBeChecked()
+  expect(getByRole('radio', { name: '第４弾ブースター' })).toBeVisible()
+  expect(getByRole('radio', { name: '第４弾ブースター' })).not.toBeChecked()
+
+  // レアリティ
+  expect(getAllRadioInItem(getByRole, 'レアリティ').length).toBe(6)
+  expect(getRadioInItem(getByRole, 'レアリティ', 'すべて')).toBeVisible()
+  expect(getRadioInItem(getByRole, 'レアリティ', 'すべて')).toBeChecked()
+  expect(getByRole('radio', { name: 'Nのみ' })).toBeVisible()
+  expect(getByRole('radio', { name: 'Nのみ' })).not.toBeChecked()
+  expect(getByRole('radio', { name: 'NとR' })).toBeVisible()
+  expect(getByRole('radio', { name: 'NとR' })).not.toBeChecked()
+  expect(getByRole('radio', { name: 'Rのみ' })).toBeVisible()
+  expect(getByRole('radio', { name: 'Rのみ' })).not.toBeChecked()
+  expect(getByRole('radio', { name: 'RとSR' })).toBeVisible()
+  expect(getByRole('radio', { name: 'RとSR' })).not.toBeChecked()
+  expect(getByRole('radio', { name: 'SRのみ' })).toBeVisible()
+  expect(getByRole('radio', { name: 'SRのみ' })).not.toBeChecked()
+
+  // 色
+  expect(getAllRadioInItem(getByRole, '色').length).toBe(8)
+  expect(getRadioInItem(getByRole, '色', 'すべて')).toBeVisible()
+  expect(getRadioInItem(getByRole, '色', 'すべて')).toBeChecked()
+  expect(getByRole('radio', { name: '赤' })).toBeVisible()
+  expect(getByRole('radio', { name: '赤' })).not.toBeChecked()
+  expect(getByRole('radio', { name: '青' })).toBeVisible()
+  expect(getByRole('radio', { name: '青' })).not.toBeChecked()
+  expect(getByRole('radio', { name: '緑' })).toBeVisible()
+  expect(getByRole('radio', { name: '緑' })).not.toBeChecked()
+  expect(getByRole('radio', { name: '黄' })).toBeVisible()
+  expect(getByRole('radio', { name: '黄' })).not.toBeChecked()
+  expect(getByRole('radio', { name: '紫' })).toBeVisible()
+  expect(getByRole('radio', { name: '紫' })).not.toBeChecked()
+  expect(getByRole('radio', { name: '多色' })).toBeVisible()
+  expect(getByRole('radio', { name: '多色' })).not.toBeChecked()
+  expect(getByRole('radio', { name: '無色' })).toBeVisible()
+  expect(getByRole('radio', { name: '無色' })).not.toBeChecked()
+
+  // 種類とパワー
+  // アクセシビリティ確認のためにすべてテストする
+  expect(getAllRadioInItem(getByRole, '色').length).toBe(8)
+  expect(getRadioInItem(getByRole, '種類とパワー', 'すべて')).toBeVisible()
+  expect(getRadioInItem(getByRole, '種類とパワー', 'すべて')).toBeChecked()
+  expect(getByRole('radio', { name: 'イジン' })).toBeVisible()
+  expect(getByRole('radio', { name: 'イジン' })).not.toBeChecked()
+  expect(getByRole('radio', { name: 'ハイケイ' })).toBeVisible()
+  expect(getByRole('radio', { name: 'ハイケイ' })).not.toBeChecked()
+  expect(getByRole('radio', { name: 'マホウ' })).toBeVisible()
+  expect(getByRole('radio', { name: 'マホウ' })).not.toBeChecked()
+  expect(getByRole('radio', { name: 'マリョク' })).toBeVisible()
+  expect(getByRole('radio', { name: 'マリョク' })).not.toBeChecked()
+  expect(getSliderInItem(getByRole, '種類とパワー')).toBeVisible()
+  expect(getSliderInItem(getByRole, '種類とパワー')).toBeDisabled()
+  expect(getSliderInItem(getByRole, '種類とパワー')).toHaveValue('0')
+  expect(getRadioInItem(getByRole, '種類とパワー', '以上')).toBeVisible()
+  expect(getRadioInItem(getByRole, '種類とパワー', '以上')).toBeDisabled()
+  expect(getRadioInItem(getByRole, '種類とパワー', '以上')).toBeChecked()
+  expect(getRadioInItem(getByRole, '種類とパワー', '以下')).toBeVisible()
+  expect(getRadioInItem(getByRole, '種類とパワー', '以下')).toBeDisabled()
+  expect(getRadioInItem(getByRole, '種類とパワー', '以下')).not.toBeChecked()
+  expect(getRadioInItem(getByRole, '種類とパワー', '等しい')).toBeVisible()
+  expect(getRadioInItem(getByRole, '種類とパワー', '等しい')).toBeDisabled()
+  expect(getRadioInItem(getByRole, '種類とパワー', '等しい')).not.toBeChecked()
+
+  // レベル
+  // アクセシビリティ確認のためにすべてテストする
+  expect(getAllRadioInItem(getByRole, 'レベル').length).toBe(3)
+  expect(getSliderInItem(getByRole, 'レベル')).toBeVisible()
+  expect(getSliderInItem(getByRole, 'レベル')).toHaveValue('0')
+  expect(getRadioInItem(getByRole, 'レベル', '以上')).toBeVisible()
+  expect(getRadioInItem(getByRole, 'レベル', '以上')).toBeChecked()
+  expect(getRadioInItem(getByRole, 'レベル', '以下')).toBeVisible()
+  expect(getRadioInItem(getByRole, 'レベル', '以下')).not.toBeChecked()
+  expect(getRadioInItem(getByRole, 'レベル', '等しい')).toBeVisible()
+  expect(getRadioInItem(getByRole, 'レベル', '等しい')).not.toBeChecked()
+
+  // 特性
+  expect(getAllRadioInItem(getByRole, '特性').length).toBe(7)
+  expect(getRadioInItem(getByRole, '特性', '指定なし')).toBeVisible()
+  expect(getRadioInItem(getByRole, '特性', '指定なし')).toBeChecked()
+  expect(getByRole('radio', { name: '剣術' })).toBeVisible()
+  expect(getByRole('radio', { name: '剣術' })).not.toBeChecked()
+  expect(getByRole('radio', { name: '美術' })).toBeVisible()
+  expect(getByRole('radio', { name: '美術' })).not.toBeChecked()
+  expect(getByRole('radio', { name: '音楽' })).toBeVisible()
+  expect(getByRole('radio', { name: '音楽' })).not.toBeChecked()
+  expect(getByRole('radio', { name: '思想' })).toBeVisible()
+  expect(getByRole('radio', { name: '思想' })).not.toBeChecked()
+  expect(getByRole('radio', { name: '医術' })).toBeVisible()
+  expect(getByRole('radio', { name: '医術' })).not.toBeChecked()
+  expect(getByRole('radio', { name: '志願' })).toBeVisible()
+  expect(getByRole('radio', { name: '志願' })).not.toBeChecked()
+
+  // 能力語
+  expect(getAllRadioInItem(getByRole, '能力語').length).toBe(6)
+  expect(getRadioInItem(getByRole, '能力語', '指定なし')).toBeVisible()
+  expect(getRadioInItem(getByRole, '能力語', '指定なし')).toBeChecked()
+  expect(getByRole('radio', { name: '航海' })).toBeVisible()
+  expect(getByRole('radio', { name: '航海' })).not.toBeChecked()
+  expect(getByRole('radio', { name: '執筆' })).toBeVisible()
+  expect(getByRole('radio', { name: '執筆' })).not.toBeChecked()
+  expect(getByRole('radio', { name: '決起' })).toBeVisible()
+  expect(getByRole('radio', { name: '決起' })).not.toBeChecked()
+  expect(getByRole('radio', { name: '徴募' })).toBeVisible()
+  expect(getByRole('radio', { name: '徴募' })).not.toBeChecked()
+  expect(getByRole('radio', { name: '魔導' })).toBeVisible()
+  expect(getByRole('radio', { name: '魔導' })).not.toBeChecked()
+
+  // 遺業能力
+  expect(getAllRadioInItem(getByRole, '遺業能力').length).toBe(10)
+  expect(getRadioInItem(getByRole, '遺業能力', '指定なし')).toBeVisible()
+  expect(getRadioInItem(getByRole, '遺業能力', '指定なし')).toBeChecked()
+  expect(getByRole('radio', { name: '魔力化' })).toBeVisible()
+  expect(getByRole('radio', { name: '魔力化' })).not.toBeChecked()
+  expect(getByRole('radio', { name: '冥府発動' })).toBeVisible()
+  expect(getByRole('radio', { name: '冥府発動' })).not.toBeChecked()
+  expect(getByRole('radio', { name: '復元' })).toBeVisible()
+  expect(getByRole('radio', { name: '復元' })).not.toBeChecked()
+  expect(getByRole('radio', { name: '反魂' })).toBeVisible()
+  expect(getByRole('radio', { name: '反魂' })).not.toBeChecked()
+  expect(getByRole('radio', { name: '木霊' })).toBeVisible()
+  expect(getByRole('radio', { name: '木霊' })).not.toBeChecked()
+  expect(getByRole('radio', { name: '喪神' })).toBeVisible()
+  expect(getByRole('radio', { name: '喪神' })).not.toBeChecked()
+  expect(getByRole('radio', { name: '1ドローする' })).toBeVisible()
+  expect(getByRole('radio', { name: '1ドローする' })).not.toBeChecked()
+  expect(getByRole('radio', { name: '手札に戻す' })).toBeVisible()
+  expect(getByRole('radio', { name: '手札に戻す' })).not.toBeChecked()
+  expect(getByRole('radio', { name: '山札の上か下に戻す' })).toBeVisible()
+  expect(getByRole('radio', { name: '山札の上か下に戻す' })).not.toBeChecked()
+})
+
+test('フィルタの全リセット', async () => {
+  const { defaultRerender, getByRole } = defaultRender()
+
+  // アコーディオンすべてを開く
+  // 「条件で絞り込む」を開く
+  await userEvent.click(getCollapsedButton(getByRole, '条件で絞り込む'))
+  defaultRerender()
+  expect(getExpandedButton(getByRole, '条件で絞り込む')).toBeVisible()
+  // エキスパンションを開く
+  await userEvent.click(getCollapsedButton(getByRole, /エキスパンション/))
+  defaultRerender()
+  expect(getExpandedButton(getByRole, /エキスパンション/)).toBeVisible()
+  // レアリティを開く
+  await userEvent.click(getCollapsedButton(getByRole, /レアリティ/))
+  defaultRerender()
+  expect(getExpandedButton(getByRole, /レアリティ/)).toBeVisible()
+  // 色は既に開いている
+  expect(getExpandedButton(getByRole, /色/)).toBeVisible()
+  // 種類とパワーは既に開いている
+  expect(getExpandedButton(getByRole, /種類とパワー/)).toBeVisible()
+  // レベルを開く
+  await userEvent.click(getCollapsedButton(getByRole, /レベル/))
+  defaultRerender()
+  expect(getExpandedButton(getByRole, /レベル/)).toBeVisible()
+  // 特性を開く
+  await userEvent.click(getCollapsedButton(getByRole, /特性/))
+  defaultRerender()
+  expect(getExpandedButton(getByRole, /特性/)).toBeVisible()
+  // 能力語を開く
+  await userEvent.click(getCollapsedButton(getByRole, /能力語/))
+  defaultRerender()
+  expect(getExpandedButton(getByRole, /能力語/)).toBeVisible()
+  // 遺業能力を開く
+  await userEvent.click(getCollapsedButton(getByRole, /遺業能力/))
+  defaultRerender()
+  expect(getExpandedButton(getByRole, /遺業能力/)).toBeVisible()
+
+  // 各フィルタを適当に選択する
+  // エキスパンション
+  await userEvent.click(getByRole('radio', { name: '第４弾ブースター' }))
+  expect(getByRole('radio', { name: '第４弾ブースター' })).toBeChecked()
+  // レアリティ
+  await userEvent.click(getByRole('radio', { name: 'NとR' }))
+  expect(getByRole('radio', { name: 'NとR' })).toBeChecked()
+  // 色
+  await userEvent.click(getByRole('radio', { name: '紫' }))
+  expect(getByRole('radio', { name: '紫' })).toBeChecked()
+  // 種類とパワー
+  await userEvent.click(getByRole('radio', { name: 'イジン' }))
+  expect(getByRole('radio', { name: 'イジン' })).toBeChecked()
+  // prettier-ignore
+  fireEvent.change(getSliderInItem(getByRole, '種類とパワー'), { target: { value: '3000'}})
+  expect(getSliderInItem(getByRole, '種類とパワー')).toHaveValue('3000')
+  await userEvent.click(getRadioInItem(getByRole, '種類とパワー', '以下'))
+  expect(getRadioInItem(getByRole, '種類とパワー', '以下')).toBeChecked()
+  // レベル
+  // prettier-ignore
+  fireEvent.change(getSliderInItem(getByRole, 'レベル'), { target: { value: '2' }})
+  expect(getSliderInItem(getByRole, 'レベル')).toHaveValue('2')
+  await userEvent.click(getRadioInItem(getByRole, 'レベル', '等しい'))
+  expect(getRadioInItem(getByRole, 'レベル', '等しい')).toBeChecked()
+  // 特性
+  await userEvent.click(getByRole('radio', { name: '医術' }))
+  expect(getByRole('radio', { name: '医術' })).toBeChecked()
+  // 能力語
+  await userEvent.click(getByRole('radio', { name: '航海' }))
+  expect(getByRole('radio', { name: '航海' })).toBeChecked()
+  // 遺業能力
+  await userEvent.click(getByRole('radio', { name: '反魂' }))
+  expect(getByRole('radio', { name: '反魂' })).toBeChecked()
+
+  // 「条件すべてをリセットする」と初期状態に戻る
+  // prettier-ignore
+  await userEvent.click(getByRole('button', { name: '条件すべてをリセットする' }))
+  expect(getRadioInItem(getByRole, 'エキスパンション', 'すべて')).toBeChecked()
+  expect(getRadioInItem(getByRole, 'レアリティ', 'すべて')).toBeChecked()
+  expect(getRadioInItem(getByRole, '色', 'すべて')).toBeChecked()
+  expect(getRadioInItem(getByRole, '種類とパワー', 'すべて')).toBeChecked()
+  expect(getSliderInItem(getByRole, '種類とパワー')).toHaveValue('0')
+  expect(getRadioInItem(getByRole, '種類とパワー', '以上')).toBeChecked()
+  expect(getSliderInItem(getByRole, 'レベル')).toHaveValue('0')
+  expect(getRadioInItem(getByRole, 'レベル', '以上')).toBeChecked()
+  expect(getRadioInItem(getByRole, '特性', '指定なし')).toBeChecked()
+  expect(getRadioInItem(getByRole, '能力語', '指定なし')).toBeChecked()
+  expect(getRadioInItem(getByRole, '遺業能力', '指定なし')).toBeChecked()
+})
 
 test('エキスパンションによるフィルタ', async () => {
   const { defaultRerender, getByRole, queryByRole } = defaultRender()
