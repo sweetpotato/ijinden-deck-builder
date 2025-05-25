@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-import { useContext, useId } from 'react'
+import { memo, useContext, useId } from 'react'
 import {
   AccordionBody,
   AccordionContext,
@@ -10,7 +10,7 @@ import {
 } from 'react-bootstrap'
 import { isAccordionItemSelected } from 'react-bootstrap/esm/AccordionContext'
 
-function AccordionItemGenericFilter({
+const AccordionItemGenericFilter = memo(function AccordionItemGenericFilter({
   eventKey,
   title,
   state,
@@ -68,6 +68,6 @@ function AccordionItemGenericFilter({
       </AccordionBody>
     </AccordionItem>
   )
-}
+})
 
 export default AccordionItemGenericFilter

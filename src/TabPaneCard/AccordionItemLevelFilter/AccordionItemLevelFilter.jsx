@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-import { useContext, useId } from 'react'
+import { memo, useContext, useId } from 'react'
 import {
   AccordionBody,
   AccordionContext,
@@ -14,7 +14,7 @@ import FormRange from 'react-bootstrap/esm/FormRange'
 import constLevel from '../constLevel'
 import enumComparator from '../enumComparator'
 
-function AccordionItemLevelFilter({
+const AccordionItemLevelFilter = memo(function AccordionItemLevelFilter({
   eventKey,
   level,
   comparator,
@@ -105,6 +105,6 @@ function AccordionItemLevelFilter({
       </AccordionBody>
     </AccordionItem>
   )
-}
+})
 
 export default AccordionItemLevelFilter

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 
 import { useLiveQuery } from 'dexie-react-hooks'
-import { useState } from 'react'
+import { memo, useState } from 'react'
 import {
   Accordion,
   AccordionBody,
@@ -104,7 +104,7 @@ function TabPaneLoad({
   )
 }
 
-function AccordionItemDeckSaved({
+const AccordionItemDeckSaved = memo(function AccordionItemDeckSaved({
   deck,
   setDeckTitle,
   dispatchSetFromEntries,
@@ -154,7 +154,7 @@ function AccordionItemDeckSaved({
       </AccordionBody>
     </AccordionItem>
   )
-}
+})
 
 function ContainerDeckSavedPart({ title, deck }) {
   const titleFull = `${title} (${sum(deck.values())}枚)`

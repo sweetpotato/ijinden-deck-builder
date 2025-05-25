@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-import { useContext, useId } from 'react'
+import { memo, useContext, useId } from 'react'
 import {
   AccordionBody,
   AccordionContext,
@@ -40,7 +40,7 @@ function makeLabel(type, power, comparator) {
   return 'すべて'
 }
 
-function AccordionItemTypeFilter({
+const AccordionItemTypeFilter = memo(function AccordionItemTypeFilter({
   eventKey,
   type,
   power,
@@ -196,6 +196,6 @@ function AccordionItemTypeFilter({
       </AccordionBody>
     </AccordionItem>
   )
-}
+})
 
 export default AccordionItemTypeFilter

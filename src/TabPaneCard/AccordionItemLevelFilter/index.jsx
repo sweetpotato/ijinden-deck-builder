@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-import { useState } from 'react'
+import { useCallback, useDeferredValue, useState } from 'react'
 
 import constLevel from '../constLevel'
 import enumComparator from '../enumComparator'
@@ -9,22 +9,29 @@ import AccordionItemLevelFilter from './AccordionItemLevelFilter'
 function useAccordionItemLevelFilter() {
   const [level, setLevel] = useState(constLevel.MIN)
   const [comparator, setComparator] = useState(enumComparator.GE)
+  // See AccordionItemGenericFilter
+  const defferedLevel = useDeferredValue(level)
+  const defferedComparator = useDeferredValue(comparator)
 
-  function handleChangeLevel(e) {
-    const currentValue = Number(e.currentTarget.value)
-    // レベル11から16までのカードは存在しないため、
-    // その値に設定してもあまり有益ではない。
-    // 代わりに、レベル10または17の近い方に四捨五入的に寄せる。
-    if (10 <= currentValue && currentValue < constLevel.MAX) {
-      setLevel(currentValue < (10 + constLevel.MAX) / 2 ? 10 : constLevel.MAX)
-    } else {
-      setLevel(currentValue)
-    }
-  }
+  const handleChangeLevel = useCallback(
+    (e) => {
+      const currentValue = Number(e.currentTarget.value)
+      // レベル11から16までのカードは存在しないため、
+      // その値に設定してもあまり有益ではない。
+      // 代わりに、レベル10または17の近い方に四捨五入的に寄せる。
+      if (10 <= currentValue && currentValue < constLevel.MAX) {
+        setLevel(currentValue < (10 + constLevel.MAX) / 2 ? 10 : constLevel.MAX)
+      } else {
+        setLevel(currentValue)
+      }
+    },
+    [setLevel]
+  )
 
-  function handleChangeComparator(e) {
-    setComparator(e.currentTarget.value)
-  }
+  const handleChangeComparator = useCallback(
+    (e) => setComparator(e.currentTarget.value),
+    [setComparator]
+  )
 
   const reset = () => {
     setLevel(constLevel.MIN)
@@ -42,8 +49,7 @@ function useAccordionItemLevelFilter() {
       />
     )
   }
-
-  return [level, comparator, reset, render]
+  return [defferedLevel, defferedComparator, reset, render]
 }
 
 export default useAccordionItemLevelFilter
