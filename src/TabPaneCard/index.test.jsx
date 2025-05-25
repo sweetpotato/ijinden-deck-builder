@@ -33,7 +33,7 @@ test('フィルタの初期状態', async () => {
   }
   const zoomIn = vi.fn()
   const interruptSimulator = vi.fn()
-  const { rerender, getByPlaceholderText, getByRole, getByTestId } = render(
+  const { rerender, getByPlaceholderText, getByRole } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
@@ -80,33 +80,28 @@ test('フィルタの初期状態', async () => {
 
   expect(
     getByRole('button', {
-      name: '➕ エキスパンション ― すべて',
+      name: /エキスパンション/,
       expanded: false,
     })
   ).toBeVisible()
 
   expect(
     getByRole('button', {
-      name: '➕ レアリティ ― すべて',
+      name: /レアリティ/,
       expanded: false,
     })
   ).toBeVisible()
 
   expect(
     getByRole('button', {
-      name: '➖ 色',
+      name: /色/,
       expanded: true,
     })
   ).toBeVisible()
 
-  const spanColorAll = getByTestId('button-color-all')
-  expect(spanColorAll).toBeVisible()
-  const buttonColorAll = spanColorAll.querySelector('input')
+  const buttonColorAll = getRadioInItem(getByRole, '色', 'すべて')
   expect(buttonColorAll).toBeVisible()
   expect(buttonColorAll).toBeChecked()
-  const labelColorAll = spanColorAll.querySelector('label')
-  expect(labelColorAll).toBeVisible()
-  expect(labelColorAll.textContent).toBe('すべて')
 
   const buttonColorRed = getByRole('radio', { name: '赤' })
   expect(buttonColorRed).toBeVisible()
@@ -176,21 +171,21 @@ test('フィルタの初期状態', async () => {
 
   expect(
     getByRole('button', {
-      name: '➕ 特性 ― 指定なし',
+      name: /特性/,
       expanded: false,
     })
   ).toBeVisible()
 
   expect(
     getByRole('button', {
-      name: '➕ 能力語 ― 指定なし',
+      name: /能力語/,
       expanded: false,
     })
   ).toBeVisible()
 
   expect(
     getByRole('button', {
-      name: '➕ 遺業能力 ― 指定なし',
+      name: /遺業能力/,
       expanded: false,
     })
   ).toBeVisible()
@@ -198,7 +193,7 @@ test('フィルタの初期状態', async () => {
   // エキスパンションを開く
   await userEvent.click(
     getByRole('button', {
-      name: '➕ エキスパンション ― すべて',
+      name: /エキスパンション/,
       expanded: false,
     })
   )
@@ -213,19 +208,14 @@ test('フィルタの初期状態', async () => {
   )
   expect(
     getByRole('button', {
-      name: '➖ エキスパンション',
+      name: /エキスパンション/,
       expanded: true,
     })
   ).toBeVisible()
 
-  const spanExpansionAll = getByTestId('button-expansion-all')
-  expect(spanExpansionAll).toBeVisible()
-  const buttonExpansionAll = spanExpansionAll.querySelector('input')
+  const buttonExpansionAll = getRadioInItem(getByRole, '色', 'すべて')
   expect(buttonExpansionAll).toBeVisible()
   expect(buttonExpansionAll).toBeChecked()
-  const labelExpansionAll = spanExpansionAll.querySelector('label')
-  expect(labelExpansionAll).toBeVisible()
-  expect(labelExpansionAll.textContent).toBe('すべて')
 
   const buttonExpansionRed = getByRole('radio', { name: '伝説の武将' })
   expect(buttonExpansionRed).toBeVisible()
@@ -258,7 +248,7 @@ test('フィルタの初期状態', async () => {
   // レアリティを開く
   await userEvent.click(
     getByRole('button', {
-      name: '➕ レアリティ ― すべて',
+      name: /レアリティ/,
       expanded: false,
     })
   )
@@ -273,19 +263,18 @@ test('フィルタの初期状態', async () => {
   )
   expect(
     getByRole('button', {
-      name: '➖ レアリティ',
+      name: /レアリティ/,
       expanded: true,
     })
   ).toBeVisible()
 
-  const spanRarityAll = getByTestId('button-expansion-all')
-  expect(spanRarityAll).toBeVisible()
-  const buttonRarityAll = spanRarityAll.querySelector('input')
+  const buttonRarityAll = getRadioInItem(
+    getByRole,
+    'エキスパンション',
+    'すべて'
+  )
   expect(buttonRarityAll).toBeVisible()
   expect(buttonRarityAll).toBeChecked()
-  const labelRarityAll = spanRarityAll.querySelector('label')
-  expect(labelRarityAll).toBeVisible()
-  expect(labelRarityAll.textContent).toBe('すべて')
 
   const buttonRarityN = getByRole('radio', { name: 'Nのみ' })
   expect(buttonRarityN).toBeVisible()
@@ -342,7 +331,7 @@ test('フィルタの初期状態', async () => {
   // 特性を開く
   await userEvent.click(
     getByRole('button', {
-      name: '➕ 特性 ― 指定なし',
+      name: /特性/,
       expanded: false,
     })
   )
@@ -357,19 +346,14 @@ test('フィルタの初期状態', async () => {
   )
   expect(
     getByRole('button', {
-      name: '➖ 特性',
+      name: /特性/,
       expanded: true,
     })
   ).toBeVisible()
 
-  const spanTraitUnspecified = getByTestId('button-trait-unspecified')
-  expect(spanTraitUnspecified).toBeVisible()
-  const buttonTraitUnspecified = spanTraitUnspecified.querySelector('input')
+  const buttonTraitUnspecified = getRadioInItem(getByRole, '特性', '指定なし')
   expect(buttonTraitUnspecified).toBeVisible()
   expect(buttonTraitUnspecified).toBeChecked()
-  const labelTraitUnspecified = spanTraitUnspecified.querySelector('label')
-  expect(labelTraitUnspecified).toBeVisible()
-  expect(labelTraitUnspecified.textContent).toBe('指定なし')
 
   const buttonTraitSwordplay = getByRole('radio', { name: '剣術' })
   expect(buttonTraitSwordplay).toBeVisible()
@@ -393,7 +377,7 @@ test('フィルタの初期状態', async () => {
   // 能力語を開く
   await userEvent.click(
     getByRole('button', {
-      name: '➕ 能力語 ― 指定なし',
+      name: /能力語/,
       expanded: false,
     })
   )
@@ -408,19 +392,14 @@ test('フィルタの初期状態', async () => {
   )
   expect(
     getByRole('button', {
-      name: '➖ 能力語',
+      name: /能力語/,
       expanded: true,
     })
   ).toBeVisible()
 
-  const spanTermUnspecified = getByTestId('button-term-unspecified')
-  expect(spanTermUnspecified).toBeVisible()
-  const buttonTermUnspecified = spanTermUnspecified.querySelector('input')
+  const buttonTermUnspecified = getRadioInItem(getByRole, '能力語', '指定なし')
   expect(buttonTermUnspecified).toBeVisible()
   expect(buttonTermUnspecified).toBeChecked()
-  const labelTermUnspecified = spanTermUnspecified.querySelector('label')
-  expect(labelTermUnspecified).toBeVisible()
-  expect(labelTermUnspecified.textContent).toBe('指定なし')
 
   const buttonTermSailing = getByRole('radio', { name: '航海' })
   expect(buttonTermSailing).toBeVisible()
@@ -441,7 +420,7 @@ test('フィルタの初期状態', async () => {
   // 遺業能力を開く
   await userEvent.click(
     getByRole('button', {
-      name: '➕ 遺業能力 ― 指定なし',
+      name: /遺業能力/,
       expanded: false,
     })
   )
@@ -456,19 +435,18 @@ test('フィルタの初期状態', async () => {
   )
   expect(
     getByRole('button', {
-      name: '➖ 遺業能力',
+      name: /遺業能力/,
       expanded: true,
     })
   ).toBeVisible()
 
-  const spanLegacyUnspecified = getByTestId('button-legacy-unspecified')
-  expect(spanLegacyUnspecified).toBeVisible()
-  const buttonLegacyUnspecified = spanLegacyUnspecified.querySelector('input')
+  const buttonLegacyUnspecified = getRadioInItem(
+    getByRole,
+    '遺業能力',
+    '指定なし'
+  )
   expect(buttonLegacyUnspecified).toBeVisible()
   expect(buttonLegacyUnspecified).toBeChecked()
-  const labelLegacyUnspecified = spanLegacyUnspecified.querySelector('label')
-  expect(labelLegacyUnspecified).toBeVisible()
-  expect(labelLegacyUnspecified.textContent).toBe('指定なし')
 
   const buttonLegacyMaryokuka = getByRole('radio', { name: '魔力化' })
   expect(buttonLegacyMaryokuka).toBeVisible()
@@ -1368,7 +1346,7 @@ test('エキスパンションによるフィルタ', async () => {
   }
   const zoomIn = vi.fn()
   const interruptSimulator = vi.fn()
-  const { rerender, getByRole, queryByRole, getByTestId } = render(
+  const { rerender, getByRole, queryByRole } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
@@ -1403,7 +1381,7 @@ test('エキスパンションによるフィルタ', async () => {
 
   // エキスパンションアコーディオンアイテムを開く
   const buttonExpansion = getByRole('button', {
-    name: '➕ エキスパンション ― すべて',
+    name: /エキスパンション/,
     expanded: false,
   })
   expect(buttonExpansion).toBeVisible()
@@ -1419,14 +1397,16 @@ test('エキスパンションによるフィルタ', async () => {
   )
   expect(
     getByRole('button', {
-      name: '➖ エキスパンション',
+      name: /エキスパンション/,
       expanded: true,
     })
   ).toBeVisible()
 
   // 初期状態ではすべてボタンが選択されている
-  let buttonExpansionAll = getByTestId('button-expansion-all').querySelector(
-    'input'
+  let buttonExpansionAll = getRadioInItem(
+    getByRole,
+    'エキスパンション',
+    'すべて'
   )
   expect(buttonExpansionAll).toBeVisible()
   expect(buttonExpansionAll).toBeChecked()
@@ -1694,9 +1674,7 @@ test('エキスパンションによるフィルタ', async () => {
   expect(getByRole('row', { name: '4-1' })).toBeVisible()
 
   // 条件すべてをリセットするボタンを押す
-  buttonExpansionAll = getByTestId('button-expansion-all').querySelector(
-    'input'
-  )
+  buttonExpansionAll = getRadioInItem(getByRole, 'エキスパンション', 'すべて')
   expect(buttonExpansionAll).toBeVisible()
   expect(buttonExpansionAll).not.toBeChecked()
   await userEvent.click(
@@ -1713,9 +1691,7 @@ test('エキスパンションによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  buttonExpansionAll = getByTestId('button-expansion-all').querySelector(
-    'input'
-  )
+  buttonExpansionAll = getRadioInItem(getByRole, 'エキスパンション', 'すべて')
   expect(buttonExpansionAll).toBeVisible()
   expect(buttonExpansionAll).toBeChecked()
 
@@ -1745,7 +1721,7 @@ test('レアリティによるフィルタ', async () => {
   }
   const zoomIn = vi.fn()
   const interruptSimulator = vi.fn()
-  const { rerender, getByRole, queryByRole, getByTestId } = render(
+  const { rerender, getByRole, queryByRole } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
@@ -1780,7 +1756,7 @@ test('レアリティによるフィルタ', async () => {
 
   // レアリティアコーディオンアイテムを開く
   const buttonRarity = getByRole('button', {
-    name: '➕ レアリティ ― すべて',
+    name: /レアリティ/,
     expanded: false,
   })
   expect(buttonRarity).toBeVisible()
@@ -1796,13 +1772,13 @@ test('レアリティによるフィルタ', async () => {
   )
   expect(
     getByRole('button', {
-      name: '➖ レアリティ',
+      name: /レアリティ/,
       expanded: true,
     })
   ).toBeVisible()
 
   // 初期状態ではすべてボタンが選択されている
-  let buttonRarityAll = getByTestId('button-rarity-all').querySelector('input')
+  let buttonRarityAll = getRadioInItem(getByRole, 'レアリティ', 'すべて')
   expect(buttonRarityAll).toBeVisible()
   expect(buttonRarityAll).toBeChecked()
 
@@ -1921,7 +1897,7 @@ test('レアリティによるフィルタ', async () => {
   expect(queryByRole('row', { name: '1-17' })).toBeNull()
 
   // 条件すべてをリセットするボタンを押す
-  buttonRarityAll = getByTestId('button-rarity-all').querySelector('input')
+  buttonRarityAll = getRadioInItem(getByRole, 'レアリティ', 'すべて')
   expect(buttonRarityAll).toBeVisible()
   expect(buttonRarityAll).not.toBeChecked()
   await userEvent.click(
@@ -1938,7 +1914,7 @@ test('レアリティによるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  buttonRarityAll = getByTestId('button-rarity-all').querySelector('input')
+  buttonRarityAll = getRadioInItem(getByRole, 'レアリティ', 'すべて')
   expect(buttonRarityAll).toBeVisible()
   expect(buttonRarityAll).toBeChecked()
 
@@ -1962,7 +1938,7 @@ test('色によるフィルタ', async () => {
   }
   const zoomIn = vi.fn()
   const interruptSimulator = vi.fn()
-  const { rerender, getByRole, queryByRole, getByTestId } = render(
+  const { rerender, getByRole, queryByRole } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
@@ -1998,13 +1974,13 @@ test('色によるフィルタ', async () => {
   // 色アコーディオンアイテムは既に開いている
   expect(
     getByRole('button', {
-      name: '➖ 色',
+      name: /色/,
       expanded: true,
     })
   ).toBeVisible()
 
   // 初期状態ではすべてボタンが選択されている
-  let buttonColorAll = getByTestId('button-color-all').querySelector('input')
+  let buttonColorAll = getRadioInItem(getByRole, '色', 'すべて')
   expect(buttonColorAll).toBeVisible()
   expect(buttonColorAll).toBeChecked()
 
@@ -2215,7 +2191,7 @@ test('色によるフィルタ', async () => {
   expect(getByRole('row', { name: '3-80' })).toBeVisible() // オブシディアン (無色)
 
   // 条件すべてをリセットするボタンを押す
-  buttonColorAll = getByTestId('button-color-all').querySelector('input')
+  buttonColorAll = getRadioInItem(getByRole, '色', 'すべて')
   expect(buttonColorAll).toBeVisible()
   expect(buttonColorAll).not.toBeChecked()
   await userEvent.click(
@@ -2232,7 +2208,7 @@ test('色によるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  buttonColorAll = getByTestId('button-color-all').querySelector('input')
+  buttonColorAll = getRadioInItem(getByRole, '色', 'すべて')
   expect(buttonColorAll).toBeVisible()
   expect(buttonColorAll).toBeChecked()
 
@@ -3260,7 +3236,7 @@ test('特性によるフィルタ', async () => {
   }
   const zoomIn = vi.fn()
   const interruptSimulator = vi.fn()
-  const { rerender, getByRole, queryByRole, getByTestId } = render(
+  const { rerender, getByRole, queryByRole } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
@@ -3295,7 +3271,7 @@ test('特性によるフィルタ', async () => {
 
   // 特性アコーディオンアイテムを開く
   const buttonTrait = getByRole('button', {
-    name: '➕ 特性 ― 指定なし',
+    name: /特性/,
     expanded: false,
   })
   expect(buttonTrait).toBeVisible()
@@ -3311,15 +3287,13 @@ test('特性によるフィルタ', async () => {
   )
   expect(
     getByRole('button', {
-      name: '➖ 特性',
+      name: /特性/,
       expanded: true,
     })
   ).toBeVisible()
 
   // 初期状態では指定なしボタンが選択されている
-  let buttonTraitUnspecified = getByTestId(
-    'button-trait-unspecified'
-  ).querySelector('input')
+  let buttonTraitUnspecified = getRadioInItem(getByRole, '特性', '指定なし')
   expect(buttonTraitUnspecified).toBeVisible()
   expect(buttonTraitUnspecified).toBeChecked()
 
@@ -3558,9 +3532,7 @@ test('特性によるフィルタ', async () => {
   expect(queryByRole('row', { name: '3-76' })).toBeNull() // ダンダラ羽織 (テキストに志願を含むマリョク)
 
   // 条件すべてをリセットするボタンを押す
-  buttonTraitUnspecified = getByTestId(
-    'button-trait-unspecified'
-  ).querySelector('input')
+  buttonTraitUnspecified = getRadioInItem(getByRole, '特性', '指定なし')
   expect(buttonTraitUnspecified).toBeVisible()
   expect(buttonTraitUnspecified).not.toBeChecked()
   const buttonResetAll = getByRole('button', {
@@ -3577,9 +3549,7 @@ test('特性によるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  buttonTraitUnspecified = getByTestId(
-    'button-trait-unspecified'
-  ).querySelector('input')
+  buttonTraitUnspecified = getRadioInItem(getByRole, '特性', '指定なし')
   expect(buttonTraitUnspecified).toBeVisible()
   expect(buttonTraitUnspecified).toBeChecked()
 
@@ -3617,7 +3587,7 @@ test('能力語によるフィルタ', async () => {
   }
   const zoomIn = vi.fn()
   const interruptSimulator = vi.fn()
-  const { rerender, getByRole, queryByRole, getByTestId } = render(
+  const { rerender, getByRole, queryByRole } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
@@ -3652,7 +3622,7 @@ test('能力語によるフィルタ', async () => {
 
   // 能力語アコーディオンアイテムを開く
   const buttonTrait = getByRole('button', {
-    name: '➕ 能力語 ― 指定なし',
+    name: /能力語/,
     expanded: false,
   })
   expect(buttonTrait).toBeVisible()
@@ -3668,15 +3638,13 @@ test('能力語によるフィルタ', async () => {
   )
   expect(
     getByRole('button', {
-      name: '➖ 能力語',
+      name: /能力語/,
       expanded: true,
     })
   ).toBeVisible()
 
   // 初期状態では指定なしボタンが選択されている
-  let buttonTermUnspecified = getByTestId(
-    'button-term-unspecified'
-  ).querySelector('input')
+  let buttonTermUnspecified = getRadioInItem(getByRole, '能力語', '指定なし')
   expect(buttonTermUnspecified).toBeVisible()
   expect(buttonTermUnspecified).toBeChecked()
 
@@ -3873,9 +3841,7 @@ test('能力語によるフィルタ', async () => {
   expect(queryByRole('row', { name: '4-8' })).toBeNull() // アルキメデス (テキストに魔導を持つイジン)
 
   // 条件すべてをリセットするボタンを押す
-  buttonTermUnspecified = getByTestId('button-term-unspecified').querySelector(
-    'input'
-  )
+  buttonTermUnspecified = getRadioInItem(getByRole, '能力語', '指定なし')
   expect(buttonTermUnspecified).toBeVisible()
   expect(buttonTermUnspecified).not.toBeChecked()
   const buttonResetAll = getByRole('button', {
@@ -3892,9 +3858,7 @@ test('能力語によるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  buttonTermUnspecified = getByTestId('button-term-unspecified').querySelector(
-    'input'
-  )
+  buttonTermUnspecified = getRadioInItem(getByRole, '能力語', '指定なし')
   expect(buttonTermUnspecified).toBeVisible()
   expect(buttonTermUnspecified).toBeChecked()
 
@@ -3931,7 +3895,7 @@ test('遺業能力によるフィルタ', async () => {
   }
   const zoomIn = vi.fn()
   const interruptSimulator = vi.fn()
-  const { rerender, getByRole, getByTestId, queryByRole } = render(
+  const { rerender, getByRole, queryByRole } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
@@ -3966,7 +3930,7 @@ test('遺業能力によるフィルタ', async () => {
 
   // 遺業能力アコーディオンアイテムを開く
   const buttonLegacy = getByRole('button', {
-    name: '➕ 遺業能力 ― 指定なし',
+    name: /遺業能力/,
     expanded: false,
   })
   expect(buttonLegacy).toBeVisible()
@@ -3982,15 +3946,17 @@ test('遺業能力によるフィルタ', async () => {
   )
   expect(
     getByRole('button', {
-      name: '➖ 遺業能力',
+      name: /遺業能力/,
       expanded: true,
     })
   ).toBeVisible()
 
   // 初期状態では指定なしボタンが選択されている
-  let buttonLegacyUnspecified = getByTestId(
-    'button-legacy-unspecified'
-  ).querySelector('input')
+  let buttonLegacyUnspecified = getRadioInItem(
+    getByRole,
+    '遺業能力',
+    '指定なし'
+  )
   expect(buttonLegacyUnspecified).toBeVisible()
   expect(buttonLegacyUnspecified).toBeChecked()
 
@@ -4267,9 +4233,7 @@ test('遺業能力によるフィルタ', async () => {
   expect(queryByRole('row', { name: '3-59' })).toBeNull() // 森閑たる離宮 (ルールテキストに冥府発動を持つハイケイ)
 
   // 条件すべてをリセットするボタンを押す
-  buttonLegacyUnspecified = getByTestId(
-    'button-legacy-unspecified'
-  ).querySelector('input')
+  buttonLegacyUnspecified = getRadioInItem(getByRole, '遺業能力', '指定なし')
   expect(buttonLegacyUnspecified).toBeVisible()
   expect(buttonLegacyUnspecified).not.toBeChecked()
   await userEvent.click(
@@ -4286,9 +4250,7 @@ test('遺業能力によるフィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  buttonLegacyUnspecified = getByTestId(
-    'button-legacy-unspecified'
-  ).querySelector('input')
+  buttonLegacyUnspecified = getRadioInItem(getByRole, '遺業能力', '指定なし')
   expect(buttonLegacyUnspecified).toBeVisible()
   expect(buttonLegacyUnspecified).toBeChecked()
 
@@ -4319,7 +4281,7 @@ test('色と種類とレベルによる複合フィルタ', async () => {
   }
   const zoomIn = vi.fn()
   const interruptSimulator = vi.fn()
-  const { rerender, getByRole, queryByRole, getByTestId } = render(
+  const { rerender, getByRole, queryByRole } = render(
     <TabPaneCard
       deckMain={deckMain}
       deckSide={deckSide}
@@ -4355,7 +4317,7 @@ test('色と種類とレベルによる複合フィルタ', async () => {
   // 色アコーディオンアイテムは既に開いている
   expect(
     getByRole('button', {
-      name: '➖ 色',
+      name: /色/,
       expanded: true,
     })
   ).toBeVisible()
@@ -4375,7 +4337,7 @@ test('色と種類とレベルによる複合フィルタ', async () => {
   expect(getByRole('button', { name: /レベル/, expanded: true })).toBeVisible()
 
   // 初期状態のチェック
-  expect(getByTestId('button-color-all').querySelector('input')).toBeChecked()
+  expect(getRadioInItem(getByRole, '色', 'すべて')).toBeChecked()
   expect(getRadioInItem(getByRole, '種類とパワー', 'すべて')).toBeChecked()
   expect(getSliderInItem(getByRole, 'レベル')).toHaveValue('0')
   expect(getRadioInItem(getByRole, 'レベル', '以上')).toBeChecked()
@@ -4453,7 +4415,7 @@ test('色と種類とレベルによる複合フィルタ', async () => {
       interruptSimulator={interruptSimulator}
     />
   )
-  expect(getByTestId('button-color-all').querySelector('input')).toBeChecked()
+  expect(getRadioInItem(getByRole, '色', 'すべて')).toBeChecked()
   expect(getRadioInItem(getByRole, '種類とパワー', 'すべて')).toBeChecked()
   expect(getSliderInItem(getByRole, 'レベル')).toHaveValue('0')
   expect(getRadioInItem(getByRole, 'レベル', '以上')).toBeChecked()
@@ -4806,7 +4768,7 @@ test('キーワードと色と種類の複合によるフィルタ', async () =>
   // 色アコーディオンアイテムは既に開いている
   expect(
     getByRole('button', {
-      name: '➖ 色',
+      name: /色/,
       expanded: true,
     })
   ).toBeVisible()

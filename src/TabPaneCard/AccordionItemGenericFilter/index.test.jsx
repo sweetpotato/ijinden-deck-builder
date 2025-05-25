@@ -3,7 +3,7 @@
 import { act } from 'react'
 import { Accordion } from 'react-bootstrap'
 import { afterEach, expect, test } from 'vitest'
-import { cleanup, render, renderHook } from '@testing-library/react'
+import { cleanup, render, renderHook, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import useAccordionItemGenericFilter from '.'
@@ -42,12 +42,12 @@ function defaultRenderHoook(id, title, data) {
     useAccordionItemGenericFilter(id, title, data)
   )
   const defaultRender = () => {
-    const { rerender, getByRole, getByTestId } = render(
+    const { rerender, getByRole } = render(
       <Accordion alwaysOpen>{getRenderFn(result)('0')}</Accordion>
     )
     const defaultRerender = () =>
       rerender(<Accordion alwaysOpen>{getRenderFn(result)('0')}</Accordion>)
-    return { defaultRerender, getByRole, getByTestId }
+    return { defaultRerender, getByRole }
   }
   return { result, defaultRender }
 }
@@ -64,7 +64,7 @@ test('デフォルトのレンダリング1', () => {
   expect(getState(result)).toBe(0)
 
   // ラジオボタンが並んでいる
-  const { getByRole, getByTestId } = defaultRender()
+  const { getByRole } = defaultRender()
   expect(getByRole('radio', { name: 'すべて' })).toBeVisible()
   expect(getByRole('radio', { name: 'すべて' })).toBeChecked()
   expect(getByRole('radio', { name: 'スタート' })).toBeVisible()
@@ -76,12 +76,10 @@ test('デフォルトのレンダリング1', () => {
   expect(getByRole('radio', { name: 'エンド' })).toBeVisible()
   expect(getByRole('radio', { name: 'エンド' })).not.toBeChecked()
 
-  // 最初のラジオボタンは getByTestId で得られる
-  expect(getByTestId('button-phase-all')).toBeVisible()
-  expect(getByTestId('button-phase-all').querySelector('input')).toBeChecked()
-  expect(
-    getByTestId('button-phase-all').querySelector('label')
-  ).toHaveTextContent('すべて')
+  // 最初のラジオボタンを得る
+  const item = getByRole('listitem', { name: 'フェイズ' })
+  expect(within(item).getByRole('radio', { name: 'すべて' })).toBeVisible()
+  expect(within(item).getByRole('radio', { name: 'すべて' })).toBeChecked()
 
   // 開閉箇所はボタンとして得られる
   expect(getByRole('button'), {
@@ -100,7 +98,7 @@ test('デフォルトのレンダリング2', () => {
   expect(getState(result)).toBe(0)
 
   // ラジオボタンが並んでいる
-  const { getByRole, getByTestId } = defaultRender()
+  const { getByRole } = defaultRender()
   expect(getByRole('radio', { name: '指定なし' })).toBeVisible()
   expect(getByRole('radio', { name: '指定なし' })).toBeChecked()
   expect(getByRole('radio', { name: '山札' })).toBeVisible()
@@ -114,14 +112,10 @@ test('デフォルトのレンダリング2', () => {
   expect(getByRole('radio', { name: '墓地' })).toBeVisible()
   expect(getByRole('radio', { name: '墓地' })).not.toBeChecked()
 
-  // 最初のラジオボタンは getByTestId で得られる
-  expect(getByTestId('button-area-unspecified')).toBeVisible()
-  expect(
-    getByTestId('button-area-unspecified').querySelector('input')
-  ).toBeChecked()
-  expect(
-    getByTestId('button-area-unspecified').querySelector('label')
-  ).toHaveTextContent('指定なし')
+  // 最初のラジオボタンを得る
+  const item = getByRole('listitem', { name: '場所' })
+  expect(within(item).getByRole('radio', { name: '指定なし' })).toBeVisible()
+  expect(within(item).getByRole('radio', { name: '指定なし' })).toBeChecked()
 
   // 開閉箇所はボタンとして得られる
   expect(getByRole('button'), {
