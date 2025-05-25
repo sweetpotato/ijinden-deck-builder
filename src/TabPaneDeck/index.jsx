@@ -12,7 +12,7 @@ import {
   ModalTitle,
 } from 'react-bootstrap'
 
-import { dataCardsArrayForDeck as dataCardsArray } from '../commons/dataCards'
+import { dataCardsMap } from '../commons/dataCards'
 import { dbAddDeck } from '../commons/db'
 import { sum } from '../commons/utils'
 import ImageCard from '../components/ImageCard'
@@ -152,16 +152,29 @@ function ContainerDeckPart({
   isSide = false,
 }) {
   const numCards = sum(deck.values())
+  const deckInternal = [...deck.entries()]
+    .map(([id, numCopies]) => {
+      return {
+        id,
+        numCopies,
+        name: dataCardsMap.get(id).name,
+        imageUrl: dataCardsMap.get(id).imageUrl,
+        orderDeck: dataCardsMap.get(id).orderDeck,
+      }
+    })
+    .sort((a, b) => a.orderDeck - b.orderDeck)
 
   return (
     <>
       <h3 className="m-2">{`${title} (${numCards}枚)`}</h3>
       <div className="container-card-line-up ms-2">
-        {dataCardsArray.map((element) => (
+        {deckInternal.map((element) => (
           <ContainerDeckCard
-            {...element}
             key={element.id}
-            numCopies={deck.has(element.id) ? deck.get(element.id) : 0}
+            id={element.id}
+            imageUrl={element.imageUrl}
+            name={element.name}
+            numCopies={element.numCopies}
             dispatchDecrement={dispatchDecrement}
             dispatchIncrement={dispatchIncrement}
             dispatchMoveOut={dispatchMoveOut}
@@ -212,42 +225,40 @@ function ContainerDeckCard({
 
   const moveText = isSide ? '^' : 'v'
   return (
-    numCopies > 0 && (
-      <ImageCard imageUrl={imageUrl} alt={name} numCopies={numCopies}>
-        <Button
-          variant="primary"
-          size="sm"
-          className="btn-pop"
-          onClick={handleClickMinus}
-        >
-          -
-        </Button>
-        <Button
-          variant="primary"
-          size="sm"
-          className="btn-push"
-          onClick={handleClickPlus}
-        >
-          +
-        </Button>
-        <Button
-          variant="primary"
-          size="sm"
-          className="btn-move"
-          onClick={handleClickMove}
-        >
-          {moveText}
-        </Button>
-        <Button
-          variant="primary"
-          size="sm"
-          className="btn-zoom"
-          onClick={handleClickZoom}
-        >
-          🔍
-        </Button>
-      </ImageCard>
-    )
+    <ImageCard imageUrl={imageUrl} alt={name} numCopies={numCopies}>
+      <Button
+        variant="primary"
+        size="sm"
+        className="btn-pop"
+        onClick={handleClickMinus}
+      >
+        -
+      </Button>
+      <Button
+        variant="primary"
+        size="sm"
+        className="btn-push"
+        onClick={handleClickPlus}
+      >
+        +
+      </Button>
+      <Button
+        variant="primary"
+        size="sm"
+        className="btn-move"
+        onClick={handleClickMove}
+      >
+        {moveText}
+      </Button>
+      <Button
+        variant="primary"
+        size="sm"
+        className="btn-zoom"
+        onClick={handleClickZoom}
+      >
+        🔍
+      </Button>
+    </ImageCard>
   )
 }
 

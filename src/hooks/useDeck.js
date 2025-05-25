@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-import { useReducer } from 'react'
+import { useCallback, useMemo, useReducer } from 'react'
 
 const enumDeckActionType = {
   INCREMENT: 1,
@@ -43,43 +43,80 @@ function useDeck(initialEntriesMain, initialEntriesSide) {
     reducerDeck,
     new Map(initialEntriesSide)
   )
-  const incrementMain = (id) =>
-    dispatchMain({ type: enumDeckActionType.INCREMENT, id })
-  const decrementMain = (id) =>
-    dispatchMain({ type: enumDeckActionType.DECREMENT, id })
-  const incrementSide = (id) =>
-    dispatchSide({ type: enumDeckActionType.INCREMENT, id })
-  const decrementSide = (id) =>
-    dispatchSide({ type: enumDeckActionType.DECREMENT, id })
-  const moveOutMain = (id) => {
-    decrementMain(id)
-    incrementSide(id)
-  }
-  const moveOutSide = (id) => {
-    decrementSide(id)
-    incrementMain(id)
-  }
-  const setFromEntries = (newEntriesMain, newEntriesSide) => {
+  const incrementMain = useCallback(
+    (id) => dispatchMain({ type: enumDeckActionType.INCREMENT, id }),
+    [dispatchMain]
+  )
+  const decrementMain = useCallback(
+    (id) => dispatchMain({ type: enumDeckActionType.DECREMENT, id }),
+    [dispatchMain]
+  )
+  const incrementSide = useCallback(
+    (id) => dispatchSide({ type: enumDeckActionType.INCREMENT, id }),
+    [dispatchSide]
+  )
+  const decrementSide = useCallback(
+    (id) => dispatchSide({ type: enumDeckActionType.DECREMENT, id }),
+    [dispatchSide]
+  )
+  const moveOutMain = useCallback(
+    (id) => {
+      dispatchMain({ type: enumDeckActionType.DECREMENT, id })
+      dispatchSide({ type: enumDeckActionType.INCREMENT, id })
+    },
+    [dispatchMain, dispatchSide]
+  )
+  const moveOutSide = useCallback(
+    (id) => {
+      dispatchSide({ type: enumDeckActionType.DECREMENT, id })
+      dispatchMain({ type: enumDeckActionType.INCREMENT, id })
+    },
+    [dispatchMain, dispatchSide]
+  )
+  const setFromEntries = useCallback(
+    (newEntriesMain, newEntriesSide) => {
+      dispatchMain({
+        type: enumDeckActionType.UNCONDITIONAL_SET,
+        deck: new Map(newEntriesMain),
+      })
+      dispatchSide({
+        type: enumDeckActionType.UNCONDITIONAL_SET,
+        deck: new Map(newEntriesSide),
+      })
+    },
+    [dispatchMain, dispatchSide]
+  )
+  const clear = useCallback(() => {
     dispatchMain({
       type: enumDeckActionType.UNCONDITIONAL_SET,
-      deck: new Map(newEntriesMain),
+      deck: new Map(),
     })
     dispatchSide({
       type: enumDeckActionType.UNCONDITIONAL_SET,
-      deck: new Map(newEntriesSide),
+      deck: new Map(),
     })
-  }
-  const clear = () => setFromEntries([], [])
-  const dispatch = {
+  }, [dispatchMain, dispatchSide])
+  const dispatch = useMemo(() => {
+    return {
+      incrementMain,
+      incrementSide,
+      decrementMain,
+      decrementSide,
+      moveOutMain,
+      moveOutSide,
+      setFromEntries,
+      clear,
+    }
+  }, [
     incrementMain,
     incrementSide,
     decrementMain,
     decrementSide,
-    moveOutSide,
     moveOutMain,
+    moveOutSide,
     setFromEntries,
     clear,
-  }
+  ])
   return [main, side, dispatch]
 }
 

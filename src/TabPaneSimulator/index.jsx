@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-import { useReducer } from 'react'
+import { useCallback, useReducer } from 'react'
 
 import TabPaneSimulator from './TabPaneSimulator'
 
@@ -95,9 +95,9 @@ function useTabPaneSimulator() {
     continue: () => dispatch(enumActionSimulator.CONTINUE),
     checkMainDeck: () => dispatch(enumActionSimulator.CHECK_MAIN_DECK),
   }
-  const interrupt = () => {
+  const interrupt = useCallback(() => {
     dispatch(enumActionSimulator.INTERRUPT)
-  }
+  }, [dispatch])
   const render = (deck) => {
     return (
       <TabPaneSimulator
