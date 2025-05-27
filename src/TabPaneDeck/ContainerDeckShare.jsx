@@ -50,6 +50,7 @@ function ContainerDeckShare({ deckMain, deckSide }) {
         </Overlay>
         <FormControl
           readOnly
+          type="text"
           value={deckUrl || '(共有できる条件を満たしていません)'}
         />
       </InputGroup>
