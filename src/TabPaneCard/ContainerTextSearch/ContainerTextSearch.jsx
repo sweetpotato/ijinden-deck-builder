@@ -37,6 +37,7 @@ function ContainerTextSearch({
         <InputGroup>
           <FormControl
             ref={ref}
+            type="text"
             placeholder="カード名やルールテキストで検索"
             onChange={handleChangeKeywords}
           />
