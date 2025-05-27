@@ -39,9 +39,9 @@ function ContainerDeckImport({ dispatchSetFromEntries }) {
       <div className="m-2">
         <InputGroup>
           <Button variant="outline-secondary" onClick={handleClickImport}>
-            共有リンクでインポートβ◀
+            インポート◀
           </Button>
-          <FormControl ref={ref} placeholder="ここに共有リンクをペースト" />
+          <FormControl ref={ref} placeholder="ここに共有リンクを貼り付け" />
         </InputGroup>
       </div>
       {showError && (

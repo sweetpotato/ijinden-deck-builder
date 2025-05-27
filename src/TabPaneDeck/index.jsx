@@ -138,7 +138,7 @@ function TabPaneDeck({
       <h2 className="m-2">レシピを共有</h2>
       <ContainerDeckShare deckMain={deckMain} deckSide={deckSide} />
       <ContainerDeckExport deckMain={deckMain} deckSide={deckSide} />
-      <h2 className="m-2">レシピをインポート</h2>
+      <h2 className="m-2">共有リンクでインポートβ</h2>
       <ContainerDeckImport
         dispatchSetFromEntries={dispatchDeck.setFromEntries}
       />
