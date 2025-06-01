@@ -3,8 +3,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { Button, FormControl, Overlay, Tooltip } from 'react-bootstrap'
 
-import { dataCardsMap } from '../commons/dataCards'
-import { sum } from '../commons/utils'
+import { dataCardsMap } from '../../commons/dataCards'
+import { sum } from '../../commons/utils'
 
 function makeTextExportedPart(title, deck) {
   const numCards = sum(deck.values())
