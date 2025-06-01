@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { Alert, Button, FormControl, InputGroup } from 'react-bootstrap'
-import { decodeDeck } from '../commons/dataCards'
+import { decodeDeck } from '../../commons/dataCards'
 
 function ContainerDeckImport({ dispatchSetFromEntries }) {
   const ref = useRef()

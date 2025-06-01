@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: MIT
 
-import { cleanup, render } from '@testing-library/react'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
-import ContainerDeckShare from './ContainerDeckShare'
+import { cleanup, render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+
+import ContainerDeckShare from '.'
 
 beforeEach(() => {
   Object.assign(navigator, {

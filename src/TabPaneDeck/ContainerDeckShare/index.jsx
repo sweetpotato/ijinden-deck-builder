@@ -9,7 +9,7 @@ import {
   Tooltip,
 } from 'react-bootstrap'
 
-import { encodeDeck } from '../commons/dataCards'
+import { encodeDeck } from '../../commons/dataCards'
 
 function ContainerDeckShare({ deckMain, deckSide }) {
   const [showCopied, setShowCopied] = useState(false)
