@@ -32,8 +32,8 @@ test('レンダリングとアクセシビリティ', async () => {
   expect(getByRole('button')).toBeVisible()
   expect(getByRole('button')).toHaveTextContent('▼テキストデータをコピー')
   // テキストデータを保持したテキストエリアがある
-  // TODO アクセシブル名で取得できるようにする
-  expect(getByRole('textbox')).toBeVisible()
+  // prettier-ignore
+  expect(getByRole('textbox'), { name: '▼テキストデータをコピー' }).toBeVisible()
   // 空のデッキのテキストデータ
   // 改行は LF である
   expect(getByRole('textbox')).toHaveValue('メインデッキ\t0\n\nサイドデッキ\t0')
