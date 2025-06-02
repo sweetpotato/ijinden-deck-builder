@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import { Button, FormControl, Overlay, Tooltip } from 'react-bootstrap'
 
 import { dataCardsMap } from '../../commons/dataCards'
@@ -25,6 +25,7 @@ function makeTextExported(deckMain, deckSide) {
 function ContainerDeckExport({ deckMain, deckSide }) {
   const [showCopied, setShowCopied] = useState(false)
   const refButton = useRef()
+  const idButton = useId()
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -39,6 +40,7 @@ function ContainerDeckExport({ deckMain, deckSide }) {
     <>
       <div className="m-2">
         <Button
+          id={idButton}
           ref={refButton}
           variant="outline-secondary"
           onClick={async () => {
@@ -55,6 +57,7 @@ function ContainerDeckExport({ deckMain, deckSide }) {
       <div className="m-2">
         <FormControl
           readOnly
+          aria-labelledby={idButton}
           as="textarea"
           rows={deckMain.size + deckSide.size + 3}
           value={textExported}
