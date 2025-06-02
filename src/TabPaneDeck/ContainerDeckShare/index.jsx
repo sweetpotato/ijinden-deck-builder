@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import {
   Button,
   FormControl,
@@ -14,6 +14,7 @@ import { encodeDeck } from '../../commons/dataCards'
 function ContainerDeckShare({ deckMain, deckSide }) {
   const [showCopied, setShowCopied] = useState(false)
   const refButton = useRef()
+  const idButton = useId()
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -31,6 +32,7 @@ function ContainerDeckShare({ deckMain, deckSide }) {
     <div className="m-2">
       <InputGroup>
         <Button
+          id={idButton}
           ref={refButton}
           variant="outline-secondary"
           disabled={!deckUrl}
@@ -50,6 +52,7 @@ function ContainerDeckShare({ deckMain, deckSide }) {
         </Overlay>
         <FormControl
           readOnly
+          aria-labelledby={idButton}
           type="text"
           value={deckUrl || '(共有できる条件を満たしていません)'}
         />

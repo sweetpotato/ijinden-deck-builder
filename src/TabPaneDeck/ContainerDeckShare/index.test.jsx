@@ -34,9 +34,7 @@ test('レンダリングとアクセシビリティ', () => {
   expect(button).toBeEnabled()
   expect(button).toHaveTextContent('▶共有リンクをコピー')
   // 共有リンクが入力された読み取り専用のテキストボックスがある
-  // TODO テキストボックスのアクセシビリティを上げる
-  // TODO 本体コードとあわせて修正する
-  const textbox = getByRole('textbox')
+  const textbox = getByRole('textbox', { name: '▶共有リンクをコピー' })
   expect(textbox).toBeVisible()
   expect(textbox).toHaveAttribute('readonly')
   // 空のデッキのデッキコード
