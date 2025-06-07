@@ -1,2511 +1,801 @@
 // SPDX-License-Identifier: MIT
 
 import { act } from 'react'
-import { afterEach, expect, test } from 'vitest'
-import { cleanup, render, renderHook } from '@testing-library/react'
+import { afterEach, beforeEach, describe, expect, test } from 'vitest'
+import { cleanup, render, renderHook, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import useTabPaneSimulator from '.'
+
+function getAllItems(getByRole, section) {
+  return within(getByRole('list', { name: section })).getAllByRole('listitem')
+}
+
+function getItemImg(item) {
+  return within(item).getByRole('img')
+}
+
+function getItemButton(item) {
+  return within(item).getByRole('button')
+}
+
+function getAllButtons(getByRole, section) {
+  return within(getByRole('list', { name: section })).getAllByRole('button')
+}
+
+function getInterruptFn(result) {
+  return result.current[0]
+}
+
+function getRenderFn(result) {
+  return result.current[1]
+}
+
+function defaultRender(deck) {
+  const { result } = renderHook(() => useTabPaneSimulator())
+  const { rerender, getByRole, queryByRole, getByText, queryByText } = render(
+    <>{getRenderFn(result)(deck)}</>
+  )
+  const defaultRerender = (deck) => rerender(<>{getRenderFn(result)(deck)}</>)
+  return {
+    result,
+    defaultRerender,
+    getByRole,
+    queryByRole,
+    getByText,
+    queryByText,
+  }
+}
 
 afterEach(cleanup)
 
 test('デッキ9枚でスタート、リセット', async () => {
   const deck = new Map([['R-1', 9]])
-  const { result } = renderHook(() => useTabPaneSimulator())
-  let renderTabPaneSimulator = result.current[1]
-  const { rerender, getByRole, getByText, queryByText } = render(
-    <>{renderTabPaneSimulator(deck)}</>
-  )
+  const { defaultRerender, getByRole, queryByRole } = defaultRender(deck)
 
-  let buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  // リセットボタンは無効
-  expect(buttonReset).toHaveAttribute('disabled')
-  let buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  expect(buttonStart).not.toHaveAttribute('disabled')
-  let buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(queryByText('ガーディアン')).toBeNull()
-  expect(queryByText('手札')).toBeNull()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
+  expect(getByRole('button', { name: 'リセット' })).toBeDisabled()
+  expect(getByRole('button', { name: 'スタート' })).toBeEnabled()
+  expect(getByRole('button', { name: 'マリガン' })).toBeDisabled()
+  expect(queryByRole('region', { name: 'ガーディアン' })).toBeNull()
+  expect(queryByRole('region', { name: '手札' })).toBeNull()
+  expect(queryByRole('alert')).toBeNull()
 
   // スタートボタンを押す
-  await userEvent.click(buttonStart)
+  await userEvent.click(getByRole('button', { name: 'スタート' }))
+  defaultRerender(deck)
 
-  renderTabPaneSimulator = result.current[1]
-  rerender(<>{renderTabPaneSimulator(deck)}</>)
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  expect(buttonReset).not.toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  // スタートボタンは無効
-  expect(buttonStart).toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(queryByText('ガーディアン')).toBeNull()
-  expect(queryByText('手札')).toBeNull()
-  expect(
-    getByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeVisible()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
+  expect(getByRole('button', { name: 'リセット' })).toBeEnabled()
+  expect(getByRole('button', { name: 'スタート' })).toBeDisabled()
+  expect(getByRole('button', { name: 'マリガン' })).toBeDisabled()
+  expect(queryByRole('region', { name: 'ガーディアン' })).toBeNull()
+  expect(queryByRole('region', { name: '手札' })).toBeNull()
+  // prettier-ignore
+  expect(getByRole('alert')).toHaveTextContent('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
 
   // リセットボタンを押す
-  await userEvent.click(buttonReset)
+  await userEvent.click(getByRole('button', { name: 'リセット' }))
+  defaultRerender(deck)
 
-  renderTabPaneSimulator = result.current[1]
-  rerender(<>{renderTabPaneSimulator(deck)}</>)
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  // リセットボタンは無効
-  expect(buttonReset).toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  expect(buttonStart).not.toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(queryByText('ガーディアン')).toBeNull()
-  expect(queryByText('手札')).toBeNull()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
+  expect(getByRole('button', { name: 'リセット' })).toBeDisabled()
+  expect(getByRole('button', { name: 'スタート' })).toBeEnabled()
+  expect(getByRole('button', { name: 'マリガン' })).toBeDisabled()
+  expect(queryByRole('region', { name: 'ガーディアン' })).toBeNull()
+  expect(queryByRole('region', { name: '手札' })).toBeNull()
+  expect(queryByRole('alert')).toBeNull()
 })
 
 test('デッキ10枚でスタート、リセット', async () => {
   const deck = new Map([['R-1', 10]])
-  const { result } = renderHook(() => useTabPaneSimulator())
-  let renderTabPaneSimulator = result.current[1]
-  const { rerender, getByRole, getByText, queryByText } = render(
-    <>{renderTabPaneSimulator(deck)}</>
-  )
+  const { defaultRerender, getByRole, queryByRole } = defaultRender(deck)
 
-  let buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  // リセットボタンは無効
-  expect(buttonReset).toHaveAttribute('disabled')
-  let buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  expect(buttonStart).not.toHaveAttribute('disabled')
-  let buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(queryByText('ガーディアン')).toBeNull()
-  expect(queryByText('手札')).toBeNull()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
+  expect(getByRole('button', { name: 'リセット' })).toBeDisabled()
+  expect(getByRole('button', { name: 'スタート' })).toBeEnabled()
+  expect(getByRole('button', { name: 'マリガン' })).toBeDisabled()
+  expect(queryByRole('region', { name: 'ガーディアン' })).toBeNull()
+  expect(queryByRole('region', { name: '手札' })).toBeNull()
+  expect(queryByRole('alert')).toBeNull()
 
   // スタートボタンを押す
-  await userEvent.click(buttonStart)
+  await userEvent.click(getByRole('button', { name: 'スタート' }))
+  defaultRerender(deck)
 
-  renderTabPaneSimulator = result.current[1]
-  rerender(<>{renderTabPaneSimulator(deck)}</>)
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  expect(buttonReset).not.toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  // スタートボタンは無効
-  expect(buttonStart).toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  expect(buttonMulligan).not.toHaveAttribute('disabled')
-
-  expect(getByText('ガーディアン')).toBeVisible()
-  expect(getByText('手札')).toBeVisible()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
+  expect(getByRole('button', { name: 'リセット' })).toBeEnabled()
+  expect(getByRole('button', { name: 'スタート' })).toBeDisabled()
+  expect(getByRole('button', { name: 'マリガン' })).toBeEnabled()
+  expect(getByRole('region', { name: 'ガーディアン' })).toBeVisible()
+  expect(getByRole('region', { name: '手札' })).toBeVisible()
+  expect(queryByRole('alert')).toBeNull()
 
   // ガーディアン4枚で不可視
-  const groupGuardians = getByRole('group', { name: 'ガーディアン' })
-  expect(groupGuardians).toBeVisible()
-  const guardians = groupGuardians.querySelectorAll('button')
+  expect(getByRole('region', { name: 'ガーディアン' })).toBeVisible()
+  const guardians = getAllItems(getByRole, 'ガーディアン')
   expect(guardians.length).toBe(4)
-  expect(guardians[0]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[1]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[2]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[3]).toHaveClass('btn-toggled-opaque')
+  expect(getItemImg(guardians[0])).toBeVisible()
+  expect(getItemImg(guardians[1])).toBeVisible()
+  expect(getItemImg(guardians[2])).toBeVisible()
+  expect(getItemImg(guardians[3])).toBeVisible()
+  expect(getItemButton(guardians[0])).toHaveClass('btn-toggled-opaque')
+  expect(getItemButton(guardians[1])).toHaveClass('btn-toggled-opaque')
+  expect(getItemButton(guardians[2])).toHaveClass('btn-toggled-opaque')
+  expect(getItemButton(guardians[3])).toHaveClass('btn-toggled-opaque')
   // 手札6枚で可視
-  const groupHand = getByRole('group', { name: '手札' })
-  expect(groupHand).toBeVisible()
-  const hand = groupHand.querySelectorAll('button')
+  expect(getByRole('region', { name: '手札' })).toBeVisible()
+  const hand = getAllItems(getByRole, '手札')
   expect(hand.length).toBe(6)
-  expect(hand[0]).toHaveClass('btn-toggled-transparent')
-  expect(hand[1]).toHaveClass('btn-toggled-transparent')
-  expect(hand[2]).toHaveClass('btn-toggled-transparent')
-  expect(hand[3]).toHaveClass('btn-toggled-transparent')
-  expect(hand[4]).toHaveClass('btn-toggled-transparent')
-  expect(hand[5]).toHaveClass('btn-toggled-transparent')
+  expect(getItemImg(hand[0])).toBeVisible()
+  expect(getItemImg(hand[1])).toBeVisible()
+  expect(getItemImg(hand[2])).toBeVisible()
+  expect(getItemImg(hand[3])).toBeVisible()
+  expect(getItemImg(hand[4])).toBeVisible()
+  expect(getItemImg(hand[5])).toBeVisible()
+  expect(getItemButton(hand[0])).toHaveClass('btn-toggled-transparent')
+  expect(getItemButton(hand[1])).toHaveClass('btn-toggled-transparent')
+  expect(getItemButton(hand[2])).toHaveClass('btn-toggled-transparent')
+  expect(getItemButton(hand[3])).toHaveClass('btn-toggled-transparent')
+  expect(getItemButton(hand[4])).toHaveClass('btn-toggled-transparent')
+  expect(getItemButton(hand[5])).toHaveClass('btn-toggled-transparent')
 
   // リセットボタンを押す
-  await userEvent.click(buttonReset)
+  await userEvent.click(getByRole('button', { name: 'リセット' }))
+  defaultRerender(deck)
 
-  renderTabPaneSimulator = result.current[1]
-  rerender(<>{renderTabPaneSimulator(deck)}</>)
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  // リセットボタンは無効
-  expect(buttonReset).toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  expect(buttonStart).not.toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(queryByText('ガーディアン')).toBeNull()
-  expect(queryByText('手札')).toBeNull()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
+  expect(getByRole('button', { name: 'リセット' })).toBeDisabled()
+  expect(getByRole('button', { name: 'スタート' })).toBeEnabled()
+  expect(getByRole('button', { name: 'マリガン' })).toBeDisabled()
+  expect(queryByRole('region', { name: 'ガーディアン' })).toBeNull()
+  expect(queryByRole('region', { name: '手札' })).toBeNull()
+  expect(queryByRole('alert')).toBeNull()
 })
 
-test('デッキ10枚でスタート、マリガン、リセット', async () => {
-  const deck = new Map([['R-1', 10]])
-  const { result } = renderHook(() => useTabPaneSimulator())
-  let renderTabPaneSimulator = result.current[1]
-  const { rerender, getByRole, getByText, queryByText } = render(
-    <>{renderTabPaneSimulator(deck)}</>
-  )
-
-  let buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  // リセットボタンは無効
-  expect(buttonReset).toHaveAttribute('disabled')
-  let buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  expect(buttonStart).not.toHaveAttribute('disabled')
-  let buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(queryByText('ガーディアン')).toBeNull()
-  expect(queryByText('手札')).toBeNull()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
-
-  // スタートボタンを押す
-  await userEvent.click(buttonStart)
-
-  renderTabPaneSimulator = result.current[1]
-  rerender(<>{renderTabPaneSimulator(deck)}</>)
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  expect(buttonReset).not.toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  // スタートボタンは無効
-  expect(buttonStart).toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  expect(buttonMulligan).not.toHaveAttribute('disabled')
-
-  expect(getByText('ガーディアン')).toBeVisible()
-  expect(getByText('手札')).toBeVisible()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
-
-  // ガーディアン4枚で不可視
-  let groupGuardians = getByRole('group', { name: 'ガーディアン' })
-  expect(groupGuardians).toBeVisible()
-  let guardians = groupGuardians.querySelectorAll('button')
-  expect(guardians.length).toBe(4)
-  expect(guardians[0]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[1]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[2]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[3]).toHaveClass('btn-toggled-opaque')
-  // 手札6枚で可視
-  let groupHand = getByRole('group', { name: '手札' })
-  expect(groupHand).toBeVisible()
-  let hand = groupHand.querySelectorAll('button')
-  expect(hand.length).toBe(6)
-  expect(hand[0]).toHaveClass('btn-toggled-transparent')
-  expect(hand[1]).toHaveClass('btn-toggled-transparent')
-  expect(hand[2]).toHaveClass('btn-toggled-transparent')
-  expect(hand[3]).toHaveClass('btn-toggled-transparent')
-  expect(hand[4]).toHaveClass('btn-toggled-transparent')
-  expect(hand[5]).toHaveClass('btn-toggled-transparent')
-
-  // マリガンボタンを押す
-  await userEvent.click(buttonMulligan)
-
-  renderTabPaneSimulator = result.current[1]
-  rerender(<>{renderTabPaneSimulator(deck)}</>)
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  expect(buttonReset).not.toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  // スタートボタンは無効
-  expect(buttonStart).toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(getByText('ガーディアン')).toBeVisible()
-  expect(getByText('手札')).toBeVisible()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
-
-  // ガーディアン4枚で不可視
-  groupGuardians = getByRole('group', { name: 'ガーディアン' })
-  expect(groupGuardians).toBeVisible()
-  guardians = groupGuardians.querySelectorAll('button')
-  expect(guardians.length).toBe(4)
-  expect(guardians[0]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[1]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[2]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[3]).toHaveClass('btn-toggled-opaque')
-  // 手札6枚で可視
-  groupHand = getByRole('group', { name: '手札' })
-  expect(groupHand).toBeVisible()
-  hand = groupHand.querySelectorAll('button')
-  expect(hand.length).toBe(6)
-  expect(hand[0]).toHaveClass('btn-toggled-transparent')
-  expect(hand[1]).toHaveClass('btn-toggled-transparent')
-  expect(hand[2]).toHaveClass('btn-toggled-transparent')
-  expect(hand[3]).toHaveClass('btn-toggled-transparent')
-  expect(hand[4]).toHaveClass('btn-toggled-transparent')
-  expect(hand[5]).toHaveClass('btn-toggled-transparent')
-
-  // リセットボタンを押す
-  await userEvent.click(buttonReset)
-
-  renderTabPaneSimulator = result.current[1]
-  rerender(<>{renderTabPaneSimulator(deck)}</>)
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  // リセットボタンは無効
-  expect(buttonReset).toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  expect(buttonStart).not.toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(queryByText('ガーディアン')).toBeNull()
-  expect(queryByText('手札')).toBeNull()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
-})
-
-test('デッキ10枚でスタート、マリガン、手札をタップ、リセット', async () => {
-  const deck = new Map([['R-1', 10]])
-  const { result } = renderHook(() => useTabPaneSimulator())
-  let renderTabPaneSimulator = result.current[1]
-  const { rerender, getByRole, getByText, queryByText } = render(
-    <>{renderTabPaneSimulator(deck)}</>
-  )
-
-  let buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  // リセットボタンは無効
-  expect(buttonReset).toHaveAttribute('disabled')
-  let buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  expect(buttonStart).not.toHaveAttribute('disabled')
-  let buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(queryByText('ガーディアン')).toBeNull()
-  expect(queryByText('手札')).toBeNull()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
-
-  // スタートボタンを押す
-  await userEvent.click(buttonStart)
-
-  renderTabPaneSimulator = result.current[1]
-  rerender(<>{renderTabPaneSimulator(deck)}</>)
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  expect(buttonReset).not.toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  // スタートボタンは無効
-  expect(buttonStart).toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  expect(buttonMulligan).not.toHaveAttribute('disabled')
-
-  expect(getByText('ガーディアン')).toBeVisible()
-  expect(getByText('手札')).toBeVisible()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
-
-  // ガーディアン4枚で不可視
-  let groupGuardians = getByRole('group', { name: 'ガーディアン' })
-  expect(groupGuardians).toBeVisible()
-  let guardians = groupGuardians.querySelectorAll('button')
-  expect(guardians.length).toBe(4)
-  expect(guardians[0]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[1]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[2]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[3]).toHaveClass('btn-toggled-opaque')
-  // 手札6枚で可視
-  let groupHand = getByRole('group', { name: '手札' })
-  expect(groupHand).toBeVisible()
-  let hand = groupHand.querySelectorAll('button')
-  expect(hand.length).toBe(6)
-  expect(hand[0]).toHaveClass('btn-toggled-transparent')
-  expect(hand[1]).toHaveClass('btn-toggled-transparent')
-  expect(hand[2]).toHaveClass('btn-toggled-transparent')
-  expect(hand[3]).toHaveClass('btn-toggled-transparent')
-  expect(hand[4]).toHaveClass('btn-toggled-transparent')
-  expect(hand[5]).toHaveClass('btn-toggled-transparent')
-
-  // マリガンボタンを押す
-  await userEvent.click(buttonMulligan)
-
-  renderTabPaneSimulator = result.current[1]
-  rerender(<>{renderTabPaneSimulator(deck)}</>)
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  expect(buttonReset).not.toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  // スタートボタンは無効
-  expect(buttonStart).toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(getByText('ガーディアン')).toBeVisible()
-  expect(getByText('手札')).toBeVisible()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
-
-  // ガーディアン4枚で不可視
-  groupGuardians = getByRole('group', { name: 'ガーディアン' })
-  expect(groupGuardians).toBeVisible()
-  guardians = groupGuardians.querySelectorAll('button')
-  expect(guardians.length).toBe(4)
-  expect(guardians[0]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[1]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[2]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[3]).toHaveClass('btn-toggled-opaque')
-  // 手札6枚で可視
-  groupHand = getByRole('group', { name: '手札' })
-  expect(groupHand).toBeVisible()
-  hand = groupHand.querySelectorAll('button')
-  expect(hand.length).toBe(6)
-  expect(hand[0]).toHaveClass('btn-toggled-transparent')
-  expect(hand[1]).toHaveClass('btn-toggled-transparent')
-  expect(hand[2]).toHaveClass('btn-toggled-transparent')
-  expect(hand[3]).toHaveClass('btn-toggled-transparent')
-  expect(hand[4]).toHaveClass('btn-toggled-transparent')
-  expect(hand[5]).toHaveClass('btn-toggled-transparent')
-
-  // 手札のカードをタップする
-  await userEvent.click(hand[0])
-
-  renderTabPaneSimulator = result.current[1]
-  rerender(<>{renderTabPaneSimulator(deck)}</>)
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  expect(buttonReset).not.toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  // スタートボタンは無効
-  expect(buttonStart).toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(getByText('ガーディアン')).toBeVisible()
-  expect(getByText('手札')).toBeVisible()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
-
-  // ガーディアン4枚で不可視
-  groupGuardians = getByRole('group', { name: 'ガーディアン' })
-  expect(groupGuardians).toBeVisible()
-  guardians = groupGuardians.querySelectorAll('button')
-  expect(guardians.length).toBe(4)
-  expect(guardians[0]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[1]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[2]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[3]).toHaveClass('btn-toggled-opaque')
-  // 手札6枚で可視
-  groupHand = getByRole('group', { name: '手札' })
-  expect(groupHand).toBeVisible()
-  hand = groupHand.querySelectorAll('button')
-  expect(hand.length).toBe(6)
-  // タップしたカードの色味が変わる
-  expect(hand[0]).toHaveClass('btn-toggled-red')
-  expect(hand[1]).toHaveClass('btn-toggled-transparent')
-  expect(hand[2]).toHaveClass('btn-toggled-transparent')
-  expect(hand[3]).toHaveClass('btn-toggled-transparent')
-  expect(hand[4]).toHaveClass('btn-toggled-transparent')
-  expect(hand[5]).toHaveClass('btn-toggled-transparent')
-
-  // リセットボタンを押す
-  await userEvent.click(buttonReset)
-
-  renderTabPaneSimulator = result.current[1]
-  rerender(<>{renderTabPaneSimulator(deck)}</>)
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  // リセットボタンは無効
-  expect(buttonReset).toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  expect(buttonStart).not.toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(queryByText('ガーディアン')).toBeNull()
-  expect(queryByText('手札')).toBeNull()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
-})
-
-test('デッキ10枚でスタート、手札をタップ、リセット', async () => {
-  const deck = new Map([['R-1', 10]])
-  const { result } = renderHook(() => useTabPaneSimulator())
-  let renderTabPaneSimulator = result.current[1]
-  const { rerender, getByRole, getByText, queryByText } = render(
-    <>{renderTabPaneSimulator(deck)}</>
-  )
-
-  let buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  // リセットボタンは無効
-  expect(buttonReset).toHaveAttribute('disabled')
-  let buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  expect(buttonStart).not.toHaveAttribute('disabled')
-  let buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(queryByText('ガーディアン')).toBeNull()
-  expect(queryByText('手札')).toBeNull()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
-
-  // スタートボタンを押す
-  await userEvent.click(buttonStart)
-
-  renderTabPaneSimulator = result.current[1]
-  rerender(<>{renderTabPaneSimulator(deck)}</>)
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  expect(buttonReset).not.toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  // スタートボタンは無効
-  expect(buttonStart).toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  expect(buttonMulligan).not.toHaveAttribute('disabled')
-
-  expect(getByText('ガーディアン')).toBeVisible()
-  expect(getByText('手札')).toBeVisible()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
-
-  // ガーディアン4枚で不可視
-  let groupGuardians = getByRole('group', { name: 'ガーディアン' })
-  expect(groupGuardians).toBeVisible()
-  let guardians = groupGuardians.querySelectorAll('button')
-  expect(guardians.length).toBe(4)
-  expect(guardians[0]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[1]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[2]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[3]).toHaveClass('btn-toggled-opaque')
-  // 手札6枚で可視
-  let groupHand = getByRole('group', { name: '手札' })
-  expect(groupHand).toBeVisible()
-  let hand = groupHand.querySelectorAll('button')
-  expect(hand.length).toBe(6)
-  expect(hand[0]).toHaveClass('btn-toggled-transparent')
-  expect(hand[1]).toHaveClass('btn-toggled-transparent')
-  expect(hand[2]).toHaveClass('btn-toggled-transparent')
-  expect(hand[3]).toHaveClass('btn-toggled-transparent')
-  expect(hand[4]).toHaveClass('btn-toggled-transparent')
-  expect(hand[5]).toHaveClass('btn-toggled-transparent')
-
-  // 手札のカードをタップする
-  await userEvent.click(hand[0])
-
-  renderTabPaneSimulator = result.current[1]
-  rerender(<>{renderTabPaneSimulator(deck)}</>)
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  expect(buttonReset).not.toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  // スタートボタンは無効
-  expect(buttonStart).toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(getByText('ガーディアン')).toBeVisible()
-  expect(getByText('手札')).toBeVisible()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
-
-  // ガーディアン4枚で不可視
-  groupGuardians = getByRole('group', { name: 'ガーディアン' })
-  expect(groupGuardians).toBeVisible()
-  guardians = groupGuardians.querySelectorAll('button')
-  expect(guardians.length).toBe(4)
-  expect(guardians[0]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[1]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[2]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[3]).toHaveClass('btn-toggled-opaque')
-  // 手札6枚で可視
-  groupHand = getByRole('group', { name: '手札' })
-  expect(groupHand).toBeVisible()
-  hand = groupHand.querySelectorAll('button')
-  expect(hand.length).toBe(6)
-  // タップしたカードの色味が変わる
-  expect(hand[0]).toHaveClass('btn-toggled-red')
-  expect(hand[1]).toHaveClass('btn-toggled-transparent')
-  expect(hand[2]).toHaveClass('btn-toggled-transparent')
-  expect(hand[3]).toHaveClass('btn-toggled-transparent')
-  expect(hand[4]).toHaveClass('btn-toggled-transparent')
-  expect(hand[5]).toHaveClass('btn-toggled-transparent')
-
-  // リセットボタンを押す
-  await userEvent.click(buttonReset)
-
-  renderTabPaneSimulator = result.current[1]
-  rerender(<>{renderTabPaneSimulator(deck)}</>)
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  // リセットボタンは無効
-  expect(buttonReset).toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  expect(buttonStart).not.toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(queryByText('ガーディアン')).toBeNull()
-  expect(queryByText('手札')).toBeNull()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
-})
-
-test('デッキ10枚でスタート、ガーディアンをタップ、リセット', async () => {
-  const deck = new Map([['R-1', 10]])
-  const { result } = renderHook(() => useTabPaneSimulator())
-  let renderTabPaneSimulator = result.current[1]
-  const { rerender, getByRole, getByText, queryByText } = render(
-    <>{renderTabPaneSimulator(deck)}</>
-  )
-
-  let buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  // リセットボタンは無効
-  expect(buttonReset).toHaveAttribute('disabled')
-  let buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  expect(buttonStart).not.toHaveAttribute('disabled')
-  let buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(queryByText('ガーディアン')).toBeNull()
-  expect(queryByText('手札')).toBeNull()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
-
-  // スタートボタンを押す
-  await userEvent.click(buttonStart)
-
-  renderTabPaneSimulator = result.current[1]
-  rerender(<>{renderTabPaneSimulator(deck)}</>)
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  expect(buttonReset).not.toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  // スタートボタンは無効
-  expect(buttonStart).toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  expect(buttonMulligan).not.toHaveAttribute('disabled')
-
-  expect(getByText('ガーディアン')).toBeVisible()
-  expect(getByText('手札')).toBeVisible()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
-
-  // ガーディアン4枚で不可視
-  let groupGuardians = getByRole('group', { name: 'ガーディアン' })
-  expect(groupGuardians).toBeVisible()
-  let guardians = groupGuardians.querySelectorAll('button')
-  expect(guardians.length).toBe(4)
-  expect(guardians[0]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[1]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[2]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[3]).toHaveClass('btn-toggled-opaque')
-  // 手札6枚で可視
-  let groupHand = getByRole('group', { name: '手札' })
-  expect(groupHand).toBeVisible()
-  let hand = groupHand.querySelectorAll('button')
-  expect(hand.length).toBe(6)
-  expect(hand[0]).toHaveClass('btn-toggled-transparent')
-  expect(hand[1]).toHaveClass('btn-toggled-transparent')
-  expect(hand[2]).toHaveClass('btn-toggled-transparent')
-  expect(hand[3]).toHaveClass('btn-toggled-transparent')
-  expect(hand[4]).toHaveClass('btn-toggled-transparent')
-  expect(hand[5]).toHaveClass('btn-toggled-transparent')
-
-  // ガーディアンのカードをタップする
-  await userEvent.click(guardians[0])
-
-  renderTabPaneSimulator = result.current[1]
-  rerender(<>{renderTabPaneSimulator(deck)}</>)
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  expect(buttonReset).not.toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  // スタートボタンは無効
-  expect(buttonStart).toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(getByText('ガーディアン')).toBeVisible()
-  expect(getByText('手札')).toBeVisible()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
-
-  // ガーディアン4枚で不可視
-  groupGuardians = getByRole('group', { name: 'ガーディアン' })
-  expect(groupGuardians).toBeVisible()
-  guardians = groupGuardians.querySelectorAll('button')
-  expect(guardians.length).toBe(4)
-  // タップしたカードの色味が変わる
-  expect(guardians[0]).toHaveClass('btn-toggled-transparent')
-  expect(guardians[1]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[2]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[3]).toHaveClass('btn-toggled-opaque')
-  // 手札6枚で可視
-  groupHand = getByRole('group', { name: '手札' })
-  expect(groupHand).toBeVisible()
-  hand = groupHand.querySelectorAll('button')
-  expect(hand.length).toBe(6)
-  expect(hand[0]).toHaveClass('btn-toggled-transparent')
-  expect(hand[1]).toHaveClass('btn-toggled-transparent')
-  expect(hand[2]).toHaveClass('btn-toggled-transparent')
-  expect(hand[3]).toHaveClass('btn-toggled-transparent')
-  expect(hand[4]).toHaveClass('btn-toggled-transparent')
-  expect(hand[5]).toHaveClass('btn-toggled-transparent')
-
-  // リセットボタンを押す
-  await userEvent.click(buttonReset)
-
-  renderTabPaneSimulator = result.current[1]
-  rerender(<>{renderTabPaneSimulator(deck)}</>)
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  // リセットボタンは無効
-  expect(buttonReset).toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  expect(buttonStart).not.toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(queryByText('ガーディアン')).toBeNull()
-  expect(queryByText('手札')).toBeNull()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
-})
-
-test('デッキ10枚でスタート、手札をタップ、手札をタップ、リセット', async () => {
-  const deck = new Map([['R-1', 10]])
-  const { result } = renderHook(() => useTabPaneSimulator())
-  let renderTabPaneSimulator = result.current[1]
-  const { rerender, getByRole, getByText, queryByText } = render(
-    <>{renderTabPaneSimulator(deck)}</>
-  )
-
-  let buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  // リセットボタンは無効
-  expect(buttonReset).toHaveAttribute('disabled')
-  let buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  expect(buttonStart).not.toHaveAttribute('disabled')
-  let buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(queryByText('ガーディアン')).toBeNull()
-  expect(queryByText('手札')).toBeNull()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
-
-  // スタートボタンを押す
-  await userEvent.click(buttonStart)
-
-  renderTabPaneSimulator = result.current[1]
-  rerender(<>{renderTabPaneSimulator(deck)}</>)
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  expect(buttonReset).not.toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  // スタートボタンは無効
-  expect(buttonStart).toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  expect(buttonMulligan).not.toHaveAttribute('disabled')
-
-  expect(getByText('ガーディアン')).toBeVisible()
-  expect(getByText('手札')).toBeVisible()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
-
-  // ガーディアン4枚で不可視
-  let groupGuardians = getByRole('group', { name: 'ガーディアン' })
-  expect(groupGuardians).toBeVisible()
-  let guardians = groupGuardians.querySelectorAll('button')
-  expect(guardians.length).toBe(4)
-  expect(guardians[0]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[1]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[2]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[3]).toHaveClass('btn-toggled-opaque')
-  // 手札6枚で可視
-  let groupHand = getByRole('group', { name: '手札' })
-  expect(groupHand).toBeVisible()
-  let hand = groupHand.querySelectorAll('button')
-  expect(hand.length).toBe(6)
-  expect(hand[0]).toHaveClass('btn-toggled-transparent')
-  expect(hand[1]).toHaveClass('btn-toggled-transparent')
-  expect(hand[2]).toHaveClass('btn-toggled-transparent')
-  expect(hand[3]).toHaveClass('btn-toggled-transparent')
-  expect(hand[4]).toHaveClass('btn-toggled-transparent')
-  expect(hand[5]).toHaveClass('btn-toggled-transparent')
-
-  // 手札のカードをタップする
-  await userEvent.click(hand[0])
-
-  renderTabPaneSimulator = result.current[1]
-  rerender(<>{renderTabPaneSimulator(deck)}</>)
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  expect(buttonReset).not.toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  // スタートボタンは無効
-  expect(buttonStart).toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(getByText('ガーディアン')).toBeVisible()
-  expect(getByText('手札')).toBeVisible()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
-
-  // ガーディアン4枚で不可視
-  groupGuardians = getByRole('group', { name: 'ガーディアン' })
-  expect(groupGuardians).toBeVisible()
-  guardians = groupGuardians.querySelectorAll('button')
-  expect(guardians.length).toBe(4)
-  expect(guardians[0]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[1]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[2]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[3]).toHaveClass('btn-toggled-opaque')
-  // 手札6枚で可視
-  groupHand = getByRole('group', { name: '手札' })
-  expect(groupHand).toBeVisible()
-  hand = groupHand.querySelectorAll('button')
-  expect(hand.length).toBe(6)
-  // タップしたカードの色味が変わる
-  expect(hand[0]).toHaveClass('btn-toggled-red')
-  expect(hand[1]).toHaveClass('btn-toggled-transparent')
-  expect(hand[2]).toHaveClass('btn-toggled-transparent')
-  expect(hand[3]).toHaveClass('btn-toggled-transparent')
-  expect(hand[4]).toHaveClass('btn-toggled-transparent')
-  expect(hand[5]).toHaveClass('btn-toggled-transparent')
-
-  // 手札のカードをタップする
-  await userEvent.click(hand[0])
-
-  renderTabPaneSimulator = result.current[1]
-  rerender(<>{renderTabPaneSimulator(deck)}</>)
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  expect(buttonReset).not.toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  // スタートボタンは無効
-  expect(buttonStart).toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(getByText('ガーディアン')).toBeVisible()
-  expect(getByText('手札')).toBeVisible()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
-
-  // ガーディアン4枚で不可視
-  groupGuardians = getByRole('group', { name: 'ガーディアン' })
-  expect(groupGuardians).toBeVisible()
-  guardians = groupGuardians.querySelectorAll('button')
-  expect(guardians.length).toBe(4)
-  expect(guardians[0]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[1]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[2]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[3]).toHaveClass('btn-toggled-opaque')
-  // 手札6枚で可視
-  groupHand = getByRole('group', { name: '手札' })
-  expect(groupHand).toBeVisible()
-  hand = groupHand.querySelectorAll('button')
-  expect(hand.length).toBe(6)
-  // タップしたカードの色味が変わる
-  expect(hand[0]).toHaveClass('btn-toggled-blue')
-  expect(hand[1]).toHaveClass('btn-toggled-transparent')
-  expect(hand[2]).toHaveClass('btn-toggled-transparent')
-  expect(hand[3]).toHaveClass('btn-toggled-transparent')
-  expect(hand[4]).toHaveClass('btn-toggled-transparent')
-  expect(hand[5]).toHaveClass('btn-toggled-transparent')
-
-  // リセットボタンを押す
-  await userEvent.click(buttonReset)
-
-  renderTabPaneSimulator = result.current[1]
-  rerender(<>{renderTabPaneSimulator(deck)}</>)
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  // リセットボタンは無効
-  expect(buttonReset).toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  expect(buttonStart).not.toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(queryByText('ガーディアン')).toBeNull()
-  expect(queryByText('手札')).toBeNull()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
-})
-
-test('デッキ10枚でスタート、手札をタップ、ガーディアンをタップ、リセット', async () => {
-  const deck = new Map([['R-1', 10]])
-  const { result } = renderHook(() => useTabPaneSimulator())
-  let renderTabPaneSimulator = result.current[1]
-  const { rerender, getByRole, getByText, queryByText } = render(
-    <>{renderTabPaneSimulator(deck)}</>
-  )
-
-  let buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  // リセットボタンは無効
-  expect(buttonReset).toHaveAttribute('disabled')
-  let buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  expect(buttonStart).not.toHaveAttribute('disabled')
-  let buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(queryByText('ガーディアン')).toBeNull()
-  expect(queryByText('手札')).toBeNull()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
-
-  // スタートボタンを押す
-  await userEvent.click(buttonStart)
-
-  renderTabPaneSimulator = result.current[1]
-  rerender(<>{renderTabPaneSimulator(deck)}</>)
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  expect(buttonReset).not.toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  // スタートボタンは無効
-  expect(buttonStart).toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  expect(buttonMulligan).not.toHaveAttribute('disabled')
-
-  expect(getByText('ガーディアン')).toBeVisible()
-  expect(getByText('手札')).toBeVisible()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
-
-  // ガーディアン4枚で不可視
-  let groupGuardians = getByRole('group', { name: 'ガーディアン' })
-  expect(groupGuardians).toBeVisible()
-  let guardians = groupGuardians.querySelectorAll('button')
-  expect(guardians.length).toBe(4)
-  expect(guardians[0]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[1]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[2]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[3]).toHaveClass('btn-toggled-opaque')
-  // 手札6枚で可視
-  let groupHand = getByRole('group', { name: '手札' })
-  expect(groupHand).toBeVisible()
-  let hand = groupHand.querySelectorAll('button')
-  expect(hand.length).toBe(6)
-  expect(hand[0]).toHaveClass('btn-toggled-transparent')
-  expect(hand[1]).toHaveClass('btn-toggled-transparent')
-  expect(hand[2]).toHaveClass('btn-toggled-transparent')
-  expect(hand[3]).toHaveClass('btn-toggled-transparent')
-  expect(hand[4]).toHaveClass('btn-toggled-transparent')
-  expect(hand[5]).toHaveClass('btn-toggled-transparent')
-
-  // 手札のカードをタップする
-  await userEvent.click(hand[0])
-
-  renderTabPaneSimulator = result.current[1]
-  rerender(<>{renderTabPaneSimulator(deck)}</>)
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  expect(buttonReset).not.toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  // スタートボタンは無効
-  expect(buttonStart).toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(getByText('ガーディアン')).toBeVisible()
-  expect(getByText('手札')).toBeVisible()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
-
-  // ガーディアン4枚で不可視
-  groupGuardians = getByRole('group', { name: 'ガーディアン' })
-  expect(groupGuardians).toBeVisible()
-  guardians = groupGuardians.querySelectorAll('button')
-  expect(guardians.length).toBe(4)
-  expect(guardians[0]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[1]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[2]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[3]).toHaveClass('btn-toggled-opaque')
-  // 手札6枚で可視
-  groupHand = getByRole('group', { name: '手札' })
-  expect(groupHand).toBeVisible()
-  hand = groupHand.querySelectorAll('button')
-  expect(hand.length).toBe(6)
-  // タップしたカードの色味が変わる
-  expect(hand[0]).toHaveClass('btn-toggled-red')
-  expect(hand[1]).toHaveClass('btn-toggled-transparent')
-  expect(hand[2]).toHaveClass('btn-toggled-transparent')
-  expect(hand[3]).toHaveClass('btn-toggled-transparent')
-  expect(hand[4]).toHaveClass('btn-toggled-transparent')
-  expect(hand[5]).toHaveClass('btn-toggled-transparent')
-
-  // ガーディアンのカードをタップする
-  await userEvent.click(guardians[0])
-
-  renderTabPaneSimulator = result.current[1]
-  rerender(<>{renderTabPaneSimulator(deck)}</>)
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  expect(buttonReset).not.toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  // スタートボタンは無効
-  expect(buttonStart).toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(getByText('ガーディアン')).toBeVisible()
-  expect(getByText('手札')).toBeVisible()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
-
-  // ガーディアン4枚で不可視
-  groupGuardians = getByRole('group', { name: 'ガーディアン' })
-  expect(groupGuardians).toBeVisible()
-  guardians = groupGuardians.querySelectorAll('button')
-  expect(guardians.length).toBe(4)
-  // タップしたカードの色味が変わる
-  expect(guardians[0]).toHaveClass('btn-toggled-transparent')
-  expect(guardians[1]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[2]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[3]).toHaveClass('btn-toggled-opaque')
-  // 手札6枚で可視
-  groupHand = getByRole('group', { name: '手札' })
-  expect(groupHand).toBeVisible()
-  hand = groupHand.querySelectorAll('button')
-  expect(hand.length).toBe(6)
-  expect(hand[0]).toHaveClass('btn-toggled-red')
-  expect(hand[1]).toHaveClass('btn-toggled-transparent')
-  expect(hand[2]).toHaveClass('btn-toggled-transparent')
-  expect(hand[3]).toHaveClass('btn-toggled-transparent')
-  expect(hand[4]).toHaveClass('btn-toggled-transparent')
-  expect(hand[5]).toHaveClass('btn-toggled-transparent')
-
-  // リセットボタンを押す
-  await userEvent.click(buttonReset)
-
-  renderTabPaneSimulator = result.current[1]
-  rerender(<>{renderTabPaneSimulator(deck)}</>)
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  // リセットボタンは無効
-  expect(buttonReset).toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  expect(buttonStart).not.toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(queryByText('ガーディアン')).toBeNull()
-  expect(queryByText('手札')).toBeNull()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
-})
-
-test('デッキ10枚でスタート、ガーディアンをタップ、ガーディアンをタップ、リセット', async () => {
-  const deck = new Map([['R-1', 10]])
-  const { result } = renderHook(() => useTabPaneSimulator())
-  let renderTabPaneSimulator = result.current[1]
-  const { rerender, getByRole, getByText, queryByText } = render(
-    <>{renderTabPaneSimulator(deck)}</>
-  )
-
-  let buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  // リセットボタンは無効
-  expect(buttonReset).toHaveAttribute('disabled')
-  let buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  expect(buttonStart).not.toHaveAttribute('disabled')
-  let buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(queryByText('ガーディアン')).toBeNull()
-  expect(queryByText('手札')).toBeNull()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
-
-  // スタートボタンを押す
-  await userEvent.click(buttonStart)
-
-  renderTabPaneSimulator = result.current[1]
-  rerender(<>{renderTabPaneSimulator(deck)}</>)
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  expect(buttonReset).not.toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  // スタートボタンは無効
-  expect(buttonStart).toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  expect(buttonMulligan).not.toHaveAttribute('disabled')
-
-  expect(getByText('ガーディアン')).toBeVisible()
-  expect(getByText('手札')).toBeVisible()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
-
-  // ガーディアン4枚で不可視
-  let groupGuardians = getByRole('group', { name: 'ガーディアン' })
-  expect(groupGuardians).toBeVisible()
-  let guardians = groupGuardians.querySelectorAll('button')
-  expect(guardians.length).toBe(4)
-  expect(guardians[0]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[1]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[2]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[3]).toHaveClass('btn-toggled-opaque')
-  // 手札6枚で可視
-  let groupHand = getByRole('group', { name: '手札' })
-  expect(groupHand).toBeVisible()
-  let hand = groupHand.querySelectorAll('button')
-  expect(hand.length).toBe(6)
-  expect(hand[0]).toHaveClass('btn-toggled-transparent')
-  expect(hand[1]).toHaveClass('btn-toggled-transparent')
-  expect(hand[2]).toHaveClass('btn-toggled-transparent')
-  expect(hand[3]).toHaveClass('btn-toggled-transparent')
-  expect(hand[4]).toHaveClass('btn-toggled-transparent')
-  expect(hand[5]).toHaveClass('btn-toggled-transparent')
-
-  // ガーディアンのカードをタップする
-  await userEvent.click(guardians[0])
-
-  renderTabPaneSimulator = result.current[1]
-  rerender(<>{renderTabPaneSimulator(deck)}</>)
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  expect(buttonReset).not.toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  // スタートボタンは無効
-  expect(buttonStart).toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(getByText('ガーディアン')).toBeVisible()
-  expect(getByText('手札')).toBeVisible()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
-
-  // ガーディアン4枚で不可視
-  groupGuardians = getByRole('group', { name: 'ガーディアン' })
-  expect(groupGuardians).toBeVisible()
-  guardians = groupGuardians.querySelectorAll('button')
-  expect(guardians.length).toBe(4)
-  // タップしたカードの色味が変わる
-  expect(guardians[0]).toHaveClass('btn-toggled-transparent')
-  expect(guardians[1]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[2]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[3]).toHaveClass('btn-toggled-opaque')
-  // 手札6枚で可視
-  groupHand = getByRole('group', { name: '手札' })
-  expect(groupHand).toBeVisible()
-  hand = groupHand.querySelectorAll('button')
-  expect(hand.length).toBe(6)
-  expect(hand[0]).toHaveClass('btn-toggled-transparent')
-  expect(hand[1]).toHaveClass('btn-toggled-transparent')
-  expect(hand[2]).toHaveClass('btn-toggled-transparent')
-  expect(hand[3]).toHaveClass('btn-toggled-transparent')
-  expect(hand[4]).toHaveClass('btn-toggled-transparent')
-  expect(hand[5]).toHaveClass('btn-toggled-transparent')
-
-  // ガーディアンのカードをタップする
-  await userEvent.click(guardians[0])
-
-  renderTabPaneSimulator = result.current[1]
-  rerender(<>{renderTabPaneSimulator(deck)}</>)
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  expect(buttonReset).not.toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  // スタートボタンは無効
-  expect(buttonStart).toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(getByText('ガーディアン')).toBeVisible()
-  expect(getByText('手札')).toBeVisible()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
-
-  // ガーディアン4枚で不可視
-  groupGuardians = getByRole('group', { name: 'ガーディアン' })
-  expect(groupGuardians).toBeVisible()
-  guardians = groupGuardians.querySelectorAll('button')
-  expect(guardians.length).toBe(4)
-  // タップしたカードの色味が変わる
-  expect(guardians[0]).toHaveClass('btn-toggled-red')
-  expect(guardians[1]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[2]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[3]).toHaveClass('btn-toggled-opaque')
-  // 手札6枚で可視
-  groupHand = getByRole('group', { name: '手札' })
-  expect(groupHand).toBeVisible()
-  hand = groupHand.querySelectorAll('button')
-  expect(hand.length).toBe(6)
-  expect(hand[0]).toHaveClass('btn-toggled-transparent')
-  expect(hand[1]).toHaveClass('btn-toggled-transparent')
-  expect(hand[2]).toHaveClass('btn-toggled-transparent')
-  expect(hand[3]).toHaveClass('btn-toggled-transparent')
-  expect(hand[4]).toHaveClass('btn-toggled-transparent')
-  expect(hand[5]).toHaveClass('btn-toggled-transparent')
-
-  // リセットボタンを押す
-  await userEvent.click(buttonReset)
-
-  renderTabPaneSimulator = result.current[1]
-  rerender(<>{renderTabPaneSimulator(deck)}</>)
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  // リセットボタンは無効
-  expect(buttonReset).toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  expect(buttonStart).not.toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(queryByText('ガーディアン')).toBeNull()
-  expect(queryByText('手札')).toBeNull()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
-})
-
-test('デッキ10枚でスタート、デッキを9枚に変更、10枚目をタップ、リセット', async () => {
-  let deck = new Map([['R-1', 10]])
-  const { result } = renderHook(() => useTabPaneSimulator())
-  let renderTabPaneSimulator = result.current[1]
-  const { rerender, getByRole, getByText, queryByText } = render(
-    <>{renderTabPaneSimulator(deck)}</>
-  )
-
-  let buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  // リセットボタンは無効
-  expect(buttonReset).toHaveAttribute('disabled')
-  let buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  expect(buttonStart).not.toHaveAttribute('disabled')
-  let buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(queryByText('ガーディアン')).toBeNull()
-  expect(queryByText('手札')).toBeNull()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
-
-  // スタートボタンを押す
-  await userEvent.click(buttonStart)
-
-  renderTabPaneSimulator = result.current[1]
-  rerender(<>{renderTabPaneSimulator(deck)}</>)
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  expect(buttonReset).not.toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  // スタートボタンは無効
-  expect(buttonStart).toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  expect(buttonMulligan).not.toHaveAttribute('disabled')
-
-  expect(getByText('ガーディアン')).toBeVisible()
-  expect(getByText('手札')).toBeVisible()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
-
-  // ガーディアン4枚で不可視
-  let groupGuardians = getByRole('group', { name: 'ガーディアン' })
-  expect(groupGuardians).toBeVisible()
-  let guardians = groupGuardians.querySelectorAll('button')
-  expect(guardians.length).toBe(4)
-  expect(guardians[0]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[1]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[2]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[3]).toHaveClass('btn-toggled-opaque')
-  // 手札6枚で可視
-  let groupHand = getByRole('group', { name: '手札' })
-  expect(groupHand).toBeVisible()
-  let hand = groupHand.querySelectorAll('button')
-  expect(hand.length).toBe(6)
-  expect(hand[0]).toHaveClass('btn-toggled-transparent')
-  expect(hand[1]).toHaveClass('btn-toggled-transparent')
-  expect(hand[2]).toHaveClass('btn-toggled-transparent')
-  expect(hand[3]).toHaveClass('btn-toggled-transparent')
-  expect(hand[4]).toHaveClass('btn-toggled-transparent')
-  expect(hand[5]).toHaveClass('btn-toggled-transparent')
-
-  // デッキを9枚に変更する
-  deck = new Map([['R-1', 9]])
-  const interruptSimulator = result.current[0]
-  act(() => interruptSimulator())
-  renderTabPaneSimulator = result.current[1]
-  rerender(<>{renderTabPaneSimulator(deck)}</>)
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  expect(buttonReset).not.toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  // スタートボタンは無効
-  expect(buttonStart).toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(getByText('ガーディアン')).toBeVisible()
-  expect(getByText('手札')).toBeVisible()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    getByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeVisible()
-
-  // デッキを編集してもシミュレータのデッキは変わらない
-  // ガーディアン4枚で不可視
-  groupGuardians = getByRole('group', { name: 'ガーディアン' })
-  expect(groupGuardians).toBeVisible()
-  guardians = groupGuardians.querySelectorAll('button')
-  expect(guardians.length).toBe(4)
-  expect(guardians[0]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[1]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[2]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[3]).toHaveClass('btn-toggled-opaque')
-  // 手札6枚で可視
-  groupHand = getByRole('group', { name: '手札' })
-  expect(groupHand).toBeVisible()
-  hand = groupHand.querySelectorAll('button')
-  expect(hand.length).toBe(6)
-  expect(hand[0]).toHaveClass('btn-toggled-transparent')
-  expect(hand[1]).toHaveClass('btn-toggled-transparent')
-  expect(hand[2]).toHaveClass('btn-toggled-transparent')
-  expect(hand[3]).toHaveClass('btn-toggled-transparent')
-  expect(hand[4]).toHaveClass('btn-toggled-transparent')
-  expect(hand[5]).toHaveClass('btn-toggled-transparent')
-
-  // 手札の6枚目をタップしても例外は発生しない
-  await userEvent.click(hand[5])
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  expect(buttonReset).not.toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  // スタートボタンは無効
-  expect(buttonStart).toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(getByText('ガーディアン')).toBeVisible()
-  expect(getByText('手札')).toBeVisible()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    getByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeVisible()
-
-  // ガーディアン4枚で不可視
-  groupGuardians = getByRole('group', { name: 'ガーディアン' })
-  expect(groupGuardians).toBeVisible()
-  guardians = groupGuardians.querySelectorAll('button')
-  expect(guardians.length).toBe(4)
-  expect(guardians[0]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[1]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[2]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[3]).toHaveClass('btn-toggled-opaque')
-  // 手札6枚で可視
-  groupHand = getByRole('group', { name: '手札' })
-  expect(groupHand).toBeVisible()
-  hand = groupHand.querySelectorAll('button')
-  expect(hand.length).toBe(6)
-  expect(hand[0]).toHaveClass('btn-toggled-transparent')
-  expect(hand[1]).toHaveClass('btn-toggled-transparent')
-  expect(hand[2]).toHaveClass('btn-toggled-transparent')
-  expect(hand[3]).toHaveClass('btn-toggled-transparent')
-  expect(hand[4]).toHaveClass('btn-toggled-transparent')
-  // タップしたカードの色味が変わる
-  expect(hand[5]).toHaveClass('btn-toggled-red')
-
-  // リセットボタンを押す
-  await userEvent.click(buttonReset)
-
-  renderTabPaneSimulator = result.current[1]
-  rerender(<>{renderTabPaneSimulator(deck)}</>)
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  // リセットボタンは無効
-  expect(buttonReset).toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  expect(buttonStart).not.toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(queryByText('ガーディアン')).toBeNull()
-  expect(queryByText('手札')).toBeNull()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
-})
-
-test('デッキ10枚でスタート、マリガン、デッキを9枚に変更、10枚目をタップ、リセット', async () => {
-  let deck = new Map([['R-1', 10]])
-  const { result } = renderHook(() => useTabPaneSimulator())
-  let renderTabPaneSimulator = result.current[1]
-  const { rerender, getByRole, getByText, queryByText } = render(
-    <>{renderTabPaneSimulator(deck)}</>
-  )
-
-  let buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  // リセットボタンは無効
-  expect(buttonReset).toHaveAttribute('disabled')
-  let buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  expect(buttonStart).not.toHaveAttribute('disabled')
-  let buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(queryByText('ガーディアン')).toBeNull()
-  expect(queryByText('手札')).toBeNull()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
-
-  // スタートボタンを押す
-  await userEvent.click(buttonStart)
-
-  renderTabPaneSimulator = result.current[1]
-  rerender(<>{renderTabPaneSimulator(deck)}</>)
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  expect(buttonReset).not.toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  // スタートボタンは無効
-  expect(buttonStart).toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  expect(buttonMulligan).not.toHaveAttribute('disabled')
-
-  expect(getByText('ガーディアン')).toBeVisible()
-  expect(getByText('手札')).toBeVisible()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
-
-  // ガーディアン4枚で不可視
-  let groupGuardians = getByRole('group', { name: 'ガーディアン' })
-  expect(groupGuardians).toBeVisible()
-  let guardians = groupGuardians.querySelectorAll('button')
-  expect(guardians.length).toBe(4)
-  expect(guardians[0]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[1]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[2]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[3]).toHaveClass('btn-toggled-opaque')
-  // 手札6枚で可視
-  let groupHand = getByRole('group', { name: '手札' })
-  expect(groupHand).toBeVisible()
-  let hand = groupHand.querySelectorAll('button')
-  expect(hand.length).toBe(6)
-  expect(hand[0]).toHaveClass('btn-toggled-transparent')
-  expect(hand[1]).toHaveClass('btn-toggled-transparent')
-  expect(hand[2]).toHaveClass('btn-toggled-transparent')
-  expect(hand[3]).toHaveClass('btn-toggled-transparent')
-  expect(hand[4]).toHaveClass('btn-toggled-transparent')
-  expect(hand[5]).toHaveClass('btn-toggled-transparent')
-
-  // マリガンボタンを押す
-  await userEvent.click(buttonMulligan)
-
-  renderTabPaneSimulator = result.current[1]
-  rerender(<>{renderTabPaneSimulator(deck)}</>)
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  expect(buttonReset).not.toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  // スタートボタンは無効
-  expect(buttonStart).toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(getByText('ガーディアン')).toBeVisible()
-  expect(getByText('手札')).toBeVisible()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
-
-  // ガーディアン4枚で不可視
-  groupGuardians = getByRole('group', { name: 'ガーディアン' })
-  expect(groupGuardians).toBeVisible()
-  guardians = groupGuardians.querySelectorAll('button')
-  expect(guardians.length).toBe(4)
-  expect(guardians[0]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[1]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[2]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[3]).toHaveClass('btn-toggled-opaque')
-  // 手札6枚で可視
-  groupHand = getByRole('group', { name: '手札' })
-  expect(groupHand).toBeVisible()
-  hand = groupHand.querySelectorAll('button')
-  expect(hand.length).toBe(6)
-  expect(hand[0]).toHaveClass('btn-toggled-transparent')
-  expect(hand[1]).toHaveClass('btn-toggled-transparent')
-  expect(hand[2]).toHaveClass('btn-toggled-transparent')
-  expect(hand[3]).toHaveClass('btn-toggled-transparent')
-  expect(hand[4]).toHaveClass('btn-toggled-transparent')
-  expect(hand[5]).toHaveClass('btn-toggled-transparent')
-
-  // デッキを9枚に変更する
-  deck = new Map([['R-1', 9]])
-  const interruptSimulator = result.current[0]
-  act(() => interruptSimulator())
-  renderTabPaneSimulator = result.current[1]
-  rerender(<>{renderTabPaneSimulator(deck)}</>)
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  expect(buttonReset).not.toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  // スタートボタンは無効
-  expect(buttonStart).toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(getByText('ガーディアン')).toBeVisible()
-  expect(getByText('手札')).toBeVisible()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    getByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeVisible()
-
-  // デッキを編集してもシミュレータのデッキは変わらない
-  // ガーディアン4枚で不可視
-  groupGuardians = getByRole('group', { name: 'ガーディアン' })
-  expect(groupGuardians).toBeVisible()
-  guardians = groupGuardians.querySelectorAll('button')
-  expect(guardians.length).toBe(4)
-  expect(guardians[0]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[1]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[2]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[3]).toHaveClass('btn-toggled-opaque')
-  // 手札6枚で可視
-  groupHand = getByRole('group', { name: '手札' })
-  expect(groupHand).toBeVisible()
-  hand = groupHand.querySelectorAll('button')
-  expect(hand.length).toBe(6)
-  expect(hand[0]).toHaveClass('btn-toggled-transparent')
-  expect(hand[1]).toHaveClass('btn-toggled-transparent')
-  expect(hand[2]).toHaveClass('btn-toggled-transparent')
-  expect(hand[3]).toHaveClass('btn-toggled-transparent')
-  expect(hand[4]).toHaveClass('btn-toggled-transparent')
-  expect(hand[5]).toHaveClass('btn-toggled-transparent')
-
-  // 手札の6枚目をタップしても例外は発生しない
-  await userEvent.click(hand[5])
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  expect(buttonReset).not.toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  // スタートボタンは無効
-  expect(buttonStart).toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(getByText('ガーディアン')).toBeVisible()
-  expect(getByText('手札')).toBeVisible()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    getByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeVisible()
-
-  // ガーディアン4枚で不可視
-  groupGuardians = getByRole('group', { name: 'ガーディアン' })
-  expect(groupGuardians).toBeVisible()
-  guardians = groupGuardians.querySelectorAll('button')
-  expect(guardians.length).toBe(4)
-  expect(guardians[0]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[1]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[2]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[3]).toHaveClass('btn-toggled-opaque')
-  // 手札6枚で可視
-  groupHand = getByRole('group', { name: '手札' })
-  expect(groupHand).toBeVisible()
-  hand = groupHand.querySelectorAll('button')
-  expect(hand.length).toBe(6)
-  expect(hand[0]).toHaveClass('btn-toggled-transparent')
-  expect(hand[1]).toHaveClass('btn-toggled-transparent')
-  expect(hand[2]).toHaveClass('btn-toggled-transparent')
-  expect(hand[3]).toHaveClass('btn-toggled-transparent')
-  expect(hand[4]).toHaveClass('btn-toggled-transparent')
-  // タップしたカードの色味が変わる
-  expect(hand[5]).toHaveClass('btn-toggled-red')
-
-  // リセットボタンを押す
-  await userEvent.click(buttonReset)
-
-  renderTabPaneSimulator = result.current[1]
-  rerender(<>{renderTabPaneSimulator(deck)}</>)
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  // リセットボタンは無効
-  expect(buttonReset).toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  expect(buttonStart).not.toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(queryByText('ガーディアン')).toBeNull()
-  expect(queryByText('手札')).toBeNull()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
-})
-
-test('デッキ10枚でスタート、手札をタップ、デッキを9枚に変更、リセット', async () => {
-  let deck = new Map([['R-1', 10]])
-  const { result } = renderHook(() => useTabPaneSimulator())
-  let renderTabPaneSimulator = result.current[1]
-  const { rerender, getByRole, getByText, queryByText } = render(
-    <>{renderTabPaneSimulator(deck)}</>
-  )
-
-  let buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  // リセットボタンは無効
-  expect(buttonReset).toHaveAttribute('disabled')
-  let buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  expect(buttonStart).not.toHaveAttribute('disabled')
-  let buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(queryByText('ガーディアン')).toBeNull()
-  expect(queryByText('手札')).toBeNull()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
-
-  // スタートボタンを押す
-  await userEvent.click(buttonStart)
-
-  renderTabPaneSimulator = result.current[1]
-  rerender(<>{renderTabPaneSimulator(deck)}</>)
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  expect(buttonReset).not.toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  // スタートボタンは無効
-  expect(buttonStart).toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  expect(buttonMulligan).not.toHaveAttribute('disabled')
-
-  expect(getByText('ガーディアン')).toBeVisible()
-  expect(getByText('手札')).toBeVisible()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
-
-  // ガーディアン4枚で不可視
-  let groupGuardians = getByRole('group', { name: 'ガーディアン' })
-  expect(groupGuardians).toBeVisible()
-  let guardians = groupGuardians.querySelectorAll('button')
-  expect(guardians.length).toBe(4)
-  expect(guardians[0]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[1]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[2]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[3]).toHaveClass('btn-toggled-opaque')
-  // 手札6枚で可視
-  let groupHand = getByRole('group', { name: '手札' })
-  expect(groupHand).toBeVisible()
-  let hand = groupHand.querySelectorAll('button')
-
-  expect(hand.length).toBe(6)
-  expect(hand[0]).toHaveClass('btn-toggled-transparent')
-  expect(hand[1]).toHaveClass('btn-toggled-transparent')
-  expect(hand[2]).toHaveClass('btn-toggled-transparent')
-  expect(hand[3]).toHaveClass('btn-toggled-transparent')
-  expect(hand[4]).toHaveClass('btn-toggled-transparent')
-  expect(hand[5]).toHaveClass('btn-toggled-transparent')
-
-  // 手札のカードをタップする
-  await userEvent.click(hand[0])
-
-  renderTabPaneSimulator = result.current[1]
-  rerender(<>{renderTabPaneSimulator(deck)}</>)
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  expect(buttonReset).not.toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  // スタートボタンは無効
-  expect(buttonStart).toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(getByText('ガーディアン')).toBeVisible()
-  expect(getByText('手札')).toBeVisible()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
-
-  // ガーディアン4枚で不可視
-  groupGuardians = getByRole('group', { name: 'ガーディアン' })
-  expect(groupGuardians).toBeVisible()
-  guardians = groupGuardians.querySelectorAll('button')
-  expect(guardians.length).toBe(4)
-  expect(guardians[0]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[1]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[2]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[3]).toHaveClass('btn-toggled-opaque')
-  // 手札6枚で可視
-  groupHand = getByRole('group', { name: '手札' })
-  expect(groupHand).toBeVisible()
-  hand = groupHand.querySelectorAll('button')
-  expect(hand.length).toBe(6)
-  // タップしたカードの色味が変わる
-  expect(hand[0]).toHaveClass('btn-toggled-red')
-  expect(hand[1]).toHaveClass('btn-toggled-transparent')
-  expect(hand[2]).toHaveClass('btn-toggled-transparent')
-  expect(hand[3]).toHaveClass('btn-toggled-transparent')
-  expect(hand[4]).toHaveClass('btn-toggled-transparent')
-  expect(hand[5]).toHaveClass('btn-toggled-transparent')
-
-  // デッキを9枚に変更する
-  deck = new Map([['R-1', 9]])
-  const interruptSimulator = result.current[0]
-  act(() => interruptSimulator())
-  renderTabPaneSimulator = result.current[1]
-  rerender(<>{renderTabPaneSimulator(deck)}</>)
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  expect(buttonReset).not.toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  // スタートボタンは無効
-  expect(buttonStart).toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(getByText('ガーディアン')).toBeVisible()
-  expect(getByText('手札')).toBeVisible()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    getByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeVisible()
-
-  // デッキを編集してもシミュレータのデッキは変わらない
-  // ガーディアン4枚で不可視
-  groupGuardians = getByRole('group', { name: 'ガーディアン' })
-  expect(groupGuardians).toBeVisible()
-  guardians = groupGuardians.querySelectorAll('button')
-  expect(guardians.length).toBe(4)
-  expect(guardians[0]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[1]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[2]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[3]).toHaveClass('btn-toggled-opaque')
-  // 手札6枚で可視
-  groupHand = getByRole('group', { name: '手札' })
-  expect(groupHand).toBeVisible()
-  hand = groupHand.querySelectorAll('button')
-  expect(hand.length).toBe(6)
-  expect(hand[0]).toHaveClass('btn-toggled-red')
-  expect(hand[1]).toHaveClass('btn-toggled-transparent')
-  expect(hand[2]).toHaveClass('btn-toggled-transparent')
-  expect(hand[3]).toHaveClass('btn-toggled-transparent')
-  expect(hand[4]).toHaveClass('btn-toggled-transparent')
-  expect(hand[5]).toHaveClass('btn-toggled-transparent')
-
-  // リセットボタンを押す
-  await userEvent.click(buttonReset)
-
-  renderTabPaneSimulator = result.current[1]
-  rerender(<>{renderTabPaneSimulator(deck)}</>)
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  // リセットボタンは無効
-  expect(buttonReset).toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  expect(buttonStart).not.toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(queryByText('ガーディアン')).toBeNull()
-  expect(queryByText('手札')).toBeNull()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
-})
-
-test('デッキ10枚でスタート、マリガン、デッキを9枚に変更、リセット', async () => {
-  let deck = new Map([['R-1', 10]])
-  const { result } = renderHook(() => useTabPaneSimulator())
-  let renderTabPaneSimulator = result.current[1]
-  const { rerender, getByRole, getByText, queryByText } = render(
-    <>{renderTabPaneSimulator(deck)}</>
-  )
-
-  let buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  // リセットボタンは無効
-  expect(buttonReset).toHaveAttribute('disabled')
-  let buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  expect(buttonStart).not.toHaveAttribute('disabled')
-  let buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(queryByText('ガーディアン')).toBeNull()
-  expect(queryByText('手札')).toBeNull()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
-
-  // スタートボタンを押す
-  await userEvent.click(buttonStart)
-
-  renderTabPaneSimulator = result.current[1]
-  rerender(<>{renderTabPaneSimulator(deck)}</>)
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  expect(buttonReset).not.toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  // スタートボタンは無効
-  expect(buttonStart).toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  expect(buttonMulligan).not.toHaveAttribute('disabled')
-
-  expect(getByText('ガーディアン')).toBeVisible()
-  expect(getByText('手札')).toBeVisible()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
-
-  // ガーディアン4枚で不可視
-  let groupGuardians = getByRole('group', { name: 'ガーディアン' })
-  expect(groupGuardians).toBeVisible()
-  let guardians = groupGuardians.querySelectorAll('button')
-  expect(guardians.length).toBe(4)
-  expect(guardians[0]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[1]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[2]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[3]).toHaveClass('btn-toggled-opaque')
-  // 手札6枚で可視
-  let groupHand = getByRole('group', { name: '手札' })
-  expect(groupHand).toBeVisible()
-  let hand = groupHand.querySelectorAll('button')
-  expect(hand.length).toBe(6)
-  expect(hand[0]).toHaveClass('btn-toggled-transparent')
-  expect(hand[1]).toHaveClass('btn-toggled-transparent')
-  expect(hand[2]).toHaveClass('btn-toggled-transparent')
-  expect(hand[3]).toHaveClass('btn-toggled-transparent')
-  expect(hand[4]).toHaveClass('btn-toggled-transparent')
-  expect(hand[5]).toHaveClass('btn-toggled-transparent')
-
-  // マリガンボタンを押す
-  await userEvent.click(buttonMulligan)
-
-  renderTabPaneSimulator = result.current[1]
-  rerender(<>{renderTabPaneSimulator(deck)}</>)
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  expect(buttonReset).not.toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  // スタートボタンは無効
-  expect(buttonStart).toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(getByText('ガーディアン')).toBeVisible()
-  expect(getByText('手札')).toBeVisible()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
-
-  // ガーディアン4枚で不可視
-  groupGuardians = getByRole('group', { name: 'ガーディアン' })
-  expect(groupGuardians).toBeVisible()
-  guardians = groupGuardians.querySelectorAll('button')
-  expect(guardians.length).toBe(4)
-  expect(guardians[0]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[1]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[2]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[3]).toHaveClass('btn-toggled-opaque')
-  // 手札6枚で可視
-  groupHand = getByRole('group', { name: '手札' })
-  expect(groupHand).toBeVisible()
-  hand = groupHand.querySelectorAll('button')
-  expect(hand.length).toBe(6)
-  expect(hand[0]).toHaveClass('btn-toggled-transparent')
-  expect(hand[1]).toHaveClass('btn-toggled-transparent')
-  expect(hand[2]).toHaveClass('btn-toggled-transparent')
-  expect(hand[3]).toHaveClass('btn-toggled-transparent')
-  expect(hand[4]).toHaveClass('btn-toggled-transparent')
-  expect(hand[5]).toHaveClass('btn-toggled-transparent')
-
-  // デッキを9枚に変更する
-  deck = new Map([['R-1', 9]])
-  const interruptSimulator = result.current[0]
-  act(() => interruptSimulator())
-  renderTabPaneSimulator = result.current[1]
-  rerender(<>{renderTabPaneSimulator(deck)}</>)
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  expect(buttonReset).not.toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  // スタートボタンは無効
-  expect(buttonStart).toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(getByText('ガーディアン')).toBeVisible()
-  expect(getByText('手札')).toBeVisible()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    getByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeVisible()
-
-  // デッキを編集してもシミュレータのデッキは変わらない
-  // ガーディアン4枚で不可視
-  groupGuardians = getByRole('group', { name: 'ガーディアン' })
-  expect(groupGuardians).toBeVisible()
-  guardians = groupGuardians.querySelectorAll('button')
-  expect(guardians.length).toBe(4)
-  expect(guardians[0]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[1]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[2]).toHaveClass('btn-toggled-opaque')
-  expect(guardians[3]).toHaveClass('btn-toggled-opaque')
-  // 手札6枚で可視
-  groupHand = getByRole('group', { name: '手札' })
-  expect(groupHand).toBeVisible()
-  hand = groupHand.querySelectorAll('button')
-  expect(hand.length).toBe(6)
-  expect(hand[0]).toHaveClass('btn-toggled-transparent')
-  expect(hand[1]).toHaveClass('btn-toggled-transparent')
-  expect(hand[2]).toHaveClass('btn-toggled-transparent')
-  expect(hand[3]).toHaveClass('btn-toggled-transparent')
-  expect(hand[4]).toHaveClass('btn-toggled-transparent')
-  expect(hand[5]).toHaveClass('btn-toggled-transparent')
-
-  // リセットボタンを押す
-  await userEvent.click(buttonReset)
-
-  renderTabPaneSimulator = result.current[1]
-  rerender(<>{renderTabPaneSimulator(deck)}</>)
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  // リセットボタンは無効
-  expect(buttonReset).toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  expect(buttonStart).not.toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(queryByText('ガーディアン')).toBeNull()
-  expect(queryByText('手札')).toBeNull()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
+describe('デッキ10枚でスタート', () => {
+  let deck, result, defaultRerender, getByRole, queryByRole
+  let guardians, hand
+  beforeEach(async () => {
+    deck = new Map([['R-1', 10]])
+    ;({ result, defaultRerender, getByRole, queryByRole } = defaultRender(deck))
+
+    expect(getByRole('button', { name: 'リセット' })).toBeDisabled()
+    expect(getByRole('button', { name: 'スタート' })).toBeEnabled()
+    expect(getByRole('button', { name: 'マリガン' })).toBeDisabled()
+    expect(queryByRole('region', { name: 'ガーディアン' })).toBeNull()
+    expect(queryByRole('region', { name: '手札' })).toBeNull()
+    expect(queryByRole('alert')).toBeNull()
+
+    // スタートボタンを押す
+    await userEvent.click(getByRole('button', { name: 'スタート' }))
+    defaultRerender(deck)
+
+    expect(getByRole('button', { name: 'リセット' })).toBeEnabled()
+    expect(getByRole('button', { name: 'スタート' })).toBeDisabled()
+    expect(getByRole('button', { name: 'マリガン' })).toBeEnabled()
+    expect(getByRole('region', { name: 'ガーディアン' })).toBeVisible()
+    expect(getByRole('region', { name: '手札' })).toBeVisible()
+    expect(queryByRole('alert')).toBeNull()
+
+    // ガーディアン4枚で不可視
+    guardians = getAllButtons(getByRole, 'ガーディアン')
+    expect(guardians.length).toBe(4)
+    expect(guardians[0]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[1]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[2]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[3]).toHaveClass('btn-toggled-opaque')
+    // 手札6枚で可視
+    hand = getAllButtons(getByRole, '手札')
+    expect(hand.length).toBe(6)
+    expect(hand[0]).toHaveClass('btn-toggled-transparent')
+    expect(hand[1]).toHaveClass('btn-toggled-transparent')
+    expect(hand[2]).toHaveClass('btn-toggled-transparent')
+    expect(hand[3]).toHaveClass('btn-toggled-transparent')
+    expect(hand[4]).toHaveClass('btn-toggled-transparent')
+    expect(hand[5]).toHaveClass('btn-toggled-transparent')
+  })
+
+  test('マリガン', async () => {
+    // マリガンボタンを押す
+    await userEvent.click(getByRole('button', { name: 'マリガン' }))
+    defaultRerender(deck)
+
+    expect(getByRole('button', { name: 'リセット' })).toBeEnabled()
+    expect(getByRole('button', { name: 'スタート' })).toBeDisabled()
+    expect(getByRole('button', { name: 'マリガン' })).toBeDisabled()
+    expect(getByRole('region', { name: 'ガーディアン' })).toBeVisible()
+    expect(getByRole('region', { name: '手札' })).toBeVisible()
+    expect(queryByRole('alert')).toBeNull()
+
+    // ガーディアン4枚で不可視
+    guardians = getAllButtons(getByRole, 'ガーディアン')
+    expect(guardians.length).toBe(4)
+    expect(guardians[0]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[1]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[2]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[3]).toHaveClass('btn-toggled-opaque')
+    // 手札6枚で可視
+    hand = getAllButtons(getByRole, '手札')
+    expect(hand.length).toBe(6)
+    expect(hand[0]).toHaveClass('btn-toggled-transparent')
+    expect(hand[1]).toHaveClass('btn-toggled-transparent')
+    expect(hand[2]).toHaveClass('btn-toggled-transparent')
+    expect(hand[3]).toHaveClass('btn-toggled-transparent')
+    expect(hand[4]).toHaveClass('btn-toggled-transparent')
+    expect(hand[5]).toHaveClass('btn-toggled-transparent')
+  })
+
+  test('マリガン、手札をタップ', async () => {
+    // マリガンボタンを押す
+    await userEvent.click(getByRole('button', { name: 'マリガン' }))
+    defaultRerender(deck)
+
+    expect(getByRole('button', { name: 'リセット' })).toBeEnabled()
+    expect(getByRole('button', { name: 'スタート' })).toBeDisabled()
+    expect(getByRole('button', { name: 'マリガン' })).toBeDisabled()
+    expect(getByRole('region', { name: 'ガーディアン' })).toBeVisible()
+    expect(getByRole('region', { name: '手札' })).toBeVisible()
+    expect(queryByRole('alert')).toBeNull()
+
+    // ガーディアン4枚で不可視
+    guardians = getAllButtons(getByRole, 'ガーディアン')
+    expect(guardians.length).toBe(4)
+    expect(guardians[0]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[1]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[2]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[3]).toHaveClass('btn-toggled-opaque')
+    // 手札6枚で可視
+    hand = getAllButtons(getByRole, '手札')
+    expect(hand.length).toBe(6)
+    expect(hand[0]).toHaveClass('btn-toggled-transparent')
+    expect(hand[1]).toHaveClass('btn-toggled-transparent')
+    expect(hand[2]).toHaveClass('btn-toggled-transparent')
+    expect(hand[3]).toHaveClass('btn-toggled-transparent')
+    expect(hand[4]).toHaveClass('btn-toggled-transparent')
+    expect(hand[5]).toHaveClass('btn-toggled-transparent')
+
+    // 手札のカードをタップする
+    await userEvent.click(hand[0])
+    defaultRerender(deck)
+
+    expect(getByRole('button', { name: 'リセット' })).toBeEnabled()
+    expect(getByRole('button', { name: 'スタート' })).toBeDisabled()
+    expect(getByRole('button', { name: 'マリガン' })).toBeDisabled()
+    expect(getByRole('region', { name: 'ガーディアン' })).toBeVisible()
+    expect(getByRole('region', { name: '手札' })).toBeVisible()
+    expect(queryByRole('alert')).toBeNull()
+
+    // ガーディアン4枚で不可視
+    guardians = getAllButtons(getByRole, 'ガーディアン')
+    expect(guardians.length).toBe(4)
+    expect(guardians[0]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[1]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[2]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[3]).toHaveClass('btn-toggled-opaque')
+    // 手札6枚で可視
+    hand = getAllButtons(getByRole, '手札')
+    expect(hand.length).toBe(6)
+    expect(hand[0]).toHaveClass('btn-toggled-red') // 色味が変わった
+    expect(hand[1]).toHaveClass('btn-toggled-transparent')
+    expect(hand[2]).toHaveClass('btn-toggled-transparent')
+    expect(hand[3]).toHaveClass('btn-toggled-transparent')
+    expect(hand[4]).toHaveClass('btn-toggled-transparent')
+    expect(hand[5]).toHaveClass('btn-toggled-transparent')
+  })
+
+  test('手札をタップ', async () => {
+    // 手札のカードをタップする
+    await userEvent.click(hand[0])
+    defaultRerender(deck)
+
+    expect(getByRole('button', { name: 'リセット' })).toBeEnabled()
+    expect(getByRole('button', { name: 'スタート' })).toBeDisabled()
+    expect(getByRole('button', { name: 'マリガン' })).toBeDisabled()
+    expect(getByRole('region', { name: 'ガーディアン' })).toBeVisible()
+    expect(getByRole('region', { name: '手札' })).toBeVisible()
+    expect(queryByRole('alert')).toBeNull()
+
+    // ガーディアン4枚で不可視
+    guardians = getAllButtons(getByRole, 'ガーディアン')
+    expect(guardians.length).toBe(4)
+    expect(guardians[0]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[1]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[2]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[3]).toHaveClass('btn-toggled-opaque')
+    // 手札6枚で可視
+    hand = getAllButtons(getByRole, '手札')
+    expect(hand.length).toBe(6)
+    expect(hand[0]).toHaveClass('btn-toggled-red') // 色味が変わった
+    expect(hand[1]).toHaveClass('btn-toggled-transparent')
+    expect(hand[2]).toHaveClass('btn-toggled-transparent')
+    expect(hand[3]).toHaveClass('btn-toggled-transparent')
+    expect(hand[4]).toHaveClass('btn-toggled-transparent')
+    expect(hand[5]).toHaveClass('btn-toggled-transparent')
+  })
+
+  test('ガーディアンをタップ', async () => {
+    // ガーディアンのカードをタップする
+    await userEvent.click(guardians[0])
+    defaultRerender(deck)
+
+    expect(getByRole('button', { name: 'リセット' })).toBeEnabled()
+    expect(getByRole('button', { name: 'スタート' })).toBeDisabled()
+    expect(getByRole('button', { name: 'マリガン' })).toBeDisabled()
+    expect(getByRole('region', { name: 'ガーディアン' })).toBeVisible()
+    expect(getByRole('region', { name: '手札' })).toBeVisible()
+    expect(queryByRole('alert')).toBeNull()
+
+    // ガーディアン4枚で不可視
+    guardians = getAllButtons(getByRole, 'ガーディアン')
+    expect(guardians.length).toBe(4)
+    expect(guardians[0]).toHaveClass('btn-toggled-transparent') // 色味が変わった
+    expect(guardians[1]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[2]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[3]).toHaveClass('btn-toggled-opaque')
+    // 手札6枚で可視
+    hand = getAllButtons(getByRole, '手札')
+    expect(hand.length).toBe(6)
+    expect(hand[0]).toHaveClass('btn-toggled-transparent')
+    expect(hand[1]).toHaveClass('btn-toggled-transparent')
+    expect(hand[2]).toHaveClass('btn-toggled-transparent')
+    expect(hand[3]).toHaveClass('btn-toggled-transparent')
+    expect(hand[4]).toHaveClass('btn-toggled-transparent')
+    expect(hand[5]).toHaveClass('btn-toggled-transparent')
+  })
+
+  test('手札をタップ、手札をタップ', async () => {
+    // 手札のカードをタップする
+    await userEvent.click(hand[0])
+    defaultRerender(deck)
+
+    expect(getByRole('button', { name: 'リセット' })).toBeEnabled()
+    expect(getByRole('button', { name: 'スタート' })).toBeDisabled()
+    expect(getByRole('button', { name: 'マリガン' })).toBeDisabled()
+    expect(getByRole('region', { name: 'ガーディアン' })).toBeVisible()
+    expect(getByRole('region', { name: '手札' })).toBeVisible()
+    expect(queryByRole('alert')).toBeNull()
+
+    // ガーディアン4枚で不可視
+    guardians = getAllButtons(getByRole, 'ガーディアン')
+    expect(guardians.length).toBe(4)
+    expect(guardians[0]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[1]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[2]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[3]).toHaveClass('btn-toggled-opaque')
+    // 手札6枚で可視
+    hand = getAllButtons(getByRole, '手札')
+    expect(hand.length).toBe(6)
+    expect(hand[0]).toHaveClass('btn-toggled-red') // 色味が変わった
+    expect(hand[1]).toHaveClass('btn-toggled-transparent')
+    expect(hand[2]).toHaveClass('btn-toggled-transparent')
+    expect(hand[3]).toHaveClass('btn-toggled-transparent')
+    expect(hand[4]).toHaveClass('btn-toggled-transparent')
+    expect(hand[5]).toHaveClass('btn-toggled-transparent')
+
+    // 手札のカードをタップする
+    await userEvent.click(hand[0])
+    defaultRerender(deck)
+
+    expect(getByRole('button', { name: 'リセット' })).toBeEnabled()
+    expect(getByRole('button', { name: 'スタート' })).toBeDisabled()
+    expect(getByRole('button', { name: 'マリガン' })).toBeDisabled()
+    expect(getByRole('region', { name: 'ガーディアン' })).toBeVisible()
+    expect(getByRole('region', { name: '手札' })).toBeVisible()
+    expect(queryByRole('alert')).toBeNull()
+
+    // ガーディアン4枚で不可視
+    guardians = getAllButtons(getByRole, 'ガーディアン')
+    expect(guardians.length).toBe(4)
+    expect(guardians[0]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[1]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[2]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[3]).toHaveClass('btn-toggled-opaque')
+    // 手札6枚で可視
+    hand = getAllButtons(getByRole, '手札')
+    expect(hand.length).toBe(6)
+    expect(hand[0]).toHaveClass('btn-toggled-blue') // 色味が変わった
+    expect(hand[1]).toHaveClass('btn-toggled-transparent')
+    expect(hand[2]).toHaveClass('btn-toggled-transparent')
+    expect(hand[3]).toHaveClass('btn-toggled-transparent')
+    expect(hand[4]).toHaveClass('btn-toggled-transparent')
+    expect(hand[5]).toHaveClass('btn-toggled-transparent')
+  })
+
+  test('手札をタップ、ガーディアンをタップ', async () => {
+    // 手札のカードをタップする
+    await userEvent.click(hand[0])
+    defaultRerender(deck)
+
+    expect(getByRole('button', { name: 'リセット' })).toBeEnabled()
+    expect(getByRole('button', { name: 'スタート' })).toBeDisabled()
+    expect(getByRole('button', { name: 'マリガン' })).toBeDisabled()
+    expect(getByRole('region', { name: 'ガーディアン' })).toBeVisible()
+    expect(getByRole('region', { name: '手札' })).toBeVisible()
+    expect(queryByRole('alert')).toBeNull()
+
+    // ガーディアン4枚で不可視
+    guardians = getAllButtons(getByRole, 'ガーディアン')
+    expect(guardians.length).toBe(4)
+    expect(guardians[0]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[1]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[2]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[3]).toHaveClass('btn-toggled-opaque')
+    // 手札6枚で可視
+    hand = getAllButtons(getByRole, '手札')
+    expect(hand.length).toBe(6)
+    expect(hand[0]).toHaveClass('btn-toggled-red') // 色味が変わった
+    expect(hand[1]).toHaveClass('btn-toggled-transparent')
+    expect(hand[2]).toHaveClass('btn-toggled-transparent')
+    expect(hand[3]).toHaveClass('btn-toggled-transparent')
+    expect(hand[4]).toHaveClass('btn-toggled-transparent')
+    expect(hand[5]).toHaveClass('btn-toggled-transparent')
+
+    // ガーディアンのカードをタップする
+    await userEvent.click(guardians[0])
+    defaultRerender(deck)
+
+    expect(getByRole('button', { name: 'リセット' })).toBeEnabled()
+    expect(getByRole('button', { name: 'スタート' })).toBeDisabled()
+    expect(getByRole('button', { name: 'マリガン' })).toBeDisabled()
+    expect(getByRole('region', { name: 'ガーディアン' })).toBeVisible()
+    expect(getByRole('region', { name: '手札' })).toBeVisible()
+    expect(queryByRole('alert')).toBeNull()
+
+    // ガーディアン4枚で不可視
+    guardians = getAllButtons(getByRole, 'ガーディアン')
+    expect(guardians.length).toBe(4)
+    expect(guardians[0]).toHaveClass('btn-toggled-transparent') // 色味が変わった
+    expect(guardians[1]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[2]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[3]).toHaveClass('btn-toggled-opaque')
+    // 手札6枚で可視
+    hand = getAllButtons(getByRole, '手札')
+    expect(hand.length).toBe(6)
+    expect(hand[0]).toHaveClass('btn-toggled-red')
+    expect(hand[1]).toHaveClass('btn-toggled-transparent')
+    expect(hand[2]).toHaveClass('btn-toggled-transparent')
+    expect(hand[3]).toHaveClass('btn-toggled-transparent')
+    expect(hand[4]).toHaveClass('btn-toggled-transparent')
+    expect(hand[5]).toHaveClass('btn-toggled-transparent')
+  })
+
+  test('ガーディアンをタップ、ガーディアンをタップ', async () => {
+    // ガーディアンのカードをタップする
+    await userEvent.click(guardians[0])
+    defaultRerender(deck)
+
+    expect(getByRole('button', { name: 'リセット' })).toBeEnabled()
+    expect(getByRole('button', { name: 'スタート' })).toBeDisabled()
+    expect(getByRole('button', { name: 'マリガン' })).toBeDisabled()
+    expect(getByRole('region', { name: 'ガーディアン' })).toBeVisible()
+    expect(getByRole('region', { name: '手札' })).toBeVisible()
+    expect(queryByRole('alert')).toBeNull()
+
+    // ガーディアン4枚で不可視
+    guardians = getAllButtons(getByRole, 'ガーディアン')
+    expect(guardians.length).toBe(4)
+    expect(guardians[0]).toHaveClass('btn-toggled-transparent') // 色味が変わった
+    expect(guardians[1]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[2]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[3]).toHaveClass('btn-toggled-opaque')
+    // 手札6枚で可視
+    hand = getAllButtons(getByRole, '手札')
+    expect(hand.length).toBe(6)
+    expect(hand[0]).toHaveClass('btn-toggled-transparent')
+    expect(hand[1]).toHaveClass('btn-toggled-transparent')
+    expect(hand[2]).toHaveClass('btn-toggled-transparent')
+    expect(hand[3]).toHaveClass('btn-toggled-transparent')
+    expect(hand[4]).toHaveClass('btn-toggled-transparent')
+    expect(hand[5]).toHaveClass('btn-toggled-transparent')
+
+    // ガーディアンのカードをタップする
+    await userEvent.click(guardians[0])
+    defaultRerender(deck)
+
+    expect(getByRole('button', { name: 'リセット' })).toBeEnabled()
+    expect(getByRole('button', { name: 'スタート' })).toBeDisabled()
+    expect(getByRole('button', { name: 'マリガン' })).toBeDisabled()
+    expect(getByRole('region', { name: 'ガーディアン' })).toBeVisible()
+    expect(getByRole('region', { name: '手札' })).toBeVisible()
+    expect(queryByRole('alert')).toBeNull()
+
+    // ガーディアン4枚で不可視
+    guardians = getAllButtons(getByRole, 'ガーディアン')
+    expect(guardians.length).toBe(4)
+    expect(guardians[0]).toHaveClass('btn-toggled-red') // 色味が変わった
+    expect(guardians[1]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[2]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[3]).toHaveClass('btn-toggled-opaque')
+    // 手札6枚で可視
+    hand = getAllButtons(getByRole, '手札')
+    expect(hand.length).toBe(6)
+    expect(hand[0]).toHaveClass('btn-toggled-transparent')
+    expect(hand[1]).toHaveClass('btn-toggled-transparent')
+    expect(hand[2]).toHaveClass('btn-toggled-transparent')
+    expect(hand[3]).toHaveClass('btn-toggled-transparent')
+    expect(hand[4]).toHaveClass('btn-toggled-transparent')
+    expect(hand[5]).toHaveClass('btn-toggled-transparent')
+  })
+
+  test('デッキを9枚に変更、10枚目をタップ', async () => {
+    // デッキを9枚に変更する
+    deck = new Map([['R-1', 9]])
+    await act(() => getInterruptFn(result)())
+    defaultRerender(deck)
+
+    expect(getByRole('button', { name: 'リセット' })).toBeEnabled()
+    expect(getByRole('button', { name: 'スタート' })).toBeDisabled()
+    expect(getByRole('button', { name: 'マリガン' })).toBeDisabled()
+    expect(getByRole('region', { name: 'ガーディアン' })).toBeVisible()
+    expect(getByRole('region', { name: '手札' })).toBeVisible()
+    // prettier-ignore
+    expect(getByRole('alert')).toHaveTextContent('シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。')
+
+    // デッキを編集してもシミュレータのデッキは変わらない
+    // ガーディアン4枚で不可視
+    guardians = getAllButtons(getByRole, 'ガーディアン')
+    expect(guardians.length).toBe(4)
+    expect(guardians[0]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[1]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[2]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[3]).toHaveClass('btn-toggled-opaque')
+    // 手札6枚で可視
+    hand = getAllButtons(getByRole, '手札')
+    expect(hand.length).toBe(6)
+    expect(hand[0]).toHaveClass('btn-toggled-transparent')
+    expect(hand[1]).toHaveClass('btn-toggled-transparent')
+    expect(hand[2]).toHaveClass('btn-toggled-transparent')
+    expect(hand[3]).toHaveClass('btn-toggled-transparent')
+    expect(hand[4]).toHaveClass('btn-toggled-transparent')
+    expect(hand[5]).toHaveClass('btn-toggled-transparent')
+
+    // 手札の6枚目をタップしても例外は発生しない
+    await userEvent.click(hand[5])
+
+    expect(getByRole('button', { name: 'リセット' })).toBeEnabled()
+    expect(getByRole('button', { name: 'スタート' })).toBeDisabled()
+    expect(getByRole('button', { name: 'マリガン' })).toBeDisabled()
+    expect(getByRole('region', { name: 'ガーディアン' })).toBeVisible()
+    expect(getByRole('region', { name: '手札' })).toBeVisible()
+    // prettier-ignore
+    expect(getByRole('alert')).toHaveTextContent('シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。')
+
+    // ガーディアン4枚で不可視
+    guardians = getAllButtons(getByRole, 'ガーディアン')
+    expect(guardians.length).toBe(4)
+    expect(guardians[0]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[1]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[2]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[3]).toHaveClass('btn-toggled-opaque')
+    // 手札6枚で可視
+    hand = getAllButtons(getByRole, '手札')
+    expect(hand.length).toBe(6)
+    expect(hand[0]).toHaveClass('btn-toggled-transparent')
+    expect(hand[1]).toHaveClass('btn-toggled-transparent')
+    expect(hand[2]).toHaveClass('btn-toggled-transparent')
+    expect(hand[3]).toHaveClass('btn-toggled-transparent')
+    expect(hand[4]).toHaveClass('btn-toggled-transparent')
+    expect(hand[5]).toHaveClass('btn-toggled-red') // 色味が変わった
+  })
+
+  test('マリガン、デッキを9枚に変更、10枚目をタップ', async () => {
+    // マリガンボタンを押す
+    await userEvent.click(getByRole('button', { name: 'マリガン' }))
+    defaultRerender(deck)
+
+    expect(getByRole('button', { name: 'リセット' })).toBeEnabled()
+    expect(getByRole('button', { name: 'スタート' })).toBeDisabled()
+    expect(getByRole('button', { name: 'マリガン' })).toBeDisabled()
+    expect(getByRole('region', { name: 'ガーディアン' })).toBeVisible()
+    expect(getByRole('region', { name: '手札' })).toBeVisible()
+    expect(queryByRole('alert')).toBeNull()
+
+    // ガーディアン4枚で不可視
+    guardians = getAllButtons(getByRole, 'ガーディアン')
+    expect(guardians.length).toBe(4)
+    expect(guardians[0]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[1]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[2]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[3]).toHaveClass('btn-toggled-opaque')
+    // 手札6枚で可視
+    hand = getAllButtons(getByRole, '手札')
+    expect(hand.length).toBe(6)
+    expect(hand[0]).toHaveClass('btn-toggled-transparent')
+    expect(hand[1]).toHaveClass('btn-toggled-transparent')
+    expect(hand[2]).toHaveClass('btn-toggled-transparent')
+    expect(hand[3]).toHaveClass('btn-toggled-transparent')
+    expect(hand[4]).toHaveClass('btn-toggled-transparent')
+    expect(hand[5]).toHaveClass('btn-toggled-transparent')
+
+    // デッキを9枚に変更する
+    deck = new Map([['R-1', 9]])
+    await act(() => getInterruptFn(result)())
+    defaultRerender(deck)
+
+    expect(getByRole('button', { name: 'リセット' })).toBeEnabled()
+    expect(getByRole('button', { name: 'スタート' })).toBeDisabled()
+    expect(getByRole('button', { name: 'マリガン' })).toBeDisabled()
+    expect(getByRole('region', { name: 'ガーディアン' })).toBeVisible()
+    expect(getByRole('region', { name: '手札' })).toBeVisible()
+    // prettier-ignore
+    expect(getByRole('alert')).toHaveTextContent('シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。')
+
+    // デッキを編集してもシミュレータのデッキは変わらない
+    // ガーディアン4枚で不可視
+    guardians = getAllButtons(getByRole, 'ガーディアン')
+    expect(guardians.length).toBe(4)
+    expect(guardians[0]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[1]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[2]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[3]).toHaveClass('btn-toggled-opaque')
+    // 手札6枚で可視
+    hand = getAllButtons(getByRole, '手札')
+    expect(hand.length).toBe(6)
+    expect(hand[0]).toHaveClass('btn-toggled-transparent')
+    expect(hand[1]).toHaveClass('btn-toggled-transparent')
+    expect(hand[2]).toHaveClass('btn-toggled-transparent')
+    expect(hand[3]).toHaveClass('btn-toggled-transparent')
+    expect(hand[4]).toHaveClass('btn-toggled-transparent')
+    expect(hand[5]).toHaveClass('btn-toggled-transparent')
+
+    // 手札の6枚目をタップしても例外は発生しない
+    await userEvent.click(hand[5])
+
+    expect(getByRole('button', { name: 'リセット' })).toBeEnabled()
+    expect(getByRole('button', { name: 'スタート' })).toBeDisabled()
+    expect(getByRole('button', { name: 'マリガン' })).toBeDisabled()
+    expect(getByRole('region', { name: 'ガーディアン' })).toBeVisible()
+    expect(getByRole('region', { name: '手札' })).toBeVisible()
+    // prettier-ignore
+    expect(getByRole('alert')).toHaveTextContent('シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。')
+
+    // ガーディアン4枚で不可視
+    guardians = getAllButtons(getByRole, 'ガーディアン')
+    expect(guardians.length).toBe(4)
+    expect(guardians[0]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[1]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[2]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[3]).toHaveClass('btn-toggled-opaque')
+    // 手札6枚で可視
+    hand = getAllButtons(getByRole, '手札')
+    expect(hand.length).toBe(6)
+    expect(hand[0]).toHaveClass('btn-toggled-transparent')
+    expect(hand[1]).toHaveClass('btn-toggled-transparent')
+    expect(hand[2]).toHaveClass('btn-toggled-transparent')
+    expect(hand[3]).toHaveClass('btn-toggled-transparent')
+    expect(hand[4]).toHaveClass('btn-toggled-transparent')
+    expect(hand[5]).toHaveClass('btn-toggled-red') // 色味が変わった
+  })
+
+  test('手札をタップ、デッキを9枚に変更、10枚目をタップ', async () => {
+    // 手札のカードをタップする
+    await userEvent.click(hand[0])
+    defaultRerender(deck)
+
+    expect(getByRole('button', { name: 'リセット' })).toBeEnabled()
+    expect(getByRole('button', { name: 'スタート' })).toBeDisabled()
+    expect(getByRole('button', { name: 'マリガン' })).toBeDisabled()
+    expect(getByRole('region', { name: 'ガーディアン' })).toBeVisible()
+    expect(getByRole('region', { name: '手札' })).toBeVisible()
+    expect(queryByRole('alert')).toBeNull()
+
+    // ガーディアン4枚で不可視
+    guardians = getAllButtons(getByRole, 'ガーディアン')
+    expect(guardians.length).toBe(4)
+    expect(guardians[0]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[1]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[2]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[3]).toHaveClass('btn-toggled-opaque')
+    // 手札6枚で可視
+    hand = getAllButtons(getByRole, '手札')
+    expect(hand.length).toBe(6)
+    expect(hand[0]).toHaveClass('btn-toggled-red') // 色味が変わった
+    expect(hand[1]).toHaveClass('btn-toggled-transparent')
+    expect(hand[2]).toHaveClass('btn-toggled-transparent')
+    expect(hand[3]).toHaveClass('btn-toggled-transparent')
+    expect(hand[4]).toHaveClass('btn-toggled-transparent')
+    expect(hand[5]).toHaveClass('btn-toggled-transparent')
+
+    // デッキを9枚に変更する
+    deck = new Map([['R-1', 9]])
+    await act(() => getInterruptFn(result)())
+    defaultRerender(deck)
+
+    expect(getByRole('button', { name: 'リセット' })).toBeEnabled()
+    expect(getByRole('button', { name: 'スタート' })).toBeDisabled()
+    expect(getByRole('button', { name: 'マリガン' })).toBeDisabled()
+    expect(getByRole('region', { name: 'ガーディアン' })).toBeVisible()
+    expect(getByRole('region', { name: '手札' })).toBeVisible()
+    // prettier-ignore
+    expect(getByRole('alert')).toHaveTextContent('シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。')
+
+    // デッキを編集してもシミュレータのデッキは変わらない
+    // ガーディアン4枚で不可視
+    guardians = getAllButtons(getByRole, 'ガーディアン')
+    expect(guardians.length).toBe(4)
+    expect(guardians[0]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[1]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[2]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[3]).toHaveClass('btn-toggled-opaque')
+    // 手札6枚で可視
+    hand = getAllButtons(getByRole, '手札')
+    expect(hand.length).toBe(6)
+    expect(hand[0]).toHaveClass('btn-toggled-red')
+    expect(hand[1]).toHaveClass('btn-toggled-transparent')
+    expect(hand[2]).toHaveClass('btn-toggled-transparent')
+    expect(hand[3]).toHaveClass('btn-toggled-transparent')
+    expect(hand[4]).toHaveClass('btn-toggled-transparent')
+    expect(hand[5]).toHaveClass('btn-toggled-transparent')
+
+    // 手札の6枚目をタップしても例外は発生しない
+    await userEvent.click(hand[5])
+
+    expect(getByRole('button', { name: 'リセット' })).toBeEnabled()
+    expect(getByRole('button', { name: 'スタート' })).toBeDisabled()
+    expect(getByRole('button', { name: 'マリガン' })).toBeDisabled()
+    expect(getByRole('region', { name: 'ガーディアン' })).toBeVisible()
+    expect(getByRole('region', { name: '手札' })).toBeVisible()
+    // prettier-ignore
+    expect(getByRole('alert')).toHaveTextContent('シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。')
+
+    // ガーディアン4枚で不可視
+    guardians = getAllButtons(getByRole, 'ガーディアン')
+    expect(guardians.length).toBe(4)
+    expect(guardians[0]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[1]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[2]).toHaveClass('btn-toggled-opaque')
+    expect(guardians[3]).toHaveClass('btn-toggled-opaque')
+    // 手札6枚で可視
+    hand = getAllButtons(getByRole, '手札')
+    expect(hand.length).toBe(6)
+    expect(hand[0]).toHaveClass('btn-toggled-red')
+    expect(hand[1]).toHaveClass('btn-toggled-transparent')
+    expect(hand[2]).toHaveClass('btn-toggled-transparent')
+    expect(hand[3]).toHaveClass('btn-toggled-transparent')
+    expect(hand[4]).toHaveClass('btn-toggled-transparent')
+    expect(hand[5]).toHaveClass('btn-toggled-red') // 色味が変わった
+  })
+
+  afterEach(async () => {
+    // リセットボタンを押す
+    await userEvent.click(getByRole('button', { name: 'リセット' }))
+    defaultRerender(deck)
+
+    expect(getByRole('button', { name: 'リセット' })).toBeDisabled()
+    expect(getByRole('button', { name: 'スタート' })).toBeEnabled()
+    expect(getByRole('button', { name: 'マリガン' })).toBeDisabled()
+    expect(queryByRole('region', { name: 'ガーディアン' })).toBeNull()
+    expect(queryByRole('region', { name: '手札' })).toBeNull()
+    expect(queryByRole('alert')).toBeNull()
+  })
 })
 
 test('デッキ40枚でスタート、山札をタップ、リセット', async () => {
-  let deck = new Map([['R-1', 40]])
-  const { result } = renderHook(() => useTabPaneSimulator())
-  let renderTabPaneSimulator = result.current[1]
-  const { rerender, getByRole, getByText, queryByText } = render(
-    <>{renderTabPaneSimulator(deck)}</>
-  )
+  const deck = new Map([['R-1', 40]])
+  const { defaultRerender, getByRole, queryByRole } = defaultRender(deck)
 
-  let buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  // リセットボタンは無効
-  expect(buttonReset).toHaveAttribute('disabled')
-  let buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  expect(buttonStart).not.toHaveAttribute('disabled')
-  let buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(queryByText('ガーディアン')).toBeNull()
-  expect(queryByText('手札')).toBeNull()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
+  expect(getByRole('button', { name: 'リセット' })).toBeDisabled()
+  expect(getByRole('button', { name: 'スタート' })).toBeEnabled()
+  expect(getByRole('button', { name: 'マリガン' })).toBeDisabled()
+  expect(queryByRole('region', { name: 'ガーディアン' })).toBeNull()
+  expect(queryByRole('region', { name: '手札' })).toBeNull()
+  expect(queryByRole('alert')).toBeNull()
 
   // スタートボタンを押す
-  await userEvent.click(buttonStart)
+  await userEvent.click(getByRole('button', { name: 'スタート' }))
+  defaultRerender(deck)
 
-  renderTabPaneSimulator = result.current[1]
-  rerender(<>{renderTabPaneSimulator(deck)}</>)
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  expect(buttonReset).not.toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  // スタートボタンは無効
-  expect(buttonStart).toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  expect(buttonMulligan).not.toHaveAttribute('disabled')
-
-  expect(getByText('ガーディアン')).toBeVisible()
-  expect(getByText('手札')).toBeVisible()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
+  expect(getByRole('button', { name: 'リセット' })).toBeEnabled()
+  expect(getByRole('button', { name: 'スタート' })).toBeDisabled()
+  expect(getByRole('button', { name: 'マリガン' })).toBeEnabled()
+  expect(getByRole('region', { name: 'ガーディアン' })).toBeVisible()
+  expect(getByRole('region', { name: '手札' })).toBeVisible()
+  expect(queryByRole('alert')).toBeNull()
 
   // ガーディアン4枚で不可視
-  let groupGuardians = getByRole('group', { name: 'ガーディアン' })
-  expect(groupGuardians).toBeVisible()
-  let guardians = groupGuardians.querySelectorAll('button')
+  let guardians = getAllButtons(getByRole, 'ガーディアン')
   expect(guardians.length).toBe(4)
   expect(guardians[0]).toHaveClass('btn-toggled-opaque')
   expect(guardians[1]).toHaveClass('btn-toggled-opaque')
   expect(guardians[2]).toHaveClass('btn-toggled-opaque')
   expect(guardians[3]).toHaveClass('btn-toggled-opaque')
   // 初期手札6枚で可視
-  let groupHand = getByRole('group', { name: '手札' })
-  expect(groupHand).toBeVisible()
-  let hand = groupHand.querySelectorAll('button')
+  let hand = getAllButtons(getByRole, '手札')
   expect(hand.length).toBe(36)
   expect(hand[0]).toHaveClass('btn-toggled-transparent')
   expect(hand[1]).toHaveClass('btn-toggled-transparent')
@@ -2513,7 +803,6 @@ test('デッキ40枚でスタート、山札をタップ、リセット', async 
   expect(hand[3]).toHaveClass('btn-toggled-transparent')
   expect(hand[4]).toHaveClass('btn-toggled-transparent')
   expect(hand[5]).toHaveClass('btn-toggled-transparent')
-  // 山札30枚で不可視
   expect(hand[6]).toHaveClass('btn-toggled-opaque')
   expect(hand[7]).toHaveClass('btn-toggled-opaque')
   expect(hand[8]).toHaveClass('btn-toggled-opaque')
@@ -2547,46 +836,24 @@ test('デッキ40枚でスタート、山札をタップ、リセット', async 
 
   // 山札のカードをタップする
   await userEvent.click(hand[6])
+  defaultRerender(deck)
 
-  renderTabPaneSimulator = result.current[1]
-  rerender(<>{renderTabPaneSimulator(deck)}</>)
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  expect(buttonReset).not.toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  // スタートボタンは無効
-  expect(buttonStart).toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(getByText('ガーディアン')).toBeVisible()
-  expect(getByText('手札')).toBeVisible()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
+  expect(getByRole('button', { name: 'リセット' })).toBeEnabled()
+  expect(getByRole('button', { name: 'スタート' })).toBeDisabled()
+  expect(getByRole('button', { name: 'マリガン' })).toBeDisabled()
+  expect(getByRole('region', { name: 'ガーディアン' })).toBeVisible()
+  expect(getByRole('region', { name: '手札' })).toBeVisible()
+  expect(queryByRole('alert')).toBeNull()
 
   // ガーディアン4枚で不可視
-  groupGuardians = getByRole('group', { name: 'ガーディアン' })
-  expect(groupGuardians).toBeVisible()
-  guardians = groupGuardians.querySelectorAll('button')
+  guardians = getAllButtons(getByRole, 'ガーディアン')
   expect(guardians.length).toBe(4)
   expect(guardians[0]).toHaveClass('btn-toggled-opaque')
   expect(guardians[1]).toHaveClass('btn-toggled-opaque')
   expect(guardians[2]).toHaveClass('btn-toggled-opaque')
   expect(guardians[3]).toHaveClass('btn-toggled-opaque')
   // 手札6枚で可視
-  groupHand = getByRole('group', { name: '手札' })
-  expect(groupHand).toBeVisible()
-  hand = groupHand.querySelectorAll('button')
+  hand = getAllButtons(getByRole, '手札')
   expect(hand.length).toBe(36)
   expect(hand[0]).toHaveClass('btn-toggled-transparent')
   expect(hand[1]).toHaveClass('btn-toggled-transparent')
@@ -2594,9 +861,7 @@ test('デッキ40枚でスタート、山札をタップ、リセット', async 
   expect(hand[3]).toHaveClass('btn-toggled-transparent')
   expect(hand[4]).toHaveClass('btn-toggled-transparent')
   expect(hand[5]).toHaveClass('btn-toggled-transparent')
-  // 山札30枚で不可視
-  // タップしたカードの色味が変わる
-  expect(hand[6]).toHaveClass('btn-toggled-transparent')
+  expect(hand[6]).toHaveClass('btn-toggled-transparent') // 色味が変わった
   expect(hand[7]).toHaveClass('btn-toggled-opaque')
   expect(hand[8]).toHaveClass('btn-toggled-opaque')
   expect(hand[9]).toHaveClass('btn-toggled-opaque')
@@ -2628,31 +893,13 @@ test('デッキ40枚でスタート、山札をタップ、リセット', async 
   expect(hand[35]).toHaveClass('btn-toggled-opaque')
 
   // リセットボタンを押す
-  await userEvent.click(buttonReset)
+  await userEvent.click(getByRole('button', { name: 'リセット' }))
+  defaultRerender(deck)
 
-  renderTabPaneSimulator = result.current[1]
-  rerender(<>{renderTabPaneSimulator(deck)}</>)
-
-  buttonReset = getByRole('button', { name: 'リセット' })
-  expect(buttonReset).toBeVisible()
-  // リセットボタンは無効
-  expect(buttonReset).toHaveAttribute('disabled')
-  buttonStart = getByRole('button', { name: 'スタート' })
-  expect(buttonStart).toBeVisible()
-  expect(buttonStart).not.toHaveAttribute('disabled')
-  buttonMulligan = getByRole('button', { name: 'マリガン' })
-  expect(buttonMulligan).toBeVisible()
-  // マリガンボタンは無効
-  expect(buttonMulligan).toHaveAttribute('disabled')
-
-  expect(queryByText('ガーディアン')).toBeNull()
-  expect(queryByText('手札')).toBeNull()
-  expect(
-    queryByText('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
-  ).toBeNull()
-  expect(
-    queryByText(
-      'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
-    )
-  ).toBeNull()
+  expect(getByRole('button', { name: 'リセット' })).toBeDisabled()
+  expect(getByRole('button', { name: 'スタート' })).toBeEnabled()
+  expect(getByRole('button', { name: 'マリガン' })).toBeDisabled()
+  expect(queryByRole('region', { name: 'ガーディアン' })).toBeNull()
+  expect(queryByRole('region', { name: '手札' })).toBeNull()
+  expect(queryByRole('alert')).toBeNull()
 })

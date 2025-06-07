@@ -162,7 +162,7 @@ function ContainerDeckSavedPart({ title, deck }) {
   return (
     <>
       <h3 className="mb-1">{titleFull}</h3>
-      <div className="overflow-auto mb-1" style={{ minHeight: 60 }}>
+      <ul className="list-card list-card-small mb-1">
         {dataCardsArrayForDeck.map(
           (card) =>
             deck.has(card.id) && (
@@ -176,7 +176,7 @@ function ContainerDeckSavedPart({ title, deck }) {
               />
             )
         )}
-      </div>
+      </ul>
     </>
   )
 }

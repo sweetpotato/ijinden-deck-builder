@@ -60,55 +60,44 @@ fieldset {
   margin-right: .25rem;
 }
 
-.container-card-line-up {
-  min-height: 120px;
+ul.list-card {
   overflow: auto;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
-.container-card {
+ul.list-card li {
   float: left;
   position: relative;
 }
 
-.container-guardian .container-card {
-  background-color: gray;
+ul.list-card-medium {
+  min-height: 120px;
 }
 
-.container-guardian .container-card:hover {
-  background-color: inherit;
-}
-
-.card-medium {
+ul.list-card-medium li {
   margin-right: .5rem;
   margin-bottom: .5rem;
 }
 
-.card-small {
+ul.list-card-medium img {
+  width: 80px;
+  height: 112px;
+}
+
+ul.list-card-small {
+  min-height: 60px;
+}
+
+ul.list-card-small li {
   margin-right: .25rem;
   margin-bottom: .25rem;
 }
 
-.card-medium .img-card {
-  width: 80px;
-  height: 112px;
-}
-
-.card-small .img-card {
+ul.list-card-small img {
   width: 40px;
   height: 56px;
-}
-
-.container-guardian .container-card .img-card {
-  visibility: hidden;
-}
-
-.container-guardian .container-card:hover .img-card {
-  visibility: visible;
-}
-
-.btn-draw {
-  width: 80px;
-  height: 112px;
 }
 
 /* タブリンクの横幅を狭くして画面幅に収めることを試みる */
