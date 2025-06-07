@@ -246,7 +246,10 @@ test('デフォルトのレンダリング', () => {
   expect(queryByRole('alert')).toBeNull()
 
   // 画像は表示されていない
-  expect(queryByRole('img')).toBeNull()
+  // prettier-ignore
+  expect(within(getByRole('region', { name: 'メインデッキ'})).queryByRole('img')).toBeNull()
+  // prettier-ignore
+  expect(within(getByRole('region', { name: 'サイドデッキ'})).queryByRole('img')).toBeNull()
 
   // テキストボックスには空のデッキの値
   expect(getByPlaceholderText('デッキ名を入力 (任意)')).toBeVisible()
@@ -281,13 +284,22 @@ test('マイデッキに保存', async () => {
     expandAccordion,
     interruptSimulator,
     getByRole,
-    getAllByRole,
     queryByRole,
-  } = defaultRender([['R-1', 1]], [], '')
+  } = defaultRender(
+    [
+      ['R-1', 1],
+      ['R-2', 2],
+    ],
+    [['R-3', 3]],
+    ''
+  )
 
   expect(queryByRole('dialog')).toBeNull()
   expect(queryByRole('alert')).toBeNull()
-  expect(getAllByRole('img').length).toBe(1)
+  // prettier-ignore
+  expect(within(getByRole('region', { name: 'メインデッキ'})).getAllByRole('img').length).toBe(2)
+  // prettier-ignore
+  expect(within(getByRole('region', { name: 'サイドデッキ'})).getAllByRole('img').length).toBe(1)
 
   await userEvent.click(getByRole('button', { name: 'マイデッキに保存' }))
   expect(setShowCodeError.mock.calls.length).toBe(0)
@@ -302,7 +314,10 @@ test('マイデッキに保存', async () => {
   defaultRerender(resultDeck)
   expect(queryByRole('dialog')).toBeNull()
   expect(queryByRole('alert')).toBeNull()
-  expect(getAllByRole('img').length).toBe(1)
+  // prettier-ignore
+  expect(within(getByRole('region', { name: 'メインデッキ'})).getAllByRole('img').length).toBe(2)
+  // prettier-ignore
+  expect(within(getByRole('region', { name: 'サイドデッキ'})).getAllByRole('img').length).toBe(1)
 })
 
 test('空のデッキは保存できない', async () => {
@@ -320,7 +335,10 @@ test('空のデッキは保存できない', async () => {
 
   expect(queryByRole('dialog')).toBeNull()
   expect(queryByRole('alert')).toBeNull()
-  expect(queryByRole('img')).toBeNull()
+  // prettier-ignore
+  expect(within(getByRole('region', { name: 'メインデッキ'})).queryByRole('img')).toBeNull()
+  // prettier-ignore
+  expect(within(getByRole('region', { name: 'サイドデッキ'})).queryByRole('img')).toBeNull()
 
   await userEvent.click(getByRole('button', { name: 'マイデッキに保存' }))
   expect(setShowCodeError.mock.calls.length).toBe(0)
@@ -333,7 +351,10 @@ test('空のデッキは保存できない', async () => {
   defaultRerender(resultDeck)
   expect(getByRole('dialog')).toBeVisible()
   expect(queryByRole('alert')).toBeNull()
-  expect(queryByRole('img')).toBeNull()
+  // prettier-ignore
+  expect(within(getByRole('region', { name: 'メインデッキ'})).queryByRole('img')).toBeNull()
+  // prettier-ignore
+  expect(within(getByRole('region', { name: 'サイドデッキ'})).queryByRole('img')).toBeNull()
 
   // ダイアログを閉じる
   await userEvent.click(
@@ -349,7 +370,10 @@ test('空のデッキは保存できない', async () => {
   defaultRerender(resultDeck)
   expect(queryByRole('dialog')).toBeNull()
   expect(queryByRole('alert')).toBeNull()
-  expect(queryByRole('img')).toBeNull()
+  // prettier-ignore
+  expect(within(getByRole('region', { name: 'メインデッキ'})).queryByRole('img')).toBeNull()
+  // prettier-ignore
+  expect(within(getByRole('region', { name: 'サイドデッキ'})).queryByRole('img')).toBeNull()
 })
 
 test('レシピをクリア', async () => {
@@ -362,13 +386,22 @@ test('レシピをクリア', async () => {
     expandAccordion,
     interruptSimulator,
     getByRole,
-    getAllByRole,
     queryByRole,
-  } = defaultRender([['R-1', 1]], [], '')
+  } = defaultRender(
+    [['R-1', 1]],
+    [
+      ['R-2', 2],
+      ['R-3', 3],
+    ],
+    ''
+  )
 
   expect(queryByRole('dialog')).toBeNull()
   expect(queryByRole('alert')).toBeNull()
-  expect(getAllByRole('img').length).toBe(1)
+  // prettier-ignore
+  expect(within(getByRole('region', { name: 'メインデッキ'})).getAllByRole('img').length).toBe(1)
+  // prettier-ignore
+  expect(within(getByRole('region', { name: 'サイドデッキ'})).getAllByRole('img').length).toBe(2)
 
   await userEvent.click(getByRole('button', { name: 'レシピをクリア' }))
   expect(setShowCodeError.mock.calls.length).toBe(0)
@@ -380,5 +413,8 @@ test('レシピをクリア', async () => {
   defaultRerender(resultDeck)
   expect(queryByRole('img')).toBeNull()
   expect(queryByRole('alert')).toBeNull()
-  expect(queryByRole('img')).toBeNull()
+  // prettier-ignore
+  expect(within(getByRole('region', { name: 'メインデッキ'})).queryByRole('img')).toBeNull()
+  // prettier-ignore
+  expect(within(getByRole('region', { name: 'サイドデッキ'})).queryByRole('img')).toBeNull()
 })

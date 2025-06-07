@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-import { memo, useState } from 'react'
+import { memo, useId, useState } from 'react'
 import {
   Alert,
   Button,
@@ -156,6 +156,7 @@ function ContainerDeckPart({
   interruptSimulator,
   isSide = false,
 }) {
+  const id = useId()
   const numCards = sum(deck.values())
   const deckInternal = [...deck.entries()]
     .map(([id, numCopies]) => {
@@ -170,8 +171,10 @@ function ContainerDeckPart({
     .sort((a, b) => a.orderDeck - b.orderDeck)
 
   return (
-    <>
-      <h3 className="m-2">{`${title} (${numCards}枚)`}</h3>
+    <section aria-labelledby={id}>
+      <h3 className="m-2">
+        <span id={id}>{title}</span> ({numCards}枚)
+      </h3>
       <div className="container-card-line-up ms-2">
         {deckInternal.map((element) => (
           <ContainerDeckCard
@@ -189,7 +192,7 @@ function ContainerDeckPart({
           />
         ))}
       </div>
-    </>
+    </section>
   )
 }
 
