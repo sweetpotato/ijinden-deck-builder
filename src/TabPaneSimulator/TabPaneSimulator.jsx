@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-import { useState } from 'react'
+import { useId, useState } from 'react'
 import { Alert, Button } from 'react-bootstrap'
 
 import { dataCardsMap as dataCards } from '../commons/dataCards'
@@ -99,14 +99,12 @@ function TabPaneSimulator({ deck, state, dispatch }) {
       {showGuardiansAndHands && (
         <>
           <ContainerSection
-            id="guardians"
             title="ガーディアン"
             cards={guardians}
             defaultNumTransparent={0}
             continueSimulator={dispatch.continue}
           />
           <ContainerSection
-            id="hand"
             title="手札"
             cards={handAndDeck}
             defaultNumTransparent={6}
@@ -119,21 +117,21 @@ function TabPaneSimulator({ deck, state, dispatch }) {
 }
 
 function ContainerSection({
-  id,
   title,
   cards,
   defaultNumTransparent,
   continueSimulator,
 }) {
+  const id = useId()
   return (
-    <div role="group" aria-labelledby={id}>
+    <section aria-labelledby={id}>
       <h3 id={id} className="m-2">
         {title}
       </h3>
       <ul className="list-card card-medium ms-2">
-        {cards?.map((id, index) => {
-          const key = `${id}-${index}`
-          const card = dataCards.get(id)
+        {cards?.map((cardId, index) => {
+          const key = `${cardId}-${index}`
+          const card = dataCards.get(cardId)
           return index < defaultNumTransparent ? (
             <ImageCardWithToggleTransparent
               key={key}
@@ -151,7 +149,7 @@ function ContainerSection({
           )
         })}
       </ul>
-    </div>
+    </section>
   )
 }
 
