@@ -20,11 +20,11 @@ import useDeck from '../hooks/useDeck'
 import TabPaneDeck from '.'
 
 function getAllListItem(getByRole, section) {
-  return within(getByRole('region', { name: section })).getAllByRole('listitem')
+  return within(getByRole('list', { name: section })).getAllByRole('listitem')
 }
 
 function queryListItem(getByRole, section) {
-  return within(getByRole('region', { name: section })).queryByRole('listitem')
+  return within(getByRole('list', { name: section })).queryByRole('listitem')
 }
 
 function getDeckMain(result) {
