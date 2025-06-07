@@ -3,9 +3,9 @@
 import 'fake-indexeddb/auto'
 
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
-import { cleanup, render, waitFor } from '@testing-library/react'
+import { cleanup, render } from '@testing-library/react'
 
-import { dbAddDeck, dbClearDecks } from '../commons/db'
+import { dbClearDecks } from '../commons/db'
 import TabPaneLoad from '.'
 
 function defaultRender(activeDeckSaved) {
