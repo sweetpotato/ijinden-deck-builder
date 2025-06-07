@@ -49,7 +49,7 @@ const AccordionItemTypeFilter = memo(function AccordionItemTypeFilter({
   handleChangePower,
   handleChangeComparator,
 }) {
-  const itemId = useId()
+  const idTitle = useId()
   const nameType = useId()
   const nameComparator = useId()
   const { activeEventKey } = useContext(AccordionContext)
@@ -58,24 +58,28 @@ const AccordionItemTypeFilter = memo(function AccordionItemTypeFilter({
   const powerEnabled = type === enumType.IJIN
 
   return (
-    <AccordionItem eventKey={eventKey} role="listitem" aria-labelledby={itemId}>
+    <AccordionItem
+      role="listitem"
+      aria-labelledby={idTitle}
+      eventKey={eventKey}
+    >
       <AccordionHeader as="h3">
         {expanded ? (
           <>
             ➖&nbsp;
-            <span id={itemId}>種類とパワー</span>
+            <span id={idTitle}>種類とパワー</span>
           </>
         ) : type === 0 ? (
           <>
             ➕&nbsp;
-            <span id={itemId}>種類とパワー</span>
+            <span id={idTitle}>種類とパワー</span>
             &nbsp;―&nbsp;
             {label}
           </>
         ) : (
           <>
             ➕&nbsp;
-            <span id={itemId}>種類とパワー</span>
+            <span id={idTitle}>種類とパワー</span>
             &nbsp;―&nbsp;
             <b>{label}</b>
           </>

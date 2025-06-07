@@ -39,6 +39,7 @@ function TabPaneLoad({
   expandAccordion,
   interruptSimulator,
 }) {
+  const idTitle = useId()
   const [showModalClear, setShowModalClear] = useState(false)
   const decks = useLiveQuery(async () => await dbQueryDecks())
 
@@ -57,9 +58,16 @@ function TabPaneLoad({
 
   return (
     <>
-      <h2 className="m-2">ロード</h2>
+      <h2 id={idTitle} className="m-2">
+        ロード
+      </h2>
       {decks ? (
-        <Accordion activeKey={activeDeckSaved} onSelect={expandAccordion}>
+        <Accordion
+          role="list"
+          aria-labelledby={idTitle}
+          activeKey={activeDeckSaved}
+          onSelect={expandAccordion}
+        >
           {decks.map((deck) => {
             return (
               <AccordionItemDeckSaved
@@ -111,6 +119,7 @@ const AccordionItemDeckSaved = memo(function AccordionItemDeckSaved({
   moveToDeck,
   interruptSimulator,
 }) {
+  const idTitle = useId()
   const timestamp = DTF.format(new Date(deck.timestamp))
   const numCardsMain = sum(deck.main.map(([, n]) => n))
   const numCardsSide = sum(deck.side.map(([, n]) => n))
@@ -118,7 +127,8 @@ const AccordionItemDeckSaved = memo(function AccordionItemDeckSaved({
   const subNumCardsMain =
     numCardsSide !== 0 ? `メイン${numCardsMain}枚` : `${numCardsMain}枚`
   const subNumCardsSide = numCardsSide !== 0 ? `/サイド${numCardsSide}枚` : ''
-  const header = `#${deck.id} ${deckTitle} [${subNumCardsMain}${subNumCardsSide}] (${timestamp})`
+  const label =
+    `${deckTitle} [${subNumCardsMain}${subNumCardsSide}] (${timestamp})`.trimStart()
 
   function handleClickLoad() {
     setDeckTitle(deck.title || '') // There may not be a title
@@ -132,8 +142,12 @@ const AccordionItemDeckSaved = memo(function AccordionItemDeckSaved({
   }
 
   return (
-    <AccordionItem eventKey={deck.id}>
-      <AccordionHeader>{header}</AccordionHeader>
+    <AccordionItem role="listitem" aria-labelledby={idTitle} eventKey={deck.id}>
+      <AccordionHeader as="h3">
+        <span id={idTitle}>#{deck.id}</span>
+        &nbsp;
+        {label}
+      </AccordionHeader>
       <AccordionBody>
         <div className="container-button mb-2">
           <Button variant="outline-success" onClick={handleClickLoad}>
