@@ -162,7 +162,7 @@ function ContainerDeckSavedPart({ title, deck }) {
   return (
     <>
       <h3 className="mb-1">{titleFull}</h3>
-      <ul className="list-card card-small mb-1">
+      <ul className="list-card list-card-small mb-1">
         {dataCardsArrayForDeck.map(
           (card) =>
             deck.has(card.id) && (

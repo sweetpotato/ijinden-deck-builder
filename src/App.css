@@ -61,7 +61,6 @@ fieldset {
 }
 
 ul.list-card {
-  min-height: 120px;
   overflow: auto;
   list-style: none;
   margin: 0;
@@ -73,22 +72,30 @@ ul.list-card li {
   position: relative;
 }
 
-.card-medium li {
+ul.list-card-medium {
+  min-height: 120px;
+}
+
+ul.list-card-medium li {
   margin-right: .5rem;
   margin-bottom: .5rem;
 }
 
-.card-small li {
-  margin-right: .25rem;
-  margin-bottom: .25rem;
-}
-
-.card-medium img {
+ul.list-card-medium img {
   width: 80px;
   height: 112px;
 }
 
-.card-small img {
+ul.list-card-small {
+  min-height: 60px;
+}
+
+ul.list-card-small li {
+  margin-right: .25rem;
+  margin-bottom: .25rem;
+}
+
+ul.list-card-small img {
   width: 40px;
   height: 56px;
 }

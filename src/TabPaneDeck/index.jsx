@@ -175,7 +175,7 @@ function ContainerDeckPart({
       <h3 className="m-2">
         <span id={id}>{title}</span> ({numCards}枚)
       </h3>
-      <ul aria-labelledby={id} className="list-card card-medium ms-2">
+      <ul aria-labelledby={id} className="list-card list-card-medium ms-2">
         {deckInternal.map((element) => (
           <ContainerDeckCard
             key={element.id}

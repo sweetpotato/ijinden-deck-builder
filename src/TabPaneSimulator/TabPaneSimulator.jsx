@@ -128,7 +128,7 @@ function ContainerSection({
       <h3 id={id} className="m-2">
         {title}
       </h3>
-      <ul aria-labelledby={id} className="list-card card-medium ms-2">
+      <ul aria-labelledby={id} className="list-card list-card-medium ms-2">
         {cards?.map((cardId, index) => {
           const key = `${cardId}-${index}`
           const card = dataCards.get(cardId)
