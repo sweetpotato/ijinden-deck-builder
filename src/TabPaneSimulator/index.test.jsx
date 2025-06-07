@@ -8,7 +8,7 @@ import userEvent from '@testing-library/user-event'
 import useTabPaneSimulator from '.'
 
 function getAllItems(getByRole, section) {
-  return within(getByRole('region', { name: section })).getAllByRole('listitem')
+  return within(getByRole('list', { name: section })).getAllByRole('listitem')
 }
 
 function getItemImg(item) {
@@ -20,7 +20,7 @@ function getItemButton(item) {
 }
 
 function getAllButtons(getByRole, section) {
-  return within(getByRole('region', { name: section })).getAllByRole('button')
+  return within(getByRole('list', { name: section })).getAllByRole('button')
 }
 
 function getInterruptFn(result) {
