@@ -143,33 +143,27 @@ const AccordionItemDeckSaved = memo(function AccordionItemDeckSaved({
             削除
           </Button>
         </div>
-        <ContainerDeckSavedPart
-          title="メインデッキ"
-          deck={new Map(deck.main)}
-        />
-        <ContainerDeckSavedPart
-          title="サイドデッキ"
-          deck={new Map(deck.side)}
-        />
+        <SectionPart title="メインデッキ" deck={new Map(deck.main)} />
+        <SectionPart title="サイドデッキ" deck={new Map(deck.side)} />
       </AccordionBody>
     </AccordionItem>
   )
 })
 
-function ContainerDeckSavedPart({ title, deck }) {
-  const id = useId()
+function SectionPart({ title, deck }) {
+  const idTitle = useId()
   const numCards = sum(deck.values())
 
   return (
-    <>
-      <h3 className="mb-1">
-        <span id={id}>{title}</span> ({numCards}枚)
-      </h3>
-      <ul className="list-card list-card-small mb-1">
+    <section aria-labelledby={idTitle}>
+      <h4 className="h3 mb-1">
+        <span id={idTitle}>{title}</span> ({numCards}枚)
+      </h4>
+      <ul aria-labelledby={idTitle} className="list-card list-card-small mb-1">
         {dataCardsArrayForDeck.map(
           (card) =>
             deck.has(card.id) && (
-              <li key={card.id} aria-labelledby={id}>
+              <li key={card.id} aria-label={card.id}>
                 <ImageCard
                   imageUrl={card.imageUrl}
                   alt={card.name}
@@ -181,7 +175,7 @@ function ContainerDeckSavedPart({ title, deck }) {
             )
         )}
       </ul>
-    </>
+    </section>
   )
 }
 
