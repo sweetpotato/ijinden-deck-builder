@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 
 import { useLiveQuery } from 'dexie-react-hooks'
-import { memo, useState } from 'react'
+import { memo, useId, useState } from 'react'
 import {
   Accordion,
   AccordionBody,
@@ -157,23 +157,27 @@ const AccordionItemDeckSaved = memo(function AccordionItemDeckSaved({
 })
 
 function ContainerDeckSavedPart({ title, deck }) {
-  const titleFull = `${title} (${sum(deck.values())}枚)`
+  const id = useId()
+  const numCards = sum(deck.values())
 
   return (
     <>
-      <h3 className="mb-1">{titleFull}</h3>
+      <h3 className="mb-1">
+        <span id={id}>{title}</span> ({numCards}枚)
+      </h3>
       <ul className="list-card list-card-small mb-1">
         {dataCardsArrayForDeck.map(
           (card) =>
             deck.has(card.id) && (
-              <ImageCard
-                key={card.id}
-                imageUrl={card.imageUrl}
-                alt={card.name}
-                numCopies={deck.get(card.id)}
-                loading="lazy"
-                small
-              />
+              <li key={card.id} aria-labelledby={id}>
+                <ImageCard
+                  imageUrl={card.imageUrl}
+                  alt={card.name}
+                  numCopies={deck.get(card.id)}
+                  loading="lazy"
+                  small
+                />
+              </li>
             )
         )}
       </ul>

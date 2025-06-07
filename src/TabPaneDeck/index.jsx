@@ -177,26 +177,27 @@ function ContainerDeckPart({
       </h3>
       <ul aria-labelledby={id} className="list-card list-card-medium ms-2">
         {deckInternal.map((element) => (
-          <ContainerDeckCard
-            key={element.id}
-            id={element.id}
-            imageUrl={element.imageUrl}
-            name={element.name}
-            numCopies={element.numCopies}
-            dispatchDecrement={dispatchDecrement}
-            dispatchIncrement={dispatchIncrement}
-            dispatchMoveOut={dispatchMoveOut}
-            zoomIn={zoomIn}
-            interruptSimulator={interruptSimulator}
-            isSide={isSide}
-          />
+          <li key={element.id} aria-labelledby={id}>
+            <ImageCardDeck
+              id={element.id}
+              imageUrl={element.imageUrl}
+              name={element.name}
+              numCopies={element.numCopies}
+              dispatchDecrement={dispatchDecrement}
+              dispatchIncrement={dispatchIncrement}
+              dispatchMoveOut={dispatchMoveOut}
+              zoomIn={zoomIn}
+              interruptSimulator={interruptSimulator}
+              isSide={isSide}
+            />
+          </li>
         ))}
       </ul>
     </section>
   )
 }
 
-const ContainerDeckCard = memo(function ContainerDeckCard({
+const ImageCardDeck = memo(function ImageCardDeck({
   id,
   imageUrl,
   name,

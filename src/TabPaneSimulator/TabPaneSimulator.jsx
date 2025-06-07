@@ -133,19 +133,21 @@ function ContainerSection({
           const key = `${cardId}-${index}`
           const card = dataCards.get(cardId)
           return index < defaultNumTransparent ? (
-            <ImageCardWithToggleTransparent
-              key={key}
-              imageUrl={card.imageUrl}
-              alt={card.name}
-              continueSimulator={continueSimulator}
-            />
+            <li key={key} aria-labelledby={id}>
+              <ImageCardWithToggleTransparent
+                imageUrl={card.imageUrl}
+                alt={card.name}
+                continueSimulator={continueSimulator}
+              />
+            </li>
           ) : (
-            <ImageCardWithToggleOpaque
-              key={key}
-              imageUrl={card.imageUrl}
-              alt={card.name}
-              continueSimulator={continueSimulator}
-            />
+            <li key={key} aria-labelledby={id}>
+              <ImageCardWithToggleOpaque
+                imageUrl={card.imageUrl}
+                alt={card.name}
+                continueSimulator={continueSimulator}
+              />
+            </li>
           )
         })}
       </ul>
