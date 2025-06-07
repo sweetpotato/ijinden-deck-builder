@@ -20,7 +20,9 @@ function ImageCard({
         loading={loading}
       />
       {numCopies !== undefined && (
-        <span className="container-num-copies">{numCopies}</span>
+        <span role="textbox" aria-readonly className="container-num-copies">
+          {numCopies}
+        </span>
       )}
       {children}
     </li>

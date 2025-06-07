@@ -27,6 +27,19 @@ function queryListItem(getByRole, section) {
   return within(getByRole('list', { name: section })).queryByRole('listitem')
 }
 
+function getButton(getByRole, section, index, name) {
+  // prettier-ignore
+  return within(getAllListItem(getByRole, section)[index]).getByRole('button', { name })
+}
+
+function getImg(getByRole, section, index) {
+  return within(getAllListItem(getByRole, section)[index]).getByRole('img')
+}
+
+function getTextbox(getByRole, section, index) {
+  return within(getAllListItem(getByRole, section)[index]).getByRole('textbox')
+}
+
 function getDeckMain(result) {
   return result.current[0]
 }
@@ -298,11 +311,7 @@ test.each([
   expect(getAllListItem(getByRole, 'サイドデッキ').length).toBe(2)
 
   // 虫眼鏡ボタンを押す
-  await userEvent.click(
-    within(getAllListItem(getByRole, section)[index]).getByRole('button', {
-      name: '🔍',
-    })
-  )
+  await userEvent.click(getButton(getByRole, section, index, '🔍'))
 
   expect(setShowCodeError.mock.calls.length).toBe(0)
   expect(zoomIn.mock.calls.length).toBe(1) // 呼ばれた
@@ -640,22 +649,15 @@ test.each([
     expect(getAllListItem(getByRole, sectionThis).length).toBe(2)
     expect(getAllListItem(getByRole, sectionThat).length).toBe(2)
     // prettier-ignore
-    expect(getAllListItem(getByRole, sectionThis)[0].querySelector('span')).toHaveTextContent(expectedInitial)
+    expect(getTextbox(getByRole, sectionThis, 0)).toHaveTextContent(expectedInitial)
     // prettier-ignore
-    expect(getAllListItem(getByRole, sectionThis)[1].querySelector('span')).toHaveTextContent(expectedInitial)
+    expect(getTextbox(getByRole, sectionThis, 1)).toHaveTextContent(expectedInitial)
     // prettier-ignore
-    expect(getAllListItem(getByRole, sectionThat)[0].querySelector('span')).toHaveTextContent(expectedInitial)
+    expect(getTextbox(getByRole, sectionThat, 0)).toHaveTextContent(expectedInitial)
     // prettier-ignore
-    expect(getAllListItem(getByRole, sectionThat)[1].querySelector('span')).toHaveTextContent(expectedInitial)
+    expect(getTextbox(getByRole, sectionThat, 1)).toHaveTextContent(expectedInitial)
 
-    await userEvent.click(
-      within(getAllListItem(getByRole, sectionThis)[index]).getByRole(
-        'button',
-        {
-          name: buttonName,
-        }
-      )
-    )
+    await userEvent.click(getButton(getByRole, sectionThis, index, buttonName))
     expect(setShowCodeError.mock.calls.length).toBe(0)
     expect(zoomIn.mock.calls.length).toBe(0)
     expect(moveToLoad.mock.calls.length).toBe(0)
@@ -666,13 +668,13 @@ test.each([
     expect(getAllListItem(getByRole, sectionThis).length).toBe(2)
     expect(getAllListItem(getByRole, sectionThat).length).toBe(2)
     // prettier-ignore
-    expect(getAllListItem(getByRole, sectionThis)[0].querySelector('span')).toHaveTextContent(expectedThis0)
+    expect(getTextbox(getByRole, sectionThis, 0)).toHaveTextContent(expectedThis0)
     // prettier-ignore
-    expect(getAllListItem(getByRole, sectionThis)[1].querySelector('span')).toHaveTextContent(expectedThis1)
+    expect(getTextbox(getByRole, sectionThis, 1)).toHaveTextContent(expectedThis1)
     // prettier-ignore
-    expect(getAllListItem(getByRole, sectionThat)[0].querySelector('span')).toHaveTextContent(expectedThat0)
+    expect(getTextbox(getByRole, sectionThat, 0)).toHaveTextContent(expectedThat0)
     // prettier-ignore
-    expect(getAllListItem(getByRole, sectionThat)[1].querySelector('span')).toHaveTextContent(expectedThat1)
+    expect(getTextbox(getByRole, sectionThat, 1)).toHaveTextContent(expectedThat1)
   }
 )
 
@@ -775,8 +777,8 @@ test.each([
     indexRemaining,
     buttonName,
     expectInterurpted,
-    expectedThat0,
-    expectedThat1
+    expected0,
+    expected1
   ) => {
     const {
       result,
@@ -800,28 +802,16 @@ test.each([
 
     expect(getAllListItem(getByRole, sectionThis).length).toBe(2)
     expect(getAllListItem(getByRole, sectionThat).length).toBe(2)
-    // prettier-ignore
-    expect(getAllListItem(getByRole, sectionThis)[0].querySelector('span')).toHaveTextContent('1')
-    // prettier-ignore
-    expect(getAllListItem(getByRole, sectionThis)[1].querySelector('span')).toHaveTextContent('1')
-    // prettier-ignore
-    expect(getAllListItem(getByRole, sectionThat)[0].querySelector('span')).toHaveTextContent('1')
-    // prettier-ignore
-    expect(getAllListItem(getByRole, sectionThat)[1].querySelector('span')).toHaveTextContent('1')
+    expect(getTextbox(getByRole, sectionThis, 0)).toHaveTextContent('1')
+    expect(getTextbox(getByRole, sectionThis, 1)).toHaveTextContent('1')
+    expect(getTextbox(getByRole, sectionThat, 0)).toHaveTextContent('1')
+    expect(getTextbox(getByRole, sectionThat, 1)).toHaveTextContent('1')
 
     // prettier-ignore
-    const src = getAllListItem(getByRole, sectionThis)[indexRemaining]
-      .querySelector('img')
-      .getAttribute('src')
+    const src = getImg(getByRole, sectionThis, indexRemaining).getAttribute('src')
 
-    await userEvent.click(
-      within(getAllListItem(getByRole, sectionThis)[indexDecrement]).getByRole(
-        'button',
-        {
-          name: buttonName,
-        }
-      )
-    )
+    // prettier-ignore
+    await userEvent.click(getButton(getByRole, sectionThis, indexDecrement, buttonName))
 
     expect(setShowCodeError.mock.calls.length).toBe(0)
     expect(zoomIn.mock.calls.length).toBe(0)
@@ -832,14 +822,10 @@ test.each([
     defaultRerender(result)
     expect(getAllListItem(getByRole, sectionThis).length).toBe(1) // 減った
     expect(getAllListItem(getByRole, sectionThat).length).toBe(2)
-    // prettier-ignore
-    expect(getAllListItem(getByRole, sectionThis)[0].querySelector('span')).toHaveTextContent('1')
-    // prettier-ignore
-    expect(getAllListItem(getByRole, sectionThis)[0].querySelector('img')).toHaveAttribute('src', src)
-    // prettier-ignore
-    expect(getAllListItem(getByRole, sectionThat)[0].querySelector('span')).toHaveTextContent(expectedThat0)
-    // prettier-ignore
-    expect(getAllListItem(getByRole, sectionThat)[1].querySelector('span')).toHaveTextContent(expectedThat1)
+    expect(getTextbox(getByRole, sectionThis, 0)).toHaveTextContent('1')
+    expect(getImg(getByRole, sectionThis, 0)).toHaveAttribute('src', src)
+    expect(getTextbox(getByRole, sectionThat, 0)).toHaveTextContent(expected0)
+    expect(getTextbox(getByRole, sectionThat, 1)).toHaveTextContent(expected1)
   }
 )
 
@@ -910,8 +896,8 @@ test.each([
     sectionThat,
     index,
     buttonName,
-    expectedThis0,
-    expectedThis1
+    expected0,
+    expected1
   ) => {
     const {
       result,
@@ -926,24 +912,12 @@ test.each([
 
     expect(getAllListItem(getByRole, sectionThis).length).toBe(2)
     expect(queryListItem(getByRole, sectionThat)).toBeNull()
-    // prettier-ignore
-    expect(getAllListItem(getByRole, sectionThis)[0].querySelector('span')).toHaveTextContent('2')
-    // prettier-ignore
-    expect(getAllListItem(getByRole, sectionThis)[1].querySelector('span')).toHaveTextContent('2')
+    expect(getTextbox(getByRole, sectionThis, 0)).toHaveTextContent('2')
+    expect(getTextbox(getByRole, sectionThis, 1)).toHaveTextContent('2')
 
-    // prettier-ignore
-    const src = getAllListItem(getByRole, sectionThis)[index]
-      .querySelector('img')
-      .getAttribute('src')
+    const src = getImg(getByRole, sectionThis, index).getAttribute('src')
 
-    await userEvent.click(
-      within(getAllListItem(getByRole, sectionThis)[index]).getByRole(
-        'button',
-        {
-          name: buttonName,
-        }
-      )
-    )
+    await userEvent.click(getButton(getByRole, sectionThis, index, buttonName))
 
     expect(setShowCodeError.mock.calls.length).toBe(0)
     expect(zoomIn.mock.calls.length).toBe(0)
@@ -954,14 +928,10 @@ test.each([
     defaultRerender(result)
     expect(getAllListItem(getByRole, sectionThis).length).toBe(2)
     expect(getAllListItem(getByRole, sectionThat).length).toBe(1) // 増えた
-    // prettier-ignore
-    expect(getAllListItem(getByRole, sectionThis)[0].querySelector('span')).toHaveTextContent(expectedThis0)
-    // prettier-ignore
-    expect(getAllListItem(getByRole, sectionThis)[1].querySelector('span')).toHaveTextContent(expectedThis1)
-    // prettier-ignore
-    expect(getAllListItem(getByRole, sectionThat)[0].querySelector('span')).toHaveTextContent(1)
-    // prettier-ignore
-    expect(getAllListItem(getByRole, sectionThat)[0].querySelector('img')).toHaveAttribute('src', src)
+    expect(getTextbox(getByRole, sectionThis, 0)).toHaveTextContent(expected0)
+    expect(getTextbox(getByRole, sectionThis, 1)).toHaveTextContent(expected1)
+    expect(getTextbox(getByRole, sectionThat, 0)).toHaveTextContent(1)
+    expect(getImg(getByRole, sectionThat, 0)).toHaveAttribute('src', src)
   }
 )
 
@@ -1043,29 +1013,16 @@ test.each([
 
     expect(getAllListItem(getByRole, sectionThis).length).toBe(2)
     expect(queryListItem(getByRole, sectionThat)).toBeNull()
-    // prettier-ignore
-    expect(getAllListItem(getByRole, sectionThis)[0].querySelector('span')).toHaveTextContent('1')
-    // prettier-ignore
-    expect(getAllListItem(getByRole, sectionThis)[1].querySelector('span')).toHaveTextContent('1')
+    expect(getTextbox(getByRole, sectionThis, 0)).toHaveTextContent('1')
+    expect(getTextbox(getByRole, sectionThis, 1)).toHaveTextContent('1')
 
     // prettier-ignore
-    const srcMoved = getAllListItem(getByRole, sectionThis)[indexMoved]
-      .querySelector('img')
-      .getAttribute('src')
+    const srcMoved = getImg(getByRole, sectionThis, indexMoved).getAttribute('src')
+    // prettier-ignore
+    const srcRemaining = getImg(getByRole, sectionThis, indexRemaining).getAttribute('src')
 
     // prettier-ignore
-    const srcRemaining = getAllListItem(getByRole, sectionThis)[indexRemaining]
-      .querySelector('img')
-      .getAttribute('src')
-
-    await userEvent.click(
-      within(getAllListItem(getByRole, sectionThis)[indexMoved]).getByRole(
-        'button',
-        {
-          name: buttonName,
-        }
-      )
-    )
+    await userEvent.click(getButton(getByRole, sectionThis, indexMoved, buttonName))
 
     expect(setShowCodeError.mock.calls.length).toBe(0)
     expect(zoomIn.mock.calls.length).toBe(0)
@@ -1076,13 +1033,10 @@ test.each([
     defaultRerender(result)
     expect(getAllListItem(getByRole, sectionThis).length).toBe(1) // 減った
     expect(getAllListItem(getByRole, sectionThat).length).toBe(1) // 増えた
+    expect(getTextbox(getByRole, sectionThis, 0)).toHaveTextContent(1)
     // prettier-ignore
-    expect(getAllListItem(getByRole, sectionThis)[0].querySelector('span')).toHaveTextContent(1)
-    // prettier-ignore
-    expect(getAllListItem(getByRole, sectionThis)[0].querySelector('img')).toHaveAttribute('src', srcRemaining)
-    // prettier-ignore
-    expect(getAllListItem(getByRole, sectionThat)[0].querySelector('span')).toHaveTextContent(1)
-    // prettier-ignore
-    expect(getAllListItem(getByRole, sectionThat)[0].querySelector('img')).toHaveAttribute('src', srcMoved)
+    expect(getImg(getByRole, sectionThis, 0)).toHaveAttribute('src', srcRemaining)
+    expect(getTextbox(getByRole, sectionThat, 0)).toHaveTextContent(1)
+    expect(getImg(getByRole, sectionThat, 0)).toHaveAttribute('src', srcMoved)
   }
 )
