@@ -116,41 +116,37 @@ test('デフォルトのレンダリング', () => {
   const columns = within(row).getAllByRole('cell')
   expect(columns.length).toBe(4)
   // 1列目 (1-origin, 以下同様) には ID が表示される
-  const columnId = columns[0]
-  expect(columnId).toBeVisible()
-  expect(columnId).toHaveTextContent('1-1')
+  expect(columns[0]).toBeVisible()
+  expect(columns[0]).toHaveTextContent('1-1')
   // 2列目にはカード名が表示される
-  const columnName = columns[1]
-  expect(columnName).toBeVisible()
-  expect(columnName).toHaveTextContent('織田信長')
+  expect(columns[1]).toBeVisible()
+  expect(columns[1]).toHaveTextContent('織田信長')
   // 2列目にはさらに虫眼鏡ボタンがある
   const buttonZoom = within(columns[1]).getByRole('button')
   expect(buttonZoom).toBeVisible()
   expect(buttonZoom).toHaveTextContent('🔎')
   // 3列目には (メインデッキの) カウンターがある
-  const columnMain = columns[2]
-  expect(columnMain).toBeVisible()
-  const buttonMinusMain = within(columnMain).getByRole('button', { name: '-' })
+  expect(columns[2]).toBeVisible()
+  const buttonMinusMain = within(columns[2]).getByRole('button', { name: '-' })
   expect(buttonMinusMain).toBeVisible()
   expect(buttonMinusMain).toBeDisabled() // 無効
-  const spinMain = within(columnMain).getByRole('spinbutton')
+  const spinMain = within(columns[2]).getByRole('spinbutton')
   expect(spinMain).toBeVisible()
   expect(spinMain).toHaveAttribute('readonly')
   expect(spinMain).toHaveValue(0)
-  const buttonPlusMain = within(columnMain).getByRole('button', { name: '+' })
+  const buttonPlusMain = within(columns[2]).getByRole('button', { name: '+' })
   expect(buttonPlusMain).toBeVisible()
   expect(buttonPlusMain).toBeEnabled()
   // 4列目には (サイドデッキの) カウンターがある
-  const columnSide = columns[3]
-  expect(columnSide).toBeVisible()
-  const buttonMinusSide = within(columnSide).getByRole('button', { name: '-' })
+  expect(columns[3]).toBeVisible()
+  const buttonMinusSide = within(columns[3]).getByRole('button', { name: '-' })
   expect(buttonMinusSide).toBeVisible()
   expect(buttonMinusSide).toBeDisabled() // 無効
-  const spinSide = within(columnSide).getByRole('spinbutton')
+  const spinSide = within(columns[3]).getByRole('spinbutton')
   expect(spinSide).toBeVisible()
   expect(spinSide).toHaveAttribute('readonly')
   expect(spinSide).toHaveValue(0)
-  const buttonPlusSide = within(columnSide).getByRole('button', { name: '+' })
+  const buttonPlusSide = within(columns[3]).getByRole('button', { name: '+' })
   expect(buttonPlusSide).toBeVisible()
   expect(buttonPlusSide).toBeEnabled()
 })
@@ -252,8 +248,8 @@ test('メインデッキのカウンターを0から1に増やす', async () => 
     interruptSimulator,
     getByRole,
   } = defaultRender(id, '織田信長', 0, enumColor.RED, 0, 0)
-  let main = within(within(getByRole('row')).getAllByRole('cell')[2])
-  let side = within(within(getByRole('row')).getAllByRole('cell')[3])
+  const main = within(within(getByRole('row')).getAllByRole('cell')[2])
+  const side = within(within(getByRole('row')).getAllByRole('cell')[3])
 
   expect(main.getByRole('button', { name: '-' })).toBeDisabled() // 無効
   expect(main.getByRole('spinbutton')).toHaveValue(0)
@@ -287,8 +283,8 @@ test('メインデッキのカウンターを1から2に増やす', async () => 
     interruptSimulator,
     getByRole,
   } = defaultRender(id, '織田信長', 0, enumColor.RED, 1, 1)
-  let main = within(within(getByRole('row')).getAllByRole('cell')[2])
-  let side = within(within(getByRole('row')).getAllByRole('cell')[3])
+  const main = within(within(getByRole('row')).getAllByRole('cell')[2])
+  const side = within(within(getByRole('row')).getAllByRole('cell')[3])
 
   expect(main.getByRole('button', { name: '-' })).toBeEnabled()
   expect(main.getByRole('spinbutton')).toHaveValue(1)
@@ -322,8 +318,8 @@ test('メインデッキのカウンターを1から0に減らす', async () => 
     interruptSimulator,
     getByRole,
   } = defaultRender(id, '織田信長', 0, enumColor.RED, 1, 1)
-  let main = within(within(getByRole('row')).getAllByRole('cell')[2])
-  let side = within(within(getByRole('row')).getAllByRole('cell')[3])
+  const main = within(within(getByRole('row')).getAllByRole('cell')[2])
+  const side = within(within(getByRole('row')).getAllByRole('cell')[3])
 
   expect(main.getByRole('button', { name: '-' })).toBeEnabled()
   expect(main.getByRole('spinbutton')).toHaveValue(1)
@@ -357,8 +353,8 @@ test('サイドデッキのカウンターを0から1に増やす', async () => 
     interruptSimulator,
     getByRole,
   } = defaultRender(id, '織田信長', 0, enumColor.RED, 0, 0)
-  let main = within(within(getByRole('row')).getAllByRole('cell')[2])
-  let side = within(within(getByRole('row')).getAllByRole('cell')[3])
+  const main = within(within(getByRole('row')).getAllByRole('cell')[2])
+  const side = within(within(getByRole('row')).getAllByRole('cell')[3])
 
   expect(main.getByRole('button', { name: '-' })).toBeDisabled() // 無効
   expect(main.getByRole('spinbutton')).toHaveValue(0)
@@ -391,8 +387,8 @@ test('サイドデッキのカウンターを1から2に増やす', async () => 
     interruptSimulator,
     getByRole,
   } = defaultRender(id, '織田信長', 0, enumColor.RED, 1, 1)
-  let main = within(within(getByRole('row')).getAllByRole('cell')[2])
-  let side = within(within(getByRole('row')).getAllByRole('cell')[3])
+  const main = within(within(getByRole('row')).getAllByRole('cell')[2])
+  const side = within(within(getByRole('row')).getAllByRole('cell')[3])
 
   expect(main.getByRole('button', { name: '-' })).toBeEnabled()
   expect(main.getByRole('spinbutton')).toHaveValue(1)
@@ -425,8 +421,8 @@ test('サイドデッキのカウンターを1から0に減らす', async () => 
     interruptSimulator,
     getByRole,
   } = defaultRender(id, '織田信長', 0, enumColor.RED, 1, 1)
-  let main = within(within(getByRole('row')).getAllByRole('cell')[2])
-  let side = within(within(getByRole('row')).getAllByRole('cell')[3])
+  const main = within(within(getByRole('row')).getAllByRole('cell')[2])
+  const side = within(within(getByRole('row')).getAllByRole('cell')[3])
 
   expect(main.getByRole('button', { name: '-' })).toBeEnabled()
   expect(main.getByRole('spinbutton')).toHaveValue(1)

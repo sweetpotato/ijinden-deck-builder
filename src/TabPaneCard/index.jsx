@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 
+import { useId } from 'react'
 import {
   Accordion,
   AccordionBody,
@@ -95,6 +96,7 @@ function TabPaneCard({
   zoomIn,
   interruptSimulator,
 }) {
+  const idTitle = useId()
   const [expansion, resetExpansion, renderExpansion] =
     useAccordionItemGenericFilter('エキスパンション', dataExpansions)
   const [rarity, resetRarity, renderRarity] = useAccordionItemGenericFilter(
@@ -173,7 +175,7 @@ function TabPaneCard({
       {renderTextSearch()}
       <Accordion>
         <AccordionItem eventKey="0">
-          <AccordionHeader as="h2" className="header-filter">
+          <AccordionHeader id={idTitle} as="h2" className="header-filter">
             条件で絞り込む
           </AccordionHeader>
           <AccordionBody>
@@ -186,6 +188,8 @@ function TabPaneCard({
               </Button>
             </div>
             <Accordion
+              role="list"
+              aria-labelledby={idTitle}
               className="container-filter"
               alwaysOpen
               defaultActiveKey={['2', '3']}

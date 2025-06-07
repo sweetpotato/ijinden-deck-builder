@@ -17,31 +17,35 @@ const AccordionItemGenericFilter = memo(function AccordionItemGenericFilter({
   handleChangeState,
   data,
 }) {
-  const itemId = useId()
+  const idTitle = useId()
   const name = useId()
   const { activeEventKey } = useContext(AccordionContext)
   const expanded = isAccordionItemSelected(activeEventKey, eventKey)
   const label = new Map(data.map((e) => [e.value, e.label])).get(state)
 
   return (
-    <AccordionItem eventKey={eventKey} role="listitem" aria-labelledby={itemId}>
+    <AccordionItem
+      role="listitem"
+      aria-labelledby={idTitle}
+      eventKey={eventKey}
+    >
       <AccordionHeader as="h3">
         {expanded ? (
           <>
             ➖&nbsp;
-            <span id={itemId}>{title}</span>
+            <span id={idTitle}>{title}</span>
           </>
         ) : state === 0 ? (
           <>
             ➕&nbsp;
-            <span id={itemId}>{title}</span>
+            <span id={idTitle}>{title}</span>
             &nbsp;―&nbsp;
             {label}
           </>
         ) : (
           <>
             ➕&nbsp;
-            <span id={itemId}>{title}</span>
+            <span id={idTitle}>{title}</span>
             &nbsp;―&nbsp;
             <b>{label}</b>
           </>

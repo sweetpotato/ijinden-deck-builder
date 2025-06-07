@@ -11,7 +11,7 @@ function ImageCard({
   const width = small ? 40 : 80
   const height = small ? 56 : 112
   return (
-    <li>
+    <>
       <img
         width={width}
         height={height}
@@ -25,7 +25,7 @@ function ImageCard({
         </span>
       )}
       {children}
-    </li>
+    </>
   )
 }
 

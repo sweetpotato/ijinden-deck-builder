@@ -1,9 +1,7 @@
 // SPDX-License-Identifier: MIT
 
 import 'fake-indexeddb/auto'
-import { IDBFactory } from 'fake-indexeddb'
 
-import Dexie from 'dexie'
 import { useState } from 'react'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 import {
@@ -16,6 +14,7 @@ import {
 import userEvent from '@testing-library/user-event'
 
 import { decodeDeck } from '../commons/dataCards'
+import { dbClearDecks, dbQueryDecks } from '../commons/db'
 import useDeck from '../hooks/useDeck'
 import TabPaneDeck from '.'
 
@@ -122,9 +121,7 @@ function defaultRender(entriesMain, entriesSide) {
   }
 }
 
-beforeEach(() => {
-  Dexie.dependencies.indexedDB = new IDBFactory()
-})
+beforeEach(dbClearDecks)
 
 afterEach(cleanup)
 
@@ -345,6 +342,9 @@ test('マイデッキに保存', async () => {
   expect(getAllListItem(getByRole, 'メインデッキ').length).toBe(2)
   expect(getAllListItem(getByRole, 'サイドデッキ').length).toBe(1)
 
+  // 初期状態ではデータベースは空
+  expect((await dbQueryDecks()).length).toBe(0)
+
   // 「マイデッキに保存」ボタンを押す
   await userEvent.click(getByRole('button', { name: 'マイデッキに保存' }))
 
@@ -360,6 +360,17 @@ test('マイデッキに保存', async () => {
   // 成功したらダイアログは表示されない
   defaultRerender(result)
   expect(queryByRole('dialog')).toBeNull()
+
+  // データベースにデッキが追加されている
+  expect((await dbQueryDecks()).length).toBe(1)
+  const deck = (await dbQueryDecks())[0]
+  expect(typeof deck.id).toBe('number')
+  expect(deck.timestamp).not.toBeFalsy()
+  expect(deck.main).toEqual([
+    ['R-1', 1],
+    ['R-2', 2],
+  ])
+  expect(deck.side).toEqual([['R-3', 3]])
 })
 
 test('空のデッキは保存できない', async () => {
@@ -379,6 +390,9 @@ test('空のデッキは保存できない', async () => {
   expect(queryListItem(getByRole, 'メインデッキ')).toBeNull()
   expect(queryListItem(getByRole, 'サイドデッキ')).toBeNull()
 
+  // 初期状態ではデータベースは空
+  expect((await dbQueryDecks()).length).toBe(0)
+
   // 「マイデッキに保存」ボタンを押す
   await userEvent.click(getByRole('button', { name: 'マイデッキに保存' }))
 
@@ -391,6 +405,9 @@ test('空のデッキは保存できない', async () => {
   // ダイアログが表示される
   defaultRerender(result)
   expect(getByRole('dialog')).toBeVisible()
+
+  // データベースには追加されていない
+  expect((await dbQueryDecks()).length).toBe(0)
 
   // ダイアログを閉じる
   // prettier-ignore

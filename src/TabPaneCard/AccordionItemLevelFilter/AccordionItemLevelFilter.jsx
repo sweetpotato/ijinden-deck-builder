@@ -21,7 +21,7 @@ const AccordionItemLevelFilter = memo(function AccordionItemLevelFilter({
   handleChangeLevel,
   handleChangeComparator,
 }) {
-  const itemId = useId()
+  const idTitle = useId()
   const name = useId()
   const { activeEventKey } = useContext(AccordionContext)
   const expanded = isAccordionItemSelected(activeEventKey, eventKey)
@@ -34,24 +34,28 @@ const AccordionItemLevelFilter = memo(function AccordionItemLevelFilter({
   const enphasized = level !== 0 || comparator != enumComparator.GE
 
   return (
-    <AccordionItem eventKey={eventKey} role="listitem" aria-labelledby={itemId}>
+    <AccordionItem
+      role="listitem"
+      aria-labelledby={idTitle}
+      eventKey={eventKey}
+    >
       <AccordionHeader as="h3">
         {expanded ? (
           <>
             ➖&nbsp;
-            <span id={itemId}>レベル</span>
+            <span id={idTitle}>レベル</span>
           </>
         ) : !enphasized ? (
           <>
             ➕&nbsp;
-            <span id={itemId}>レベル</span>
+            <span id={idTitle}>レベル</span>
             &nbsp;―&nbsp;
             {label}
           </>
         ) : (
           <>
             ➕&nbsp;
-            <span id={itemId}>レベル</span>
+            <span id={idTitle}>レベル</span>
             &nbsp;―&nbsp;
             <b>{label}</b>
           </>

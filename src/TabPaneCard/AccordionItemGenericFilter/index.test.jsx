@@ -37,30 +37,27 @@ function getRenderFn(result) {
   return result.current[2]
 }
 
-function defaultRenderHoook(title, data) {
+function defaultRender(title, data) {
   const { result } = renderHook(() =>
     useAccordionItemGenericFilter(title, data)
   )
-  const defaultRender = () => {
-    const { rerender, getByRole } = render(
-      <Accordion alwaysOpen>{getRenderFn(result)('0')}</Accordion>
-    )
-    const defaultRerender = () =>
-      rerender(<Accordion alwaysOpen>{getRenderFn(result)('0')}</Accordion>)
-    return { defaultRerender, getByRole }
-  }
-  return { result, defaultRender }
+  const { rerender, getByRole } = render(
+    <Accordion alwaysOpen>{getRenderFn(result)('0')}</Accordion>
+  )
+  const defaultRerender = () =>
+    rerender(<Accordion alwaysOpen>{getRenderFn(result)('0')}</Accordion>)
+  return { result, defaultRerender, getByRole }
 }
 
 afterEach(cleanup)
 
 test('デフォルトのレンダリング1', () => {
+  const { result, getByRole } = defaultRender('フェイズ', dataPhases)
+
   // 初期状態はゼロ
-  const { result, defaultRender } = defaultRenderHoook('フェイズ', dataPhases)
   expect(getState(result)).toBe(0)
 
   // ラジオボタンが並んでいる
-  const { getByRole } = defaultRender()
   expect(getByRole('radio', { name: 'すべて' })).toBeVisible()
   expect(getByRole('radio', { name: 'すべて' })).toBeChecked()
   expect(getByRole('radio', { name: 'スタート' })).toBeVisible()
@@ -78,19 +75,21 @@ test('デフォルトのレンダリング1', () => {
   expect(within(item).getByRole('radio', { name: 'すべて' })).toBeChecked()
 
   // 開閉箇所はボタンとして得られる
-  expect(getByRole('button'), {
-    name: /フェイズ/,
-    expanded: false,
-  }).toBeVisible()
+  expect(
+    getByRole('button', {
+      name: /フェイズ/,
+      expanded: false,
+    })
+  ).toBeVisible()
 })
 
 test('デフォルトのレンダリング2', () => {
+  const { result, getByRole } = defaultRender('場所', dataAreas)
+
   // 初期状態はゼロ
-  const { result, defaultRender } = defaultRenderHoook('場所', dataAreas)
   expect(getState(result)).toBe(0)
 
   // ラジオボタンが並んでいる
-  const { getByRole } = defaultRender()
   expect(getByRole('radio', { name: '指定なし' })).toBeVisible()
   expect(getByRole('radio', { name: '指定なし' })).toBeChecked()
   expect(getByRole('radio', { name: '山札' })).toBeVisible()
@@ -110,17 +109,22 @@ test('デフォルトのレンダリング2', () => {
   expect(within(item).getByRole('radio', { name: '指定なし' })).toBeChecked()
 
   // 開閉箇所はボタンとして得られる
-  expect(getByRole('button'), {
-    name: /場所/,
-    expanded: false,
-  }).toBeVisible()
+  expect(
+    getByRole('button', {
+      name: /場所/,
+      expanded: false,
+    })
+  ).toBeVisible()
 })
 
 test('ボタンを選択する', async () => {
+  const { result, defaultRerender, getByRole } = defaultRender(
+    'フェイズ',
+    dataPhases
+  )
+
   // 初期状態では「すべて」が選択されている
-  const { result, defaultRender } = defaultRenderHoook('フェイズ', dataPhases)
   expect(getState(result)).toBe(0)
-  const { defaultRerender, getByRole } = defaultRender()
   expect(getByRole('radio', { name: 'すべて' })).toBeChecked()
   expect(getByRole('radio', { name: 'スタート' })).not.toBeChecked()
   expect(getByRole('radio', { name: 'ドロー' })).not.toBeChecked()
@@ -129,8 +133,9 @@ test('ボタンを選択する', async () => {
 
   // スタートを選択する
   await userEvent.click(getByRole('radio', { name: 'スタート' }))
-  expect(getState(result)).toBe(1)
   defaultRerender()
+
+  expect(getState(result)).toBe(1)
   expect(getByRole('radio', { name: 'すべて' })).not.toBeChecked()
   expect(getByRole('radio', { name: 'スタート' })).toBeChecked()
   expect(getByRole('radio', { name: 'ドロー' })).not.toBeChecked()
@@ -139,8 +144,9 @@ test('ボタンを選択する', async () => {
 
   // ドローを選択する
   await userEvent.click(getByRole('radio', { name: 'ドロー' }))
-  expect(getState(result)).toBe(2)
   defaultRerender()
+
+  expect(getState(result)).toBe(2)
   expect(getByRole('radio', { name: 'すべて' })).not.toBeChecked()
   expect(getByRole('radio', { name: 'スタート' })).not.toBeChecked()
   expect(getByRole('radio', { name: 'ドロー' })).toBeChecked()
@@ -149,8 +155,9 @@ test('ボタンを選択する', async () => {
 
   // メインを選択する
   await userEvent.click(getByRole('radio', { name: 'メイン' }))
-  expect(getState(result)).toBe(3)
   defaultRerender()
+
+  expect(getState(result)).toBe(3)
   expect(getByRole('radio', { name: 'すべて' })).not.toBeChecked()
   expect(getByRole('radio', { name: 'スタート' })).not.toBeChecked()
   expect(getByRole('radio', { name: 'ドロー' })).not.toBeChecked()
@@ -159,8 +166,9 @@ test('ボタンを選択する', async () => {
 
   // エンドを選択する
   await userEvent.click(getByRole('radio', { name: 'エンド' }))
-  expect(getState(result)).toBe(4)
   defaultRerender()
+
+  expect(getState(result)).toBe(4)
   expect(getByRole('radio', { name: 'すべて' })).not.toBeChecked()
   expect(getByRole('radio', { name: 'スタート' })).not.toBeChecked()
   expect(getByRole('radio', { name: 'ドロー' })).not.toBeChecked()
@@ -169,8 +177,9 @@ test('ボタンを選択する', async () => {
 
   // 「すべて」を再度選択する
   await userEvent.click(getByRole('radio', { name: 'すべて' }))
-  expect(getState(result)).toBe(0)
   defaultRerender()
+
+  expect(getState(result)).toBe(0)
   expect(getByRole('radio', { name: 'すべて' })).toBeChecked()
   expect(getByRole('radio', { name: 'スタート' })).not.toBeChecked()
   expect(getByRole('radio', { name: 'ドロー' })).not.toBeChecked()
@@ -179,10 +188,13 @@ test('ボタンを選択する', async () => {
 })
 
 test('状態をリセットする', async () => {
+  const { result, defaultRerender, getByRole } = defaultRender(
+    'フェイズ',
+    dataPhases
+  )
+
   // 初期状態では「すべて」が選択されている
-  const { result, defaultRender } = defaultRenderHoook('フェイズ', dataPhases)
   expect(getState(result)).toBe(0)
-  const { defaultRerender, getByRole } = defaultRender()
   expect(getByRole('radio', { name: 'すべて' })).toBeChecked()
   expect(getByRole('radio', { name: 'スタート' })).not.toBeChecked()
   expect(getByRole('radio', { name: 'ドロー' })).not.toBeChecked()
@@ -191,8 +203,9 @@ test('状態をリセットする', async () => {
 
   // 適当なボタンとしてスタートを選択する
   await userEvent.click(getByRole('radio', { name: 'スタート' }))
-  expect(getState(result)).toBe(1)
   defaultRerender()
+
+  expect(getState(result)).toBe(1)
   expect(getByRole('radio', { name: 'すべて' })).not.toBeChecked()
   expect(getByRole('radio', { name: 'スタート' })).toBeChecked()
   expect(getByRole('radio', { name: 'ドロー' })).not.toBeChecked()
@@ -201,8 +214,9 @@ test('状態をリセットする', async () => {
 
   // リセットすると「すべて」が選択される
   await act(() => getResetFn(result)())
-  expect(getState(result)).toBe(0)
   defaultRerender()
+
+  expect(getState(result)).toBe(0)
   expect(getByRole('radio', { name: 'すべて' })).toBeChecked()
   expect(getByRole('radio', { name: 'スタート' })).not.toBeChecked()
   expect(getByRole('radio', { name: 'ドロー' })).not.toBeChecked()

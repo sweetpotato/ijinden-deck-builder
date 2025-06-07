@@ -3,7 +3,7 @@
 import { useId, useState } from 'react'
 import { Alert, Button } from 'react-bootstrap'
 
-import { dataCardsMap as dataCards } from '../commons/dataCards'
+import { dataCardsMap } from '../commons/dataCards'
 import { sum } from '../commons/utils'
 import {
   ImageCardWithToggleOpaque,
@@ -98,13 +98,13 @@ function TabPaneSimulator({ deck, state, dispatch }) {
       )}
       {showGuardiansAndHands && (
         <>
-          <ContainerSection
+          <SectionPart
             title="ガーディアン"
             cards={guardians}
             defaultNumTransparent={0}
             continueSimulator={dispatch.continue}
           />
-          <ContainerSection
+          <SectionPart
             title="手札"
             cards={handAndDeck}
             defaultNumTransparent={6}
@@ -116,36 +116,39 @@ function TabPaneSimulator({ deck, state, dispatch }) {
   )
 }
 
-function ContainerSection({
+function SectionPart({
   title,
   cards,
   defaultNumTransparent,
   continueSimulator,
 }) {
-  const id = useId()
+  const idTitle = useId()
+
   return (
-    <section aria-labelledby={id}>
-      <h3 id={id} className="m-2">
+    <section aria-labelledby={idTitle}>
+      <h3 id={idTitle} className="m-2">
         {title}
       </h3>
-      <ul aria-labelledby={id} className="list-card list-card-medium ms-2">
+      <ul aria-labelledby={idTitle} className="list-card list-card-medium ms-2">
         {cards?.map((cardId, index) => {
           const key = `${cardId}-${index}`
-          const card = dataCards.get(cardId)
+          const card = dataCardsMap.get(cardId)
           return index < defaultNumTransparent ? (
-            <ImageCardWithToggleTransparent
-              key={key}
-              imageUrl={card.imageUrl}
-              alt={card.name}
-              continueSimulator={continueSimulator}
-            />
+            <li key={key}>
+              <ImageCardWithToggleTransparent
+                imageUrl={card.imageUrl}
+                alt={card.name}
+                continueSimulator={continueSimulator}
+              />
+            </li>
           ) : (
-            <ImageCardWithToggleOpaque
-              key={key}
-              imageUrl={card.imageUrl}
-              alt={card.name}
-              continueSimulator={continueSimulator}
-            />
+            <li key={key}>
+              <ImageCardWithToggleOpaque
+                imageUrl={card.imageUrl}
+                alt={card.name}
+                continueSimulator={continueSimulator}
+              />
+            </li>
           )
         })}
       </ul>

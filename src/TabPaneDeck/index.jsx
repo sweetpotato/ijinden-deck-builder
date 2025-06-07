@@ -116,7 +116,7 @@ function TabPaneDeck({
           </Button>
         </ModalFooter>
       </Modal>
-      <ContainerDeckPart
+      <SectionPart
         title="メインデッキ"
         deck={deckMain}
         dispatchDecrement={dispatchDeck.decrementMain}
@@ -125,7 +125,7 @@ function TabPaneDeck({
         zoomIn={zoomIn}
         interruptSimulator={interruptSimulator}
       />
-      <ContainerDeckPart
+      <SectionPart
         title="サイドデッキ"
         deck={deckSide}
         dispatchDecrement={dispatchDeck.decrementSide}
@@ -146,7 +146,7 @@ function TabPaneDeck({
   )
 }
 
-function ContainerDeckPart({
+function SectionPart({
   title,
   deck,
   dispatchDecrement,
@@ -156,7 +156,7 @@ function ContainerDeckPart({
   interruptSimulator,
   isSide = false,
 }) {
-  const id = useId()
+  const idTitle = useId()
   const numCards = sum(deck.values())
   const deckInternal = [...deck.entries()]
     .map(([id, numCopies]) => {
@@ -171,32 +171,33 @@ function ContainerDeckPart({
     .sort((a, b) => a.orderDeck - b.orderDeck)
 
   return (
-    <section aria-labelledby={id}>
+    <section aria-labelledby={idTitle}>
       <h3 className="m-2">
-        <span id={id}>{title}</span> ({numCards}枚)
+        <span id={idTitle}>{title}</span> ({numCards}枚)
       </h3>
-      <ul aria-labelledby={id} className="list-card list-card-medium ms-2">
-        {deckInternal.map((element) => (
-          <ContainerDeckCard
-            key={element.id}
-            id={element.id}
-            imageUrl={element.imageUrl}
-            name={element.name}
-            numCopies={element.numCopies}
-            dispatchDecrement={dispatchDecrement}
-            dispatchIncrement={dispatchIncrement}
-            dispatchMoveOut={dispatchMoveOut}
-            zoomIn={zoomIn}
-            interruptSimulator={interruptSimulator}
-            isSide={isSide}
-          />
+      <ul aria-labelledby={idTitle} className="list-card list-card-medium ms-2">
+        {deckInternal.map((card) => (
+          <li key={card.id} aria-label={card.id}>
+            <ImageCardDeck
+              id={card.id}
+              imageUrl={card.imageUrl}
+              name={card.name}
+              numCopies={card.numCopies}
+              dispatchDecrement={dispatchDecrement}
+              dispatchIncrement={dispatchIncrement}
+              dispatchMoveOut={dispatchMoveOut}
+              zoomIn={zoomIn}
+              interruptSimulator={interruptSimulator}
+              isSide={isSide}
+            />
+          </li>
         ))}
       </ul>
     </section>
   )
 }
 
-const ContainerDeckCard = memo(function ContainerDeckCard({
+const ImageCardDeck = memo(function ImageCardDeck({
   id,
   imageUrl,
   name,
