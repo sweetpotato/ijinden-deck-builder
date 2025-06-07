@@ -130,7 +130,7 @@ function ContainerSection({
       <h3 id={id} className="m-2">
         {title}
       </h3>
-      <div className="container-card-line-up ms-2">
+      <ul className="list-card card-medium ms-2">
         {cards?.map((id, index) => {
           const key = `${id}-${index}`
           const card = dataCards.get(id)
@@ -150,7 +150,7 @@ function ContainerSection({
             />
           )
         })}
-      </div>
+      </ul>
     </div>
   )
 }

@@ -175,7 +175,7 @@ function ContainerDeckPart({
       <h3 className="m-2">
         <span id={id}>{title}</span> ({numCards}枚)
       </h3>
-      <div className="container-card-line-up ms-2">
+      <ul className="list-card card-medium ms-2">
         {deckInternal.map((element) => (
           <ContainerDeckCard
             key={element.id}
@@ -191,7 +191,7 @@ function ContainerDeckPart({
             isSide={isSide}
           />
         ))}
-      </div>
+      </ul>
     </section>
   )
 }
