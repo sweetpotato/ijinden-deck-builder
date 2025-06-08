@@ -32,7 +32,6 @@ function Home() {
   const [activeTab, setActiveTab] = useState(
     code ? enumTabPane.DECK : enumTabPane.CARD
   )
-  const [showCodeError, setShowCodeError] = useState(!resultsDecode)
 
   const [zoomIn, renderZoom] = useModalZoom()
   const [deckTitle, setDeckTitle] = useState('')
@@ -73,9 +72,7 @@ function Home() {
         </Tab>
         <Tab eventKey={enumTabPane.DECK} title="レシピ">
           <TabPaneDeck
-            code={code}
-            showCodeError={showCodeError}
-            setShowCodeError={setShowCodeError}
+            defaultShowCodeError={code && !resultsDecode}
             deckTitle={deckTitle}
             setDeckTitle={setDeckTitle}
             deckMain={deckMain}

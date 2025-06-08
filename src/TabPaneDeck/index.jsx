@@ -11,6 +11,7 @@ import {
   ModalHeader,
   ModalTitle,
 } from 'react-bootstrap'
+import { useParams } from 'react-router-dom'
 
 import { dataCardsMap } from '../commons/dataCards'
 import { dbAddDeck } from '../commons/db'
@@ -23,9 +24,7 @@ import ContainerDeckImport from './ContainerDeckImport'
 import './index.css'
 
 function TabPaneDeck({
-  code,
-  showCodeError,
-  setShowCodeError,
+  defaultShowCodeError,
   deckTitle,
   setDeckTitle,
   deckMain,
@@ -36,6 +35,10 @@ function TabPaneDeck({
   setActiveDeckSaved,
   interruptSimulator,
 }) {
+  // デッキコード関連
+  const { code } = useParams()
+  const [showCodeError, setShowCodeError] = useState(defaultShowCodeError)
+
   const [showModalEmpty, setShowModalEmpty] = useState(false)
 
   function handleChangeDeckTitle(event) {

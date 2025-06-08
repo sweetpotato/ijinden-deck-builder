@@ -3,6 +3,7 @@
 import 'fake-indexeddb/auto'
 
 import { useState } from 'react'
+import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 import {
   cleanup,
@@ -62,7 +63,6 @@ function getSetDeckTitleFn(result) {
 function defaultRender(entriesMain, entriesSide) {
   const { result } = renderHook(() => useDeck(entriesMain, entriesSide))
   const { result: resultDeckTitle } = renderHook(() => useState(''))
-  const setShowCodeError = vi.fn()
   const zoomIn = vi.fn()
   const moveToLoad = vi.fn()
   const setActiveDeckSaved = vi.fn()
@@ -75,9 +75,7 @@ function defaultRender(entriesMain, entriesSide) {
     queryByRole,
   } = render(
     <TabPaneDeck
-      code={undefined}
-      showCodeError={false}
-      setShowCodeError={setShowCodeError}
+      defaultShowCodeError={false}
       deckTitle={getDeckTitle(resultDeckTitle)}
       setDeckTitle={getSetDeckTitleFn(resultDeckTitle)}
       deckMain={getDeckMain(result)}
@@ -92,9 +90,7 @@ function defaultRender(entriesMain, entriesSide) {
   const defaultRerender = (result) =>
     rerender(
       <TabPaneDeck
-        code={undefined}
-        showCodeError={false}
-        setShowCodeError={setShowCodeError}
+        defaultShowCodeError={false}
         deckTitle={getDeckTitle(resultDeckTitle)}
         setDeckTitle={getSetDeckTitleFn(resultDeckTitle)}
         deckMain={getDeckMain(result)}
@@ -108,7 +104,6 @@ function defaultRender(entriesMain, entriesSide) {
     )
   return {
     result,
-    setShowCodeError,
     zoomIn,
     moveToLoad,
     setActiveDeckSaved,
@@ -136,20 +131,27 @@ test('コードが正しい場合のレンダリング', () => {
 
   // defaultRender は使用しない
   const { getByRole, queryByRole } = render(
-    <TabPaneDeck
-      code={code}
-      showCodeError={false}
-      setShowCodeError={vi.fn()}
-      deckTitle=""
-      setDeckTitle={vi.fn()}
-      deckMain={getDeckMain(result)}
-      deckSide={getDeckSide(result)}
-      dispatchDeck={getDispatchDeck(result)}
-      zoomIn={vi.fn()}
-      moveToLoad={vi.fn()}
-      setActiveDeckSaved={vi.fn()}
-      interruptSimulator={vi.fn()}
-    />
+    <MemoryRouter initialEntries={[`/deck/${code}`]}>
+      <Routes>
+        <Route
+          path="/deck/:code"
+          element={
+            <TabPaneDeck
+              defaultShowCodeError={false}
+              deckTitle=""
+              setDeckTitle={vi.fn()}
+              deckMain={getDeckMain(result)}
+              deckSide={getDeckSide(result)}
+              dispatchDeck={getDispatchDeck(result)}
+              zoomIn={vi.fn()}
+              moveToLoad={vi.fn()}
+              setActiveDeckSaved={vi.fn()}
+              interruptSimulator={vi.fn()}
+            />
+          }
+        />
+      </Routes>
+    </MemoryRouter>
   )
 
   // アラートは表示されない
@@ -174,7 +176,6 @@ test('コードが誤っている場合のレンダリング', async () => {
   expect(decodeDeck(code)).toBeNull()
   const { result } = renderHook(() => useDeck([], []))
 
-  const setShowCodeError = vi.fn()
   const setDeckTitle = vi.fn()
   const zoomIn = vi.fn()
   const moveToLoad = vi.fn()
@@ -183,20 +184,27 @@ test('コードが誤っている場合のレンダリング', async () => {
 
   // defaultRender は使用しない
   const { rerender, getByRole, queryByRole } = render(
-    <TabPaneDeck
-      code={code}
-      showCodeError={true}
-      setShowCodeError={setShowCodeError}
-      deckTitle=""
-      setDeckTitle={setDeckTitle}
-      deckMain={getDeckMain(result)}
-      deckSide={getDeckSide(result)}
-      dispatchDeck={getDispatchDeck(result)}
-      zoomIn={zoomIn}
-      moveToLoad={moveToLoad}
-      setActiveDeckSaved={setActiveDeckSaved}
-      interruptSimulator={interruptSimulator}
-    />
+    <MemoryRouter initialEntries={[`/deck/${code}`]}>
+      <Routes>
+        <Route
+          path="/deck/:code"
+          element={
+            <TabPaneDeck
+              defaultShowCodeError={true}
+              deckTitle=""
+              setDeckTitle={setDeckTitle}
+              deckMain={getDeckMain(result)}
+              deckSide={getDeckSide(result)}
+              dispatchDeck={getDispatchDeck(result)}
+              zoomIn={zoomIn}
+              moveToLoad={moveToLoad}
+              setActiveDeckSaved={setActiveDeckSaved}
+              interruptSimulator={interruptSimulator}
+            />
+          }
+        />
+      </Routes>
+    </MemoryRouter>
   )
 
   // アラートが表示される
@@ -213,9 +221,6 @@ test('コードが誤っている場合のレンダリング', async () => {
   // アラートを閉じる
   await userEvent.click(getByRole('button', { name: 'Close alert' }))
 
-  expect(setShowCodeError.mock.calls.length).toBe(1) // 呼ばれた
-  expect(setShowCodeError.mock.lastCall.length).toBe(1)
-  expect(setShowCodeError.mock.lastCall[0]).toBe(false)
   expect(setDeckTitle.mock.calls.length).toBe(0)
   expect(zoomIn.mock.calls.length).toBe(0)
   expect(moveToLoad.mock.calls.length).toBe(0)
@@ -224,9 +229,7 @@ test('コードが誤っている場合のレンダリング', async () => {
 
   rerender(
     <TabPaneDeck
-      code={code}
-      showCodeError={true}
-      setShowCodeError={setShowCodeError}
+      defaultShowCodeError={true}
       deckTitle=""
       setDeckTitle={setDeckTitle}
       deckMain={getDeckMain(result)}
@@ -287,7 +290,6 @@ test.each([
   ['楠木正成', 'サイドデッキ', 1, 'R-6'],
 ])('虫眼鏡ボタンで拡大 (%s)', async (_, section, index, expectedId) => {
   const {
-    setShowCodeError,
     zoomIn,
     moveToLoad,
     setActiveDeckSaved,
@@ -310,7 +312,6 @@ test.each([
   // 虫眼鏡ボタンを押す
   await userEvent.click(getButton(getByRole, section, index, '🔍'))
 
-  expect(setShowCodeError.mock.calls.length).toBe(0)
   expect(zoomIn.mock.calls.length).toBe(1) // 呼ばれた
   expect(zoomIn.mock.lastCall.length).toBe(1)
   expect(zoomIn.mock.lastCall[0]).toBe(expectedId)
@@ -323,7 +324,6 @@ test('マイデッキに保存', async () => {
   const {
     result,
     defaultRerender,
-    setShowCodeError,
     zoomIn,
     moveToLoad,
     setActiveDeckSaved,
@@ -348,7 +348,6 @@ test('マイデッキに保存', async () => {
   // 「マイデッキに保存」ボタンを押す
   await userEvent.click(getByRole('button', { name: 'マイデッキに保存' }))
 
-  expect(setShowCodeError.mock.calls.length).toBe(0)
   expect(zoomIn.mock.calls.length).toBe(0)
   // handleClickSave は async 関数のため完了を待つ必要がある
   await waitFor(() => expect(moveToLoad.mock.calls.length).toBe(1)) // 呼ばれた
@@ -377,7 +376,6 @@ test('空のデッキは保存できない', async () => {
   const {
     result,
     defaultRerender,
-    setShowCodeError,
     zoomIn,
     moveToLoad,
     setActiveDeckSaved,
@@ -396,7 +394,6 @@ test('空のデッキは保存できない', async () => {
   // 「マイデッキに保存」ボタンを押す
   await userEvent.click(getByRole('button', { name: 'マイデッキに保存' }))
 
-  expect(setShowCodeError.mock.calls.length).toBe(0)
   expect(zoomIn.mock.calls.length).toBe(0)
   expect(moveToLoad.mock.calls.length).toBe(0)
   expect(setActiveDeckSaved.mock.calls.length).toBe(0)
@@ -412,7 +409,6 @@ test('空のデッキは保存できない', async () => {
   // ダイアログを閉じる
   // prettier-ignore
   await userEvent.click(within(getByRole('dialog')).getByRole('button', { name: 'OK' }))
-  expect(setShowCodeError.mock.calls.length).toBe(0)
   expect(zoomIn.mock.calls.length).toBe(0)
   expect(moveToLoad.mock.calls.length).toBe(0)
   expect(setActiveDeckSaved.mock.calls.length).toBe(0)
@@ -427,7 +423,6 @@ test('レシピをクリア', async () => {
   const {
     result,
     defaultRerender,
-    setShowCodeError,
     zoomIn,
     moveToLoad,
     setActiveDeckSaved,
@@ -446,7 +441,6 @@ test('レシピをクリア', async () => {
 
   // 「レシピをクリア」ボタンを押す
   await userEvent.click(getByRole('button', { name: 'レシピをクリア' }))
-  expect(setShowCodeError.mock.calls.length).toBe(0)
   expect(zoomIn.mock.calls.length).toBe(0)
   expect(moveToLoad.mock.calls.length).toBe(0)
   expect(setActiveDeckSaved.mock.calls.length).toBe(0)
@@ -645,7 +639,6 @@ test.each([
   ) => {
     const {
       result,
-      setShowCodeError,
       zoomIn,
       moveToLoad,
       setActiveDeckSaved,
@@ -675,7 +668,6 @@ test.each([
     expect(getTextbox(getByRole, sectionThat, 1)).toHaveTextContent(expectedInitial)
 
     await userEvent.click(getButton(getByRole, sectionThis, index, buttonName))
-    expect(setShowCodeError.mock.calls.length).toBe(0)
     expect(zoomIn.mock.calls.length).toBe(0)
     expect(moveToLoad.mock.calls.length).toBe(0)
     expect(setActiveDeckSaved.mock.calls.length).toBe(0)
@@ -799,7 +791,6 @@ test.each([
   ) => {
     const {
       result,
-      setShowCodeError,
       zoomIn,
       moveToLoad,
       setActiveDeckSaved,
@@ -830,7 +821,6 @@ test.each([
     // prettier-ignore
     await userEvent.click(getButton(getByRole, sectionThis, indexDecrement, buttonName))
 
-    expect(setShowCodeError.mock.calls.length).toBe(0)
     expect(zoomIn.mock.calls.length).toBe(0)
     expect(moveToLoad.mock.calls.length).toBe(0)
     expect(setActiveDeckSaved.mock.calls.length).toBe(0)
@@ -918,7 +908,6 @@ test.each([
   ) => {
     const {
       result,
-      setShowCodeError,
       zoomIn,
       moveToLoad,
       setActiveDeckSaved,
@@ -936,7 +925,6 @@ test.each([
 
     await userEvent.click(getButton(getByRole, sectionThis, index, buttonName))
 
-    expect(setShowCodeError.mock.calls.length).toBe(0)
     expect(zoomIn.mock.calls.length).toBe(0)
     expect(moveToLoad.mock.calls.length).toBe(0)
     expect(setActiveDeckSaved.mock.calls.length).toBe(0)
@@ -1019,7 +1007,6 @@ test.each([
   ) => {
     const {
       result,
-      setShowCodeError,
       zoomIn,
       moveToLoad,
       setActiveDeckSaved,
@@ -1041,7 +1028,6 @@ test.each([
     // prettier-ignore
     await userEvent.click(getButton(getByRole, sectionThis, indexMoved, buttonName))
 
-    expect(setShowCodeError.mock.calls.length).toBe(0)
     expect(zoomIn.mock.calls.length).toBe(0)
     expect(moveToLoad.mock.calls.length).toBe(0)
     expect(setActiveDeckSaved.mock.calls.length).toBe(0)
