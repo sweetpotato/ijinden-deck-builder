@@ -5,13 +5,12 @@ import { useState } from 'react'
 import TabPaneLoad from './TabPaneLoad'
 
 function useTabPaneLoad(
-  setDeckTitle,
   dispatchSetFromEntries,
   moveToDeck,
   interruptSimulator
 ) {
   const [activeDeckSaved, setActiveDeckSaved] = useState(null)
-  const render = () => {
+  const render = (setDeckTitle) => {
     return (
       <TabPaneLoad
         activeDeckSaved={activeDeckSaved}

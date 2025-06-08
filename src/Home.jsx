@@ -47,7 +47,6 @@ function Home() {
   }
 
   const [setActiveDeckSaved, renderTabPaneLoad] = useTabPaneLoad(
-    setDeckTitle,
     dispatchDeck.setFromEntries,
     moveToDeck,
     interruptSimulator
@@ -85,7 +84,7 @@ function Home() {
           />
         </Tab>
         <Tab eventKey={enumTabPane.LOAD} title="マイデッキ">
-          {renderTabPaneLoad()}
+          {renderTabPaneLoad(setDeckTitle)}
         </Tab>
         <Tab eventKey={enumTabPane.SIMULATOR} title="シミュ">
           {renderTabPaneSimulator(deckMain)}
