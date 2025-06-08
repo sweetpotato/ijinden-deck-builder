@@ -47,7 +47,7 @@ function Home() {
     setActiveTab(enumTabPane.LOAD)
   }
 
-  const [expandAccordion, renderTabPaneLoad] = useTabPaneLoad(
+  const [setActiveDeckSaved, renderTabPaneLoad] = useTabPaneLoad(
     setDeckTitle,
     dispatchDeck.setFromEntries,
     moveToDeck,
@@ -83,7 +83,7 @@ function Home() {
             dispatchDeck={dispatchDeck}
             zoomIn={zoomIn}
             moveToLoad={moveToLoad}
-            expandAccordion={expandAccordion}
+            setActiveDeckSaved={setActiveDeckSaved}
             interruptSimulator={interruptSimulator}
           />
         </Tab>

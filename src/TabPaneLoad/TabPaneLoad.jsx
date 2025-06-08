@@ -32,11 +32,11 @@ const DTF = new Intl.DateTimeFormat([], {
 })
 
 function TabPaneLoad({
-  setDeckTitle,
   activeDeckSaved,
+  setActiveDeckSaved,
+  setDeckTitle,
   dispatchSetFromEntries,
   moveToDeck,
-  expandAccordion,
   interruptSimulator,
 }) {
   const idTitle = useId()
@@ -66,7 +66,7 @@ function TabPaneLoad({
           role="list"
           aria-labelledby={idTitle}
           activeKey={activeDeckSaved}
-          onSelect={expandAccordion}
+          onSelect={setActiveDeckSaved}
         >
           {decks.map((deck) => {
             return (

@@ -33,7 +33,7 @@ function TabPaneDeck({
   dispatchDeck,
   zoomIn,
   moveToLoad,
-  expandAccordion,
+  setActiveDeckSaved,
   interruptSimulator,
 }) {
   const [showModalEmpty, setShowModalEmpty] = useState(false)
@@ -61,7 +61,7 @@ function TabPaneDeck({
     // IndexedDB に保存する
     const idDeck = await dbAddDeck(objectDeck)
     // マイデッキペインに移動する
-    expandAccordion(idDeck)
+    setActiveDeckSaved(idDeck)
     moveToLoad()
   }
 

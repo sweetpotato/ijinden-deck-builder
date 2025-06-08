@@ -65,7 +65,7 @@ function defaultRender(entriesMain, entriesSide) {
   const setShowCodeError = vi.fn()
   const zoomIn = vi.fn()
   const moveToLoad = vi.fn()
-  const expandAccordion = vi.fn()
+  const setActiveDeckSaved = vi.fn()
   const interruptSimulator = vi.fn()
   const {
     rerender,
@@ -85,7 +85,7 @@ function defaultRender(entriesMain, entriesSide) {
       dispatchDeck={getDispatchDeck(result)}
       zoomIn={zoomIn}
       moveToLoad={moveToLoad}
-      expandAccordion={expandAccordion}
+      setActiveDeckSaved={setActiveDeckSaved}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -102,7 +102,7 @@ function defaultRender(entriesMain, entriesSide) {
         dispatchDeck={getDispatchDeck(result)}
         zoomIn={zoomIn}
         moveToLoad={moveToLoad}
-        expandAccordion={expandAccordion}
+        setActiveDeckSaved={setActiveDeckSaved}
         interruptSimulator={interruptSimulator}
       />
     )
@@ -111,7 +111,7 @@ function defaultRender(entriesMain, entriesSide) {
     setShowCodeError,
     zoomIn,
     moveToLoad,
-    expandAccordion,
+    setActiveDeckSaved,
     interruptSimulator,
     defaultRerender,
     getByPlaceholderText,
@@ -147,7 +147,7 @@ test('コードが正しい場合のレンダリング', () => {
       dispatchDeck={getDispatchDeck(result)}
       zoomIn={vi.fn()}
       moveToLoad={vi.fn()}
-      expandAccordion={vi.fn()}
+      setActiveDeckSaved={vi.fn()}
       interruptSimulator={vi.fn()}
     />
   )
@@ -178,7 +178,7 @@ test('コードが誤っている場合のレンダリング', async () => {
   const setDeckTitle = vi.fn()
   const zoomIn = vi.fn()
   const moveToLoad = vi.fn()
-  const expandAccordion = vi.fn()
+  const setActiveDeckSaved = vi.fn()
   const interruptSimulator = vi.fn()
 
   // defaultRender は使用しない
@@ -194,7 +194,7 @@ test('コードが誤っている場合のレンダリング', async () => {
       dispatchDeck={getDispatchDeck(result)}
       zoomIn={zoomIn}
       moveToLoad={moveToLoad}
-      expandAccordion={expandAccordion}
+      setActiveDeckSaved={setActiveDeckSaved}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -219,7 +219,7 @@ test('コードが誤っている場合のレンダリング', async () => {
   expect(setDeckTitle.mock.calls.length).toBe(0)
   expect(zoomIn.mock.calls.length).toBe(0)
   expect(moveToLoad.mock.calls.length).toBe(0)
-  expect(expandAccordion.mock.calls.length).toBe(0)
+  expect(setActiveDeckSaved.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(0)
 
   rerender(
@@ -234,7 +234,7 @@ test('コードが誤っている場合のレンダリング', async () => {
       dispatchDeck={getDispatchDeck(result)}
       zoomIn={zoomIn}
       moveToLoad={moveToLoad}
-      expandAccordion={expandAccordion}
+      setActiveDeckSaved={setActiveDeckSaved}
       interruptSimulator={interruptSimulator}
     />
   )
@@ -290,7 +290,7 @@ test.each([
     setShowCodeError,
     zoomIn,
     moveToLoad,
-    expandAccordion,
+    setActiveDeckSaved,
     interruptSimulator,
     getByRole,
   } = defaultRender(
@@ -315,7 +315,7 @@ test.each([
   expect(zoomIn.mock.lastCall.length).toBe(1)
   expect(zoomIn.mock.lastCall[0]).toBe(expectedId)
   expect(moveToLoad.mock.calls.length).toBe(0)
-  expect(expandAccordion.mock.calls.length).toBe(0)
+  expect(setActiveDeckSaved.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(0)
 })
 
@@ -326,7 +326,7 @@ test('マイデッキに保存', async () => {
     setShowCodeError,
     zoomIn,
     moveToLoad,
-    expandAccordion,
+    setActiveDeckSaved,
     interruptSimulator,
     getByRole,
     queryByRole,
@@ -352,9 +352,9 @@ test('マイデッキに保存', async () => {
   expect(zoomIn.mock.calls.length).toBe(0)
   // handleClickSave は async 関数のため完了を待つ必要がある
   await waitFor(() => expect(moveToLoad.mock.calls.length).toBe(1)) // 呼ばれた
-  await waitFor(() => expect(expandAccordion.mock.calls.length).toBe(1)) // 呼ばれた
-  expect(expandAccordion.mock.lastCall.length).toBe(1)
-  expect(expandAccordion.mock.lastCall[0]).toBe(1) // 最初のレコード
+  await waitFor(() => expect(setActiveDeckSaved.mock.calls.length).toBe(1)) // 呼ばれた
+  expect(setActiveDeckSaved.mock.lastCall.length).toBe(1)
+  expect(setActiveDeckSaved.mock.lastCall[0]).toBe(1) // 最初のレコード
   expect(interruptSimulator.mock.calls.length).toBe(0)
 
   // 成功したらダイアログは表示されない
@@ -380,7 +380,7 @@ test('空のデッキは保存できない', async () => {
     setShowCodeError,
     zoomIn,
     moveToLoad,
-    expandAccordion,
+    setActiveDeckSaved,
     interruptSimulator,
     getByRole,
     queryByRole,
@@ -399,7 +399,7 @@ test('空のデッキは保存できない', async () => {
   expect(setShowCodeError.mock.calls.length).toBe(0)
   expect(zoomIn.mock.calls.length).toBe(0)
   expect(moveToLoad.mock.calls.length).toBe(0)
-  expect(expandAccordion.mock.calls.length).toBe(0)
+  expect(setActiveDeckSaved.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(0)
 
   // ダイアログが表示される
@@ -415,7 +415,7 @@ test('空のデッキは保存できない', async () => {
   expect(setShowCodeError.mock.calls.length).toBe(0)
   expect(zoomIn.mock.calls.length).toBe(0)
   expect(moveToLoad.mock.calls.length).toBe(0)
-  expect(expandAccordion.mock.calls.length).toBe(0)
+  expect(setActiveDeckSaved.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(0)
 
   // ダイアログは閉じられた
@@ -430,7 +430,7 @@ test('レシピをクリア', async () => {
     setShowCodeError,
     zoomIn,
     moveToLoad,
-    expandAccordion,
+    setActiveDeckSaved,
     interruptSimulator,
     getByRole,
   } = defaultRender(
@@ -449,7 +449,7 @@ test('レシピをクリア', async () => {
   expect(setShowCodeError.mock.calls.length).toBe(0)
   expect(zoomIn.mock.calls.length).toBe(0)
   expect(moveToLoad.mock.calls.length).toBe(0)
-  expect(expandAccordion.mock.calls.length).toBe(0)
+  expect(setActiveDeckSaved.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(1) // 呼ばれた
 
   // 画像リストが空になる
@@ -648,7 +648,7 @@ test.each([
       setShowCodeError,
       zoomIn,
       moveToLoad,
-      expandAccordion,
+      setActiveDeckSaved,
       interruptSimulator,
       defaultRerender,
       getByRole,
@@ -678,7 +678,7 @@ test.each([
     expect(setShowCodeError.mock.calls.length).toBe(0)
     expect(zoomIn.mock.calls.length).toBe(0)
     expect(moveToLoad.mock.calls.length).toBe(0)
-    expect(expandAccordion.mock.calls.length).toBe(0)
+    expect(setActiveDeckSaved.mock.calls.length).toBe(0)
     expect(interruptSimulator.mock.calls.length).toBe(expectedInterrupted)
 
     defaultRerender(result)
@@ -802,7 +802,7 @@ test.each([
       setShowCodeError,
       zoomIn,
       moveToLoad,
-      expandAccordion,
+      setActiveDeckSaved,
       interruptSimulator,
       defaultRerender,
       getByRole,
@@ -833,7 +833,7 @@ test.each([
     expect(setShowCodeError.mock.calls.length).toBe(0)
     expect(zoomIn.mock.calls.length).toBe(0)
     expect(moveToLoad.mock.calls.length).toBe(0)
-    expect(expandAccordion.mock.calls.length).toBe(0)
+    expect(setActiveDeckSaved.mock.calls.length).toBe(0)
     expect(interruptSimulator.mock.calls.length).toBe(expectInterurpted)
 
     defaultRerender(result)
@@ -921,7 +921,7 @@ test.each([
       setShowCodeError,
       zoomIn,
       moveToLoad,
-      expandAccordion,
+      setActiveDeckSaved,
       interruptSimulator,
       defaultRerender,
       getByRole,
@@ -939,7 +939,7 @@ test.each([
     expect(setShowCodeError.mock.calls.length).toBe(0)
     expect(zoomIn.mock.calls.length).toBe(0)
     expect(moveToLoad.mock.calls.length).toBe(0)
-    expect(expandAccordion.mock.calls.length).toBe(0)
+    expect(setActiveDeckSaved.mock.calls.length).toBe(0)
     expect(interruptSimulator.mock.calls.length).toBe(1) // 呼ばれた
 
     defaultRerender(result)
@@ -1022,7 +1022,7 @@ test.each([
       setShowCodeError,
       zoomIn,
       moveToLoad,
-      expandAccordion,
+      setActiveDeckSaved,
       interruptSimulator,
       defaultRerender,
       getByRole,
@@ -1044,7 +1044,7 @@ test.each([
     expect(setShowCodeError.mock.calls.length).toBe(0)
     expect(zoomIn.mock.calls.length).toBe(0)
     expect(moveToLoad.mock.calls.length).toBe(0)
-    expect(expandAccordion.mock.calls.length).toBe(0)
+    expect(setActiveDeckSaved.mock.calls.length).toBe(0)
     expect(interruptSimulator.mock.calls.length).toBe(1) // 呼ばれた
 
     defaultRerender(result)

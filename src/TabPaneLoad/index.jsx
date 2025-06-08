@@ -10,20 +10,20 @@ function useTabPaneLoad(
   moveToDeck,
   interruptSimulator
 ) {
-  const [activeDeckSaved, expandAccordion] = useState(null)
+  const [activeDeckSaved, setActiveDeckSaved] = useState(null)
   const render = () => {
     return (
       <TabPaneLoad
-        setDeckTitle={setDeckTitle}
         activeDeckSaved={activeDeckSaved}
+        setActiveDeckSaved={setActiveDeckSaved}
+        setDeckTitle={setDeckTitle}
         dispatchSetFromEntries={dispatchSetFromEntries}
         moveToDeck={moveToDeck}
-        expandAccordion={expandAccordion}
         interruptSimulator={interruptSimulator}
       />
     )
   }
-  return [expandAccordion, render]
+  return [setActiveDeckSaved, render]
 }
 
 export default useTabPaneLoad
