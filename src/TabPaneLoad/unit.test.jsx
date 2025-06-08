@@ -299,7 +299,7 @@ test('保存済みレシピをすべて削除', async () => {
     main: [['R-1', 1]],
     side: [],
   })
-  const id2 = await dbAddDeck({
+  await dbAddDeck({
     title: 'サンプルレシピ2',
     timestamp: Date.now(),
     main: [['R-2', 1]],
