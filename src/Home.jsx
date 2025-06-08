@@ -10,7 +10,7 @@ import { decodeDeck } from './commons/dataCards'
 import useDeck from './hooks/useDeck'
 import useModalZoom from './useModalZoom'
 import TabPaneCard from './TabPaneCard'
-import TabPaneDeck from './TabPaneDeck'
+import useTabPaneDeck from './TabPaneDeck'
 import useTabPaneLoad from './TabPaneLoad'
 import useTabPaneSimulator from './TabPaneSimulator'
 
@@ -32,10 +32,8 @@ function Home() {
   const [activeTab, setActiveTab] = useState(
     code ? enumTabPane.DECK : enumTabPane.CARD
   )
-  const [showCodeError, setShowCodeError] = useState(!resultsDecode)
 
   const [zoomIn, renderZoom] = useModalZoom()
-  const [deckTitle, setDeckTitle] = useState('')
   const [deckMain, deckSide, dispatchDeck] = useDeck(entriesMain, entriesSide)
   const [interruptSimulator, renderTabPaneSimulator] = useTabPaneSimulator()
 
@@ -47,12 +45,24 @@ function Home() {
     setActiveTab(enumTabPane.LOAD)
   }
 
+  const [setDeckTitle, renderTabPaneDeck] = useTabPaneDeck(
+    code && !resultsDecode,
+    dispatchDeck,
+    zoomIn,
+    moveToLoad,
+    interruptSimulator
+  )
+
   const [setActiveDeckSaved, renderTabPaneLoad] = useTabPaneLoad(
-    setDeckTitle,
     dispatchDeck.setFromEntries,
     moveToDeck,
     interruptSimulator
   )
+
+  const renderTabPaneDeckWrapper = (deckMain, deckSide) =>
+    renderTabPaneDeck(deckMain, deckSide, setActiveDeckSaved)
+
+  const renderTabPaneLoadWrapper = () => renderTabPaneLoad(setDeckTitle)
 
   return (
     <>
@@ -72,23 +82,10 @@ function Home() {
           />
         </Tab>
         <Tab eventKey={enumTabPane.DECK} title="レシピ">
-          <TabPaneDeck
-            code={code}
-            showCodeError={showCodeError}
-            setShowCodeError={setShowCodeError}
-            deckTitle={deckTitle}
-            setDeckTitle={setDeckTitle}
-            deckMain={deckMain}
-            deckSide={deckSide}
-            dispatchDeck={dispatchDeck}
-            zoomIn={zoomIn}
-            moveToLoad={moveToLoad}
-            setActiveDeckSaved={setActiveDeckSaved}
-            interruptSimulator={interruptSimulator}
-          />
+          {renderTabPaneDeckWrapper(deckMain, deckSide)}
         </Tab>
         <Tab eventKey={enumTabPane.LOAD} title="マイデッキ">
-          {renderTabPaneLoad()}
+          {renderTabPaneLoadWrapper()}
         </Tab>
         <Tab eventKey={enumTabPane.SIMULATOR} title="シミュ">
           {renderTabPaneSimulator(deckMain)}

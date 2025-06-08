@@ -31,17 +31,12 @@ function defaultRender() {
   const interruptSimulator = vi.fn()
 
   const { result } = renderHook(() =>
-    useTabPaneLoad(
-      setDeckTitle,
-      dispatchSetFromEntries,
-      moveToDeck,
-      interruptSimulator
-    )
+    useTabPaneLoad(dispatchSetFromEntries, moveToDeck, interruptSimulator)
   )
   const { rerender, getByRole, getAllByRole, queryByRole } = render(
-    getRenderFn(result)()
+    getRenderFn(result)(setDeckTitle)
   )
-  const defaultRerender = () => rerender(getRenderFn(result)())
+  const defaultRerender = () => rerender(getRenderFn(result)(setDeckTitle))
 
   return {
     result,
