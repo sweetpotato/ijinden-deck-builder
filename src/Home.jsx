@@ -59,6 +59,11 @@ function Home() {
     interruptSimulator
   )
 
+  const renderTabPaneDeckWrapper = (deckMain, deckSide) =>
+    renderTabPaneDeck(deckMain, deckSide, setActiveDeckSaved)
+
+  const renderTabPaneLoadWrapper = () => renderTabPaneLoad(setDeckTitle)
+
   return (
     <>
       <h1 className="m-2">イジンデン デッキ作成</h1>
@@ -77,10 +82,10 @@ function Home() {
           />
         </Tab>
         <Tab eventKey={enumTabPane.DECK} title="レシピ">
-          {renderTabPaneDeck(deckMain, deckSide, setActiveDeckSaved)}
+          {renderTabPaneDeckWrapper(deckMain, deckSide)}
         </Tab>
         <Tab eventKey={enumTabPane.LOAD} title="マイデッキ">
-          {renderTabPaneLoad(setDeckTitle)}
+          {renderTabPaneLoadWrapper()}
         </Tab>
         <Tab eventKey={enumTabPane.SIMULATOR} title="シミュ">
           {renderTabPaneSimulator(deckMain)}
