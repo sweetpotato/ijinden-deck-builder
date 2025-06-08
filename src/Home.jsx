@@ -11,7 +11,7 @@ import useDeck from './hooks/useDeck'
 import useModalZoom from './useModalZoom'
 import TabPaneCard from './TabPaneCard'
 import TabPaneDeck from './TabPaneDeck'
-import TabPaneLoad from './TabPaneLoad'
+import useTabPaneLoad from './TabPaneLoad'
 import useTabPaneSimulator from './TabPaneSimulator'
 
 const enumTabPane = {
@@ -37,7 +37,6 @@ function Home() {
   const [zoomIn, renderZoom] = useModalZoom()
   const [deckTitle, setDeckTitle] = useState('')
   const [deckMain, deckSide, dispatchDeck] = useDeck(entriesMain, entriesSide)
-  const [activeDeckSaved, expandAccordion] = useState(null)
   const [interruptSimulator, renderTabPaneSimulator] = useTabPaneSimulator()
 
   const moveToDeck = useCallback(() => {
@@ -47,6 +46,13 @@ function Home() {
   function moveToLoad() {
     setActiveTab(enumTabPane.LOAD)
   }
+
+  const [expandAccordion, renderTabPaneLoad] = useTabPaneLoad(
+    setDeckTitle,
+    dispatchDeck.setFromEntries,
+    moveToDeck,
+    interruptSimulator
+  )
 
   return (
     <>
@@ -82,14 +88,7 @@ function Home() {
           />
         </Tab>
         <Tab eventKey={enumTabPane.LOAD} title="マイデッキ">
-          <TabPaneLoad
-            setDeckTitle={setDeckTitle}
-            activeDeckSaved={activeDeckSaved}
-            dispatchSetFromEntries={dispatchDeck.setFromEntries}
-            moveToDeck={moveToDeck}
-            expandAccordion={expandAccordion}
-            interruptSimulator={interruptSimulator}
-          />
+          {renderTabPaneLoad()}
         </Tab>
         <Tab eventKey={enumTabPane.SIMULATOR} title="シミュ">
           {renderTabPaneSimulator(deckMain)}

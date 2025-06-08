@@ -3,45 +3,51 @@
 import 'fake-indexeddb/auto'
 
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
-import { cleanup, render, waitFor, within } from '@testing-library/react'
-
-import { dbAddDeck, dbClearDecks, dbQueryDecks } from '../commons/db'
-import TabPaneLoad from '.'
+import {
+  cleanup,
+  render,
+  renderHook,
+  waitFor,
+  within,
+} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-function defaultRender(activeDeckSaved) {
+import { dbAddDeck, dbClearDecks, dbQueryDecks } from '../commons/db'
+import useTabPaneLoad from '.'
+import { act } from 'react'
+
+function getExpandFn(result) {
+  return result.current[0]
+}
+
+function getRenderFn(result) {
+  return result.current[1]
+}
+
+function defaultRender() {
   const setDeckTitle = vi.fn()
   const dispatchSetFromEntries = vi.fn()
   const moveToDeck = vi.fn()
-  const expandAccordion = vi.fn()
   const interruptSimulator = vi.fn()
 
-  const { rerender, getByRole, getAllByRole, queryByRole } = render(
-    <TabPaneLoad
-      setDeckTitle={setDeckTitle}
-      activeDeckSaved={activeDeckSaved}
-      dispatchSetFromEntries={dispatchSetFromEntries}
-      moveToDeck={moveToDeck}
-      expandAccordion={expandAccordion}
-      interruptSimulator={interruptSimulator}
-    />
-  )
-  const defaultRerender = (activeDeckSaved) =>
-    rerender(
-      <TabPaneLoad
-        setDeckTitle={setDeckTitle}
-        activeDeckSaved={activeDeckSaved}
-        dispatchSetFromEntries={dispatchSetFromEntries}
-        moveToDeck={moveToDeck}
-        expandAccordion={expandAccordion}
-        interruptSimulator={interruptSimulator}
-      />
+  const { result } = renderHook(() =>
+    useTabPaneLoad(
+      setDeckTitle,
+      dispatchSetFromEntries,
+      moveToDeck,
+      interruptSimulator
     )
+  )
+  const { rerender, getByRole, getAllByRole, queryByRole } = render(
+    getRenderFn(result)()
+  )
+  const defaultRerender = () => rerender(getRenderFn(result)())
+
   return {
+    result,
     setDeckTitle,
     dispatchSetFromEntries,
     moveToDeck,
-    expandAccordion,
     interruptSimulator,
     defaultRerender,
     getByRole,
@@ -60,7 +66,7 @@ test('デフォルトのレンダリング', async () => {
   // 初期状態ではデータベースは空
   expect((await dbQueryDecks()).length).toBe(0)
 
-  const { getByRole, queryByRole } = defaultRender(null)
+  const { getByRole, queryByRole } = defaultRender()
 
   // 保存済みデッキはない
   expect(queryByRole('listitem')).toBeNull()
@@ -93,11 +99,10 @@ test('保存済みデッキの表示と読込み', async () => {
     setDeckTitle,
     dispatchSetFromEntries,
     moveToDeck,
-    expandAccordion,
     interruptSimulator,
     defaultRerender,
     getByRole,
-  } = defaultRender(null)
+  } = defaultRender()
 
   // ライブクエリの完了を waitFor で待つ
   // prettier-ignore
@@ -114,10 +119,9 @@ test('保存済みデッキの表示と読込み', async () => {
   expect(setDeckTitle.mock.calls.length).toBe(0)
   expect(dispatchSetFromEntries.mock.calls.length).toBe(0)
   expect(moveToDeck.mock.calls.length).toBe(0)
-  expect(expandAccordion.mock.calls.length).toBe(1) // 呼ばれた
   expect(interruptSimulator.mock.calls.length).toBe(0)
 
-  defaultRerender(id)
+  defaultRerender()
 
   // デッキが開かれた
   deck = getByRole('listitem', { name: `#${id}` })
@@ -158,7 +162,6 @@ test('保存済みデッキの表示と読込み', async () => {
   // prettier-ignore
   expect(dispatchSetFromEntries.mock.lastCall[1]).toEqual([['R-5', 2], ['R-6', 1]])
   expect(moveToDeck.mock.calls.length).toBe(1) // 呼ばれた
-  expect(expandAccordion.mock.calls.length).toBe(1)
   expect(interruptSimulator.mock.calls.length).toBe(1) // 呼ばれた
 })
 
@@ -180,7 +183,9 @@ test('たったいま保存したデッキの表示', async () => {
     side: [],
   })
 
-  const { getByRole } = defaultRender(id2) // 渡す
+  const { result, defaultRerender, getByRole } = defaultRender()
+  await act(() => getExpandFn(result)(id2))
+  defaultRerender()
 
   // ライブクエリの完了を waitFor で待つ
   // prettier-ignore
@@ -224,11 +229,10 @@ test('保存済みデッキの削除', async () => {
     setDeckTitle,
     dispatchSetFromEntries,
     moveToDeck,
-    expandAccordion,
     interruptSimulator,
     defaultRerender,
     getByRole,
-  } = defaultRender(null)
+  } = defaultRender()
 
   // ライブクエリの完了を waitFor で待つ
   // prettier-ignore
@@ -250,10 +254,9 @@ test('保存済みデッキの削除', async () => {
   expect(setDeckTitle.mock.calls.length).toBe(0)
   expect(dispatchSetFromEntries.mock.calls.length).toBe(0)
   expect(moveToDeck.mock.calls.length).toBe(0)
-  expect(expandAccordion.mock.calls.length).toBe(1) // 呼ばれた
   expect(interruptSimulator.mock.calls.length).toBe(0)
 
-  defaultRerender(id2)
+  defaultRerender()
 
   // デッキが開かれた
   deck2 = getByRole('listitem', { name: `#${id2}` })
@@ -269,13 +272,12 @@ test('保存済みデッキの削除', async () => {
   expect(setDeckTitle.mock.calls.length).toBe(0)
   expect(dispatchSetFromEntries.mock.calls.length).toBe(0)
   expect(moveToDeck.mock.calls.length).toBe(0)
-  expect(expandAccordion.mock.calls.length).toBe(1)
   expect(interruptSimulator.mock.calls.length).toBe(0)
 
   // データベースから削除された
-  expect((await dbQueryDecks()).length).toBe(2)
+  await waitFor(async () => expect((await dbQueryDecks()).length).toBe(2))
 
-  defaultRerender(null)
+  defaultRerender()
 
   // ライブクエリの完了を waitFor で待つ
   // prettier-ignore
@@ -308,12 +310,11 @@ test('保存済みレシピをすべて削除', async () => {
     setDeckTitle,
     dispatchSetFromEntries,
     moveToDeck,
-    expandAccordion,
     interruptSimulator,
     defaultRerender,
     getByRole,
     queryByRole,
-  } = defaultRender(null)
+  } = defaultRender()
 
   // ライブクエリの完了を waitFor で待つ
   // prettier-ignore
@@ -334,13 +335,13 @@ test('保存済みレシピをすべて削除', async () => {
   expect(setDeckTitle.mock.calls.length).toBe(0)
   expect(dispatchSetFromEntries.mock.calls.length).toBe(0)
   expect(moveToDeck.mock.calls.length).toBe(0)
-  expect(expandAccordion.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(0)
 
-  defaultRerender(null)
+  defaultRerender()
 
   // ダイアログが表示された
-  expect(getByRole('dialog')).toBeVisible()
+  // ダイアログ表示の変化は waitFor した方がテストが安定する模様
+  await waitFor(() => expect(getByRole('dialog')).toBeVisible())
 
   // キャンセルボタンを押す
   // prettier-ignore
@@ -349,16 +350,15 @@ test('保存済みレシピをすべて削除', async () => {
   expect(setDeckTitle.mock.calls.length).toBe(0)
   expect(dispatchSetFromEntries.mock.calls.length).toBe(0)
   expect(moveToDeck.mock.calls.length).toBe(0)
-  expect(expandAccordion.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(0)
 
   // データベースからはまだ削除されていない
   expect((await dbQueryDecks()).length).toBe(2)
 
-  defaultRerender(null)
+  defaultRerender()
 
   // ダイアログが引っ込んだ
-  expect(queryByRole('dialog')).toBeNull()
+  await waitFor(() => expect(queryByRole('dialog')).toBeNull())
 
   // 再度、すべて削除ボタンを押す
   // prettier-ignore
@@ -367,13 +367,12 @@ test('保存済みレシピをすべて削除', async () => {
   expect(setDeckTitle.mock.calls.length).toBe(0)
   expect(dispatchSetFromEntries.mock.calls.length).toBe(0)
   expect(moveToDeck.mock.calls.length).toBe(0)
-  expect(expandAccordion.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(0)
 
-  defaultRerender(null)
+  defaultRerender()
 
   // またダイアログが表示された
-  expect(getByRole('dialog')).toBeVisible()
+  await waitFor(() => expect(getByRole('dialog')).toBeVisible())
 
   // 「削除する」ボタンを押して削除を確定する
   // prettier-ignore
@@ -382,13 +381,12 @@ test('保存済みレシピをすべて削除', async () => {
   expect(setDeckTitle.mock.calls.length).toBe(0)
   expect(dispatchSetFromEntries.mock.calls.length).toBe(0)
   expect(moveToDeck.mock.calls.length).toBe(0)
-  expect(expandAccordion.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(0)
 
   // データベースから削除された
-  expect((await dbQueryDecks()).length).toBe(0)
+  await waitFor(async () => expect((await dbQueryDecks()).length).toBe(0))
 
-  defaultRerender(null)
+  defaultRerender()
 
   // ライブクエリの完了を waitFor で待つ
   // prettier-ignore
