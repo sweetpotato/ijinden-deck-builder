@@ -10,7 +10,7 @@ import { decodeDeck } from './commons/dataCards'
 import useDeck from './hooks/useDeck'
 import useModalZoom from './useModalZoom'
 import TabPaneCard from './TabPaneCard'
-import TabPaneDeck from './TabPaneDeck/TabPaneDeck'
+import useTabPaneDeck from './TabPaneDeck'
 import useTabPaneLoad from './TabPaneLoad'
 import useTabPaneSimulator from './TabPaneSimulator'
 
@@ -34,7 +34,6 @@ function Home() {
   )
 
   const [zoomIn, renderZoom] = useModalZoom()
-  const [deckTitle, setDeckTitle] = useState('')
   const [deckMain, deckSide, dispatchDeck] = useDeck(entriesMain, entriesSide)
   const [interruptSimulator, renderTabPaneSimulator] = useTabPaneSimulator()
 
@@ -45,6 +44,14 @@ function Home() {
   function moveToLoad() {
     setActiveTab(enumTabPane.LOAD)
   }
+
+  const [setDeckTitle, renderTabPaneDeck] = useTabPaneDeck(
+    code && !resultsDecode,
+    dispatchDeck,
+    zoomIn,
+    moveToLoad,
+    interruptSimulator
+  )
 
   const [setActiveDeckSaved, renderTabPaneLoad] = useTabPaneLoad(
     dispatchDeck.setFromEntries,
@@ -70,18 +77,7 @@ function Home() {
           />
         </Tab>
         <Tab eventKey={enumTabPane.DECK} title="レシピ">
-          <TabPaneDeck
-            defaultShowCodeError={code && !resultsDecode}
-            deckTitle={deckTitle}
-            setDeckTitle={setDeckTitle}
-            deckMain={deckMain}
-            deckSide={deckSide}
-            dispatchDeck={dispatchDeck}
-            zoomIn={zoomIn}
-            moveToLoad={moveToLoad}
-            setActiveDeckSaved={setActiveDeckSaved}
-            interruptSimulator={interruptSimulator}
-          />
+          {renderTabPaneDeck(deckMain, deckSide, setActiveDeckSaved)}
         </Tab>
         <Tab eventKey={enumTabPane.LOAD} title="マイデッキ">
           {renderTabPaneLoad(setDeckTitle)}

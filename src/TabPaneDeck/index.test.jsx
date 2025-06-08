@@ -2,7 +2,6 @@
 
 import 'fake-indexeddb/auto'
 
-import { useState } from 'react'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 import {
@@ -18,6 +17,7 @@ import { decodeDeck } from '../commons/dataCards'
 import { dbClearDecks, dbQueryDecks } from '../commons/db'
 import useDeck from '../hooks/useDeck'
 import TabPaneDeck from './TabPaneDeck'
+import useTabPaneDeck from '.'
 
 function getAllListItem(getByRole, section) {
   return within(getByRole('list', { name: section })).getAllByRole('listitem')
@@ -52,21 +52,27 @@ function getDispatchDeck(result) {
   return result.current[2]
 }
 
-function getDeckTitle(result) {
-  return result.current[0]
-}
+// TODO setDeckTitle する単体テストの追加
 
-function getSetDeckTitleFn(result) {
-  return result.current[1]
+function getRenderFn(resultTabPaneDeck) {
+  return resultTabPaneDeck.current[1]
 }
 
 function defaultRender(entriesMain, entriesSide) {
-  const { result } = renderHook(() => useDeck(entriesMain, entriesSide))
-  const { result: resultDeckTitle } = renderHook(() => useState(''))
   const zoomIn = vi.fn()
   const moveToLoad = vi.fn()
   const setActiveDeckSaved = vi.fn()
   const interruptSimulator = vi.fn()
+  const { result } = renderHook(() => useDeck(entriesMain, entriesSide))
+  const { result: resultTabPaneDeck } = renderHook(() =>
+    useTabPaneDeck(
+      false,
+      getDispatchDeck(result),
+      zoomIn,
+      moveToLoad,
+      interruptSimulator
+    )
+  )
   const {
     rerender,
     getByPlaceholderText,
@@ -74,33 +80,19 @@ function defaultRender(entriesMain, entriesSide) {
     getAllByRole,
     queryByRole,
   } = render(
-    <TabPaneDeck
-      defaultShowCodeError={false}
-      deckTitle={getDeckTitle(resultDeckTitle)}
-      setDeckTitle={getSetDeckTitleFn(resultDeckTitle)}
-      deckMain={getDeckMain(result)}
-      deckSide={getDeckSide(result)}
-      dispatchDeck={getDispatchDeck(result)}
-      zoomIn={zoomIn}
-      moveToLoad={moveToLoad}
-      setActiveDeckSaved={setActiveDeckSaved}
-      interruptSimulator={interruptSimulator}
-    />
+    getRenderFn(resultTabPaneDeck)(
+      getDeckMain(result),
+      getDeckSide(result),
+      setActiveDeckSaved
+    )
   )
   const defaultRerender = (result) =>
     rerender(
-      <TabPaneDeck
-        defaultShowCodeError={false}
-        deckTitle={getDeckTitle(resultDeckTitle)}
-        setDeckTitle={getSetDeckTitleFn(resultDeckTitle)}
-        deckMain={getDeckMain(result)}
-        deckSide={getDeckSide(result)}
-        dispatchDeck={getDispatchDeck(result)}
-        zoomIn={zoomIn}
-        moveToLoad={moveToLoad}
-        setActiveDeckSaved={setActiveDeckSaved}
-        interruptSimulator={interruptSimulator}
-      />
+      getRenderFn(resultTabPaneDeck)(
+        getDeckMain(result),
+        getDeckSide(result),
+        setActiveDeckSaved
+      )
     )
   return {
     result,
