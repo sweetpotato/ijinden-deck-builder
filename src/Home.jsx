@@ -10,7 +10,7 @@ import { decodeDeck } from './commons/dataCards'
 import useDeck from './hooks/useDeck'
 import useModalZoom from './useModalZoom'
 import TabPaneCard from './TabPaneCard'
-import TabPaneDeck from './TabPaneDeck'
+import TabPaneDeck from './TabPaneDeck/TabPaneDeck'
 import useTabPaneLoad from './TabPaneLoad'
 import useTabPaneSimulator from './TabPaneSimulator'
 

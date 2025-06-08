@@ -17,7 +17,7 @@ import userEvent from '@testing-library/user-event'
 import { decodeDeck } from '../commons/dataCards'
 import { dbClearDecks, dbQueryDecks } from '../commons/db'
 import useDeck from '../hooks/useDeck'
-import TabPaneDeck from '.'
+import TabPaneDeck from './TabPaneDeck'
 
 function getAllListItem(getByRole, section) {
   return within(getByRole('list', { name: section })).getAllByRole('listitem')
