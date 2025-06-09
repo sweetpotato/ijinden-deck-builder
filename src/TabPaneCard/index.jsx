@@ -190,7 +190,7 @@ function TabPaneCard({
             <Accordion
               role="list"
               aria-labelledby={idTitle}
-              className="container-filter"
+              className="list-filter"
               alwaysOpen
               defaultActiveKey={['2', '3']}
             >

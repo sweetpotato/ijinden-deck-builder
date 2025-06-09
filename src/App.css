@@ -39,15 +39,15 @@ fieldset {
   margin-right: .25rem;
 }
 
-.container-filter .accordion-header {
+.list-filter .accordion-header {
   position: initial;
 }
 
-.container-filter .accordion-item:nth-of-type(odd) .accordion-button {
+.list-filter .accordion-item:nth-of-type(odd) .accordion-button {
   background-color: #e9ecef;
 }
 
-.container-filter .accordion-item:nth-of-type(even) .accordion-button {
+.list-filter .accordion-item:nth-of-type(even) .accordion-button {
   background-color: #ced4da;
 }
 
