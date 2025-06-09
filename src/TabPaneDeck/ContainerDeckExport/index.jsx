@@ -26,6 +26,7 @@ function ContainerDeckExport({ deckMain, deckSide }) {
   const [showCopied, setShowCopied] = useState(false)
   const refButton = useRef()
   const idButton = useId()
+  const idInput = useId()
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -56,6 +57,7 @@ function ContainerDeckExport({ deckMain, deckSide }) {
       </div>
       <div className="m-2">
         <FormControl
+          id={idInput}
           readOnly
           aria-labelledby={idButton}
           as="textarea"
