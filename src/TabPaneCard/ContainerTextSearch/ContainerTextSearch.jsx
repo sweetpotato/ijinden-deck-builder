@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-import { useRef } from 'react'
+import { useId, useRef } from 'react'
 import { Button, FormCheck, FormControl, InputGroup } from 'react-bootstrap'
 
 function ContainerTextSearch({
@@ -8,6 +8,7 @@ function ContainerTextSearch({
   handleChangeIncludesTraitAndLegacy,
 }) {
   const ref = useRef(null)
+  const idInput = useId()
 
   function handleClickClear() {
     /*
@@ -37,6 +38,7 @@ function ContainerTextSearch({
         <InputGroup>
           <FormControl
             ref={ref}
+            id={idInput}
             type="text"
             placeholder="カード名やルールテキストで検索"
             onChange={handleChangeKeywords}

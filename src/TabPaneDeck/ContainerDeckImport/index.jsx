@@ -1,9 +1,10 @@
-import { useRef, useState } from 'react'
+import { useId, useRef, useState } from 'react'
 import { Alert, Button, FormControl, InputGroup } from 'react-bootstrap'
 import { decodeDeck } from '../../commons/dataCards'
 
 function ContainerDeckImport({ dispatchSetFromEntries }) {
   const ref = useRef()
+  const idInput = useId()
   // TODO レシピペイントップのエラー表示と統合したい
   const [showError, setShowError] = useState(false)
 
@@ -43,6 +44,7 @@ function ContainerDeckImport({ dispatchSetFromEntries }) {
           </Button>
           <FormControl
             ref={ref}
+            id={idInput}
             type="text"
             placeholder="ここに共有リンクを貼り付け"
           />

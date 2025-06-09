@@ -40,6 +40,7 @@ function TabPaneDeck({
   const [showCodeError, setShowCodeError] = useState(defaultShowCodeError)
 
   const [showModalEmpty, setShowModalEmpty] = useState(false)
+  const idInput = useId()
 
   function handleChangeDeckTitle(event) {
     setDeckTitle(event.target.value)
@@ -102,6 +103,7 @@ function TabPaneDeck({
       </div>
       <div className="mx-2 mt-2 mb-3">
         <FormControl
+          id={idInput}
           type="text"
           placeholder="デッキ名を入力 (任意)"
           value={deckTitle}

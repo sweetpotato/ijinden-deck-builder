@@ -15,6 +15,7 @@ function ContainerDeckShare({ deckMain, deckSide }) {
   const [showCopied, setShowCopied] = useState(false)
   const refButton = useRef()
   const idButton = useId()
+  const idInput = useId()
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -51,6 +52,7 @@ function ContainerDeckShare({ deckMain, deckSide }) {
           {(props) => <Tooltip {...props}>コピーしました</Tooltip>}
         </Overlay>
         <FormControl
+          id={idInput}
           readOnly
           aria-labelledby={idButton}
           type="text"
