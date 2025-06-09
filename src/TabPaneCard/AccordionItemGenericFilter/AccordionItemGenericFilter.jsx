@@ -32,19 +32,16 @@ const AccordionItemGenericFilter = memo(function AccordionItemGenericFilter({
       <AccordionHeader as="h3">
         {expanded ? (
           <span>
-            ➖&nbsp;
             <span id={idTitle}>{title}</span>
           </span>
         ) : state === 0 ? (
           <span>
-            ➕&nbsp;
             <span id={idTitle}>{title}</span>
             &nbsp;―&nbsp;
             {label}
           </span>
         ) : (
           <span>
-            ➕&nbsp;
             <span id={idTitle}>{title}</span>
             &nbsp;―&nbsp;
             <b>{label}</b>

@@ -43,10 +43,6 @@ fieldset {
   position: initial;
 }
 
-.container-filter .accordion-button::after {
-  content: none;
-}
-
 .container-filter .accordion-item:nth-of-type(odd) .accordion-button {
   background-color: #e9ecef;
 }
