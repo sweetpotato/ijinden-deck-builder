@@ -16,7 +16,7 @@ fieldset {
   z-index: 1025;
 }
 
-.accordion-header {
+.list-deck-saved .accordion-header {
   position: sticky;
   top: 2.5rem;
   /* See https://getbootstrap.jp/docs/5.3/layout/z-index/ */ 
