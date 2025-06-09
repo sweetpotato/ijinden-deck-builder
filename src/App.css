@@ -23,38 +23,6 @@ fieldset {
   z-index: 1020;
 }
 
-.header-filter {
-  position: initial;
-}
-
-.header-filter .accordion-button {
-  background-color: #ced4da;
-}
-
-.header-filter button::before {
-  display: inline-block;
-  content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-filter" viewBox="0 0 16 16"><path d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5"/></svg>');
-  width: 1.25em;
-  height: 1.25em;
-  margin-right: .25rem;
-}
-
-.container-filter .accordion-header {
-  position: initial;
-}
-
-.container-filter .accordion-button::after {
-  content: none;
-}
-
-.container-filter .accordion-item:nth-of-type(odd) .accordion-button {
-  background-color: #e9ecef;
-}
-
-.container-filter .accordion-item:nth-of-type(even) .accordion-button {
-  background-color: #ced4da;
-}
-
 .container-button label,
 .container-button button[type="button"] {
   margin-right: .25rem;

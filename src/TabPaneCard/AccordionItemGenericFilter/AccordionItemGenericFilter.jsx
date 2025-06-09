@@ -31,24 +31,21 @@ const AccordionItemGenericFilter = memo(function AccordionItemGenericFilter({
     >
       <AccordionHeader as="h3">
         {expanded ? (
-          <>
-            ➖&nbsp;
+          <span>
             <span id={idTitle}>{title}</span>
-          </>
+          </span>
         ) : state === 0 ? (
-          <>
-            ➕&nbsp;
+          <span>
             <span id={idTitle}>{title}</span>
             &nbsp;―&nbsp;
             {label}
-          </>
+          </span>
         ) : (
-          <>
-            ➕&nbsp;
+          <span>
             <span id={idTitle}>{title}</span>
             &nbsp;―&nbsp;
             <b>{label}</b>
-          </>
+          </span>
         )}
       </AccordionHeader>
       <AccordionBody className="container-button">

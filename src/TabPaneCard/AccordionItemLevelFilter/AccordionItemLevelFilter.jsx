@@ -41,24 +41,21 @@ const AccordionItemLevelFilter = memo(function AccordionItemLevelFilter({
     >
       <AccordionHeader as="h3">
         {expanded ? (
-          <>
-            ➖&nbsp;
+          <span>
             <span id={idTitle}>レベル</span>
-          </>
+          </span>
         ) : !enphasized ? (
-          <>
-            ➕&nbsp;
+          <span>
             <span id={idTitle}>レベル</span>
             &nbsp;―&nbsp;
             {label}
-          </>
+          </span>
         ) : (
-          <>
-            ➕&nbsp;
+          <span>
             <span id={idTitle}>レベル</span>
             &nbsp;―&nbsp;
             <b>{label}</b>
-          </>
+          </span>
         )}
       </AccordionHeader>
       <AccordionBody>

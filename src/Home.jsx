@@ -29,13 +29,10 @@ function Home() {
   const [entriesMain, entriesSide] = resultsDecode
     ? [resultsDecode[0], resultsDecode[1]]
     : [[], []]
+
   const [activeTab, setActiveTab] = useState(
     code ? enumTabPane.DECK : enumTabPane.CARD
   )
-
-  const [zoomIn, renderZoom] = useModalZoom()
-  const [deckMain, deckSide, dispatchDeck] = useDeck(entriesMain, entriesSide)
-  const [interruptSimulator, renderTabPaneSimulator] = useTabPaneSimulator()
 
   const moveToDeck = useCallback(() => {
     setActiveTab(enumTabPane.DECK)
@@ -44,6 +41,10 @@ function Home() {
   function moveToLoad() {
     setActiveTab(enumTabPane.LOAD)
   }
+
+  const [deckMain, deckSide, dispatchDeck] = useDeck(entriesMain, entriesSide)
+  const [zoomIn, renderZoom] = useModalZoom()
+  const [interruptSimulator, renderTabPaneSimulator] = useTabPaneSimulator()
 
   const [setDeckTitle, renderTabPaneDeck] = useTabPaneDeck(
     code && !resultsDecode,
