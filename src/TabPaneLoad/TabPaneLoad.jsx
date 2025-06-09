@@ -64,6 +64,7 @@ function TabPaneLoad({
       {decks ? (
         <Accordion
           role="list"
+          className="list-deck-saved"
           aria-labelledby={idTitle}
           activeKey={activeDeckSaved}
           onSelect={setActiveDeckSaved}
