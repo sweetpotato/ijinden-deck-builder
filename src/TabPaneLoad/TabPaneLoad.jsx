@@ -144,9 +144,11 @@ const AccordionItemDeckSaved = memo(function AccordionItemDeckSaved({
   return (
     <AccordionItem role="listitem" aria-labelledby={idTitle} eventKey={deck.id}>
       <AccordionHeader as="h3">
-        <span id={idTitle}>#{deck.id}</span>
-        &nbsp;
-        {label}
+        <span>
+          <span id={idTitle}>#{deck.id}</span>
+          &nbsp;
+          {label}
+        </span>
       </AccordionHeader>
       <AccordionBody>
         <div className="container-button mb-2">

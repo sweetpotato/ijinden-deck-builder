@@ -65,24 +65,24 @@ const AccordionItemTypeFilter = memo(function AccordionItemTypeFilter({
     >
       <AccordionHeader as="h3">
         {expanded ? (
-          <>
+          <span>
             ➖&nbsp;
             <span id={idTitle}>種類とパワー</span>
-          </>
+          </span>
         ) : type === 0 ? (
-          <>
+          <span>
             ➕&nbsp;
             <span id={idTitle}>種類とパワー</span>
             &nbsp;―&nbsp;
             {label}
-          </>
+          </span>
         ) : (
-          <>
+          <span>
             ➕&nbsp;
             <span id={idTitle}>種類とパワー</span>
             &nbsp;―&nbsp;
             <b>{label}</b>
-          </>
+          </span>
         )}
       </AccordionHeader>
       <AccordionBody>
