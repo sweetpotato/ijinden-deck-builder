@@ -29,7 +29,6 @@
 }
 
 .btn-toggled-blue, .btn-toggled-blue:hover, :not(.btn-check) + .btn-toggled-blue:active {
-  opacity: 0.7;
   background-color: rgba(13, 110, 253, 0.7);
 }
 
