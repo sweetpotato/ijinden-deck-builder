@@ -10,8 +10,6 @@
   width: 80px;
   height: 112px;
   border-radius: 0;
-  /* タップで色変化時のちらつきを抑える */
-  backface-visibility: hidden;
 }
 
 .btn-toggled, .btn-toggled:hover, :not(.btn-check) + .btn-toggled:active {
