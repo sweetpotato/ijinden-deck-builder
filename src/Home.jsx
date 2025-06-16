@@ -94,6 +94,11 @@ function Home() {
         <Tab eventKey={enumTabPane.HELP} title="ヘルプ" className="mx-2 mt-2">
           <h2>これは何？</h2>
           <p>イジンデンのデッキレシピを作成するアプリです。</p>
+          <p>
+            このアプリは<b>非公認</b>です。制作者 (すいーとポテト)
+            も公認サポーターではありません。公式 (大創出版やワンドローなど)
+            への問い合わせはされませんよう、ご理解の上でご利用ください。
+          </p>
           <h2>マイデッキ利用時のご注意</h2>
           <Alert variant="warning">
             iPhone の Safari ではインテリジェントトラッキング防止機能 (ITP)
@@ -235,11 +240,6 @@ function Home() {
           <h3>PSR カード</h3>
           <p>対応する SR のカードを使用ください。</p>
           <h2>連絡先</h2>
-          <p>
-            普段は Discord の「
-            <a href="https://discord.com/invite/3dPgu5G9uB">天草サーバー</a>
-            」にいます。
-          </p>
           <h3>リポジトリ</h3>
           <p>
             <a href="https://github.com/sweetpotato/ijinden-deck-builder/">
