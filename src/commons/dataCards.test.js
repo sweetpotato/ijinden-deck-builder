@@ -14,14 +14,14 @@ test('dataCardsArrayForTable は orderTable 順', () => {
   expect(Array.isArray(dataCardsArrayForTable)).toBe(true)
   const { length } = dataCardsArrayForTable
   expect(dataCardsArrayForTable[0].orderTable).toBe(1)
-  expect(dataCardsArrayForTable[length - 1].orderTable).toBe(length + 1)
+  expect(dataCardsArrayForTable[length - 1].orderTable).toBe(length)
 })
 
 test('dataCardsArrayForDeck は orderDeck 順', () => {
   expect(Array.isArray(dataCardsArrayForDeck)).toBe(true)
   const { length } = dataCardsArrayForDeck
   expect(dataCardsArrayForDeck[0].orderDeck).toBe(1)
-  expect(dataCardsArrayForDeck[length - 1].orderDeck).toBe(length + 2)
+  expect(dataCardsArrayForDeck[length - 1].orderDeck).toBe(length)
 })
 
 test('dataCardsMap は Map 型', () => {
@@ -62,9 +62,9 @@ test('登録されていないカードはすべてエンコード不可', () =>
   expect(encodeDeck([['P-00', 1]], [])).toBeFalsy()
   expect(encodeDeck([['P-17', 1]], [])).toBeFalsy()
   expect(encodeDeck([['3-00', 1]], [])).toBeFalsy()
-  expect(encodeDeck([['3-81', 1]], [])).toBeFalsy() // 土方歳三 (PSR)
+  expect(encodeDeck([['3-82', 1]], [])).toBeFalsy()
   expect(encodeDeck([['4-00', 1]], [])).toBeFalsy()
-  expect(encodeDeck([['4-81', 1]], [])).toBeFalsy() // カール大帝 (PSR)
+  expect(encodeDeck([['4-82', 1]], [])).toBeFalsy()
   expect(encodeDeck([['5-00', 1]], [])).toBeFalsy()
   expect(encodeDeck([['5-01', 1]], [])).toBeFalsy()
 })

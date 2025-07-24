@@ -2,9 +2,6 @@
 
 import cards from './cards.json'
 
-const ORDER_TABLE_HIJIKATA_TOSHIZO_PSR = 309 // 土方歳三 (PSR)
-const ORDER_TABLE_CHARLEMAGNE_PSR = 390 // カール大帝 (PSR)
-
 export const dataCardsArrayForTable = [...cards].sort(
   (a, b) => a.orderTable - b.orderTable
 )
@@ -158,8 +155,6 @@ function isDeckSerializable(nrbitsOrderTable, nrbitsNumCopies, entries) {
     return !!(
       orderTable >= 1 &&
       orderTable <= (1 << nrbitsOrderTable) - 1 &&
-      orderTable !== ORDER_TABLE_HIJIKATA_TOSHIZO_PSR &&
-      orderTable !== ORDER_TABLE_CHARLEMAGNE_PSR &&
       numCopies >= 1 &&
       numCopies <= 1 << nrbitsNumCopies
     )
@@ -302,8 +297,6 @@ function validateDeck(nrbitsNumCopies, entries) {
           orderTable <=
             dataCardsArrayForTable[dataCardsArrayForTable.length - 1]
               .orderTable &&
-          orderTable !== ORDER_TABLE_HIJIKATA_TOSHIZO_PSR &&
-          orderTable !== ORDER_TABLE_CHARLEMAGNE_PSR &&
           numCopies >= 1 &&
           numCopies <= 1 << nrbitsNumCopies
         )
