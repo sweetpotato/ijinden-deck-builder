@@ -168,7 +168,7 @@ function SectionPart({
       return {
         id,
         numCopies,
-        name: dataCardsMap.get(id).name,
+        displayName: dataCardsMap.get(id).displayName,
         imageUrl: dataCardsMap.get(id).imageUrl,
         orderDeck: dataCardsMap.get(id).orderDeck,
       }
@@ -186,7 +186,7 @@ function SectionPart({
             <ImageCardDeck
               id={card.id}
               imageUrl={card.imageUrl}
-              name={card.name}
+              displayName={card.displayName}
               numCopies={card.numCopies}
               dispatchDecrement={dispatchDecrement}
               dispatchIncrement={dispatchIncrement}
@@ -205,7 +205,7 @@ function SectionPart({
 const ImageCardDeck = memo(function ImageCardDeck({
   id,
   imageUrl,
-  name,
+  displayName,
   numCopies,
   dispatchDecrement,
   dispatchIncrement,
@@ -239,7 +239,7 @@ const ImageCardDeck = memo(function ImageCardDeck({
 
   const moveText = isSide ? '^' : 'v'
   return (
-    <ImageCard imageUrl={imageUrl} alt={name} numCopies={numCopies}>
+    <ImageCard imageUrl={imageUrl} alt={displayName} numCopies={numCopies}>
       <Button
         variant="primary"
         size="sm"

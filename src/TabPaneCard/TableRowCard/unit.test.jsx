@@ -16,7 +16,7 @@ const TERM_CHROMAGIC_GREEN = enumTerm.CHROMAGIC | enumChromagic.GREEN
 const TERM_CHROMAGIC_YELLOW = enumTerm.CHROMAGIC | enumChromagic.YELLOW
 const TERM_CHROMAGIC_PURPLE = enumTerm.CHROMAGIC | enumChromagic.PURPLE
 
-function defaultRender(id, name, term, color, counterMain, counterSide) {
+function defaultRender(id, displayName, term, color, counterMain, counterSide) {
   const decrementMain = vi.fn()
   const incrementMain = vi.fn()
   const decrementSide = vi.fn()
@@ -34,7 +34,7 @@ function defaultRender(id, name, term, color, counterMain, counterSide) {
       <tbody>
         <TableRowCard
           id={id}
-          name={name}
+          displayName={displayName}
           term={term}
           color={color}
           counterMain={counterMain}
@@ -52,7 +52,7 @@ function defaultRender(id, name, term, color, counterMain, counterSide) {
         <tbody>
           <TableRowCard
             id={id}
-            name={name}
+            displayName={displayName}
             term={term}
             color={color}
             counterMain={counterMain}
@@ -83,7 +83,7 @@ function defaultRenderColor(term, color) {
       <tbody>
         <TableRowCard
           id="X-1"
-          name="ダミー"
+          displayName="ダミー"
           term={term}
           color={color}
           counterMain={0}
@@ -158,7 +158,7 @@ test('各行のアクセシブル名はIDである', async () => {
       <tbody>
         <TableRowCard
           id="1-1"
-          name="織田信長"
+          displayName="織田信長"
           term={0}
           color={enumColor.RED}
           counterMain={1}
@@ -174,7 +174,7 @@ test('各行のアクセシブル名はIDである', async () => {
         />
         <TableRowCard
           id="1-2"
-          name="クレオパトラ"
+          displayName="クレオパトラ"
           term={0}
           color={enumColor.RED}
           counterMain={3}

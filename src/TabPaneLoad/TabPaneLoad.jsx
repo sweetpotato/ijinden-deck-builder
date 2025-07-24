@@ -183,7 +183,7 @@ function SectionPart({ title, deck }) {
               <li key={card.id} aria-label={card.id}>
                 <ImageCard
                   imageUrl={card.imageUrl}
-                  alt={card.name}
+                  alt={card.displayName}
                   numCopies={deck.get(card.id)}
                   loading="lazy"
                   small

@@ -8,12 +8,12 @@ function ModalZoom({ id, zoomOut }) {
   return (
     <Modal show onHide={zoomOut}>
       <ModalHeader closeButton>
-        <ModalTitle>{dataCardsMap.get(id).name}</ModalTitle>
+        <ModalTitle>{dataCardsMap.get(id).displayName}</ModalTitle>
       </ModalHeader>
       <ModalBody>
         <img
           src={dataCardsMap.get(id).imageUrl}
-          alt={dataCardsMap.get(id).name}
+          alt={dataCardsMap.get(id).displayName}
           style={{ width: '100%', height: 'auto' }}
         />
       </ModalBody>
