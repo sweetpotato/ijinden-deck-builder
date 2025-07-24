@@ -20,6 +20,7 @@ import ImageCard from '../components/ImageCard'
 import ContainerDeckShare from './ContainerDeckShare'
 import ContainerDeckExport from './ContainerDeckExport'
 import ContainerDeckImport from './ContainerDeckImport'
+import ContainerDeckValidator from './ContainerDeckValidator'
 
 import './index.css'
 
@@ -140,6 +141,8 @@ function TabPaneDeck({
         interruptSimulator={interruptSimulator}
         isSide
       />
+      <h3 className="m-2">デッキチェッカーβ</h3>
+      <ContainerDeckValidator deckMain={deckMain} deckSide={deckSide} />
       <h2 className="m-2">レシピを共有</h2>
       <ContainerDeckShare deckMain={deckMain} deckSide={deckSide} />
       <ContainerDeckExport deckMain={deckMain} deckSide={deckSide} />
