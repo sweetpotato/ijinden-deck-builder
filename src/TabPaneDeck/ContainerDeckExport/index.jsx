@@ -11,7 +11,7 @@ function makeTextExportedPart(title, deck) {
   const text = [...deck.entries()]
     .map(([id, numCopies]) => [dataCardsMap.get(id), numCopies])
     .sort((a, b) => a[0].orderDeck - b[0].orderDeck)
-    .map(([card, numCopies]) => `\r\n${card.name}\t${numCopies}`)
+    .map(([card, numCopies]) => `\r\n${card.displayName}\t${numCopies}`)
     .join('')
   return `${title}\t${numCards}${text}`
 }

@@ -137,7 +137,7 @@ function SectionPart({
             <li key={key}>
               <ImageCardWithToggleTransparent
                 imageUrl={card.imageUrl}
-                alt={card.name}
+                alt={card.displayName}
                 continueSimulator={continueSimulator}
               />
             </li>
@@ -145,7 +145,7 @@ function SectionPart({
             <li key={key}>
               <ImageCardWithToggleOpaque
                 imageUrl={card.imageUrl}
-                alt={card.name}
+                alt={card.displayName}
                 continueSimulator={continueSimulator}
               />
             </li>

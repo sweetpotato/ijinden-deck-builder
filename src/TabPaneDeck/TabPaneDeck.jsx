@@ -20,6 +20,7 @@ import ImageCard from '../components/ImageCard'
 import ContainerDeckShare from './ContainerDeckShare'
 import ContainerDeckExport from './ContainerDeckExport'
 import ContainerDeckImport from './ContainerDeckImport'
+import ContainerDeckValidator from './ContainerDeckValidator'
 
 import './index.css'
 
@@ -140,6 +141,8 @@ function TabPaneDeck({
         interruptSimulator={interruptSimulator}
         isSide
       />
+      <h3 className="m-2">デッキチェッカーβ</h3>
+      <ContainerDeckValidator deckMain={deckMain} deckSide={deckSide} />
       <h2 className="m-2">レシピを共有</h2>
       <ContainerDeckShare deckMain={deckMain} deckSide={deckSide} />
       <ContainerDeckExport deckMain={deckMain} deckSide={deckSide} />
@@ -168,7 +171,7 @@ function SectionPart({
       return {
         id,
         numCopies,
-        name: dataCardsMap.get(id).name,
+        displayName: dataCardsMap.get(id).displayName,
         imageUrl: dataCardsMap.get(id).imageUrl,
         orderDeck: dataCardsMap.get(id).orderDeck,
       }
@@ -186,7 +189,7 @@ function SectionPart({
             <ImageCardDeck
               id={card.id}
               imageUrl={card.imageUrl}
-              name={card.name}
+              displayName={card.displayName}
               numCopies={card.numCopies}
               dispatchDecrement={dispatchDecrement}
               dispatchIncrement={dispatchIncrement}
@@ -205,7 +208,7 @@ function SectionPart({
 const ImageCardDeck = memo(function ImageCardDeck({
   id,
   imageUrl,
-  name,
+  displayName,
   numCopies,
   dispatchDecrement,
   dispatchIncrement,
@@ -239,7 +242,7 @@ const ImageCardDeck = memo(function ImageCardDeck({
 
   const moveText = isSide ? '^' : 'v'
   return (
-    <ImageCard imageUrl={imageUrl} alt={name} numCopies={numCopies}>
+    <ImageCard imageUrl={imageUrl} alt={displayName} numCopies={numCopies}>
       <Button
         variant="primary"
         size="sm"

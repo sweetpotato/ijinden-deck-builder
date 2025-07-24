@@ -150,6 +150,7 @@ function TabPaneCard({
         : levelComparator === enumComparator.LE
         ? card.level <= level
         : card.level === level
+    // Should use name, not displayName
     let allText = card.name + '§' + card.kana
     allText +=
       includesTraitAndLegacy && card.traitText ? '§' + card.traitText : ''
@@ -222,7 +223,7 @@ function TabPaneCard({
                 <TableRowCard
                   key={element.id}
                   id={element.id}
-                  name={element.name}
+                  displayName={element.displayName}
                   color={element.color}
                   term={element.term}
                   counterMain={

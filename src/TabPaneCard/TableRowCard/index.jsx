@@ -79,7 +79,7 @@ const dataChromagicsToCss = [
 
 const TableRowCard = memo(function TableRowCard({
   id,
-  name,
+  displayName,
   color,
   term,
   counterMain,
@@ -125,7 +125,7 @@ const TableRowCard = memo(function TableRowCard({
         >
           🔎
         </Button>
-        {name}
+        {displayName}
       </td>
       <td>
         <InputGroupCounter
