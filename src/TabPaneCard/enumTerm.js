@@ -6,7 +6,7 @@ const enumTerm = {
   RISING: 4, // 決起
   RECRUITMENT: 8, // 徴募
   CHROMAGIC: 16, // 魔導
-  BATTLE_CRY: 32, // 勝鬨
+  BATTLE_CRY: 1024, // 勝鬨
 }
 
 export default enumTerm
