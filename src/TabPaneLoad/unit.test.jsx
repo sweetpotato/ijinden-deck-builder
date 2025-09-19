@@ -134,7 +134,10 @@ test('保存済みデッキの表示と読込み', async () => {
   const side = within(deck).getByRole('region', { name: 'サイドデッキ' })
   expect(within(side).getAllByRole('listitem').length).toBe(2)
   const r5 = within(side).getAllByRole('listitem')[0]
-  expect(within(r5).getByRole('img')).toHaveAttribute('alt', '坂上田村麻呂')
+  expect(within(r5).getByRole('img')).toHaveAttribute(
+    'alt',
+    '坂上田村麻呂 (スターター)'
+  )
   expect(within(r5).getByRole('textbox')).toHaveTextContent(2)
   const r6 = within(side).getAllByRole('listitem')[1]
   expect(within(r6).getByRole('img')).toHaveAttribute('alt', '楠木正成')
