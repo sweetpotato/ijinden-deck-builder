@@ -135,7 +135,7 @@ test('フィルタの初期状態', async () => {
   expect(getAllByRole('listitem').length).toBe(8)
 
   // エキスパンション
-  expect(getAllRadioInItem(getByRole, 'エキスパンション').length).toBe(10)
+  expect(getAllRadioInItem(getByRole, 'エキスパンション').length).toBe(11)
   expect(getRadioInItem(getByRole, 'エキスパンション', 'すべて')).toBeVisible()
   expect(getRadioInItem(getByRole, 'エキスパンション', 'すべて')).toBeChecked()
   expect(getByRole('radio', { name: '伝説の武将' })).toBeVisible()
@@ -156,6 +156,8 @@ test('フィルタの初期状態', async () => {
   expect(getByRole('radio', { name: '第３弾ブースター' })).not.toBeChecked()
   expect(getByRole('radio', { name: '第４弾ブースター' })).toBeVisible()
   expect(getByRole('radio', { name: '第４弾ブースター' })).not.toBeChecked()
+  expect(getByRole('radio', { name: '第５弾ブースター' })).toBeVisible()
+  expect(getByRole('radio', { name: '第５弾ブースター' })).not.toBeChecked()
 
   // レアリティ
   expect(getAllRadioInItem(getByRole, 'レアリティ').length).toBe(6)
@@ -247,7 +249,7 @@ test('フィルタの初期状態', async () => {
   expect(getByRole('radio', { name: '志願' })).not.toBeChecked()
 
   // 能力語
-  expect(getAllRadioInItem(getByRole, '能力語').length).toBe(6)
+  expect(getAllRadioInItem(getByRole, '能力語').length).toBe(7)
   expect(getRadioInItem(getByRole, '能力語', '指定なし')).toBeVisible()
   expect(getRadioInItem(getByRole, '能力語', '指定なし')).toBeChecked()
   expect(getByRole('radio', { name: '航海' })).toBeVisible()
@@ -260,6 +262,8 @@ test('フィルタの初期状態', async () => {
   expect(getByRole('radio', { name: '徴募' })).not.toBeChecked()
   expect(getByRole('radio', { name: '魔導' })).toBeVisible()
   expect(getByRole('radio', { name: '魔導' })).not.toBeChecked()
+  expect(getByRole('radio', { name: '勝鬨' })).toBeVisible()
+  expect(getByRole('radio', { name: '勝鬨' })).not.toBeChecked()
 
   // 遺業能力
   expect(getAllRadioInItem(getByRole, '遺業能力').length).toBe(10)

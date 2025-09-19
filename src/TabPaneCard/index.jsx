@@ -34,6 +34,7 @@ const dataExpansions = [
   { value: 30, label: '発展する医学' },
   { value: 35, label: '第３弾ブースター' },
   { value: 45, label: '第４弾ブースター' },
+  { value: 55, label: '第５弾ブースター' },
 ]
 
 const dataRarities = [
@@ -63,6 +64,7 @@ const dataTerms = [
   { value: enumTerm.RISING, label: '決起' },
   { value: enumTerm.RECRUITMENT, label: '徴募' },
   { value: enumTerm.CHROMAGIC, label: '魔導' },
+  { value: enumTerm.BATTLE_CRY, label: '勝鬨' },
 ]
 
 const dataTraits = [
