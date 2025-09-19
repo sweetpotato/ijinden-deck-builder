@@ -104,6 +104,19 @@ const TableRowCard = memo(function TableRowCard({
       dataColorsToCss.map((e) => e.color === color && e.css)
     )
   }
+  /*
+   * 幅が狭い端末では「2nd1」に幅を割かれ、カウンタが適切に表示されなく
+   * おそれがある。そのため「2nd」と「1」の間にゼロ幅スペースを入れて
+   * そこで改行されるようにする。
+   *
+   * TODO これは暫定的な修正である。
+   */
+  let displayId
+  if (id.startsWith('2nd')) {
+    displayId = '2nd\u200B' + id.slice(3)
+  } else {
+    displayId = id
+  }
 
   return (
     /*
@@ -114,7 +127,7 @@ const TableRowCard = memo(function TableRowCard({
      */
     <tr aria-labelledby={rowId}>
       <td className={classesColor} id={rowId}>
-        {id}
+        {displayId}
       </td>
       <td>
         <Button
