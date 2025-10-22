@@ -121,8 +121,12 @@ test('フィルタの初期状態', async () => {
   expect(getExpandedButton(getByRole, /遺業能力/)).toBeVisible()
 
   // 画面上部のコンポーネント
-  expect(getByPlaceholderText('カード名やルールテキストで検索')).toBeVisible()
-  expect(getByPlaceholderText('カード名やルールテキストで検索')).toHaveValue('')
+  expect(
+    getByPlaceholderText('カード名、テキスト、イラストレータで検索')
+  ).toBeVisible()
+  expect(
+    getByPlaceholderText('カード名、テキスト、イラストレータで検索')
+  ).toHaveValue('')
   expect(getByRole('button', { name: 'クリア' })).toBeVisible()
   // prettier-ignore
   expect(getByRole('checkbox', { name: '特性と遺業能力も検索する' })).toBeVisible()
@@ -1616,7 +1620,7 @@ test('キーワードによるフィルタ', async () => {
 
   // ひらがなで検索するとカード名の読み仮名でヒットする
   // prettier-ignore
-  await userEvent.type(getByPlaceholderText('カード名やルールテキストで検索'), 'すとーん')
+  await userEvent.type(getByPlaceholderText('カード名、テキスト、イラストレータで検索'), 'すとーん')
   defaultRerender()
   expect(queryByRole('row', { name: '2-7' })).toBeNull() // 日野富子
   expect(getByRole('row', { name: '3-79' })).toBeVisible() // ストーンマスク
@@ -1628,7 +1632,7 @@ test('キーワードによるフィルタ', async () => {
 
   // ひらがな以外で検索するとカード名またはルールテキストで文字通りにヒットする
   // prettier-ignore
-  await userEvent.type(getByPlaceholderText('カード名やルールテキストで検索'), 'ストーン')
+  await userEvent.type(getByPlaceholderText('カード名、テキスト、イラストレータで検索'), 'ストーン')
   defaultRerender()
   expect(getByRole('row', { name: '2-7' })).toBeVisible() // 日野富子
   expect(getByRole('row', { name: '3-79' })).toBeVisible() // ストーンマスク
@@ -1640,7 +1644,7 @@ test('キーワードによるフィルタ', async () => {
 
   // 部分文字列でも同様
   // prettier-ignore
-  await userEvent.type(getByPlaceholderText('カード名やルールテキストで検索'), 'ストー')
+  await userEvent.type(getByPlaceholderText('カード名、テキスト、イラストレータで検索'), 'ストー')
   defaultRerender()
   expect(getByRole('row', { name: '2-7' })).toBeVisible() // 日野富子
   expect(getByRole('row', { name: '3-79' })).toBeVisible() // ストーンマスク
@@ -1660,7 +1664,7 @@ test('複合キーワードによるフィルタ', async () => {
 
   // 複合キーワードはAND検索になる
   // prettier-ignore
-  await userEvent.type(getByPlaceholderText('カード名やルールテキストで検索'), '即応 装備')
+  await userEvent.type(getByPlaceholderText('カード名、テキスト、イラストレータで検索'), '即応 装備')
   defaultRerender()
   expect(getByRole('row', { name: '2-46' })).toBeVisible() // 孫夫人
   expect(getByRole('row', { name: '2-54' })).toBeVisible() // 蒸気機関車
@@ -1679,7 +1683,7 @@ test('特性と遺業能力を含めるか否か', async () => {
 
   // 含めて検索する
   // prettier-ignore
-  await userEvent.type(getByPlaceholderText('カード名やルールテキストで検索'), '反魂')
+  await userEvent.type(getByPlaceholderText('カード名、テキスト、イラストレータで検索'), '反魂')
   defaultRerender()
   expect(getByRole('row', { name: '2-37' })).toBeVisible() // 姜維
   expect(getByRole('row', { name: 'Y-1' })).toBeVisible() // 諸葛亮
@@ -1725,7 +1729,7 @@ test('キーワードと色と種類の複合によるフィルタ', async () =>
   await userEvent.click(getByRole('radio', { name: 'イジン' }))
   defaultRerender()
   // prettier-ignore
-  await userEvent.type(getByPlaceholderText('カード名やルールテキストで検索'), 'イジン召喚権')
+  await userEvent.type(getByPlaceholderText('カード名、テキスト、イラストレータで検索'), 'イジン召喚権')
   defaultRerender()
 
   expect(getByRole('row', { name: '1-10' })).toBeVisible() // 徳川家康

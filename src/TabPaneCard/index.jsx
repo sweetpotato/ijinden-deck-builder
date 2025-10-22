@@ -159,6 +159,7 @@ function TabPaneCard({
     allText += '§' + card.ruleText
     allText +=
       includesTraitAndLegacy && card.legacyText ? '§' + card.legacyText : ''
+    allText += '§' + card.illustration.toLowerCase()
     return (
       (expansion === 0 || card.expansion === expansion) &&
       (rarity === 0 || (card.rarity & rarity) === card.rarity) &&
@@ -169,7 +170,7 @@ function TabPaneCard({
       (term === 0 || (card.term & term) === term) &&
       (trait === 0 || (card.trait & trait) === trait) &&
       (legacy === 0 || card.legacy === legacy) &&
-      deferredKeywords.every((e) => allText.includes(e))
+      deferredKeywords.every((e) => allText.includes(e.toLowerCase()))
     )
   }
 

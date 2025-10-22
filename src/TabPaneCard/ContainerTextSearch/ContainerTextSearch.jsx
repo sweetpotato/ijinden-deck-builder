@@ -40,7 +40,7 @@ function ContainerTextSearch({
             ref={ref}
             id={idInput}
             type="text"
-            placeholder="カード名やルールテキストで検索"
+            placeholder="カード名、テキスト、イラストレータで検索"
             onChange={handleChangeKeywords}
           />
           <Button variant="outline-danger" onClick={handleClickClear}>
