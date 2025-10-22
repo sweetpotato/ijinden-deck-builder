@@ -45,7 +45,9 @@ test('デフォルトのレンダリング', () => {
 test('アクセシビリティ', () => {
   const { getByPlaceholderText, getByRole } = defaultRender()
 
-  expect(getByPlaceholderText('カード名やルールテキストで検索')).toHaveValue('')
+  expect(
+    getByPlaceholderText('カード名、テキスト、イラストレータで検索')
+  ).toHaveValue('')
   expect(getByRole('button', { name: 'クリア' })).toBeVisible()
   // prettier-ignore
   expect(getByRole('checkbox', { name: '特性と遺業能力も検索する' })).toBeChecked()
