@@ -7,6 +7,7 @@ function ContainerDeckValidator({ deckMain, deckSide }) {
   const id002 = useId()
   const idRecommended = useId()
   const idUnrestricted = useId()
+  const idAverageLevel = useId()
 
   return (
     <div className="m-2">
@@ -29,6 +30,13 @@ function ContainerDeckValidator({ deckMain, deckSide }) {
             {isDeckValidUnrestricted(deckMain, deckSide) ? '✅' : '❌'}
           </span>
           <span id={idUnrestricted}>封印なし</span> (メディチ4・リユニオン4)
+        </li>
+        <li>
+          <span>📊</span>
+          <span id={idAverageLevel}>メインデッキの平均レベル</span> ={' '}
+          <span role="status" aria-labelledby={idAverageLevel}>
+            {getAverageLevel(deckMain).toFixed(2)}
+          </span>
         </li>
       </ul>
     </div>
@@ -132,6 +140,17 @@ function numCopiesNameOfId(id, deck) {
     .filter(([name]) => name === nameOfId)
     .map(([, numCopies]) => numCopies)
     .reduce((a, b) => a + b, 0)
+}
+
+function getAverageLevel(deck) {
+  const divisor = sumDeck(deck)
+  return divisor === 0
+    ? 0
+    : sum(
+        [...deck.entries()].map(
+          ([id, numCopies]) => dataCardsMap.get(id).level * numCopies
+        )
+      ) / sumDeck(deck)
 }
 
 export default ContainerDeckValidator
