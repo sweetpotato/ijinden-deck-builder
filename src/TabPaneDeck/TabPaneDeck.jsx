@@ -141,7 +141,7 @@ function TabPaneDeck({
         interruptSimulator={interruptSimulator}
         isSide
       />
-      <h3 className="m-2">デッキチェッカーβ</h3>
+      <h3 className="m-2">デッキチェッカー</h3>
       <ContainerDeckValidator deckMain={deckMain} deckSide={deckSide} />
       <h2 className="m-2">レシピを共有</h2>
       <ContainerDeckShare deckMain={deckMain} deckSide={deckSide} />
