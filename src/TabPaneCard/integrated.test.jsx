@@ -58,7 +58,7 @@ function defaultRender() {
       dispatchDeck={result.current[2]}
       zoomIn={zoomIn}
       interruptSimulator={interruptSimulator}
-    />
+    />,
   )
   const defaultRerender = () => {
     rerender(
@@ -68,7 +68,7 @@ function defaultRender() {
         dispatchDeck={result.current[2]}
         zoomIn={zoomIn}
         interruptSimulator={interruptSimulator}
-      />
+      />,
     )
   }
   return {
@@ -122,10 +122,10 @@ test('フィルタの初期状態', async () => {
 
   // 画面上部のコンポーネント
   expect(
-    getByPlaceholderText('カード名、テキスト、イラストレータで検索')
+    getByPlaceholderText('カード名、テキスト、イラストレータで検索'),
   ).toBeVisible()
   expect(
-    getByPlaceholderText('カード名、テキスト、イラストレータで検索')
+    getByPlaceholderText('カード名、テキスト、イラストレータで検索'),
   ).toHaveValue('')
   expect(getByRole('button', { name: 'クリア' })).toBeVisible()
   // prettier-ignore
@@ -270,9 +270,13 @@ test('フィルタの初期状態', async () => {
   expect(getByRole('radio', { name: '勝鬨' })).not.toBeChecked()
 
   // 遺業能力
-  expect(getAllRadioInItem(getByRole, '遺業能力').length).toBe(10)
+  expect(getAllRadioInItem(getByRole, '遺業能力').length).toBe(12)
   expect(getRadioInItem(getByRole, '遺業能力', '指定なし')).toBeVisible()
   expect(getRadioInItem(getByRole, '遺業能力', '指定なし')).toBeChecked()
+  expect(getByRole('radio', { name: '遺業能力なし' })).toBeVisible()
+  expect(getByRole('radio', { name: '遺業能力なし' })).not.toBeChecked()
+  expect(getByRole('radio', { name: '遺業能力あり' })).toBeVisible()
+  expect(getByRole('radio', { name: '遺業能力あり' })).not.toBeChecked()
   expect(getByRole('radio', { name: '魔力化' })).toBeVisible()
   expect(getByRole('radio', { name: '魔力化' })).not.toBeChecked()
   expect(getByRole('radio', { name: '冥府発動' })).toBeVisible()
