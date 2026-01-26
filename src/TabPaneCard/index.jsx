@@ -82,15 +82,17 @@ const dataTraits = [
 // 表示順を整えるため、値の昇順にしていない
 const dataLegacies = [
   { value: 0, label: '指定なし' },
-  { value: 1, label: '魔力化' },
-  { value: 2, label: '冥府発動' },
-  { value: 3, label: '復元' },
-  { value: 6, label: '反魂' },
-  { value: 8, label: '木霊' },
-  { value: 9, label: '喪神' },
-  { value: 4, label: '1ドローする' },
-  { value: 5, label: '手札に戻す' },
-  { value: 7, label: '山札の上か下に戻す' },
+  { value: 1, label: '遺業能力なし' },
+  { value: 2, label: '遺業能力あり' },
+  { value: 6, label: '魔力化' },
+  { value: 10, label: '冥府発動' },
+  { value: 18, label: '復元' },
+  { value: 130, label: '反魂' },
+  { value: 514, label: '木霊' },
+  { value: 1026, label: '喪神' },
+  { value: 34, label: '1ドローする' },
+  { value: 66, label: '手札に戻す' },
+  { value: 258, label: '山札の上か下に戻す' },
 ]
 
 function TabPaneCard({
@@ -105,11 +107,11 @@ function TabPaneCard({
     useAccordionItemGenericFilter('エキスパンション', dataExpansions)
   const [rarity, resetRarity, renderRarity] = useAccordionItemGenericFilter(
     'レアリティ',
-    dataRarities
+    dataRarities,
   )
   const [color, resetColor, renderColor] = useAccordionItemGenericFilter(
     '色',
-    dataColors
+    dataColors,
   )
   const [type, power, powerComparator, resetType, renderType] =
     useAccordionItemTypeFilter()
@@ -117,15 +119,15 @@ function TabPaneCard({
     useAccordionItemLevelFilter()
   const [trait, resetTrait, renderTrait] = useAccordionItemGenericFilter(
     '特性',
-    dataTraits
+    dataTraits,
   )
   const [term, resetTerm, renderTerm] = useAccordionItemGenericFilter(
     '能力語',
-    dataTerms
+    dataTerms,
   )
   const [legacy, resetLegacy, renderLegacy] = useAccordionItemGenericFilter(
     '遺業能力',
-    dataLegacies
+    dataLegacies,
   )
   const [deferredKeywords, includesTraitAndLegacy, renderTextSearch] =
     useContainerTextSearch()
@@ -147,14 +149,14 @@ function TabPaneCard({
       powerComparator === enumComparator.GE
         ? card.power >= power
         : powerComparator === enumComparator.LE
-        ? card.power <= power
-        : card.power === power
+          ? card.power <= power
+          : card.power === power
     const levelMatched =
       levelComparator === enumComparator.GE
         ? card.level >= level
         : levelComparator === enumComparator.LE
-        ? card.level <= level
-        : card.level === level
+          ? card.level <= level
+          : card.level === level
     // Should use name, not displayName
     let allText = card.name + '§' + card.kana
     allText +=
@@ -172,7 +174,7 @@ function TabPaneCard({
       levelMatched &&
       (term === 0 || (card.term & term) === term) &&
       (trait === 0 || (card.trait & trait) === trait) &&
-      (legacy === 0 || card.legacy === legacy) &&
+      (legacy === 0 || (card.legacy & legacy) === legacy) &&
       deferredKeywords.every((e) => allText.includes(e.toLowerCase()))
     )
   }
