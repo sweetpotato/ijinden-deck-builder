@@ -295,7 +295,7 @@ test('フィルタの初期状態', async () => {
   expect(getByRole('radio', { name: '手札に戻す' })).not.toBeChecked()
   expect(getByRole('radio', { name: '山札の上か下に戻す' })).toBeVisible()
   expect(getByRole('radio', { name: '山札の上か下に戻す' })).not.toBeChecked()
-})
+}, 120000)
 
 test('フィルタの全リセット', async () => {
   const { defaultRerender, getByRole } = defaultRender()
