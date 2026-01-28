@@ -34,6 +34,7 @@ const AccordionItemSortBy = memo(function AccordionItemSortBy({
         <div className="container-button">
           {dataSortBy.map((element) => (
             <ToggleButton
+              key={`${name}-${element.value}`}
               type="radio"
               variant="outline-primary"
               id={`${name}-${element.value}`}
