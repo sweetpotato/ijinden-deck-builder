@@ -17,7 +17,7 @@ export default defineConfig({
       ],
       output: {
         manualChunks: {
-          vendor: ['dexie', 'react-dom', 'react-router'],
+          vendor: ['dexie', 'react-dom/client', 'react-router'],
         },
       },
     },
