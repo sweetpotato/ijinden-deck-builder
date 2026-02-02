@@ -5,7 +5,7 @@ import ContainerDeckValidator from '.'
 
 function defaultRender(deckMain, deckSide) {
   const { getByRole } = render(
-    <ContainerDeckValidator deckMain={deckMain} deckSide={deckSide} />
+    <ContainerDeckValidator deckMain={deckMain} deckSide={deckSide} />,
   )
   return { getByRole }
 }
@@ -539,7 +539,7 @@ test('メインデッキの平均レベル', () => {
   const deckMain = new Map([
     ['R-1', 2], // 上杉謙信 (レベル6)
     ['R-2', 2], // 源義経 (レベル1)
-    ['R-3', 2], // 武田勝頼　(レベル2)
+    ['R-3', 2], // 武田勝頼 (レベル2)
     ['R-4', 2], // ヴラド・ツェペシュ (レベル3)
     ['R-5', 2], // 坂上田村麻呂 (レベル4)
     ['R-6', 2], // 楠木正成 (レベル5)
@@ -560,6 +560,6 @@ test('メインデッキの平均レベル', () => {
   ])
   const { getByRole } = defaultRender(deckMain, deckSide)
   expect(
-    getByRole('status', { name: 'メインデッキの平均レベル' })
+    getByRole('status', { name: 'メインデッキの平均レベル' }),
   ).toHaveTextContent('2.55')
 })
