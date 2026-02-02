@@ -8,7 +8,7 @@ import react from '@vitejs/plugin-react-swc'
 export default defineConfig({
   base: 'https://sweetpotato.github.io/ijinden-deck-builder/',
   build: {
-    outDir: 'public',
+    outDir: 'docs',
     rollupOptions: {
       plugins: [
         visualizer({
