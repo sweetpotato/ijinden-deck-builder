@@ -8,7 +8,7 @@ import ContainerDeckShare from '.'
 
 function defaultRender(deckMain, deckSide) {
   const { getByRole } = render(
-    <ContainerDeckShare deckMain={deckMain} deckSide={deckSide} />
+    <ContainerDeckShare deckMain={deckMain} deckSide={deckSide} />,
   )
   return { getByRole }
 }
@@ -38,34 +38,14 @@ test('レンダリングとアクセシビリティ', () => {
   expect(textbox).toBeVisible()
   expect(textbox).toHaveAttribute('readonly')
   // 空のデッキのデッキコード
-  expect(textbox).toHaveValue('/ijinden-deck-builder/#/deck/BAA')
+  expect(textbox).toHaveValue('/#/deck/BAA')
 })
 
 test.each([
-  [
-    '1枚',
-    new Map([['R-1', 1]]),
-    new Map(),
-    '/ijinden-deck-builder/#/deck/BBAAA',
-  ],
-  [
-    '4枚',
-    new Map([['R-1', 4]]),
-    new Map(),
-    '/ijinden-deck-builder/#/deck/BBwAA',
-  ],
-  [
-    '5枚',
-    new Map([['R-1', 5]]),
-    new Map(),
-    '/ijinden-deck-builder/#/deck/CBAEAAA',
-  ],
-  [
-    '64枚 (1/2)',
-    new Map([['R-1', 64]]),
-    new Map(),
-    '/ijinden-deck-builder/#/deck/CBA_AAA',
-  ],
+  ['1枚', new Map([['R-1', 1]]), new Map(), '/#/deck/BBAAA'],
+  ['4枚', new Map([['R-1', 4]]), new Map(), '/#/deck/BBwAA'],
+  ['5枚', new Map([['R-1', 5]]), new Map(), '/#/deck/CBAEAAA'],
+  ['64枚 (1/2)', new Map([['R-1', 64]]), new Map(), '/#/deck/CBA_AAA'],
   [
     '64枚 (2/2)',
     new Map([
@@ -73,7 +53,7 @@ test.each([
       ['R-2', 1],
     ]),
     new Map([['R-1', 1]]),
-    '/ijinden-deck-builder/#/deck/CBA_CAAAAABAA',
+    '/#/deck/CBA_CAAAAABAA',
   ],
   // ここから下はデッキの実例
   [
@@ -94,7 +74,7 @@ test.each([
       ['R-13', 16],
     ]),
     new Map(),
-    '/ijinden-deck-builder/#/deck/CBABCABDABEABFABGABHABIABJABKABLABMABNAPAAA',
+    '/#/deck/CBABCABDABEABFABGABHABIABJABKABLABMABNAPAAA',
   ],
   [
     'イジンデンフェス優勝デッキ',
@@ -112,7 +92,7 @@ test.each([
       ['3-72', 4], // 怖れの種
     ]),
     new Map(),
-    '/ijinden-deck-builder/#/deck/B8wBxXxexoRGiVikyTz6zs0AA',
+    '/#/deck/B8wBxXxexoRGiVikyTz6zs0AA',
   ],
   [
     'RSコロッセオ優勝デッキ',
@@ -142,7 +122,7 @@ test.each([
       ['4-68', 1], // 遁甲式水鏡
       ['4-74', 2], // ディ・クローネ
     ]),
-    '/ijinden-deck-builder/#/deck/BLw4QFSNy_SITSDfzjDtDpUr0v05F9VF2AA4ASDT0uE5F_V',
+    '/#/deck/BLw4QFSNy_SITSDfzjDtDpUr0v05F9VF2AA4ASDT0uE5F_V',
   ],
 ])(
   '同じカードの枚数が64枚以下ならコードは有効 (%s)',
@@ -159,7 +139,7 @@ test.each([
     expect(navigator.clipboard.writeText.mock.calls.length).toBe(1)
     expect(navigator.clipboard.writeText.mock.lastCall.length).toBe(1)
     expect(navigator.clipboard.writeText.mock.lastCall[0]).toBe(expectedCode)
-  }
+  },
 )
 
 test('同じカードの枚数が65枚以上ならコードは無効', async () => {

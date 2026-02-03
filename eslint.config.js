@@ -36,6 +36,8 @@ export default [
         { allowConstantExport: true },
       ],
       'react/prop-types': 'off',
+      // watch https://github.com/facebook/react/issues/34775
+      'react-hooks/refs': 'off',
     },
   },
 ]

@@ -7,11 +7,11 @@ import ContainerDeckImport from '.'
 function defaultRender() {
   const dispatchSetFromEntries = vi.fn()
   const { rerender, getByPlaceholderText, getByRole, queryByRole } = render(
-    <ContainerDeckImport dispatchSetFromEntries={dispatchSetFromEntries} />
+    <ContainerDeckImport dispatchSetFromEntries={dispatchSetFromEntries} />,
   )
   const defaultRerender = () =>
     rerender(
-      <ContainerDeckImport dispatchSetFromEntries={dispatchSetFromEntries} />
+      <ContainerDeckImport dispatchSetFromEntries={dispatchSetFromEntries} />,
     )
   return {
     dispatchSetFromEntries,
@@ -48,7 +48,7 @@ test('共有リンクが正しくない', async () => {
   // 共有リンクを入力してインポートボタンを押す
   await userEvent.type(
     getByPlaceholderText('ここに共有リンクを貼り付け'),
-    '/ijinden-deck-builder/#/deck/BAAA' // 1文字多い
+    '/#/deck/BAAA', // 1文字多い
   )
   await userEvent.click(getByRole('button', { name: 'インポート◀' }))
   expect(dispatchSetFromEntries.mock.calls.length).toBe(0)
@@ -57,7 +57,7 @@ test('共有リンクが正しくない', async () => {
   defaultRerender()
   // 入力した値はまだ残っている
   expect(getByPlaceholderText('ここに共有リンクを貼り付け')).toHaveValue(
-    '/ijinden-deck-builder/#/deck/BAAA'
+    '/#/deck/BAAA',
   )
   // prettier-ignore
   expect(getByRole('alert')).toHaveTextContent('共有リンクが正しくありません。')
@@ -66,7 +66,7 @@ test('共有リンクが正しくない', async () => {
   await userEvent.clear(getByPlaceholderText('ここに共有リンクを貼り付け'))
   await userEvent.type(
     getByPlaceholderText('ここに共有リンクを貼り付け'),
-    '/ijinden-deck-builder/#/deck/BAA' // 空のデッキ
+    '/#/deck/BAA', // 空のデッキ
   )
   await userEvent.click(getByRole('button', { name: 'インポート◀' }))
   expect(dispatchSetFromEntries.mock.calls.length).toBe(1)
@@ -88,7 +88,7 @@ test('共有リンクが正しくない', async () => {
 test.each([
   [
     '伝説の武将デッキ',
-    '/ijinden-deck-builder/#/deck/CBABCABDABEABFABGABHABIABJABKABLABMABNAPAAA',
+    '/#/deck/CBABCABDABEABFABGABHABIABJABKABLABMABNAPAAA',
     [
       ['R-1', 2],
       ['R-2', 2],
@@ -108,7 +108,7 @@ test.each([
   ],
   [
     'イジンデンフェス優勝デッキ',
-    '/ijinden-deck-builder/#/deck/B8wBxXxexoRGiVikyTz6zs0AA',
+    '/#/deck/B8wBxXxexoRGiVikyTz6zs0AA',
     [
       ['1-21', 4], // 鑑真
       ['1-26', 4], // メアリー1世
@@ -126,7 +126,7 @@ test.each([
   ],
   [
     'RSコロッセオ優勝デッキ',
-    '/ijinden-deck-builder/#/deck/BLw4QFSNy_SITSDfzjDtDpUr0v05F9VF2AA4ASDT0uE5F_V',
+    '/#/deck/BLw4QFSNy_SITSDfzjDtDpUr0v05F9VF2AA4ASDT0uE5F_V',
     [
       ['R-11', 4], // ロイヤリティ
       ['1-17', 2], // 藤原道長
