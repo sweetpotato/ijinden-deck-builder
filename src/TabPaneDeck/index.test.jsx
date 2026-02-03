@@ -70,8 +70,8 @@ function defaultRender(entriesMain, entriesSide) {
       getDispatchDeck(result),
       zoomIn,
       moveToLoad,
-      interruptSimulator
-    )
+      interruptSimulator,
+    ),
   )
   const {
     rerender,
@@ -83,16 +83,16 @@ function defaultRender(entriesMain, entriesSide) {
     getRenderFn(resultTabPaneDeck)(
       getDeckMain(result),
       getDeckSide(result),
-      setActiveDeckSaved
-    )
+      setActiveDeckSaved,
+    ),
   )
   const defaultRerender = (result) =>
     rerender(
       getRenderFn(resultTabPaneDeck)(
         getDeckMain(result),
         getDeckSide(result),
-        setActiveDeckSaved
-      )
+        setActiveDeckSaved,
+      ),
     )
   return {
     result,
@@ -115,7 +115,7 @@ afterEach(cleanup)
 test('コードが正しい場合のレンダリング', () => {
   // RSコロッセオ優勝デッキ
   const code = 'BLw4QFSNy_SITSDfzjDtDpUr0v05F9VF2AA4ASDT0uE5F_V'
-  const link = `/ijinden-deck-builder/#/deck/${code}`
+  const link = `/#/deck/${code}`
   const resultsDecode = decodeDeck(code)
   expect(resultsDecode).not.toBeFalsy()
   const [entriesMain, entriesSide] = resultsDecode
@@ -143,7 +143,7 @@ test('コードが正しい場合のレンダリング', () => {
           }
         />
       </Routes>
-    </MemoryRouter>
+    </MemoryRouter>,
   )
 
   // アラートは表示されない
@@ -159,7 +159,7 @@ test('コードが正しい場合のレンダリング', () => {
       '遁甲式水鏡\t1\nラ・コロール\t2\n悲しみの種\t4\n' +
       'パープルオーブ (スターター)\t1\nRYマーブルオーブ\t1\nカルドロン\t4\n\n' +
       'サイドデッキ\t10\n徳川慶喜\t4\n藤原道長\t1\n遁甲式水鏡\t1\n' +
-      '苦しみの種\t1\nディ・クローネ\t2\nRYマーブルオーブ\t1'
+      '苦しみの種\t1\nディ・クローネ\t2\nRYマーブルオーブ\t1',
   )
 })
 
@@ -196,7 +196,7 @@ test('コードが誤っている場合のレンダリング', async () => {
           }
         />
       </Routes>
-    </MemoryRouter>
+    </MemoryRouter>,
   )
 
   // アラートが表示される
@@ -204,10 +204,10 @@ test('コードが誤っている場合のレンダリング', async () => {
 
   // テキストボックスには空のデッキの値
   expect(getByRole('textbox', { name: '▶共有リンクをコピー' })).toHaveValue(
-    '/ijinden-deck-builder/#/deck/BAA'
+    '/#/deck/BAA',
   )
   expect(getByRole('textbox', { name: '▼テキストデータをコピー' })).toHaveValue(
-    'メインデッキ\t0\n\nサイドデッキ\t0'
+    'メインデッキ\t0\n\nサイドデッキ\t0',
   )
 
   // アラートを閉じる
@@ -231,7 +231,7 @@ test('コードが誤っている場合のレンダリング', async () => {
       moveToLoad={moveToLoad}
       setActiveDeckSaved={setActiveDeckSaved}
       interruptSimulator={interruptSimulator}
-    />
+    />,
   )
 
   // アラートは閉じられた
@@ -257,12 +257,12 @@ test('デフォルトのレンダリング', () => {
   expect(getByPlaceholderText('デッキ名を入力 (任意)')).toHaveValue('')
   expect(getByRole('textbox', { name: '▶共有リンクをコピー' })).toBeVisible()
   expect(getByRole('textbox', { name: '▶共有リンクをコピー' })).toHaveValue(
-    '/ijinden-deck-builder/#/deck/BAA'
+    '/#/deck/BAA',
   )
   // prettier-ignore
   expect(getByRole('textbox', { name: '▼テキストデータをコピー' })).toBeVisible()
   expect(getByRole('textbox', { name: '▼テキストデータをコピー' })).toHaveValue(
-    'メインデッキ\t0\n\nサイドデッキ\t0'
+    'メインデッキ\t0\n\nサイドデッキ\t0',
   )
   expect(getByPlaceholderText('ここに共有リンクを貼り付け')).toBeVisible()
   expect(getByPlaceholderText('ここに共有リンクを貼り付け')).toHaveValue('')
@@ -295,7 +295,7 @@ test.each([
     [
       ['R-5', 1],
       ['R-6', 1],
-    ]
+    ],
   )
 
   expect(getAllListItem(getByRole, 'メインデッキ').length).toBe(2)
@@ -327,7 +327,7 @@ test('マイデッキに保存', async () => {
       ['R-1', 1],
       ['R-2', 2],
     ],
-    [['R-3', 3]]
+    [['R-3', 3]],
   )
 
   expect(queryByRole('dialog')).toBeNull()
@@ -425,7 +425,7 @@ test('レシピをクリア', async () => {
     [
       ['R-2', 2],
       ['R-3', 3],
-    ]
+    ],
   )
 
   expect(getAllListItem(getByRole, 'メインデッキ').length).toBe(1)
@@ -627,7 +627,7 @@ test.each([
     expectedThis0,
     expectedThis1,
     expectedThat0,
-    expectedThat1
+    expectedThat1,
   ) => {
     const {
       result,
@@ -645,7 +645,7 @@ test.each([
       [
         ['R-2', initial],
         ['R-3', initial],
-      ]
+      ],
     )
 
     expect(getAllListItem(getByRole, sectionThis).length).toBe(2)
@@ -676,7 +676,7 @@ test.each([
     expect(getTextbox(getByRole, sectionThat, 0)).toHaveTextContent(expectedThat0)
     // prettier-ignore
     expect(getTextbox(getByRole, sectionThat, 1)).toHaveTextContent(expectedThat1)
-  }
+  },
 )
 
 test.each([
@@ -779,7 +779,7 @@ test.each([
     buttonName,
     expectInterurpted,
     expected0,
-    expected1
+    expected1,
   ) => {
     const {
       result,
@@ -797,7 +797,7 @@ test.each([
       [
         ['R-2', 1],
         ['R-3', 1],
-      ]
+      ],
     )
 
     expect(getAllListItem(getByRole, sectionThis).length).toBe(2)
@@ -825,7 +825,7 @@ test.each([
     expect(getImg(getByRole, sectionThis, 0)).toHaveAttribute('src', src)
     expect(getTextbox(getByRole, sectionThat, 0)).toHaveTextContent(expected0)
     expect(getTextbox(getByRole, sectionThat, 1)).toHaveTextContent(expected1)
-  }
+  },
 )
 
 test.each([
@@ -896,7 +896,7 @@ test.each([
     index,
     buttonName,
     expected0,
-    expected1
+    expected1,
   ) => {
     const {
       result,
@@ -929,7 +929,7 @@ test.each([
     expect(getTextbox(getByRole, sectionThis, 1)).toHaveTextContent(expected1)
     expect(getTextbox(getByRole, sectionThat, 0)).toHaveTextContent(1)
     expect(getImg(getByRole, sectionThat, 0)).toHaveAttribute('src', src)
-  }
+  },
 )
 
 test.each([
@@ -995,7 +995,7 @@ test.each([
     sectionThat,
     indexMoved,
     indexRemaining,
-    buttonName
+    buttonName,
   ) => {
     const {
       result,
@@ -1033,5 +1033,5 @@ test.each([
     expect(getImg(getByRole, sectionThis, 0)).toHaveAttribute('src', srcRemaining)
     expect(getTextbox(getByRole, sectionThat, 0)).toHaveTextContent(1)
     expect(getImg(getByRole, sectionThat, 0)).toHaveAttribute('src', srcMoved)
-  }
+  },
 )
