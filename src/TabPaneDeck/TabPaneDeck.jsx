@@ -17,6 +17,7 @@ import { dataCardsMap } from '../commons/dataCards'
 import { dbAddDeck } from '../commons/db'
 import { sum } from '../commons/utils'
 import ImageCard from '../components/ImageCard'
+import ContainerDeckScreenshot from './ContainerDeckScreenshot'
 import ContainerDeckShare from './ContainerDeckShare'
 import ContainerDeckExport from './ContainerDeckExport'
 import ContainerDeckImport from './ContainerDeckImport'
@@ -144,6 +145,7 @@ function TabPaneDeck({
       <h3 className="m-2">デッキチェッカー</h3>
       <ContainerDeckValidator deckMain={deckMain} deckSide={deckSide} />
       <h2 className="m-2">レシピを共有</h2>
+      <ContainerDeckScreenshot deckMain={deckMain} deckSide={deckSide} />
       <ContainerDeckShare deckMain={deckMain} deckSide={deckSide} />
       <ContainerDeckExport deckMain={deckMain} deckSide={deckSide} />
       <h2 className="m-2">共有リンクでインポート</h2>
