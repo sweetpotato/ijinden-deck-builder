@@ -1,10 +1,9 @@
 // SPDX-License-Identifier: MIT
 
-import { useRef } from 'react'
 import { Button } from 'react-bootstrap'
 
-import CanvasScreenshot from './CanvasScreenshot'
-import { getCanvasSpec, isCanvasEnabled } from './utils'
+import useCanvasScreenshot from './CanvasScreenshot'
+import { getCanvasSpec, isCanvasEnabled } from './CanvasScreenshot/utils'
 
 // YYYY/mm/dd HH:MM:SS
 const DTF = new Intl.DateTimeFormat([], {
@@ -17,7 +16,7 @@ const DTF = new Intl.DateTimeFormat([], {
 })
 
 function ContainerDeckScreenshot({ deckMain, deckSide }) {
-  const ref = useRef(null)
+  const [ref, renderCanvas] = useCanvasScreenshot()
   const spec = getCanvasSpec(deckMain.size, deckSide.size)
 
   function handleClickDownload() {
@@ -56,12 +55,7 @@ function ContainerDeckScreenshot({ deckMain, deckSide }) {
           レシピ画像をダウンロードβ
         </Button>
       </div>
-      <CanvasScreenshot
-        refCanvas={ref}
-        deckMain={deckMain}
-        deckSide={deckSide}
-        spec={spec}
-      />
+      {renderCanvas(deckMain, deckSide, spec)}
     </>
   )
 }

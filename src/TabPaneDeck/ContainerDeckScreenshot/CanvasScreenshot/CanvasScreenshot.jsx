@@ -3,8 +3,8 @@
 import { Group, Image, Layer, Rect, Stage, Text } from 'react-konva'
 import { usePixzleImage } from '@pixzle/react'
 
-import { dataCardsMap } from '../../commons/dataCards'
-import { sum } from '../../commons/utils'
+import { dataCardsMap } from '../../../commons/dataCards'
+import { sum } from '../../../commons/utils'
 import {
   GUTTER,
   HEADING_FONT_SIZE,
