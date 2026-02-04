@@ -4,7 +4,7 @@ import { useRef } from 'react'
 import { Button } from 'react-bootstrap'
 
 import CanvasScreenshot from './CanvasScreenshot'
-import { getCanvasSpec, isCanvasEnabled } from './utils'
+import { getCanvasSpec, isCanvasEnabled } from './CanvasScreenshot/utils'
 
 // YYYY/mm/dd HH:MM:SS
 const DTF = new Intl.DateTimeFormat([], {
