@@ -20,14 +20,12 @@ function ContainerDeckScreenshot({ deckMain, deckSide }) {
   const spec = getCanvasSpec(deckMain.size, deckSide.size)
 
   function handleClickDownload() {
-    const url = ref.current.toDataURL()
     const link = document.createElement('a')
-    const dt = Date.now()
     link.download =
       'ijinden-deck-builder-' +
-      DTF.format(dt).replaceAll(/[ :/]/g, '-') +
+      DTF.format(Date.now()).replaceAll(/[ :/]/g, '-') +
       '.png'
-    link.href = url
+    link.href = ref.current.toDataURL()
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
