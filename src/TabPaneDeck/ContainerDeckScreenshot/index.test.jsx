@@ -103,7 +103,7 @@ test.each([
     )
 
     const buttonDownload = getByRole('button', {
-      text: 'レシピ画像をダウンロードβ',
+      text: 'レシピ画像をダウンロード',
     })
     expect(buttonDownload).not.toBeEnabled()
   },

@@ -31,7 +31,7 @@ function Home() {
     : [[], []]
 
   const [activeTab, setActiveTab] = useState(
-    code ? enumTabPane.DECK : enumTabPane.CARD
+    code ? enumTabPane.DECK : enumTabPane.CARD,
   )
 
   const moveToDeck = useCallback(() => {
@@ -51,13 +51,13 @@ function Home() {
     dispatchDeck,
     zoomIn,
     moveToLoad,
-    interruptSimulator
+    interruptSimulator,
   )
 
   const [setActiveDeckSaved, renderTabPaneLoad] = useTabPaneLoad(
     dispatchDeck.setFromEntries,
     moveToDeck,
-    interruptSimulator
+    interruptSimulator,
   )
 
   const renderTabPaneDeckWrapper = (deckMain, deckSide) =>
@@ -213,31 +213,6 @@ function Home() {
             するとオモテ面のカード画像が表示され、さらにタップしていくと通常→赤→青→黄→白→黒→通常の順で色味が変わります。灰色のガーディアンも同様に操作できます。
           </p>
           <h2>未対応機能</h2>
-          <h3>自前の画像保存</h3>
-          <p>OS のスクリーンショット機能で保存願います。</p>
-          <ul>
-            <li>
-              Windows:{' '}
-              <a href="https://support.microsoft.com/ja-jp/windows/snipping-tool-%E3%82%92%E4%BD%BF%E3%81%A3%E3%81%A6%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%BC%E3%83%B3-%E3%82%B7%E3%83%A7%E3%83%83%E3%83%88%E3%82%92%E3%82%AD%E3%83%A3%E3%83%97%E3%83%81%E3%83%A3%E3%81%99%E3%82%8B-00246869-1843-655f-f220-97299b865f6b">
-                Snipping Tool を使ってスクリーン ショットをキャプチャする
-              </a>
-            </li>
-            <li>
-              Android:{' '}
-              <a href="https://support.google.com/android/answer/9075928?hl=ja&sjid=12199801082883893448-AP">
-                Android
-                デバイスで画面の画像（スクリーンショット）または動画を撮影する
-              </a>{' '}
-              → スクロール スクリーンショットを撮る
-            </li>
-            <li>
-              iPhone:{' '}
-              <a href="https://support.apple.com/ja-jp/guide/iphone/iphc872c0115/ios">
-                iPhoneでスクリーンショットを撮る
-              </a>{' '}
-              → フルページのスクリーンショットを撮る
-            </li>
-          </ul>
           <h3>並び順の変更</h3>
           <p>ご面倒ですがこのまま使用ください。</p>
           <h2>連絡先</h2>
