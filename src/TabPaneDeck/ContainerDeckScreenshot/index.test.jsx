@@ -76,7 +76,7 @@ test.each([
     const anchor = spyAppendChild.mock.lastCall[0]
     expect(anchor).toHaveProperty('download')
     expect(anchor.download).toMatch(
-      /^ijinden-deck-builder-\d{4}-\d{2}-\d{2}-\d{2}-\d{2}-\d{2}$/,
+      /^ijinden-deck-builder-\d{4}-\d{2}-\d{2}-\d{2}-\d{2}-\d{2}.png$/,
     )
     expect(anchor).toHaveProperty('href')
     expect(anchor.href).toMatch(/^data:image\/png;base64,/)

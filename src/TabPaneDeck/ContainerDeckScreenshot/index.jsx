@@ -24,7 +24,9 @@ function ContainerDeckScreenshot({ deckMain, deckSide }) {
     const link = document.createElement('a')
     const dt = Date.now()
     link.download =
-      'ijinden-deck-builder-' + DTF.format(dt).replaceAll(/[ :/]/g, '-')
+      'ijinden-deck-builder-' +
+      DTF.format(dt).replaceAll(/[ :/]/g, '-') +
+      '.png'
     link.href = url
     document.body.appendChild(link)
     link.click()
