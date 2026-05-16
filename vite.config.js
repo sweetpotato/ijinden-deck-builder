@@ -16,8 +16,25 @@ export default defineConfig({
         }),
       ],
       output: {
-        manualChunks: {
-          vendor: ['dexie', 'react-dom/client', 'react-router'],
+        codeSplitting: {
+          groups: [
+            {
+              name: 'cards',
+              test: 'cards.json',
+            },
+            {
+              name: 'dexie',
+              test: 'dexie',
+            },
+            {
+              name: 'react-dom',
+              test: 'react-dom',
+            },
+            {
+              name: 'react-reconciler',
+              test: 'react-reconciler',
+            },
+          ],
         },
       },
     },
