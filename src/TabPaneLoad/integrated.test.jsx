@@ -25,7 +25,7 @@ test('レシピが空だと保存できない', async () => {
   const user = userEvent.setup()
 
   // モーダルはまだない
-  expect(screen.queryByRole('dialog')).toBeNull()
+  await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull())
 
   const tabDeck = screen.getAllByRole('tab')[1]
   const paneDeck = screen.getAllByRole('tabpanel')[1]
@@ -44,7 +44,7 @@ test('レシピが空だと保存できない', async () => {
   // モーダルが表示される
   const modal = screen.getByRole('dialog')
   expect(modal.querySelector('.modal-body').textContent).toBe(
-    '現在のレシピが空のため保存できません。'
+    '現在のレシピが空のため保存できません。',
   )
 
   // OK ボタンを押す
@@ -52,7 +52,7 @@ test('レシピが空だと保存できない', async () => {
   expect(buttonOk.textContent).toBe('OK')
   await user.click(buttonOk)
   // モーダルがひっこむ
-  expect(screen.queryByRole('dialog')).toBeNull()
+  await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull())
 })
 
 test('レシピに1枚でもあるなら保存できる', async () => {
@@ -72,11 +72,11 @@ test('レシピに1枚でもあるなら保存できる', async () => {
   expect(paneCard).toHaveClass('active')
   expect(paneCard).toBeVisible()
   const buttonPlusMain = paneCard.querySelector(
-    'tbody tr:nth-child(1) td:nth-child(3) button:nth-child(3)'
+    'tbody tr:nth-child(1) td:nth-child(3) button:nth-child(3)',
   )
   expect(buttonPlusMain.textContent).toBe('+')
   const inputMain = paneCard.querySelector(
-    'tbody tr:nth-child(1) td:nth-child(3) input'
+    'tbody tr:nth-child(1) td:nth-child(3) input',
   )
   expect(inputMain.value).toBe('0')
   await user.click(buttonPlusMain)
@@ -95,7 +95,7 @@ test('レシピに1枚でもあるなら保存できる', async () => {
   await waitFor(() => expect(paneSave).toHaveClass('active')) // waitFor で包まないと不安定
   expect(paneSave).toBeVisible()
   await waitFor(() =>
-    expect(paneSave.querySelectorAll('.accordion-item').length).toBe(1)
+    expect(paneSave.querySelectorAll('.accordion-item').length).toBe(1),
   )
 
   // 保存されたデータの検証
@@ -111,7 +111,7 @@ test('レシピに1枚でもあるなら保存できる', async () => {
   expect(paneCard).toHaveClass('active')
   expect(paneCard).toBeVisible()
   const buttonMinusMain = paneCard.querySelector(
-    'tbody tr:nth-child(1) td:nth-child(3) button:nth-child(1)'
+    'tbody tr:nth-child(1) td:nth-child(3) button:nth-child(1)',
   )
   expect(buttonMinusMain.textContent).toBe('-')
   await user.click(buttonMinusMain)
@@ -119,11 +119,11 @@ test('レシピに1枚でもあるなら保存できる', async () => {
 
   // カードペインの適当なカードのサイドプラスボタンを押す
   const buttonPlusSide = paneCard.querySelector(
-    'tbody tr:nth-child(2) td:nth-child(4) button:nth-child(3)'
+    'tbody tr:nth-child(2) td:nth-child(4) button:nth-child(3)',
   )
   expect(buttonPlusSide.textContent).toBe('+')
   const inputSide = paneCard.querySelector(
-    'tbody tr:nth-child(2) td:nth-child(4) input'
+    'tbody tr:nth-child(2) td:nth-child(4) input',
   )
   expect(inputSide.value).toBe('0')
   await user.click(buttonPlusSide)
@@ -140,7 +140,7 @@ test('レシピに1枚でもあるなら保存できる', async () => {
   await waitFor(() => expect(paneSave).toHaveClass('active')) // waitFor で包まないと不安定
   expect(paneSave).toBeVisible()
   await waitFor(() =>
-    expect(paneSave.querySelectorAll('.accordion-item').length).toBe(2)
+    expect(paneSave.querySelectorAll('.accordion-item').length).toBe(2),
   )
   // 新しく保存されたデッキはリストの戦闘に追加される
   decksSaved = await dbQueryDecks()
@@ -177,19 +177,19 @@ test('保存済みデッキの表示と削除', async () => {
   expect(paneSave).toHaveClass('active')
   expect(paneSave).toBeVisible()
   await waitFor(() =>
-    expect(paneSave.querySelectorAll('.accordion-item').length).toBe(3)
+    expect(paneSave.querySelectorAll('.accordion-item').length).toBe(3),
   )
 
   // 3つあるデッキのうち2つ目を削除する
   const buttonDelete = paneSave.querySelector(
-    '.accordion-item:nth-child(2) .container-button button:nth-child(2)'
+    '.accordion-item:nth-child(2) .container-button button:nth-child(2)',
   )
   expect(buttonDelete.textContent).toBe('削除')
   await user.click(buttonDelete)
 
   // 保存済みデッキの表示が減る
   await waitFor(() =>
-    expect(paneSave.querySelectorAll('.accordion-item').length).toBe(2)
+    expect(paneSave.querySelectorAll('.accordion-item').length).toBe(2),
   )
   // 保存されたデータの検証
   decksSaved = await dbQueryDecks()
@@ -211,7 +211,7 @@ test('保存済みデッキの表示と削除', async () => {
   // モーダルが表示される
   let modal = screen.getByRole('dialog')
   expect(modal.querySelector('.modal-body').textContent).toBe(
-    '保存済みレシピをすべて削除します。よろしいですか？'
+    '保存済みレシピをすべて削除します。よろしいですか？',
   )
 
   // キャンセルボタンを押す
@@ -220,7 +220,7 @@ test('保存済みデッキの表示と削除', async () => {
   await user.click(buttonCancel)
 
   // モーダルがひっこむ
-  expect(screen.queryByRole('dialog')).toBeNull()
+  await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull())
 
   // デッキはクリアされていない
   decksSaved = await dbQueryDecks()
@@ -240,12 +240,12 @@ test('保存済みデッキの表示と削除', async () => {
   // モーダルが再度表示される
   modal = screen.getByRole('dialog')
   expect(modal.querySelector('.modal-body').textContent).toBe(
-    '保存済みレシピをすべて削除します。よろしいですか？'
+    '保存済みレシピをすべて削除します。よろしいですか？',
   )
 
   // 削除するボタンを押す
   const buttonConfirmDelete = modal.querySelector(
-    '.modal-footer button:nth-child(2)'
+    '.modal-footer button:nth-child(2)',
   )
   expect(buttonConfirmDelete.textContent).toBe('削除する')
   await user.click(buttonConfirmDelete)
@@ -255,7 +255,7 @@ test('保存済みデッキの表示と削除', async () => {
 
   // 保存済みデッキの表示がなくなる
   await waitFor(() =>
-    expect(paneSave.querySelectorAll('.accordion-item').length).toBe(0)
+    expect(paneSave.querySelectorAll('.accordion-item').length).toBe(0),
   )
   // 保存されたデータの検証
   decksSaved = await dbQueryDecks()
