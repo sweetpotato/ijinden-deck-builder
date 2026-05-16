@@ -25,7 +25,7 @@ test('レシピが空だと保存できない', async () => {
   const user = userEvent.setup()
 
   // モーダルはまだない
-  expect(screen.queryByRole('dialog')).toBeNull()
+  await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull())
 
   const tabDeck = screen.getAllByRole('tab')[1]
   const paneDeck = screen.getAllByRole('tabpanel')[1]
@@ -52,7 +52,7 @@ test('レシピが空だと保存できない', async () => {
   expect(buttonOk.textContent).toBe('OK')
   await user.click(buttonOk)
   // モーダルがひっこむ
-  expect(screen.queryByRole('dialog')).toBeNull()
+  await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull())
 })
 
 test('レシピに1枚でもあるなら保存できる', async () => {
@@ -220,7 +220,7 @@ test('保存済みデッキの表示と削除', async () => {
   await user.click(buttonCancel)
 
   // モーダルがひっこむ
-  expect(screen.queryByRole('dialog')).toBeNull()
+  await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull())
 
   // デッキはクリアされていない
   decksSaved = await dbQueryDecks()
