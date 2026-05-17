@@ -5,7 +5,8 @@ set -Cxueo pipefail
 declare bin="$(dirname "${BASH_SOURCE[0]}")"
 
 main() {
-	local -i bs=22 seed=6880780254253071
+	local -i bs=22
+	local seed=qnoaMuW16MLQ
 	local src_dir dst_dir
 	src_dir="${1}"
 	dst_dir="${2}"
