@@ -22,7 +22,7 @@ import {
 } from './utils'
 
 const BLOCK_SIZE = 22
-const SEED = 6880780254253071
+const SEED = 'qnoaMuW16MLQ'
 const IMAGE_INFO = { w: IMAGE_WIDTH, h: IMAGE_HEIGHT }
 
 function CanvasScreenshot({ refCanvas, deckMain, deckSide, spec }) {
