@@ -1,10 +1,11 @@
-name: CI
+name: Lint and CI
 
 on:
   pull_request:
 
 jobs:
   lint:
+    name: Lint
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v6
@@ -26,6 +27,7 @@ jobs:
       - run: npm run lint
 
   ci:
+    name: CI
     runs-on: ubuntu-24.04
     env:
       LANG: ja_JP.UTF-8
