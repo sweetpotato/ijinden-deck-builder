@@ -5,7 +5,13 @@ import 'fake-indexeddb/auto'
 import { act } from 'react'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
-import { cleanup, render, renderHook, within } from '@testing-library/react'
+import {
+  cleanup,
+  render,
+  renderHook,
+  waitFor,
+  within,
+} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import { decodeDeck } from '../commons/dataCards'
@@ -410,7 +416,8 @@ test('空のデッキは保存できない', async () => {
 
   // ダイアログは閉じられた
   await defaultRerender(result)
-  expect(queryByRole('dialog')).toBeNull()
+  // TODO 冗長に見えるが脆いテストを直すためである
+  await waitFor(() => expect(queryByRole('dialog')).toBeNull())
 })
 
 test('レシピをクリア', async () => {
