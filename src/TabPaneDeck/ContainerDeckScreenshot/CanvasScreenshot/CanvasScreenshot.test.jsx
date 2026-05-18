@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-import { useRef } from 'react'
+import { act, useRef } from 'react'
 import { afterEach, expect, test } from 'vitest'
 import { cleanup, render, renderHook } from '@testing-library/react'
 
@@ -36,7 +36,7 @@ test.each([
   [4, 4, IMAGE_HEIGHT * 2],
 ])(
   '最低幅と高さ (メイン%d枚、サイド%d枚)',
-  (numEntriesMain, numEntriesSide, minHeight) => {
+  async (numEntriesMain, numEntriesSide, minHeight) => {
     const { result } = renderHook(() => useRef(null))
     const deckMain = new Map(
       [...Array(numEntriesMain)].map((_, i) => [`2nd1-${i + 1}`, 1]),
@@ -48,14 +48,17 @@ test.each([
     expect(deckSide.size).toEqual(numEntriesSide)
     const spec = getCanvasSpec(deckMain.size, deckSide.size)
 
-    const { container } = render(
-      <CanvasScreenshot
-        refCanvas={getRef(result)}
-        deckMain={deckMain}
-        deckSide={deckSide}
-        spec={spec}
-      />,
-    )
+    let container
+    await act(async () => {
+      ;({ container } = render(
+        <CanvasScreenshot
+          refCanvas={getRef(result)}
+          deckMain={deckMain}
+          deckSide={deckSide}
+          spec={spec}
+        />,
+      ))
+    })
 
     expect(container.getElementsByTagName('canvas').length).toEqual(1)
     const canvas = container.getElementsByTagName('canvas')[0]

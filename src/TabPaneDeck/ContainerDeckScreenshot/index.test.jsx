@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: MIT
 
+import { act } from 'react'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 import { cleanup, render } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 
 import ContainerDeckScreenshot from '.'
-import userEvent from '@testing-library/user-event'
 
 beforeEach(vi.restoreAllMocks)
 afterEach(cleanup)
@@ -36,9 +37,12 @@ test.each([
     )
     expect(deckSide.size).toEqual(numEntriesSide)
 
-    const { getByRole } = render(
-      <ContainerDeckScreenshot deckMain={deckMain} deckSide={deckSide} />,
-    )
+    let getByRole
+    await act(async () => {
+      ;({ getByRole } = render(
+        <ContainerDeckScreenshot deckMain={deckMain} deckSide={deckSide} />,
+      ))
+    })
 
     const buttonDownload = getByRole('button', {
       text: 'レシピ画像をダウンロードβ',
@@ -90,7 +94,7 @@ test.each([
   [91, 0],
 ])(
   'ダウンロードボタン無効 (メイン%d枚、サイド%d枚)',
-  (numEntriesMain, numEntriesSide) => {
+  async (numEntriesMain, numEntriesSide) => {
     const deckMain = new Map(
       [...Array(numEntriesMain)].map((_, i) => [`2nd1-${i + 1}`, 1]),
     )
@@ -98,9 +102,12 @@ test.each([
       [...Array(numEntriesSide)].map((_, i) => [`2nd1-${i + 1}`, 1]),
     )
 
-    const { getByRole } = render(
-      <ContainerDeckScreenshot deckMain={deckMain} deckSide={deckSide} />,
-    )
+    let getByRole
+    await act(async () => {
+      ;({ getByRole } = render(
+        <ContainerDeckScreenshot deckMain={deckMain} deckSide={deckSide} />,
+      ))
+    })
 
     const buttonDownload = getByRole('button', {
       text: 'レシピ画像をダウンロード',
