@@ -2,15 +2,10 @@
 
 import 'fake-indexeddb/auto'
 
+import { act } from 'react'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
-import {
-  cleanup,
-  render,
-  renderHook,
-  waitFor,
-  within,
-} from '@testing-library/react'
+import { cleanup, render, renderHook, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import { decodeDeck } from '../commons/dataCards'
@@ -58,7 +53,7 @@ function getRenderFn(resultTabPaneDeck) {
   return resultTabPaneDeck.current[1]
 }
 
-function defaultRender(entriesMain, entriesSide) {
+async function defaultRender(entriesMain, entriesSide) {
   const zoomIn = vi.fn()
   const moveToLoad = vi.fn()
   const setActiveDeckSaved = vi.fn()
@@ -73,27 +68,28 @@ function defaultRender(entriesMain, entriesSide) {
       interruptSimulator,
     ),
   )
-  const {
-    rerender,
-    getByPlaceholderText,
-    getByRole,
-    getAllByRole,
-    queryByRole,
-  } = render(
-    getRenderFn(resultTabPaneDeck)(
-      getDeckMain(result),
-      getDeckSide(result),
-      setActiveDeckSaved,
-    ),
-  )
-  const defaultRerender = (result) =>
-    rerender(
-      getRenderFn(resultTabPaneDeck)(
-        getDeckMain(result),
-        getDeckSide(result),
-        setActiveDeckSaved,
-      ),
-    )
+  let rerender, getByPlaceholderText, getByRole, getAllByRole, queryByRole
+  await act(async () => {
+    ;({ rerender, getByPlaceholderText, getByRole, getAllByRole, queryByRole } =
+      render(
+        getRenderFn(resultTabPaneDeck)(
+          getDeckMain(result),
+          getDeckSide(result),
+          setActiveDeckSaved,
+        ),
+      ))
+  })
+  const defaultRerender = async (result) => {
+    await act(async () => {
+      rerender(
+        getRenderFn(resultTabPaneDeck)(
+          getDeckMain(result),
+          getDeckSide(result),
+          setActiveDeckSaved,
+        ),
+      )
+    })
+  }
   return {
     result,
     zoomIn,
@@ -112,7 +108,7 @@ beforeEach(dbClearDecks)
 
 afterEach(cleanup)
 
-test('コードが正しい場合のレンダリング', () => {
+test('コードが正しい場合のレンダリング', async () => {
   // RSコロッセオ優勝デッキ
   const code = 'BLw4QFSNy_SITSDfzjDtDpUr0v05F9VF2AA4ASDT0uE5F_V'
   const link = `/#/deck/${code}`
@@ -122,29 +118,32 @@ test('コードが正しい場合のレンダリング', () => {
   const { result } = renderHook(() => useDeck(entriesMain, entriesSide))
 
   // defaultRender は使用しない
-  const { getByRole, queryByRole } = render(
-    <MemoryRouter initialEntries={[`/deck/${code}`]}>
-      <Routes>
-        <Route
-          path="/deck/:code"
-          element={
-            <TabPaneDeck
-              defaultShowCodeError={false}
-              deckTitle=""
-              setDeckTitle={vi.fn()}
-              deckMain={getDeckMain(result)}
-              deckSide={getDeckSide(result)}
-              dispatchDeck={getDispatchDeck(result)}
-              zoomIn={vi.fn()}
-              moveToLoad={vi.fn()}
-              setActiveDeckSaved={vi.fn()}
-              interruptSimulator={vi.fn()}
-            />
-          }
-        />
-      </Routes>
-    </MemoryRouter>,
-  )
+  let getByRole, queryByRole
+  await act(async () => {
+    ;({ getByRole, queryByRole } = render(
+      <MemoryRouter initialEntries={[`/deck/${code}`]}>
+        <Routes>
+          <Route
+            path="/deck/:code"
+            element={
+              <TabPaneDeck
+                defaultShowCodeError={false}
+                deckTitle=""
+                setDeckTitle={vi.fn()}
+                deckMain={getDeckMain(result)}
+                deckSide={getDeckSide(result)}
+                dispatchDeck={getDispatchDeck(result)}
+                zoomIn={vi.fn()}
+                moveToLoad={vi.fn()}
+                setActiveDeckSaved={vi.fn()}
+                interruptSimulator={vi.fn()}
+              />
+            }
+          />
+        </Routes>
+      </MemoryRouter>,
+    ))
+  })
 
   // アラートは表示されない
   expect(queryByRole('alert')).toBeNull()
@@ -175,6 +174,7 @@ test('コードが誤っている場合のレンダリング', async () => {
   const interruptSimulator = vi.fn()
 
   // defaultRender は使用しない
+  // また、act で囲む必要はない (PixzleImage がレンダされないためか)
   const { rerender, getByRole, queryByRole } = render(
     <MemoryRouter initialEntries={[`/deck/${code}`]}>
       <Routes>
@@ -238,9 +238,9 @@ test('コードが誤っている場合のレンダリング', async () => {
   expect(queryByRole('alert')).toBeNull()
 })
 
-test('デフォルトのレンダリング', () => {
+test('デフォルトのレンダリング', async () => {
   // prettier-ignore
-  const { getByPlaceholderText, getByRole, queryByRole } = defaultRender([], [], '')
+  const { getByPlaceholderText, getByRole, queryByRole } = await defaultRender([], [], '')
 
   // モーダルダイアログは表示されていない
   expect(queryByRole('dialog')).toBeNull()
@@ -287,7 +287,7 @@ test.each([
     setActiveDeckSaved,
     interruptSimulator,
     getByRole,
-  } = defaultRender(
+  } = await defaultRender(
     [
       ['R-2', 1],
       ['R-3', 1],
@@ -322,7 +322,7 @@ test('マイデッキに保存', async () => {
     interruptSimulator,
     getByRole,
     queryByRole,
-  } = defaultRender(
+  } = await defaultRender(
     [
       ['R-1', 1],
       ['R-2', 2],
@@ -338,18 +338,20 @@ test('マイデッキに保存', async () => {
   expect((await dbQueryDecks()).length).toBe(0)
 
   // 「マイデッキに保存」ボタンを押す
-  await userEvent.click(getByRole('button', { name: 'マイデッキに保存' }))
+  // handleClickSave は async 関数のため完了を待つ必要がある
+  await act(async () => {
+    await userEvent.click(getByRole('button', { name: 'マイデッキに保存' }))
+  })
 
   expect(zoomIn.mock.calls.length).toBe(0)
-  // handleClickSave は async 関数のため完了を待つ必要がある
-  await waitFor(() => expect(moveToLoad.mock.calls.length).toBe(1)) // 呼ばれた
-  await waitFor(() => expect(setActiveDeckSaved.mock.calls.length).toBe(1)) // 呼ばれた
+  expect(moveToLoad.mock.calls.length).toBe(1) // 呼ばれた
+  expect(setActiveDeckSaved.mock.calls.length).toBe(1) // 呼ばれた
   expect(setActiveDeckSaved.mock.lastCall.length).toBe(1)
   expect(setActiveDeckSaved.mock.lastCall[0]).toBe(1) // 最初のレコード
   expect(interruptSimulator.mock.calls.length).toBe(0)
 
   // 成功したらダイアログは表示されない
-  defaultRerender(result)
+  await defaultRerender(result)
   expect(queryByRole('dialog')).toBeNull()
 
   // データベースにデッキが追加されている
@@ -374,7 +376,7 @@ test('空のデッキは保存できない', async () => {
     interruptSimulator,
     getByRole,
     queryByRole,
-  } = defaultRender([], [])
+  } = await defaultRender([], [])
 
   expect(queryByRole('dialog')).toBeNull()
   expect(queryListItem(getByRole, 'メインデッキ')).toBeNull()
@@ -392,7 +394,7 @@ test('空のデッキは保存できない', async () => {
   expect(interruptSimulator.mock.calls.length).toBe(0)
 
   // ダイアログが表示される
-  defaultRerender(result)
+  await defaultRerender(result)
   expect(getByRole('dialog')).toBeVisible()
 
   // データベースには追加されていない
@@ -407,8 +409,8 @@ test('空のデッキは保存できない', async () => {
   expect(interruptSimulator.mock.calls.length).toBe(0)
 
   // ダイアログは閉じられた
-  defaultRerender(result)
-  await waitFor(() => expect(queryByRole('dialog')).toBeNull())
+  await defaultRerender(result)
+  expect(queryByRole('dialog')).toBeNull()
 })
 
 test('レシピをクリア', async () => {
@@ -420,7 +422,7 @@ test('レシピをクリア', async () => {
     setActiveDeckSaved,
     interruptSimulator,
     getByRole,
-  } = defaultRender(
+  } = await defaultRender(
     [['R-1', 1]],
     [
       ['R-2', 2],
@@ -439,7 +441,7 @@ test('レシピをクリア', async () => {
   expect(interruptSimulator.mock.calls.length).toBe(1) // 呼ばれた
 
   // 画像リストが空になる
-  defaultRerender(result)
+  await defaultRerender(result)
   expect(queryListItem(getByRole, 'メインデッキ')).toBeNull()
   expect(queryListItem(getByRole, 'サイドデッキ')).toBeNull()
 })
@@ -637,7 +639,7 @@ test.each([
       interruptSimulator,
       defaultRerender,
       getByRole,
-    } = defaultRender(
+    } = await defaultRender(
       [
         ['R-2', initial],
         ['R-3', initial],
@@ -665,7 +667,7 @@ test.each([
     expect(setActiveDeckSaved.mock.calls.length).toBe(0)
     expect(interruptSimulator.mock.calls.length).toBe(expectedInterrupted)
 
-    defaultRerender(result)
+    await defaultRerender(result)
     expect(getAllListItem(getByRole, sectionThis).length).toBe(2)
     expect(getAllListItem(getByRole, sectionThat).length).toBe(2)
     // prettier-ignore
@@ -789,7 +791,7 @@ test.each([
       interruptSimulator,
       defaultRerender,
       getByRole,
-    } = defaultRender(
+    } = await defaultRender(
       [
         ['R-2', 1],
         ['R-3', 1],
@@ -818,7 +820,7 @@ test.each([
     expect(setActiveDeckSaved.mock.calls.length).toBe(0)
     expect(interruptSimulator.mock.calls.length).toBe(expectInterurpted)
 
-    defaultRerender(result)
+    await defaultRerender(result)
     expect(getAllListItem(getByRole, sectionThis).length).toBe(1) // 減った
     expect(getAllListItem(getByRole, sectionThat).length).toBe(2)
     expect(getTextbox(getByRole, sectionThis, 0)).toHaveTextContent('1')
@@ -906,7 +908,7 @@ test.each([
       interruptSimulator,
       defaultRerender,
       getByRole,
-    } = defaultRender(initialMain, initialSide)
+    } = await defaultRender(initialMain, initialSide)
 
     expect(getAllListItem(getByRole, sectionThis).length).toBe(2)
     expect(queryListItem(getByRole, sectionThat)).toBeNull()
@@ -922,7 +924,7 @@ test.each([
     expect(setActiveDeckSaved.mock.calls.length).toBe(0)
     expect(interruptSimulator.mock.calls.length).toBe(1) // 呼ばれた
 
-    defaultRerender(result)
+    await defaultRerender(result)
     expect(getAllListItem(getByRole, sectionThis).length).toBe(2)
     expect(getAllListItem(getByRole, sectionThat).length).toBe(1) // 増えた
     expect(getTextbox(getByRole, sectionThis, 0)).toHaveTextContent(expected0)
@@ -1005,7 +1007,7 @@ test.each([
       interruptSimulator,
       defaultRerender,
       getByRole,
-    } = defaultRender(initialMain, initialSide)
+    } = await defaultRender(initialMain, initialSide)
 
     expect(getAllListItem(getByRole, sectionThis).length).toBe(2)
     expect(queryListItem(getByRole, sectionThat)).toBeNull()
@@ -1025,7 +1027,7 @@ test.each([
     expect(setActiveDeckSaved.mock.calls.length).toBe(0)
     expect(interruptSimulator.mock.calls.length).toBe(1) // 呼ばれた
 
-    defaultRerender(result)
+    await defaultRerender(result)
     expect(getAllListItem(getByRole, sectionThis).length).toBe(1) // 減った
     expect(getAllListItem(getByRole, sectionThat).length).toBe(1) // 増えた
     expect(getTextbox(getByRole, sectionThis, 0)).toHaveTextContent(1)
