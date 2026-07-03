@@ -1,10 +1,20 @@
-// SPDX-License-Identifier: MIT
+import { useLiveQuery } from 'dexie-react-hooks';
+import { useObservable } from 'dexie-react-hooks';
 
-// jest-dom adds custom jest matchers for asserting on DOM nodes.
-// allows you to do things like:
-// expect(element).toHaveTextContent(/react/i)
-// learn more: https://github.com/testing-library/jest-dom
-import '@testing-library/jest-dom/vitest'
+const useAct = () => {
+  const [data, set] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [path, setPath] = useState('');
+  const [content, setContent] = useState(null);
 
-// See https://ja.react.dev/reference/react/act#error-the-current-testing-environment-is-not-configured-to-support-act
-globalThis.IS_REACT_ACT_ENVIRONMENT = true
+  useLiveQuery(() => {
+    if (data && !loading) {
+      setContent(data);
+      setLoading(false);
+    }
+  }, [data, loading, error, path], [data, loading, error, content]);
+
+  useObservable(() => {
+    setPath(path);
+  });
