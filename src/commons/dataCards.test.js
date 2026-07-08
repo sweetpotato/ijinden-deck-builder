@@ -14,14 +14,16 @@ test('dataCardsArrayForTable は orderTable 順', () => {
   expect(Array.isArray(dataCardsArrayForTable)).toBe(true)
   const { length } = dataCardsArrayForTable
   expect(dataCardsArrayForTable[0].orderTable).toBe(1)
-  expect(dataCardsArrayForTable[length - 1].orderTable).toBe(length)
+  // ヴィクトリア女王 (SSR) を考慮
+  expect(dataCardsArrayForTable[length - 1].orderTable).toBe(length + 1)
 })
 
 test('dataCardsArrayForDeck は orderDeck 順', () => {
   expect(Array.isArray(dataCardsArrayForDeck)).toBe(true)
   const { length } = dataCardsArrayForDeck
   expect(dataCardsArrayForDeck[0].orderDeck).toBe(1)
-  expect(dataCardsArrayForDeck[length - 1].orderDeck).toBe(length)
+  // ヴィクトリア女王 (SSR) を考慮
+  expect(dataCardsArrayForDeck[length - 1].orderDeck).toBe(length + 1)
 })
 
 test('dataCardsMap は Map 型', () => {
@@ -75,14 +77,14 @@ test('順序の違いはエンコード時に正規化される', () => {
       ['R-1', 3],
       ['R-2', 4],
     ],
-    []
+    [],
   )
   const code2 = encodeDeck(
     [
       ['R-2', 4],
       ['R-1', 3],
     ],
-    []
+    [],
   )
   expect(code1).toBe(code2)
 })

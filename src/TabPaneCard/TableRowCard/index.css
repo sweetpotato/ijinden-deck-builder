@@ -14,6 +14,26 @@
 .table > :not(caption) > * > .bg-ijinden-colorless { --bs-table-bg-state: #ced4da; } /* gray-400 */
 .table-hover > tbody > tr:hover > .bg-ijinden-colorless { --bs-table-bg-state: #6c757d; } /* gray-600 */
 /* 多色 */
+.table > :not(caption) > * > .bg-ijinden-red-green {
+  --bs-table-color-state: initial;
+  --bs-table-bg-state: initial;
+  background: linear-gradient(to bottom right, #f1aeb5 50%, #a3cfbb 50%);
+}
+.table-hover > tbody > tr:hover > .bg-ijinden-red-green {
+  --bs-table-color-state: initial;
+  --bs-table-bg-state: initial;
+  background: linear-gradient(to bottom right, #e35d6a 50%, #479f76 50%);
+}
+.table > :not(caption) > * > .bg-ijinden-blue-green {
+  --bs-table-color-state: initial;
+  --bs-table-bg-state: initial;
+  background: linear-gradient(to bottom right, #9ec5fe 50%, #a3cfbb 50%);
+}
+.table-hover > tbody > tr:hover > .bg-ijinden-blue-green {
+  --bs-table-color-state: initial;
+  --bs-table-bg-state: initial;
+  background: linear-gradient(to bottom right, #3d8bfd  50%, #479f76 50%);
+}
 .table > :not(caption) > * > .bg-ijinden-red-yellow {
   --bs-table-color-state: initial;
   --bs-table-bg-state: initial;
@@ -43,6 +63,26 @@
   --bs-table-color-state: initial;
   --bs-table-bg-state: initial;
   background: linear-gradient(to bottom right, #479f76 50%, #ffcd39 50%);
+}
+.table > :not(caption) > * > .bg-ijinden-blue-purple {
+  --bs-table-color-state: initial;
+  --bs-table-bg-state: initial;
+  background: linear-gradient(to bottom right, #9ec5fe 50%, #c5b3e6 50%);
+}
+.table-hover > tbody > tr:hover > .bg-ijinden-blue-purple {
+  --bs-table-color-state: initial;
+  --bs-table-bg-state: initial;
+  background: linear-gradient(to bottom right, #3d8bfd 50%, #8c68cd 50%);
+}
+.table > :not(caption) > * > .bg-ijinden-yellow-purple {
+  --bs-table-color-state: initial;
+  --bs-table-bg-state: initial;
+  background: linear-gradient(to bottom right, #ffe69c 50%, #c5b3e6 50%);
+}
+.table-hover > tbody > tr:hover > .bg-ijinden-yellow-purple {
+  --bs-table-color-state: initial;
+  --bs-table-bg-state: initial;
+  background: linear-gradient(to bottom right, #ffcd39 50%, #8c68cd 50%);
 }
 /* 魔導 */
 .table > :not(caption) > * > .bg-chromagic-red-yellow {

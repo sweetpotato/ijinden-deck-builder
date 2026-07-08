@@ -17,9 +17,13 @@ const dataColorsToCss = [
   { color: enumColor.GREEN, css: 'bg-ijinden-green' },
   { color: enumColor.YELLOW, css: 'bg-ijinden-yellow' },
   { color: enumColor.PURPLE, css: 'bg-ijinden-purple' },
+  { color: enumColor.RED_GREEN, css: 'bg-ijinden-red-green' },
+  { color: enumColor.BLUE_GREEN, css: 'bg-ijinden-blue-green' },
   { color: enumColor.RED_YELLOW, css: 'bg-ijinden-red-yellow' },
   { color: enumColor.BLUE_YELLOW, css: 'bg-ijinden-blue-yellow' },
   { color: enumColor.GREEN_YELLOW, css: 'bg-ijinden-green-yellow' },
+  { color: enumColor.BLUE_PURPLE, css: 'bg-ijinden-blue-purple' },
+  { color: enumColor.YELLOW_PURPLE, css: 'bg-ijinden-yellow-purple' },
   { color: enumColor.COLORLESS, css: 'bg-ijinden-colorless' },
 ]
 
@@ -96,12 +100,12 @@ const TableRowCard = memo(function TableRowCard({
         (e) =>
           e.color === color &&
           (term & ~enumTerm.CHROMAGIC) === e.chromagic &&
-          e.css
-      )
+          e.css,
+      ),
     )
   } else {
     classesColor = classNames(
-      dataColorsToCss.map((e) => e.color === color && e.css)
+      dataColorsToCss.map((e) => e.color === color && e.css),
     )
   }
   /*
