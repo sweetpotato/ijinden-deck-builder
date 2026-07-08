@@ -7,6 +7,7 @@ const enumTerm = {
   RECRUITMENT: 8, // 徴募
   CHROMAGIC: 16, // 魔導
   BATTLE_CRY: 1024, // 勝鬨
+  BREAKTHROUGH: 2048, // 躍進
 }
 
 export default enumTerm
