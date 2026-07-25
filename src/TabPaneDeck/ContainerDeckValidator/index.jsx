@@ -4,6 +4,7 @@ import { dataCardsMap } from '../../commons/dataCards'
 import { sum } from '../../commons/utils'
 
 function ContainerDeckValidator({ deckMain, deckSide }) {
+  const idSDK2026 = useId()
   const id002 = useId()
   const idRecommended = useId()
   const idUnrestricted = useId()
@@ -12,6 +13,13 @@ function ContainerDeckValidator({ deckMain, deckSide }) {
   return (
     <div className="m-2">
       <ul style={{ padding: 0, listStyle: 'none' }}>
+        <li>
+          <span role="status" aria-labelledby={idSDK2026}>
+            {isDeckValidSDK2026(deckMain, deckSide) ? '✅' : '❌'}
+          </span>
+          <span id={idSDK2026}>最強ダイバー決定戦2026</span>{' '}
+          (メディチ0・リユニオン0・千利休0)
+        </li>
         <li>
           <span role="status" aria-labelledby={id002}>
             {isDeckValidCommunity002(deckMain, deckSide) ? '✅' : '❌'}
@@ -40,6 +48,16 @@ function ContainerDeckValidator({ deckMain, deckSide }) {
         </li>
       </ul>
     </div>
+  )
+}
+
+// 最強ダイバー決定戦 (2026)
+function isDeckValidSDK2026(deckMain, deckSide) {
+  return (
+    isDeckValidBase(deckMain, deckSide) &&
+    hasMediciLe(0, deckMain, deckSide) &&
+    hasReunionLe(0, deckMain, deckSide) &&
+    hasNoRikyu(deckMain, deckSide)
   )
 }
 
@@ -126,6 +144,10 @@ function hasReunionLe(numCopies, deckMain, deckSide) {
   return hasNumCopiesNameOfIdLe('4-59', numCopies, deckMain, deckSide)
 }
 
+function hasNoRikyu(deckMain, deckSide) {
+  return hasNumCopiesNameOfIdLe('1-33', 0, deckMain, deckSide)
+}
+
 function hasNumCopiesNameOfIdLe(id, numCopies, deckMain, deckSide) {
   const numCopiesMain = numCopiesNameOfId(id, deckMain)
   const numCopiesSide = numCopiesNameOfId(id, deckSide)
@@ -148,8 +170,8 @@ function getAverageLevel(deck) {
     ? 0
     : sum(
         [...deck.entries()].map(
-          ([id, numCopies]) => dataCardsMap.get(id).level * numCopies
-        )
+          ([id, numCopies]) => dataCardsMap.get(id).level * numCopies,
+        ),
       ) / sumDeck(deck)
 }
 
