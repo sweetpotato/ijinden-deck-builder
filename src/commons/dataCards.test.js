@@ -216,12 +216,21 @@ test('半端に欠けたコードは不正である', () => {
 })
 
 test('未登録のSSRは不正である', () => {
-  expect(decodeDeck('B2HAA')).toBeFalsy() // ヴィクトリア女王 (SSR)
-  expect(decodeDeck('BCJAA')).toBeFalsy() // ジャンヌ・ダルク (SSR)
+  // ヴィクトリア女王 (SSR) のひとつ前
+  expect(decodeDeck('B1HAA')[0][0][0]).toBe('2nd1-111')
+  // ヴィクトリア女王 (SSR)
+  expect(decodeDeck('B2HAA')).toBeFalsy()
+  // ヴィクトリア女王 (SSR) のひとつ後
+  expect(decodeDeck('B3HAA')[0][0][0]).toBe('2nd2-1')
+  // ジャンヌ・ダルク (SSR) のひとつ前
+  expect(decodeDeck('BBJAA')[0][0][0]).toBe('2nd2-75')
+  // ジャンヌ・ダルク (SSR)
+  expect(decodeDeck('BCJAA')).toBeFalsy()
 })
 
 test('存在しないorderTableのコードは不正である', () => {
-  expect(decodeDeck('BDJAA')).toBeFalsy() // ジャンヌ・ダルク (SSR) の次
+  // ジャンヌ・ダルク (SSR) の次
+  expect(decodeDeck('BDJAA')).toBeFalsy()
 })
 
 test('緑黄ハイケイデッキの実例', () => {
