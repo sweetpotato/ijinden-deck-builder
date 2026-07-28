@@ -3,19 +3,22 @@
 import cards from './cards.json'
 
 export const dataCardsArrayForTable = [...cards].sort(
-  (a, b) => a.orderTable - b.orderTable
+  (a, b) => a.orderTable - b.orderTable,
 )
 export const dataCardsArrayForDeck = [...cards].sort(
-  (a, b) => a.orderDeck - b.orderDeck
+  (a, b) => a.orderDeck - b.orderDeck,
 )
 export const dataCardsMap = new Map(
-  cards.map((element) => [element.id, element])
+  cards.map((element) => [element.id, element]),
 )
 
 // private use only
 const dataCardsMapFromOrderTable = new Map(
-  cards.map((element) => [element.orderTable, element])
+  cards.map((element) => [element.orderTable, element]),
 )
+
+export const ORDER_TABLE_QUEEN_VICTORIA_SSR = 502
+export const ORDER_TABLE_JEANNE_D_ARC_SSR = 578
 
 const VERSION_V1 = 1
 const NRCHARS_PER_CARD_V1 = 2
@@ -116,7 +119,7 @@ function isDeckSerializableV1(entries) {
   return isDeckSerializable(
     NRBITS_ORDER_TABLE_V1,
     NRBITS_NUM_COPIES_V1,
-    entries
+    entries,
   )
 }
 
@@ -126,7 +129,7 @@ function encodeDeckV1(entriesMain, entriesSide) {
     NRBITS_ORDER_TABLE_V1,
     NRCHARS_PER_CARD_V1,
     entriesMain,
-    entriesSide
+    entriesSide,
   )
 }
 
@@ -135,7 +138,7 @@ function isDeckSerializableV2(entries) {
   return isDeckSerializable(
     NRBITS_ORDER_TABLE_V2,
     NRBITS_NUM_COPIES_V2,
-    entries
+    entries,
   )
 }
 
@@ -145,7 +148,7 @@ function encodeDeckV2(entriesMain, entriesSide) {
     NRBITS_ORDER_TABLE_V2,
     NRCHARS_PER_CARD_V2,
     entriesMain,
-    entriesSide
+    entriesSide,
   )
 }
 
@@ -166,7 +169,7 @@ function encodeDeckGeneric(
   nrbitsOrderTable,
   nrcharsPerCard,
   entriesMain,
-  entriesSide
+  entriesSide,
 ) {
   let code = mapBinaryToAscii.get(version)
   code += serializeDeck(nrbitsOrderTable, nrcharsPerCard, entriesMain)
@@ -223,7 +226,7 @@ function decodeDeckV1(code) {
     NRCHARS_PER_CARD_V1,
     NRBITS_ORDER_TABLE_V1,
     NRBITS_NUM_COPIES_V1,
-    code
+    code,
   )
 }
 
@@ -232,7 +235,7 @@ function decodeDeckV2(code) {
     NRCHARS_PER_CARD_V2,
     NRBITS_ORDER_TABLE_V2,
     NRBITS_NUM_COPIES_V2,
-    code
+    code,
   )
 }
 
@@ -240,7 +243,7 @@ function decodeDeckGeneric(
   nrcharsPerCard,
   nrbitsOrderTable,
   nrbitsNumCopies,
-  code
+  code,
 ) {
   // 先頭1文字を取り除き、規定の文字数ごとに分割する
   code = code.substring(1)
@@ -293,13 +296,15 @@ function validateDeck(nrbitsNumCopies, entries) {
     !entries.every(
       ([orderTable, numCopies]) =>
         !!(
+          orderTable !== ORDER_TABLE_QUEEN_VICTORIA_SSR &&
+          orderTable !== ORDER_TABLE_JEANNE_D_ARC_SSR &&
           orderTable >= dataCardsArrayForTable[0].orderTable &&
           orderTable <=
             dataCardsArrayForTable[dataCardsArrayForTable.length - 1]
               .orderTable &&
           numCopies >= 1 &&
           numCopies <= 1 << nrbitsNumCopies
-        )
+        ),
     )
   ) {
     return false
