@@ -8,21 +8,35 @@ import {
   dataCardsMap,
   encodeDeck,
   decodeDeck,
+  ORDER_TABLE_QUEEN_VICTORIA_SSR,
+  ORDER_TABLE_JEANNE_D_ARC_SSR,
 } from './dataCards'
 
 test('dataCardsArrayForTable は orderTable 順', () => {
   expect(Array.isArray(dataCardsArrayForTable)).toBe(true)
   const { length } = dataCardsArrayForTable
-  expect(dataCardsArrayForTable[0].orderTable).toBe(1)
-  // ヴィクトリア女王 (SSR) を考慮
-  expect(dataCardsArrayForTable[length - 1].orderTable).toBe(length + 1)
+  let index = 0
+  let expected = 1
+  while (index < length) {
+    if (expected === ORDER_TABLE_QUEEN_VICTORIA_SSR) {
+      ++expected
+      continue
+    }
+    if (expected === ORDER_TABLE_JEANNE_D_ARC_SSR) {
+      ++expected
+      continue
+    }
+    expect(dataCardsArrayForTable[index].orderTable).toBe(expected)
+    ++expected
+    ++index
+  }
 })
 
 test('dataCardsArrayForDeck は orderDeck 順', () => {
   expect(Array.isArray(dataCardsArrayForDeck)).toBe(true)
   const { length } = dataCardsArrayForDeck
   expect(dataCardsArrayForDeck[0].orderDeck).toBe(1)
-  // ヴィクトリア女王 (SSR) を考慮
+  // SSR を考慮
   expect(dataCardsArrayForDeck[length - 1].orderDeck).toBe(length + 1)
 })
 
@@ -49,26 +63,41 @@ test('登録されているカードはすべてバージョン1でエンコー�
 })
 
 test('登録されていないカードはすべてエンコード不可', () => {
-  expect(encodeDeck([['R-00', 1]], [])).toBeFalsy()
+  expect(encodeDeck([['R-0', 1]], [])).toBeFalsy()
+  expect(encodeDeck([['R-01', 1]], [])).toBeFalsy()
   expect(encodeDeck([['R-14', 1]], [])).toBeFalsy()
-  expect(encodeDeck([['B-00', 1]], [])).toBeFalsy()
+  expect(encodeDeck([['B-0', 1]], [])).toBeFalsy()
+  expect(encodeDeck([['B-01', 1]], [])).toBeFalsy()
   expect(encodeDeck([['B-14', 1]], [])).toBeFalsy()
-  expect(encodeDeck([['G-00', 1]], [])).toBeFalsy()
+  expect(encodeDeck([['G-0', 1]], [])).toBeFalsy()
+  expect(encodeDeck([['G-01', 1]], [])).toBeFalsy()
   expect(encodeDeck([['G-14', 1]], [])).toBeFalsy()
-  expect(encodeDeck([['1-00', 1]], [])).toBeFalsy()
+  expect(encodeDeck([['1-0', 1]], [])).toBeFalsy()
+  expect(encodeDeck([['1-01', 1]], [])).toBeFalsy()
   expect(encodeDeck([['1-81', 1]], [])).toBeFalsy()
-  expect(encodeDeck([['Y-00', 1]], [])).toBeFalsy()
+  expect(encodeDeck([['Y-0', 1]], [])).toBeFalsy()
+  expect(encodeDeck([['Y-01', 1]], [])).toBeFalsy()
   expect(encodeDeck([['Y-14', 1]], [])).toBeFalsy()
-  expect(encodeDeck([['2-00', 1]], [])).toBeFalsy()
+  expect(encodeDeck([['2-0', 1]], [])).toBeFalsy()
+  expect(encodeDeck([['2-01', 1]], [])).toBeFalsy()
   expect(encodeDeck([['2-81', 1]], [])).toBeFalsy()
-  expect(encodeDeck([['P-00', 1]], [])).toBeFalsy()
+  expect(encodeDeck([['P-0', 1]], [])).toBeFalsy()
+  expect(encodeDeck([['P-01', 1]], [])).toBeFalsy()
   expect(encodeDeck([['P-17', 1]], [])).toBeFalsy()
-  expect(encodeDeck([['3-00', 1]], [])).toBeFalsy()
+  expect(encodeDeck([['3-0', 1]], [])).toBeFalsy()
+  expect(encodeDeck([['3-01', 1]], [])).toBeFalsy()
   expect(encodeDeck([['3-82', 1]], [])).toBeFalsy()
-  expect(encodeDeck([['4-00', 1]], [])).toBeFalsy()
+  expect(encodeDeck([['4-0', 1]], [])).toBeFalsy()
+  expect(encodeDeck([['4-01', 1]], [])).toBeFalsy()
   expect(encodeDeck([['4-82', 1]], [])).toBeFalsy()
-  expect(encodeDeck([['5-00', 1]], [])).toBeFalsy()
+  expect(encodeDeck([['5-0', 1]], [])).toBeFalsy()
   expect(encodeDeck([['5-01', 1]], [])).toBeFalsy()
+  expect(encodeDeck([['5-112', 1]], [])).toBeFalsy() // ヴィクトリア女王 (SSR)
+  expect(encodeDeck([['5-113', 1]], [])).toBeFalsy()
+  expect(encodeDeck([['6-0', 1]], [])).toBeFalsy()
+  expect(encodeDeck([['6-01', 1]], [])).toBeFalsy()
+  expect(encodeDeck([['6-76', 1]], [])).toBeFalsy() // ジャンヌ・ダルク (SSR)
+  expect(encodeDeck([['6-77', 1]], [])).toBeFalsy()
 })
 
 test('順序の違いはエンコード時に正規化される', () => {
@@ -184,6 +213,11 @@ test('半端に欠けたコードは不正である', () => {
   expect(decodeDeck('CBAAAACAE')).toBeFalsy()
   expect(decodeDeck('CBBAAACAE')).toBeFalsy()
   expect(decodeDeck('CABAAACAE')).toBeFalsy()
+})
+
+test('未登録のSSRはそれぞれエラーになる', () => {
+  expect(() => decodeDeck('B2HAA')).toThrow() // ヴィクトリア女王 (SSR)
+  expect(decodeDeck('BCJAA')).toBeNull() // ジャンヌ・ダルク (SSR)
 })
 
 test('緑黄ハイケイデッキの実例', () => {

@@ -17,6 +17,9 @@ const dataCardsMapFromOrderTable = new Map(
   cards.map((element) => [element.orderTable, element]),
 )
 
+export const ORDER_TABLE_QUEEN_VICTORIA_SSR = 502
+export const ORDER_TABLE_JEANNE_D_ARC_SSR = 578
+
 const VERSION_V1 = 1
 const NRCHARS_PER_CARD_V1 = 2
 const NRBITS_ORDER_TABLE_V1 = 10
