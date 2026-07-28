@@ -215,9 +215,13 @@ test('半端に欠けたコードは不正である', () => {
   expect(decodeDeck('CABAAACAE')).toBeFalsy()
 })
 
-test('未登録のSSRはそれぞれエラーになる', () => {
-  expect(() => decodeDeck('B2HAA')).toThrow() // ヴィクトリア女王 (SSR)
-  expect(decodeDeck('BCJAA')).toBeNull() // ジャンヌ・ダルク (SSR)
+test('未登録のSSRは不正である', () => {
+  expect(decodeDeck('B2HAA')).toBeFalsy() // ヴィクトリア女王 (SSR)
+  expect(decodeDeck('BCJAA')).toBeFalsy() // ジャンヌ・ダルク (SSR)
+})
+
+test('存在しないorderTableのコードは不正である', () => {
+  expect(decodeDeck('BDJAA')).toBeFalsy() // ジャンヌ・ダルク (SSR) の次
 })
 
 test('緑黄ハイケイデッキの実例', () => {

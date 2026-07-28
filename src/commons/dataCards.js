@@ -296,6 +296,8 @@ function validateDeck(nrbitsNumCopies, entries) {
     !entries.every(
       ([orderTable, numCopies]) =>
         !!(
+          orderTable !== ORDER_TABLE_QUEEN_VICTORIA_SSR &&
+          orderTable !== ORDER_TABLE_JEANNE_D_ARC_SSR &&
           orderTable >= dataCardsArrayForTable[0].orderTable &&
           orderTable <=
             dataCardsArrayForTable[dataCardsArrayForTable.length - 1]
