@@ -27,6 +27,21 @@ function getExpandedButton(getByRole, name) {
   })
 }
 
+function getCheckboxInItem(getByRole, itemName, checkboxName) {
+  return within(getByRole('listitem', { name: itemName })).getByRole(
+    'checkbox',
+    {
+      name: checkboxName,
+    },
+  )
+}
+
+function getAllCheckboxInItem(getByRole, itemName) {
+  return within(getByRole('listitem', { name: itemName })).getAllByRole(
+    'checkbox',
+  )
+}
+
 function getRadioInItem(getByRole, itemName, radioName) {
   return within(getByRole('listitem', { name: itemName })).getByRole('radio', {
     name: radioName,
@@ -139,80 +154,83 @@ test('フィルタの初期状態', async () => {
   expect(getAllByRole('listitem').length).toBe(8)
 
   // エキスパンション
-  expect(getAllRadioInItem(getByRole, 'エキスパンション').length).toBe(12)
-  expect(getRadioInItem(getByRole, 'エキスパンション', 'すべて')).toBeVisible()
-  expect(getRadioInItem(getByRole, 'エキスパンション', 'すべて')).toBeChecked()
-  expect(getByRole('radio', { name: '伝説の武将' })).toBeVisible()
-  expect(getByRole('radio', { name: '伝説の武将' })).not.toBeChecked()
-  expect(getByRole('radio', { name: '美と知の革命' })).toBeVisible()
-  expect(getByRole('radio', { name: '美と知の革命' })).not.toBeChecked()
-  expect(getByRole('radio', { name: '日本の大天才' })).toBeVisible()
-  expect(getByRole('radio', { name: '日本の大天才' })).not.toBeChecked()
-  expect(getByRole('radio', { name: '第１弾ブースター' })).toBeVisible()
-  expect(getByRole('radio', { name: '第１弾ブースター' })).not.toBeChecked()
-  expect(getByRole('radio', { name: '三国の英傑' })).toBeVisible()
-  expect(getByRole('radio', { name: '三国の英傑' })).not.toBeChecked()
-  expect(getByRole('radio', { name: '第２弾ブースター' })).toBeVisible()
-  expect(getByRole('radio', { name: '第２弾ブースター' })).not.toBeChecked()
-  expect(getByRole('radio', { name: '発展する医学' })).toBeVisible()
-  expect(getByRole('radio', { name: '発展する医学' })).not.toBeChecked()
-  expect(getByRole('radio', { name: '第３弾ブースター' })).toBeVisible()
-  expect(getByRole('radio', { name: '第３弾ブースター' })).not.toBeChecked()
-  expect(getByRole('radio', { name: '第４弾ブースター' })).toBeVisible()
-  expect(getByRole('radio', { name: '第４弾ブースター' })).not.toBeChecked()
-  expect(getByRole('radio', { name: '第５弾ブースター' })).toBeVisible()
-  expect(getByRole('radio', { name: '第５弾ブースター' })).not.toBeChecked()
-  expect(getByRole('radio', { name: '第６弾ブースター' })).toBeVisible()
-  expect(getByRole('radio', { name: '第６弾ブースター' })).not.toBeChecked()
+  expect(getAllCheckboxInItem(getByRole, 'エキスパンション').length).toBe(12)
+  // prettier-ignore
+  expect(getCheckboxInItem(getByRole, 'エキスパンション', 'すべて')).toBeVisible()
+  // prettier-ignore
+  expect(getCheckboxInItem(getByRole, 'エキスパンション', 'すべて')).toBeChecked()
+  expect(getByRole('checkbox', { name: '伝説の武将' })).toBeVisible()
+  expect(getByRole('checkbox', { name: '伝説の武将' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: '美と知の革命' })).toBeVisible()
+  expect(getByRole('checkbox', { name: '美と知の革命' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: '日本の大天才' })).toBeVisible()
+  expect(getByRole('checkbox', { name: '日本の大天才' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: '第１弾ブースター' })).toBeVisible()
+  expect(getByRole('checkbox', { name: '第１弾ブースター' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: '三国の英傑' })).toBeVisible()
+  expect(getByRole('checkbox', { name: '三国の英傑' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: '第２弾ブースター' })).toBeVisible()
+  expect(getByRole('checkbox', { name: '第２弾ブースター' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: '発展する医学' })).toBeVisible()
+  expect(getByRole('checkbox', { name: '発展する医学' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: '第３弾ブースター' })).toBeVisible()
+  expect(getByRole('checkbox', { name: '第３弾ブースター' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: '第４弾ブースター' })).toBeVisible()
+  expect(getByRole('checkbox', { name: '第４弾ブースター' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: '第５弾ブースター' })).toBeVisible()
+  expect(getByRole('checkbox', { name: '第５弾ブースター' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: '第６弾ブースター' })).toBeVisible()
+  expect(getByRole('checkbox', { name: '第６弾ブースター' })).not.toBeChecked()
 
   // レアリティ
-  expect(getAllRadioInItem(getByRole, 'レアリティ').length).toBe(5)
-  expect(getRadioInItem(getByRole, 'レアリティ', 'すべて')).toBeVisible()
-  expect(getRadioInItem(getByRole, 'レアリティ', 'すべて')).toBeChecked()
-  expect(getByRole('radio', { name: 'N' })).toBeVisible()
-  expect(getByRole('radio', { name: 'N' })).not.toBeChecked()
-  expect(getByRole('radio', { name: 'R' })).toBeVisible()
-  expect(getByRole('radio', { name: 'R' })).not.toBeChecked()
-  expect(getByRole('radio', { name: 'SR' })).toBeVisible()
-  expect(getByRole('radio', { name: 'SR' })).not.toBeChecked()
-  expect(getByRole('radio', { name: 'PSR' })).toBeVisible()
-  expect(getByRole('radio', { name: 'PSR' })).not.toBeChecked()
+  expect(getAllCheckboxInItem(getByRole, 'レアリティ').length).toBe(5)
+  expect(getCheckboxInItem(getByRole, 'レアリティ', 'すべて')).toBeVisible()
+  expect(getCheckboxInItem(getByRole, 'レアリティ', 'すべて')).toBeChecked()
+  expect(getByRole('checkbox', { name: 'N' })).toBeVisible()
+  expect(getByRole('checkbox', { name: 'N' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'R' })).toBeVisible()
+  expect(getByRole('checkbox', { name: 'R' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'SR' })).toBeVisible()
+  expect(getByRole('checkbox', { name: 'SR' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'PSR' })).toBeVisible()
+  expect(getByRole('checkbox', { name: 'PSR' })).not.toBeChecked()
 
   // 色
-  expect(getAllRadioInItem(getByRole, '色').length).toBe(8)
-  expect(getRadioInItem(getByRole, '色', 'すべて')).toBeVisible()
-  expect(getRadioInItem(getByRole, '色', 'すべて')).toBeChecked()
-  expect(getByRole('radio', { name: '赤' })).toBeVisible()
-  expect(getByRole('radio', { name: '赤' })).not.toBeChecked()
-  expect(getByRole('radio', { name: '青' })).toBeVisible()
-  expect(getByRole('radio', { name: '青' })).not.toBeChecked()
-  expect(getByRole('radio', { name: '緑' })).toBeVisible()
-  expect(getByRole('radio', { name: '緑' })).not.toBeChecked()
-  expect(getByRole('radio', { name: '黄' })).toBeVisible()
-  expect(getByRole('radio', { name: '黄' })).not.toBeChecked()
-  expect(getByRole('radio', { name: '紫' })).toBeVisible()
-  expect(getByRole('radio', { name: '紫' })).not.toBeChecked()
-  expect(getByRole('radio', { name: '多色' })).toBeVisible()
-  expect(getByRole('radio', { name: '多色' })).not.toBeChecked()
-  expect(getByRole('radio', { name: '無色' })).toBeVisible()
-  expect(getByRole('radio', { name: '無色' })).not.toBeChecked()
+  expect(getAllCheckboxInItem(getByRole, '色').length).toBe(8)
+  expect(getCheckboxInItem(getByRole, '色', 'すべて')).toBeVisible()
+  expect(getCheckboxInItem(getByRole, '色', 'すべて')).toBeChecked()
+  expect(getByRole('checkbox', { name: '赤' })).toBeVisible()
+  expect(getByRole('checkbox', { name: '赤' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: '青' })).toBeVisible()
+  expect(getByRole('checkbox', { name: '青' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: '緑' })).toBeVisible()
+  expect(getByRole('checkbox', { name: '緑' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: '黄' })).toBeVisible()
+  expect(getByRole('checkbox', { name: '黄' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: '紫' })).toBeVisible()
+  expect(getByRole('checkbox', { name: '紫' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: '多色' })).toBeVisible()
+  expect(getByRole('checkbox', { name: '多色' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: '無色' })).toBeVisible()
+  expect(getByRole('checkbox', { name: '無色' })).not.toBeChecked()
 
   // 種類とパワー
   // アクセシビリティ確認のためにすべてテストする
-  expect(getAllRadioInItem(getByRole, '色').length).toBe(8)
-  expect(getRadioInItem(getByRole, '種類とパワー', 'すべて')).toBeVisible()
-  expect(getRadioInItem(getByRole, '種類とパワー', 'すべて')).toBeChecked()
-  expect(getByRole('radio', { name: 'イジン' })).toBeVisible()
-  expect(getByRole('radio', { name: 'イジン' })).not.toBeChecked()
-  expect(getByRole('radio', { name: 'ハイケイ' })).toBeVisible()
-  expect(getByRole('radio', { name: 'ハイケイ' })).not.toBeChecked()
-  expect(getByRole('radio', { name: 'マホウ' })).toBeVisible()
-  expect(getByRole('radio', { name: 'マホウ' })).not.toBeChecked()
-  expect(getByRole('radio', { name: 'マリョク' })).toBeVisible()
-  expect(getByRole('radio', { name: 'マリョク' })).not.toBeChecked()
+  expect(getAllCheckboxInItem(getByRole, '種類とパワー').length).toBe(5)
+  expect(getCheckboxInItem(getByRole, '種類とパワー', 'すべて')).toBeVisible()
+  expect(getCheckboxInItem(getByRole, '種類とパワー', 'すべて')).toBeChecked()
+  expect(getByRole('checkbox', { name: 'イジン' })).toBeVisible()
+  expect(getByRole('checkbox', { name: 'イジン' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'ハイケイ' })).toBeVisible()
+  expect(getByRole('checkbox', { name: 'ハイケイ' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'マホウ' })).toBeVisible()
+  expect(getByRole('checkbox', { name: 'マホウ' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'マリョク' })).toBeVisible()
+  expect(getByRole('checkbox', { name: 'マリョク' })).not.toBeChecked()
   expect(getSliderInItem(getByRole, '種類とパワー')).toBeVisible()
   expect(getSliderInItem(getByRole, '種類とパワー')).toBeDisabled()
   expect(getSliderInItem(getByRole, '種類とパワー')).toHaveValue('0')
+  expect(getAllRadioInItem(getByRole, '種類とパワー').length).toBe(3)
   expect(getRadioInItem(getByRole, '種類とパワー', '以上')).toBeVisible()
   expect(getRadioInItem(getByRole, '種類とパワー', '以上')).toBeDisabled()
   expect(getRadioInItem(getByRole, '種類とパワー', '以上')).toBeChecked()
@@ -236,67 +254,69 @@ test('フィルタの初期状態', async () => {
   expect(getRadioInItem(getByRole, 'レベル', '等しい')).not.toBeChecked()
 
   // 特性
-  expect(getAllRadioInItem(getByRole, '特性').length).toBe(7)
-  expect(getRadioInItem(getByRole, '特性', '指定なし')).toBeVisible()
-  expect(getRadioInItem(getByRole, '特性', '指定なし')).toBeChecked()
-  expect(getByRole('radio', { name: '剣術' })).toBeVisible()
-  expect(getByRole('radio', { name: '剣術' })).not.toBeChecked()
-  expect(getByRole('radio', { name: '美術' })).toBeVisible()
-  expect(getByRole('radio', { name: '美術' })).not.toBeChecked()
-  expect(getByRole('radio', { name: '音楽' })).toBeVisible()
-  expect(getByRole('radio', { name: '音楽' })).not.toBeChecked()
-  expect(getByRole('radio', { name: '思想' })).toBeVisible()
-  expect(getByRole('radio', { name: '思想' })).not.toBeChecked()
-  expect(getByRole('radio', { name: '医術' })).toBeVisible()
-  expect(getByRole('radio', { name: '医術' })).not.toBeChecked()
-  expect(getByRole('radio', { name: '志願' })).toBeVisible()
-  expect(getByRole('radio', { name: '志願' })).not.toBeChecked()
+  expect(getAllCheckboxInItem(getByRole, '特性').length).toBe(7)
+  expect(getCheckboxInItem(getByRole, '特性', '指定なし')).toBeVisible()
+  expect(getCheckboxInItem(getByRole, '特性', '指定なし')).toBeChecked()
+  expect(getByRole('checkbox', { name: '剣術' })).toBeVisible()
+  expect(getByRole('checkbox', { name: '剣術' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: '美術' })).toBeVisible()
+  expect(getByRole('checkbox', { name: '美術' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: '音楽' })).toBeVisible()
+  expect(getByRole('checkbox', { name: '音楽' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: '思想' })).toBeVisible()
+  expect(getByRole('checkbox', { name: '思想' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: '医術' })).toBeVisible()
+  expect(getByRole('checkbox', { name: '医術' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: '志願' })).toBeVisible()
+  expect(getByRole('checkbox', { name: '志願' })).not.toBeChecked()
 
   // 能力語
-  expect(getAllRadioInItem(getByRole, '能力語').length).toBe(8)
-  expect(getRadioInItem(getByRole, '能力語', '指定なし')).toBeVisible()
-  expect(getRadioInItem(getByRole, '能力語', '指定なし')).toBeChecked()
-  expect(getByRole('radio', { name: '航海' })).toBeVisible()
-  expect(getByRole('radio', { name: '航海' })).not.toBeChecked()
-  expect(getByRole('radio', { name: '執筆' })).toBeVisible()
-  expect(getByRole('radio', { name: '執筆' })).not.toBeChecked()
-  expect(getByRole('radio', { name: '決起' })).toBeVisible()
-  expect(getByRole('radio', { name: '決起' })).not.toBeChecked()
-  expect(getByRole('radio', { name: '徴募' })).toBeVisible()
-  expect(getByRole('radio', { name: '徴募' })).not.toBeChecked()
-  expect(getByRole('radio', { name: '魔導' })).toBeVisible()
-  expect(getByRole('radio', { name: '魔導' })).not.toBeChecked()
-  expect(getByRole('radio', { name: '勝鬨' })).toBeVisible()
-  expect(getByRole('radio', { name: '勝鬨' })).not.toBeChecked()
-  expect(getByRole('radio', { name: '躍進' })).toBeVisible()
-  expect(getByRole('radio', { name: '躍進' })).not.toBeChecked()
+  expect(getAllCheckboxInItem(getByRole, '能力語').length).toBe(8)
+  expect(getCheckboxInItem(getByRole, '能力語', '指定なし')).toBeVisible()
+  expect(getCheckboxInItem(getByRole, '能力語', '指定なし')).toBeChecked()
+  expect(getByRole('checkbox', { name: '航海' })).toBeVisible()
+  expect(getByRole('checkbox', { name: '航海' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: '執筆' })).toBeVisible()
+  expect(getByRole('checkbox', { name: '執筆' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: '決起' })).toBeVisible()
+  expect(getByRole('checkbox', { name: '決起' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: '徴募' })).toBeVisible()
+  expect(getByRole('checkbox', { name: '徴募' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: '魔導' })).toBeVisible()
+  expect(getByRole('checkbox', { name: '魔導' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: '勝鬨' })).toBeVisible()
+  expect(getByRole('checkbox', { name: '勝鬨' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: '躍進' })).toBeVisible()
+  expect(getByRole('checkbox', { name: '躍進' })).not.toBeChecked()
 
   // 遺業能力
-  expect(getAllRadioInItem(getByRole, '遺業能力').length).toBe(12)
-  expect(getRadioInItem(getByRole, '遺業能力', '指定なし')).toBeVisible()
-  expect(getRadioInItem(getByRole, '遺業能力', '指定なし')).toBeChecked()
-  expect(getByRole('radio', { name: '遺業能力なし' })).toBeVisible()
-  expect(getByRole('radio', { name: '遺業能力なし' })).not.toBeChecked()
-  expect(getByRole('radio', { name: '遺業能力あり' })).toBeVisible()
-  expect(getByRole('radio', { name: '遺業能力あり' })).not.toBeChecked()
-  expect(getByRole('radio', { name: '魔力化' })).toBeVisible()
-  expect(getByRole('radio', { name: '魔力化' })).not.toBeChecked()
-  expect(getByRole('radio', { name: '冥府発動' })).toBeVisible()
-  expect(getByRole('radio', { name: '冥府発動' })).not.toBeChecked()
-  expect(getByRole('radio', { name: '復元' })).toBeVisible()
-  expect(getByRole('radio', { name: '復元' })).not.toBeChecked()
-  expect(getByRole('radio', { name: '反魂' })).toBeVisible()
-  expect(getByRole('radio', { name: '反魂' })).not.toBeChecked()
-  expect(getByRole('radio', { name: '木霊' })).toBeVisible()
-  expect(getByRole('radio', { name: '木霊' })).not.toBeChecked()
-  expect(getByRole('radio', { name: '喪神' })).toBeVisible()
-  expect(getByRole('radio', { name: '喪神' })).not.toBeChecked()
-  expect(getByRole('radio', { name: '1ドローする' })).toBeVisible()
-  expect(getByRole('radio', { name: '1ドローする' })).not.toBeChecked()
-  expect(getByRole('radio', { name: '手札に戻す' })).toBeVisible()
-  expect(getByRole('radio', { name: '手札に戻す' })).not.toBeChecked()
-  expect(getByRole('radio', { name: '山札の上か下に戻す' })).toBeVisible()
-  expect(getByRole('radio', { name: '山札の上か下に戻す' })).not.toBeChecked()
+  expect(getAllCheckboxInItem(getByRole, '遺業能力').length).toBe(12)
+  expect(getCheckboxInItem(getByRole, '遺業能力', '指定なし')).toBeVisible()
+  expect(getCheckboxInItem(getByRole, '遺業能力', '指定なし')).toBeChecked()
+  expect(getByRole('checkbox', { name: '遺業能力なし' })).toBeVisible()
+  expect(getByRole('checkbox', { name: '遺業能力なし' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: '遺業能力あり' })).toBeVisible()
+  expect(getByRole('checkbox', { name: '遺業能力あり' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: '魔力化' })).toBeVisible()
+  expect(getByRole('checkbox', { name: '魔力化' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: '冥府発動' })).toBeVisible()
+  expect(getByRole('checkbox', { name: '冥府発動' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: '復元' })).toBeVisible()
+  expect(getByRole('checkbox', { name: '復元' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: '反魂' })).toBeVisible()
+  expect(getByRole('checkbox', { name: '反魂' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: '木霊' })).toBeVisible()
+  expect(getByRole('checkbox', { name: '木霊' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: '喪神' })).toBeVisible()
+  expect(getByRole('checkbox', { name: '喪神' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: '1ドローする' })).toBeVisible()
+  expect(getByRole('checkbox', { name: '1ドローする' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: '手札に戻す' })).toBeVisible()
+  expect(getByRole('checkbox', { name: '手札に戻す' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: '山札の上か下に戻す' })).toBeVisible()
+  expect(
+    getByRole('checkbox', { name: '山札の上か下に戻す' }),
+  ).not.toBeChecked()
 }, 180000)
 
 test('フィルタの全リセット', async () => {
@@ -338,17 +358,17 @@ test('フィルタの全リセット', async () => {
 
   // 各フィルタを適当に選択する
   // エキスパンション
-  await userEvent.click(getByRole('radio', { name: '第４弾ブースター' }))
-  expect(getByRole('radio', { name: '第４弾ブースター' })).toBeChecked()
+  await userEvent.click(getByRole('checkbox', { name: '第４弾ブースター' }))
+  expect(getByRole('checkbox', { name: '第４弾ブースター' })).toBeChecked()
   // レアリティ
-  await userEvent.click(getByRole('radio', { name: 'N' }))
-  expect(getByRole('radio', { name: 'N' })).toBeChecked()
+  await userEvent.click(getByRole('checkbox', { name: 'N' }))
+  expect(getByRole('checkbox', { name: 'N' })).toBeChecked()
   // 色
-  await userEvent.click(getByRole('radio', { name: '紫' }))
-  expect(getByRole('radio', { name: '紫' })).toBeChecked()
+  await userEvent.click(getByRole('checkbox', { name: '紫' }))
+  expect(getByRole('checkbox', { name: '紫' })).toBeChecked()
   // 種類とパワー
-  await userEvent.click(getByRole('radio', { name: 'イジン' }))
-  expect(getByRole('radio', { name: 'イジン' })).toBeChecked()
+  await userEvent.click(getByRole('checkbox', { name: 'イジン' }))
+  expect(getByRole('checkbox', { name: 'イジン' })).toBeChecked()
   // prettier-ignore
   fireEvent.change(getSliderInItem(getByRole, '種類とパワー'), { target: { value: '3000'}})
   expect(getSliderInItem(getByRole, '種類とパワー')).toHaveValue('3000')
@@ -361,29 +381,31 @@ test('フィルタの全リセット', async () => {
   await userEvent.click(getRadioInItem(getByRole, 'レベル', '等しい'))
   expect(getRadioInItem(getByRole, 'レベル', '等しい')).toBeChecked()
   // 特性
-  await userEvent.click(getByRole('radio', { name: '医術' }))
-  expect(getByRole('radio', { name: '医術' })).toBeChecked()
+  await userEvent.click(getByRole('checkbox', { name: '医術' }))
+  expect(getByRole('checkbox', { name: '医術' })).toBeChecked()
   // 能力語
-  await userEvent.click(getByRole('radio', { name: '航海' }))
-  expect(getByRole('radio', { name: '航海' })).toBeChecked()
+  await userEvent.click(getByRole('checkbox', { name: '航海' }))
+  expect(getByRole('checkbox', { name: '航海' })).toBeChecked()
   // 遺業能力
-  await userEvent.click(getByRole('radio', { name: '反魂' }))
-  expect(getByRole('radio', { name: '反魂' })).toBeChecked()
+  await userEvent.click(getByRole('checkbox', { name: '反魂' }))
+  expect(getByRole('checkbox', { name: '反魂' })).toBeChecked()
 
   // 「条件すべてをリセットする」と初期状態に戻る
   // prettier-ignore
   await userEvent.click(getByRole('button', { name: '条件すべてをリセットする' }))
-  expect(getRadioInItem(getByRole, 'エキスパンション', 'すべて')).toBeChecked()
-  expect(getRadioInItem(getByRole, 'レアリティ', 'すべて')).toBeChecked()
-  expect(getRadioInItem(getByRole, '色', 'すべて')).toBeChecked()
-  expect(getRadioInItem(getByRole, '種類とパワー', 'すべて')).toBeChecked()
+  expect(
+    getCheckboxInItem(getByRole, 'エキスパンション', 'すべて'),
+  ).toBeChecked()
+  expect(getCheckboxInItem(getByRole, 'レアリティ', 'すべて')).toBeChecked()
+  expect(getCheckboxInItem(getByRole, '色', 'すべて')).toBeChecked()
+  expect(getCheckboxInItem(getByRole, '種類とパワー', 'すべて')).toBeChecked()
   expect(getSliderInItem(getByRole, '種類とパワー')).toHaveValue('0')
   expect(getRadioInItem(getByRole, '種類とパワー', '以上')).toBeChecked()
   expect(getSliderInItem(getByRole, 'レベル')).toHaveValue('0')
   expect(getRadioInItem(getByRole, 'レベル', '以上')).toBeChecked()
-  expect(getRadioInItem(getByRole, '特性', '指定なし')).toBeChecked()
-  expect(getRadioInItem(getByRole, '能力語', '指定なし')).toBeChecked()
-  expect(getRadioInItem(getByRole, '遺業能力', '指定なし')).toBeChecked()
+  expect(getCheckboxInItem(getByRole, '特性', '指定なし')).toBeChecked()
+  expect(getCheckboxInItem(getByRole, '能力語', '指定なし')).toBeChecked()
+  expect(getCheckboxInItem(getByRole, '遺業能力', '指定なし')).toBeChecked()
 })
 
 test('エキスパンションによるフィルタ', async () => {
@@ -399,7 +421,9 @@ test('エキスパンションによるフィルタ', async () => {
   defaultRerender()
   expect(getExpandedButton(getByRole, /エキスパンション/)).toBeVisible()
 
-  expect(getRadioInItem(getByRole, 'エキスパンション', 'すべて')).toBeChecked()
+  expect(
+    getCheckboxInItem(getByRole, 'エキスパンション', 'すべて'),
+  ).toBeChecked()
   expect(getByRole('row', { name: 'R-1' })).toBeVisible()
   expect(getByRole('row', { name: 'B-1' })).toBeVisible()
   expect(getByRole('row', { name: 'G-1' })).toBeVisible()
@@ -410,7 +434,7 @@ test('エキスパンションによるフィルタ', async () => {
   expect(getByRole('row', { name: '3-1' })).toBeVisible()
   expect(getByRole('row', { name: '4-1' })).toBeVisible()
 
-  await userEvent.click(getByRole('radio', { name: '伝説の武将' }))
+  await userEvent.click(getByRole('checkbox', { name: '伝説の武将' }))
   defaultRerender()
   expect(getByRole('row', { name: 'R-1' })).toBeVisible()
   expect(queryByRole('row', { name: 'B-1' })).toBeNull()
@@ -422,7 +446,7 @@ test('エキスパンションによるフィルタ', async () => {
   expect(queryByRole('row', { name: '3-1' })).toBeNull()
   expect(queryByRole('row', { name: '4-1' })).toBeNull()
 
-  await userEvent.click(getByRole('radio', { name: '美と知の革命' }))
+  await userEvent.click(getByRole('checkbox', { name: '美と知の革命' }))
   defaultRerender()
   expect(queryByRole('row', { name: 'R-1' })).toBeNull()
   expect(getByRole('row', { name: 'B-1' })).toBeVisible()
@@ -434,7 +458,7 @@ test('エキスパンションによるフィルタ', async () => {
   expect(queryByRole('row', { name: '3-1' })).toBeNull()
   expect(queryByRole('row', { name: '4-1' })).toBeNull()
 
-  await userEvent.click(getByRole('radio', { name: '日本の大天才' }))
+  await userEvent.click(getByRole('checkbox', { name: '日本の大天才' }))
   defaultRerender()
   expect(queryByRole('row', { name: 'R-1' })).toBeNull()
   expect(queryByRole('row', { name: 'B-1' })).toBeNull()
@@ -446,7 +470,7 @@ test('エキスパンションによるフィルタ', async () => {
   expect(queryByRole('row', { name: '3-1' })).toBeNull()
   expect(queryByRole('row', { name: '4-1' })).toBeNull()
 
-  await userEvent.click(getByRole('radio', { name: '第１弾ブースター' }))
+  await userEvent.click(getByRole('checkbox', { name: '第１弾ブースター' }))
   defaultRerender()
   expect(queryByRole('row', { name: 'R-1' })).toBeNull()
   expect(queryByRole('row', { name: 'B-1' })).toBeNull()
@@ -458,7 +482,7 @@ test('エキスパンションによるフィルタ', async () => {
   expect(queryByRole('row', { name: '3-1' })).toBeNull()
   expect(queryByRole('row', { name: '4-1' })).toBeNull()
 
-  await userEvent.click(getByRole('radio', { name: '三国の英傑' }))
+  await userEvent.click(getByRole('checkbox', { name: '三国の英傑' }))
   defaultRerender()
   expect(queryByRole('row', { name: 'R-1' })).toBeNull()
   expect(queryByRole('row', { name: 'B-1' })).toBeNull()
@@ -470,7 +494,7 @@ test('エキスパンションによるフィルタ', async () => {
   expect(queryByRole('row', { name: '3-1' })).toBeNull()
   expect(queryByRole('row', { name: '4-1' })).toBeNull()
 
-  await userEvent.click(getByRole('radio', { name: '第２弾ブースター' }))
+  await userEvent.click(getByRole('checkbox', { name: '第２弾ブースター' }))
   defaultRerender()
   expect(queryByRole('row', { name: 'R-1' })).toBeNull()
   expect(queryByRole('row', { name: 'B-1' })).toBeNull()
@@ -482,7 +506,7 @@ test('エキスパンションによるフィルタ', async () => {
   expect(queryByRole('row', { name: '3-1' })).toBeNull()
   expect(queryByRole('row', { name: '4-1' })).toBeNull()
 
-  await userEvent.click(getByRole('radio', { name: '発展する医学' }))
+  await userEvent.click(getByRole('checkbox', { name: '発展する医学' }))
   defaultRerender()
   expect(queryByRole('row', { name: 'R-1' })).toBeNull()
   expect(queryByRole('row', { name: 'B-1' })).toBeNull()
@@ -494,7 +518,7 @@ test('エキスパンションによるフィルタ', async () => {
   expect(queryByRole('row', { name: '3-1' })).toBeNull()
   expect(queryByRole('row', { name: '4-1' })).toBeNull()
 
-  await userEvent.click(getByRole('radio', { name: '第３弾ブースター' }))
+  await userEvent.click(getByRole('checkbox', { name: '第３弾ブースター' }))
   defaultRerender()
   expect(queryByRole('row', { name: 'R-1' })).toBeNull()
   expect(queryByRole('row', { name: 'B-1' })).toBeNull()
@@ -506,7 +530,7 @@ test('エキスパンションによるフィルタ', async () => {
   expect(getByRole('row', { name: '3-1' })).toBeVisible()
   expect(queryByRole('row', { name: '4-1' })).toBeNull()
 
-  await userEvent.click(getByRole('radio', { name: '第４弾ブースター' }))
+  await userEvent.click(getByRole('checkbox', { name: '第４弾ブースター' }))
   defaultRerender()
   expect(queryByRole('row', { name: 'R-1' })).toBeNull()
   expect(queryByRole('row', { name: 'B-1' })).toBeNull()
@@ -532,34 +556,34 @@ test('レアリティによるフィルタ', async () => {
   defaultRerender()
   expect(getExpandedButton(getByRole, /レアリティ/)).toBeVisible()
 
-  expect(getRadioInItem(getByRole, 'レアリティ', 'すべて')).toBeChecked()
+  expect(getCheckboxInItem(getByRole, 'レアリティ', 'すべて')).toBeChecked()
   expect(getByRole('row', { name: '1-1' })).toBeVisible() // 織田信長 (SR)
   expect(getByRole('row', { name: '1-15' })).toBeVisible() // 中臣鎌足 (R)
   expect(getByRole('row', { name: '1-17' })).toBeVisible() // 藤原道長 (N)
   expect(getByRole('row', { name: '3-81' })).toBeVisible() // 土方歳三 (PSR)
 
-  await userEvent.click(getByRole('radio', { name: 'N' }))
+  await userEvent.click(getByRole('checkbox', { name: 'N' }))
   defaultRerender()
   expect(queryByRole('row', { name: '1-1' })).toBeNull()
   expect(queryByRole('row', { name: '1-15' })).toBeNull()
   expect(getByRole('row', { name: '1-17' })).toBeVisible()
   expect(queryByRole('row', { name: '3-81' })).toBeNull()
 
-  await userEvent.click(getByRole('radio', { name: 'R' }))
+  await userEvent.click(getByRole('checkbox', { name: 'R' }))
   defaultRerender()
   expect(queryByRole('row', { name: '1-1' })).toBeNull()
   expect(getByRole('row', { name: '1-15' })).toBeVisible()
   expect(queryByRole('row', { name: '1-17' })).toBeNull()
   expect(queryByRole('row', { name: '3-81' })).toBeNull()
 
-  await userEvent.click(getByRole('radio', { name: 'SR' }))
+  await userEvent.click(getByRole('checkbox', { name: 'SR' }))
   defaultRerender()
   expect(getByRole('row', { name: '1-1' })).toBeVisible()
   expect(queryByRole('row', { name: '1-15' })).toBeNull()
   expect(queryByRole('row', { name: '1-17' })).toBeNull()
   expect(queryByRole('row', { name: '3-81' })).toBeNull()
 
-  await userEvent.click(getByRole('radio', { name: 'PSR' }))
+  await userEvent.click(getByRole('checkbox', { name: 'PSR' }))
   defaultRerender()
   expect(queryByRole('row', { name: '1-1' })).toBeNull()
   expect(queryByRole('row', { name: '1-15' })).toBeNull()
@@ -588,7 +612,7 @@ test('色によるフィルタ', async () => {
   expect(getByRole('row', { name: '2-80' })).toBeVisible() // RYマーブルオーブ (緑黄)
   expect(getByRole('row', { name: '3-80' })).toBeVisible() // オブシディアン (無色)
 
-  await userEvent.click(getByRole('radio', { name: '赤' }))
+  await userEvent.click(getByRole('checkbox', { name: '赤' }))
   defaultRerender()
   expect(getByRole('row', { name: '3-15' })).toBeVisible()
   expect(queryByRole('row', { name: '3-19' })).toBeNull()
@@ -600,7 +624,7 @@ test('色によるフィルタ', async () => {
   expect(queryByRole('row', { name: '2-80' })).toBeNull()
   expect(queryByRole('row', { name: '3-80' })).toBeNull()
 
-  await userEvent.click(getByRole('radio', { name: '青' }))
+  await userEvent.click(getByRole('checkbox', { name: '青' }))
   defaultRerender()
   expect(queryByRole('row', { name: '3-15' })).toBeNull()
   expect(getByRole('row', { name: '3-19' })).toBeVisible()
@@ -612,7 +636,7 @@ test('色によるフィルタ', async () => {
   expect(queryByRole('row', { name: '2-80' })).toBeNull()
   expect(queryByRole('row', { name: '3-80' })).toBeNull()
 
-  await userEvent.click(getByRole('radio', { name: '緑' }))
+  await userEvent.click(getByRole('checkbox', { name: '緑' }))
   defaultRerender()
   expect(queryByRole('row', { name: '3-15' })).toBeNull()
   expect(queryByRole('row', { name: '3-19' })).toBeNull()
@@ -624,7 +648,7 @@ test('色によるフィルタ', async () => {
   expect(getByRole('row', { name: '2-80' })).toBeVisible()
   expect(queryByRole('row', { name: '3-80' })).toBeNull()
 
-  await userEvent.click(getByRole('radio', { name: '黄' }))
+  await userEvent.click(getByRole('checkbox', { name: '黄' }))
   defaultRerender()
   expect(queryByRole('row', { name: '3-15' })).toBeNull()
   expect(queryByRole('row', { name: '3-19' })).toBeNull()
@@ -636,7 +660,7 @@ test('色によるフィルタ', async () => {
   expect(getByRole('row', { name: '2-80' })).toBeVisible()
   expect(queryByRole('row', { name: '3-80' })).toBeNull()
 
-  await userEvent.click(getByRole('radio', { name: '紫' }))
+  await userEvent.click(getByRole('checkbox', { name: '紫' }))
   defaultRerender()
   expect(queryByRole('row', { name: '3-15' })).toBeNull()
   expect(queryByRole('row', { name: '3-19' })).toBeNull()
@@ -648,7 +672,7 @@ test('色によるフィルタ', async () => {
   expect(queryByRole('row', { name: '2-80' })).toBeNull()
   expect(queryByRole('row', { name: '3-80' })).toBeNull()
 
-  await userEvent.click(getByRole('radio', { name: '多色' }))
+  await userEvent.click(getByRole('checkbox', { name: '多色' }))
   defaultRerender()
   expect(queryByRole('row', { name: '3-15' })).toBeNull()
   expect(queryByRole('row', { name: '3-19' })).toBeNull()
@@ -660,7 +684,7 @@ test('色によるフィルタ', async () => {
   expect(getByRole('row', { name: '2-80' })).toBeVisible()
   expect(queryByRole('row', { name: '3-80' })).toBeNull()
 
-  await userEvent.click(getByRole('radio', { name: '無色' }))
+  await userEvent.click(getByRole('checkbox', { name: '無色' }))
   defaultRerender()
   expect(queryByRole('row', { name: '3-15' })).toBeNull()
   expect(queryByRole('row', { name: '3-19' })).toBeNull()
@@ -689,28 +713,28 @@ test('種類によるフィルタ', async () => {
   expect(getByRole('row', { name: 'B-11' })).toBeVisible() // フリート
   expect(getByRole('row', { name: 'B-13' })).toBeVisible() // ブルーストーン
 
-  await userEvent.click(getByRole('radio', { name: 'イジン' }))
+  await userEvent.click(getByRole('checkbox', { name: 'イジン' }))
   defaultRerender()
   expect(getByRole('row', { name: 'B-2' })).toBeVisible()
   expect(queryByRole('row', { name: 'B-9' })).toBeNull()
   expect(queryByRole('row', { name: 'B-11' })).toBeNull()
   expect(queryByRole('row', { name: 'B-13' })).toBeNull()
 
-  await userEvent.click(getByRole('radio', { name: 'ハイケイ' }))
+  await userEvent.click(getByRole('checkbox', { name: 'ハイケイ' }))
   defaultRerender()
   expect(queryByRole('row', { name: 'B-2' })).toBeNull()
   expect(getByRole('row', { name: 'B-9' })).toBeVisible()
   expect(queryByRole('row', { name: 'B-11' })).toBeNull()
   expect(queryByRole('row', { name: 'B-13' })).toBeNull()
 
-  await userEvent.click(getByRole('radio', { name: 'マホウ' }))
+  await userEvent.click(getByRole('checkbox', { name: 'マホウ' }))
   defaultRerender()
   expect(queryByRole('row', { name: 'B-2' })).toBeNull()
   expect(queryByRole('row', { name: 'B-9' })).toBeNull()
   expect(getByRole('row', { name: 'B-11' })).toBeVisible()
   expect(queryByRole('row', { name: 'B-13' })).toBeNull()
 
-  await userEvent.click(getByRole('radio', { name: 'マリョク' }))
+  await userEvent.click(getByRole('checkbox', { name: 'マリョク' }))
   defaultRerender()
   expect(queryByRole('row', { name: 'B-2' })).toBeNull()
   expect(queryByRole('row', { name: 'B-9' })).toBeNull()
@@ -730,7 +754,7 @@ test('イジンのパワーによるフィルタ', async () => {
   expect(getExpandedButton(getByRole, /種類とパワー/)).toBeVisible()
 
   // 0以上
-  await userEvent.click(getByRole('radio', { name: 'イジン' }))
+  await userEvent.click(getByRole('checkbox', { name: 'イジン' }))
   defaultRerender()
   expect(getByRole('row', { name: '4-37' })).toBeVisible() // フローレンス・ナイチンゲール (0)
   expect(getByRole('row', { name: 'G-2' })).toBeVisible() // 卑弥呼 (500)
@@ -1002,7 +1026,7 @@ test('特性によるフィルタ (剣術)', async () => {
   expect(getByRole('row', { name: 'R-11' })).toBeVisible() // ロイヤリティ (テキストに剣術を持つマホウ)
   expect(getByRole('row', { name: '1-60' })).toBeVisible() // 髭切 (テキストに剣術を持つマリョク)
 
-  await userEvent.click(getByRole('radio', { name: '剣術' }))
+  await userEvent.click(getByRole('checkbox', { name: '剣術' }))
   defaultRerender()
   expect(getByRole('row', { name: '1-10' })).toBeVisible() // 徳川家康 (剣術イジン)
   expect(getByRole('row', { name: '4-35' })).toBeVisible() // 沖田総司 (剣術・志願イジン)
@@ -1041,7 +1065,7 @@ test('特性によるフィルタ (美術)', async () => {
   expect(getByRole('row', { name: '1-76' })).toBeVisible() // シーボルト (テキストに美術を持つイジン)
   expect(getByRole('row', { name: '1-56' })).toBeVisible() // リバイバル (テキストに美術を持つマホウ)
 
-  await userEvent.click(getByRole('radio', { name: '美術' }))
+  await userEvent.click(getByRole('checkbox', { name: '美術' }))
   defaultRerender()
   expect(queryByRole('row', { name: '1-10' })).toBeNull() // 徳川家康 (剣術イジン)
   expect(getByRole('row', { name: '1-23' })).toBeVisible() // ドナテッロ (美術イジン)
@@ -1077,7 +1101,7 @@ test('特性によるフィルタ (音楽)', async () => {
   expect(getByRole('row', { name: '4-3' })).toBeVisible() // アンナ・パブロワ (テキストに音楽を含むイジン)
   expect(getByRole('row', { name: '4-47' })).toBeVisible() // マザーグース (テキストに音楽を含むハイケイ)
 
-  await userEvent.click(getByRole('radio', { name: '音楽' }))
+  await userEvent.click(getByRole('checkbox', { name: '音楽' }))
   defaultRerender()
   expect(queryByRole('row', { name: '1-10' })).toBeNull() // 徳川家康 (剣術イジン)
   expect(queryByRole('row', { name: '1-23' })).toBeNull() // ドナテッロ (美術イジン)
@@ -1113,7 +1137,7 @@ test('特性によるフィルタ (思想)', async () => {
   expect(getByRole('row', { name: '3-43' })).toBeVisible() // ポンパドゥール夫人 (テキストに思想を持つイジン)
   expect(getByRole('row', { name: '2-55' })).toBeVisible() // 凱旋門 (テキストに思想を含むハイケイ)
 
-  await userEvent.click(getByRole('radio', { name: '思想' }))
+  await userEvent.click(getByRole('checkbox', { name: '思想' }))
   defaultRerender()
   expect(queryByRole('row', { name: '1-10' })).toBeNull() // 徳川家康 (剣術イジン)
   expect(queryByRole('row', { name: '1-23' })).toBeNull() // ドナテッロ (美術イジン)
@@ -1148,7 +1172,7 @@ test('特性によるフィルタ (医術)', async () => {
   expect(getByRole('row', { name: '3-43' })).toBeVisible() // 芹沢鴨 (志願イジン)
   expect(getByRole('row', { name: 'P-5' })).toBeVisible() // 渡辺崋山 (テキストに医術を持つ美術イジン)
 
-  await userEvent.click(getByRole('radio', { name: '医術' }))
+  await userEvent.click(getByRole('checkbox', { name: '医術' }))
   defaultRerender()
   expect(queryByRole('row', { name: '1-10' })).toBeNull() // 徳川家康 (剣術イジン)
   expect(queryByRole('row', { name: '1-23' })).toBeNull() // ドナテッロ (美術イジン)
@@ -1181,7 +1205,7 @@ test('特性によるフィルタ (志願)', async () => {
   expect(getByRole('row', { name: '4-49' })).toBeVisible() // 蝦夷共和国 (テキストに志願を持つハイケイ)
   expect(getByRole('row', { name: '3-76' })).toBeVisible() // ダンダラ羽織 (テキストに志願を持つマリョク)
 
-  await userEvent.click(getByRole('radio', { name: '志願' }))
+  await userEvent.click(getByRole('checkbox', { name: '志願' }))
   defaultRerender()
   expect(queryByRole('row', { name: '1-10' })).toBeNull() // 徳川家康 (剣術イジン)
   expect(queryByRole('row', { name: '1-23' })).toBeNull() // ドナテッロ (美術イジン)
@@ -1216,7 +1240,7 @@ test('能力語によるフィルタ (航海)', async () => {
   expect(getByRole('row', { name: 'B-11' })).toBeVisible() // フリート (テキストに航海を持つマホウ)
   expect(getByRole('row', { name: '1-64' })).toBeVisible() // 羅針盤 (テキストに航海を持つマリョク)
 
-  await userEvent.click(getByRole('radio', { name: '航海' }))
+  await userEvent.click(getByRole('checkbox', { name: '航海' }))
   defaultRerender()
   expect(getByRole('row', { name: '2-22' })).toBeVisible() // 日蓮 (航海イジン)
   expect(queryByRole('row', { name: '2-39' })).toBeNull() // 陳寿 (執筆イジン)
@@ -1251,7 +1275,7 @@ test('能力語によるフィルタ (執筆)', async () => {
   expect(getByRole('row', { name: '1-25' })).toBeVisible() // 始皇帝 (テキストに執筆を持つイジン)
   expect(getByRole('row', { name: '1-68' })).toBeVisible() // 万葉集 (テキストに執筆を持つマリョク)
 
-  await userEvent.click(getByRole('radio', { name: '執筆' }))
+  await userEvent.click(getByRole('checkbox', { name: '執筆' }))
   defaultRerender()
   expect(queryByRole('row', { name: '2-22' })).toBeNull() // 日蓮 (航海イジン)
   expect(getByRole('row', { name: '2-39' })).toBeVisible() // 陳寿 (執筆イジン)
@@ -1284,7 +1308,7 @@ test('能力語によるフィルタ (決起)', async () => {
   expect(getByRole('row', { name: '2-57' })).toBeVisible() // スペクター (魔導マホウ)
   expect(getByRole('row', { name: '3-4' })).toBeVisible() // 吉田松陰 (テキストに決起を持つイジン)
 
-  await userEvent.click(getByRole('radio', { name: '決起' }))
+  await userEvent.click(getByRole('checkbox', { name: '決起' }))
   defaultRerender()
   expect(queryByRole('row', { name: '2-22' })).toBeNull() // 日蓮 (航海イジン)
   expect(queryByRole('row', { name: '2-39' })).toBeNull() // 陳寿 (執筆イジン)
@@ -1315,7 +1339,7 @@ test('能力語によるフィルタ (徴募)', async () => {
   expect(getByRole('row', { name: '2-57' })).toBeVisible() // スペクター (魔導マホウ)
   expect(getByRole('row', { name: '2-55' })).toBeVisible() // 凱旋門 (テキストに徴募を持つハイケイ)
 
-  await userEvent.click(getByRole('radio', { name: '徴募' }))
+  await userEvent.click(getByRole('checkbox', { name: '徴募' }))
   defaultRerender()
   expect(queryByRole('row', { name: '2-22' })).toBeNull() // 日蓮 (航海イジン)
   expect(queryByRole('row', { name: '2-39' })).toBeNull() // 陳寿 (執筆イジン)
@@ -1353,7 +1377,7 @@ test('能力語によるフィルタ (魔導)', async () => {
   expect(getByRole('row', { name: '4-65' })).toBeVisible() // ソリッドビジョンγ (無色の紫魔導マホウ)
   expect(getByRole('row', { name: '4-8' })).toBeVisible() // アルキメデス (テキストに魔導を持つイジン)
 
-  await userEvent.click(getByRole('radio', { name: '魔導' }))
+  await userEvent.click(getByRole('checkbox', { name: '魔導' }))
   defaultRerender()
   expect(queryByRole('row', { name: '2-22' })).toBeNull() // 日蓮 (航海イジン)
   expect(queryByRole('row', { name: '2-39' })).toBeNull() // 陳寿 (執筆イジン)
@@ -1397,7 +1421,7 @@ test('遺業能力によるフィルタ (冥府発動)', async () => {
   expect(getByRole('row', { name: '3-59' })).toBeVisible() // 森閑たる離宮 (テキストに冥府発動を持つハイケイ)
   expect(getByRole('row', { name: '3-61' })).toBeVisible() // サンダーボルト (テキストに冥府発動を持つマホウ)
 
-  await userEvent.click(getByRole('radio', { name: '冥府発動' }))
+  await userEvent.click(getByRole('checkbox', { name: '冥府発動' }))
   defaultRerender()
 
   expect(queryByRole('row', { name: '4-46' })).toBeNull() // 大日本沿海輿地全図 (魔力化)
@@ -1439,7 +1463,7 @@ test('遺業能力によるフィルタ (反魂)', async () => {
   expect(getByRole('row', { name: '2-37' })).toBeVisible() // 姜維 (テキストに反魂を持つイジン)
   expect(getByRole('row', { name: '2-49' })).toBeVisible() // 籠城戦 (テキストに反魂を持つハイケイ)
 
-  await userEvent.click(getByRole('radio', { name: '反魂' }))
+  await userEvent.click(getByRole('checkbox', { name: '反魂' }))
   defaultRerender()
 
   expect(queryByRole('row', { name: '4-46' })).toBeNull() // 大日本沿海輿地全図 (魔力化)
@@ -1478,7 +1502,7 @@ test('遺業能力によるフィルタ (その他)', async () => {
   expect(getByRole('row', { name: '4-43' })).toBeVisible() // 火と氷の大地 (手札に戻す)
   expect(getByRole('row', { name: '4-48' })).toBeVisible() // 遠征軍 (山札の上か下に戻す)
 
-  await userEvent.click(getByRole('radio', { name: '魔力化' }))
+  await userEvent.click(getByRole('checkbox', { name: '魔力化' }))
   defaultRerender()
   expect(getByRole('row', { name: '4-46' })).toBeVisible() // 大日本沿海輿地全図 (魔力化)
   expect(queryByRole('row', { name: '4-58' })).toBeNull() // ルーナ (冥府発動)
@@ -1492,7 +1516,7 @@ test('遺業能力によるフィルタ (その他)', async () => {
 
   // 冥府発動は別途実施
 
-  await userEvent.click(getByRole('radio', { name: '復元' }))
+  await userEvent.click(getByRole('checkbox', { name: '復元' }))
   defaultRerender()
   expect(queryByRole('row', { name: '4-46' })).toBeNull() // 大日本沿海輿地全図 (魔力化)
   expect(queryByRole('row', { name: '4-58' })).toBeNull() // ルーナ (冥府発動)
@@ -1506,7 +1530,7 @@ test('遺業能力によるフィルタ (その他)', async () => {
 
   // 反魂は別途実施
 
-  await userEvent.click(getByRole('radio', { name: '木霊' }))
+  await userEvent.click(getByRole('checkbox', { name: '木霊' }))
   defaultRerender()
   expect(queryByRole('row', { name: '4-46' })).toBeNull() // 大日本沿海輿地全図 (魔力化)
   expect(queryByRole('row', { name: '4-58' })).toBeNull() // ルーナ (冥府発動)
@@ -1518,7 +1542,7 @@ test('遺業能力によるフィルタ (その他)', async () => {
   expect(queryByRole('row', { name: '4-43' })).toBeNull() // 火と氷の大地 (手札に戻す)
   expect(queryByRole('row', { name: '4-48' })).toBeNull() // 遠征軍 (山札の上か下に戻す)
 
-  await userEvent.click(getByRole('radio', { name: '喪神' }))
+  await userEvent.click(getByRole('checkbox', { name: '喪神' }))
   defaultRerender()
   expect(queryByRole('row', { name: '4-46' })).toBeNull() // 大日本沿海輿地全図 (魔力化)
   expect(queryByRole('row', { name: '4-58' })).toBeNull() // ルーナ (冥府発動)
@@ -1530,7 +1554,7 @@ test('遺業能力によるフィルタ (その他)', async () => {
   expect(queryByRole('row', { name: '4-43' })).toBeNull() // 火と氷の大地 (手札に戻す)
   expect(queryByRole('row', { name: '4-48' })).toBeNull() // 遠征軍 (山札の上か下に戻す)
 
-  await userEvent.click(getByRole('radio', { name: '1ドローする' }))
+  await userEvent.click(getByRole('checkbox', { name: '1ドローする' }))
   defaultRerender()
   expect(queryByRole('row', { name: '4-46' })).toBeNull() // 大日本沿海輿地全図 (魔力化)
   expect(queryByRole('row', { name: '4-58' })).toBeNull() // ルーナ (冥府発動)
@@ -1542,7 +1566,7 @@ test('遺業能力によるフィルタ (その他)', async () => {
   expect(queryByRole('row', { name: '4-43' })).toBeNull() // 火と氷の大地 (手札に戻す)
   expect(queryByRole('row', { name: '4-48' })).toBeNull() // 遠征軍 (山札の上か下に戻す)
 
-  await userEvent.click(getByRole('radio', { name: '手札に戻す' }))
+  await userEvent.click(getByRole('checkbox', { name: '手札に戻す' }))
   defaultRerender()
   expect(queryByRole('row', { name: '4-46' })).toBeNull() // 大日本沿海輿地全図 (魔力化)
   expect(queryByRole('row', { name: '4-58' })).toBeNull() // ルーナ (冥府発動)
@@ -1554,7 +1578,7 @@ test('遺業能力によるフィルタ (その他)', async () => {
   expect(getByRole('row', { name: '4-43' })).toBeVisible() // 火と氷の大地 (手札に戻す)
   expect(queryByRole('row', { name: '4-48' })).toBeNull() // 遠征軍 (山札の上か下に戻す)
 
-  await userEvent.click(getByRole('radio', { name: '山札の上か下に戻す' }))
+  await userEvent.click(getByRole('checkbox', { name: '山札の上か下に戻す' }))
   defaultRerender()
   expect(queryByRole('row', { name: '4-46' })).toBeNull() // 大日本沿海輿地全図 (魔力化)
   expect(queryByRole('row', { name: '4-58' })).toBeNull() // ルーナ (冥府発動)
@@ -1595,9 +1619,9 @@ test('色と種類とレベルによる複合フィルタ', async () => {
   expect(getByRole('row', { name: '1-75' })).toBeVisible() // 衛青 (赤でない)
 
   // レベル5以下の赤のイジンを探す
-  await userEvent.click(getByRole('radio', { name: '赤' }))
+  await userEvent.click(getByRole('checkbox', { name: '赤' }))
   defaultRerender()
-  await userEvent.click(getByRole('radio', { name: 'イジン' }))
+  await userEvent.click(getByRole('checkbox', { name: 'イジン' }))
   defaultRerender()
   // prettier-ignore
   fireEvent.change(getSliderInItem(getByRole, 'レベル'), { target: { value: '5' } })
@@ -1728,10 +1752,10 @@ test('キーワードと色と種類の複合によるフィルタ', async () =>
   expect(getByRole('row', { name: '4-67' })).toBeVisible() // レッドサークル
 
   // 赤のイジンで「イジン召喚権」を持つものを探す
-  await userEvent.click(getByRole('radio', { name: '赤' }))
+  await userEvent.click(getByRole('checkbox', { name: '赤' }))
   defaultRerender()
   // イジンボタンを押す
-  await userEvent.click(getByRole('radio', { name: 'イジン' }))
+  await userEvent.click(getByRole('checkbox', { name: 'イジン' }))
   defaultRerender()
   // prettier-ignore
   await userEvent.type(getByPlaceholderText('カード名、テキスト、イラストレータで検索'), 'イジン召喚権')

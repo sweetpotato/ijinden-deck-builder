@@ -48,22 +48,22 @@ test('デフォルトのレンダリング', () => {
   // 初期状態はゼロ
   expect(getState(result)).toBe(0)
 
-  // ラジオボタンが並んでいる
-  expect(getByRole('radio', { name: 'すべて' })).toBeVisible()
-  expect(getByRole('radio', { name: 'すべて' })).toBeChecked()
-  expect(getByRole('radio', { name: 'スタート' })).toBeVisible()
-  expect(getByRole('radio', { name: 'スタート' })).not.toBeChecked()
-  expect(getByRole('radio', { name: 'ドロー' })).toBeVisible()
-  expect(getByRole('radio', { name: 'ドロー' })).not.toBeChecked()
-  expect(getByRole('radio', { name: 'メイン' })).toBeVisible()
-  expect(getByRole('radio', { name: 'メイン' })).not.toBeChecked()
-  expect(getByRole('radio', { name: 'エンド' })).toBeVisible()
-  expect(getByRole('radio', { name: 'エンド' })).not.toBeChecked()
+  // チェックボックスが並んでいる
+  expect(getByRole('checkbox', { name: 'すべて' })).toBeVisible()
+  expect(getByRole('checkbox', { name: 'すべて' })).toBeChecked()
+  expect(getByRole('checkbox', { name: 'スタート' })).toBeVisible()
+  expect(getByRole('checkbox', { name: 'スタート' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'ドロー' })).toBeVisible()
+  expect(getByRole('checkbox', { name: 'ドロー' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'メイン' })).toBeVisible()
+  expect(getByRole('checkbox', { name: 'メイン' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'エンド' })).toBeVisible()
+  expect(getByRole('checkbox', { name: 'エンド' })).not.toBeChecked()
 
-  // 最初のラジオボタンを得る
+  // 最初のチェックボックスを得る
   const item = getByRole('listitem', { name: 'フェイズ' })
-  expect(within(item).getByRole('radio', { name: 'すべて' })).toBeVisible()
-  expect(within(item).getByRole('radio', { name: 'すべて' })).toBeChecked()
+  expect(within(item).getByRole('checkbox', { name: 'すべて' })).toBeVisible()
+  expect(within(item).getByRole('checkbox', { name: 'すべて' })).toBeChecked()
 
   // 開閉箇所はボタンとして得られる
   expect(
@@ -82,66 +82,125 @@ test('ボタンを選択する', async () => {
 
   // 初期状態では「すべて」が選択されている
   expect(getState(result)).toBe(0)
-  expect(getByRole('radio', { name: 'すべて' })).toBeChecked()
-  expect(getByRole('radio', { name: 'スタート' })).not.toBeChecked()
-  expect(getByRole('radio', { name: 'ドロー' })).not.toBeChecked()
-  expect(getByRole('radio', { name: 'メイン' })).not.toBeChecked()
-  expect(getByRole('radio', { name: 'エンド' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'すべて' })).toBeChecked()
+  expect(getByRole('checkbox', { name: 'スタート' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'ドロー' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'メイン' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'エンド' })).not.toBeChecked()
 
   // スタートを選択する
-  await userEvent.click(getByRole('radio', { name: 'スタート' }))
+  await userEvent.click(getByRole('checkbox', { name: 'スタート' }))
   defaultRerender()
 
   expect(getState(result)).toBe(1)
-  expect(getByRole('radio', { name: 'すべて' })).not.toBeChecked()
-  expect(getByRole('radio', { name: 'スタート' })).toBeChecked()
-  expect(getByRole('radio', { name: 'ドロー' })).not.toBeChecked()
-  expect(getByRole('radio', { name: 'メイン' })).not.toBeChecked()
-  expect(getByRole('radio', { name: 'エンド' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'すべて' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'スタート' })).toBeChecked()
+  expect(getByRole('checkbox', { name: 'ドロー' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'メイン' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'エンド' })).not.toBeChecked()
 
   // ドローを選択する
-  await userEvent.click(getByRole('radio', { name: 'ドロー' }))
+  await userEvent.click(getByRole('checkbox', { name: 'ドロー' }))
   defaultRerender()
 
   expect(getState(result)).toBe(2)
-  expect(getByRole('radio', { name: 'すべて' })).not.toBeChecked()
-  expect(getByRole('radio', { name: 'スタート' })).not.toBeChecked()
-  expect(getByRole('radio', { name: 'ドロー' })).toBeChecked()
-  expect(getByRole('radio', { name: 'メイン' })).not.toBeChecked()
-  expect(getByRole('radio', { name: 'エンド' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'すべて' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'スタート' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'ドロー' })).toBeChecked()
+  expect(getByRole('checkbox', { name: 'メイン' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'エンド' })).not.toBeChecked()
 
   // メインを選択する
-  await userEvent.click(getByRole('radio', { name: 'メイン' }))
+  await userEvent.click(getByRole('checkbox', { name: 'メイン' }))
   defaultRerender()
 
   expect(getState(result)).toBe(4)
-  expect(getByRole('radio', { name: 'すべて' })).not.toBeChecked()
-  expect(getByRole('radio', { name: 'スタート' })).not.toBeChecked()
-  expect(getByRole('radio', { name: 'ドロー' })).not.toBeChecked()
-  expect(getByRole('radio', { name: 'メイン' })).toBeChecked()
-  expect(getByRole('radio', { name: 'エンド' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'すべて' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'スタート' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'ドロー' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'メイン' })).toBeChecked()
+  expect(getByRole('checkbox', { name: 'エンド' })).not.toBeChecked()
 
   // エンドを選択する
-  await userEvent.click(getByRole('radio', { name: 'エンド' }))
+  await userEvent.click(getByRole('checkbox', { name: 'エンド' }))
   defaultRerender()
 
   expect(getState(result)).toBe(8)
-  expect(getByRole('radio', { name: 'すべて' })).not.toBeChecked()
-  expect(getByRole('radio', { name: 'スタート' })).not.toBeChecked()
-  expect(getByRole('radio', { name: 'ドロー' })).not.toBeChecked()
-  expect(getByRole('radio', { name: 'メイン' })).not.toBeChecked()
-  expect(getByRole('radio', { name: 'エンド' })).toBeChecked()
+  expect(getByRole('checkbox', { name: 'すべて' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'スタート' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'ドロー' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'メイン' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'エンド' })).toBeChecked()
 
   // 「すべて」を再度選択する
-  await userEvent.click(getByRole('radio', { name: 'すべて' }))
+  await userEvent.click(getByRole('checkbox', { name: 'すべて' }))
   defaultRerender()
 
   expect(getState(result)).toBe(0)
-  expect(getByRole('radio', { name: 'すべて' })).toBeChecked()
-  expect(getByRole('radio', { name: 'スタート' })).not.toBeChecked()
-  expect(getByRole('radio', { name: 'ドロー' })).not.toBeChecked()
-  expect(getByRole('radio', { name: 'メイン' })).not.toBeChecked()
-  expect(getByRole('radio', { name: 'エンド' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'すべて' })).toBeChecked()
+  expect(getByRole('checkbox', { name: 'スタート' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'ドロー' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'メイン' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'エンド' })).not.toBeChecked()
+})
+
+test('ボタンを再選択する', async () => {
+  const { result, defaultRerender, getByRole } = defaultRender(
+    'フェイズ',
+    dataPhases,
+  )
+
+  // 初期状態では「すべて」が選択されている
+  expect(getState(result)).toBe(0)
+  expect(getByRole('checkbox', { name: 'すべて' })).toBeChecked()
+  expect(getByRole('checkbox', { name: 'スタート' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'ドロー' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'メイン' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'エンド' })).not.toBeChecked()
+
+  // スタートを選択する
+  await userEvent.click(getByRole('checkbox', { name: 'スタート' }))
+  defaultRerender()
+
+  expect(getState(result)).toBe(1)
+  expect(getByRole('checkbox', { name: 'すべて' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'スタート' })).toBeChecked()
+  expect(getByRole('checkbox', { name: 'ドロー' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'メイン' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'エンド' })).not.toBeChecked()
+
+  // スタートを再選択する
+  await userEvent.click(getByRole('checkbox', { name: 'スタート' }))
+  defaultRerender()
+
+  expect(getState(result)).toBe(0)
+  expect(getByRole('checkbox', { name: 'すべて' })).toBeChecked()
+  expect(getByRole('checkbox', { name: 'スタート' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'ドロー' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'メイン' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'エンド' })).not.toBeChecked()
+
+  // ドローを選択する
+  await userEvent.click(getByRole('checkbox', { name: 'ドロー' }))
+  defaultRerender()
+
+  expect(getState(result)).toBe(2)
+  expect(getByRole('checkbox', { name: 'すべて' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'スタート' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'ドロー' })).toBeChecked()
+  expect(getByRole('checkbox', { name: 'メイン' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'エンド' })).not.toBeChecked()
+
+  // ドローを再選択する
+  await userEvent.click(getByRole('checkbox', { name: 'ドロー' }))
+  defaultRerender()
+
+  expect(getState(result)).toBe(0)
+  expect(getByRole('checkbox', { name: 'すべて' })).toBeChecked()
+  expect(getByRole('checkbox', { name: 'スタート' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'ドロー' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'メイン' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'エンド' })).not.toBeChecked()
 })
 
 test('状態をリセットする', async () => {
@@ -152,31 +211,31 @@ test('状態をリセットする', async () => {
 
   // 初期状態では「すべて」が選択されている
   expect(getState(result)).toBe(0)
-  expect(getByRole('radio', { name: 'すべて' })).toBeChecked()
-  expect(getByRole('radio', { name: 'スタート' })).not.toBeChecked()
-  expect(getByRole('radio', { name: 'ドロー' })).not.toBeChecked()
-  expect(getByRole('radio', { name: 'メイン' })).not.toBeChecked()
-  expect(getByRole('radio', { name: 'エンド' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'すべて' })).toBeChecked()
+  expect(getByRole('checkbox', { name: 'スタート' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'ドロー' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'メイン' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'エンド' })).not.toBeChecked()
 
   // 適当なボタンとしてスタートを選択する
-  await userEvent.click(getByRole('radio', { name: 'スタート' }))
+  await userEvent.click(getByRole('checkbox', { name: 'スタート' }))
   defaultRerender()
 
   expect(getState(result)).toBe(1)
-  expect(getByRole('radio', { name: 'すべて' })).not.toBeChecked()
-  expect(getByRole('radio', { name: 'スタート' })).toBeChecked()
-  expect(getByRole('radio', { name: 'ドロー' })).not.toBeChecked()
-  expect(getByRole('radio', { name: 'メイン' })).not.toBeChecked()
-  expect(getByRole('radio', { name: 'エンド' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'すべて' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'スタート' })).toBeChecked()
+  expect(getByRole('checkbox', { name: 'ドロー' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'メイン' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'エンド' })).not.toBeChecked()
 
   // リセットすると「すべて」が選択される
   await act(() => getResetFn(result)())
   defaultRerender()
 
   expect(getState(result)).toBe(0)
-  expect(getByRole('radio', { name: 'すべて' })).toBeChecked()
-  expect(getByRole('radio', { name: 'スタート' })).not.toBeChecked()
-  expect(getByRole('radio', { name: 'ドロー' })).not.toBeChecked()
-  expect(getByRole('radio', { name: 'メイン' })).not.toBeChecked()
-  expect(getByRole('radio', { name: 'エンド' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'すべて' })).toBeChecked()
+  expect(getByRole('checkbox', { name: 'スタート' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'ドロー' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'メイン' })).not.toBeChecked()
+  expect(getByRole('checkbox', { name: 'エンド' })).not.toBeChecked()
 })

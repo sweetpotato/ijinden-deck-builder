@@ -54,7 +54,7 @@ const AccordionItemGenericFilter = memo(function AccordionItemGenericFilter({
           return (
             <ToggleButton
               key={id}
-              type="radio"
+              type="checkbox"
               variant="outline-primary"
               id={id}
               name={name}

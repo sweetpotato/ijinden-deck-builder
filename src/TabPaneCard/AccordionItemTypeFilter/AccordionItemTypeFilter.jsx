@@ -85,7 +85,7 @@ const AccordionItemTypeFilter = memo(function AccordionItemTypeFilter({
       <AccordionBody>
         <div className="container-button">
           <ToggleButton
-            type="radio"
+            type="checkbox"
             variant="outline-primary"
             id={`${nameType}-0`}
             name={nameType}
@@ -96,7 +96,7 @@ const AccordionItemTypeFilter = memo(function AccordionItemTypeFilter({
             すべて
           </ToggleButton>
           <ToggleButton
-            type="radio"
+            type="checkbox"
             variant="outline-primary"
             id={`${nameType}-${enumType.IJIN}`}
             name={nameType}
@@ -107,7 +107,7 @@ const AccordionItemTypeFilter = memo(function AccordionItemTypeFilter({
             イジン
           </ToggleButton>
           <ToggleButton
-            type="radio"
+            type="checkbox"
             variant="outline-primary"
             id={`${nameType}-${enumType.HAIKEI}`}
             name={nameType}
@@ -118,7 +118,7 @@ const AccordionItemTypeFilter = memo(function AccordionItemTypeFilter({
             ハイケイ
           </ToggleButton>
           <ToggleButton
-            type="radio"
+            type="checkbox"
             variant="outline-primary"
             id={`${nameType}-${enumType.MAHOU}`}
             name={nameType}
@@ -129,7 +129,7 @@ const AccordionItemTypeFilter = memo(function AccordionItemTypeFilter({
             マホウ
           </ToggleButton>
           <ToggleButton
-            type="radio"
+            type="checkbox"
             variant="outline-primary"
             id={`${nameType}-${enumType.MARYOKU}`}
             name={nameType}
