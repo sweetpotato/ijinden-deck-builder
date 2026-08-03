@@ -42,11 +42,10 @@ const dataExpansions = [
 
 const dataRarities = [
   { value: 0, label: 'すべて' },
-  { value: 1, label: 'Nのみ' },
-  { value: 3, label: 'NとR' },
-  { value: 2, label: 'Rのみ' },
-  { value: 6, label: 'RとSR' },
-  { value: 4, label: 'SRのみ' },
+  { value: 1, label: 'N' },
+  { value: 2, label: 'R' },
+  { value: 4, label: 'SR' },
+  { value: 8, label: 'PSR' },
 ]
 
 const dataColors = [
@@ -169,7 +168,7 @@ function TabPaneCard({
     allText += '§' + card.illustration.toLowerCase()
     return (
       (expansion === 0 || card.expansion === expansion) &&
-      (rarity === 0 || (card.rarity & rarity) === card.rarity) &&
+      (rarity === 0 || (card.rarity & rarity) === rarity) &&
       (color === 0 || (card.color & color) === color) &&
       (type === 0 || card.type === type) &&
       (card.type !== enumType.IJIN || powerMatched) &&
