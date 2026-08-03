@@ -27,17 +27,17 @@ import './index.css'
 
 const dataExpansions = [
   { value: 0, label: 'すべて' },
-  { value: 10, label: '伝説の武将' },
-  { value: 11, label: '美と知の革命' },
-  { value: 12, label: '日本の大天才' },
-  { value: 15, label: '第１弾ブースター' },
-  { value: 20, label: '三国の英傑' },
-  { value: 25, label: '第２弾ブースター' },
-  { value: 30, label: '発展する医学' },
-  { value: 35, label: '第３弾ブースター' },
-  { value: 45, label: '第４弾ブースター' },
-  { value: 55, label: '第５弾ブースター' },
-  { value: 65, label: '第６弾ブースター' },
+  { value: 1, label: '伝説の武将' },
+  { value: 2, label: '美と知の革命' },
+  { value: 4, label: '日本の大天才' },
+  { value: 8, label: '第１弾ブースター' },
+  { value: 16, label: '三国の英傑' },
+  { value: 32, label: '第２弾ブースター' },
+  { value: 64, label: '発展する医学' },
+  { value: 128, label: '第３弾ブースター' },
+  { value: 256, label: '第４弾ブースター' },
+  { value: 512, label: '第５弾ブースター' },
+  { value: 1024, label: '第６弾ブースター' },
 ]
 
 const dataRarities = [
@@ -167,10 +167,10 @@ function TabPaneCard({
       includesTraitAndLegacy && card.legacyText ? '§' + card.legacyText : ''
     allText += '§' + card.illustration.toLowerCase()
     return (
-      (expansion === 0 || card.expansion === expansion) &&
+      (expansion === 0 || (card.expansion & expansion) === expansion) &&
       (rarity === 0 || (card.rarity & rarity) === rarity) &&
       (color === 0 || (card.color & color) === color) &&
-      (type === 0 || card.type === type) &&
+      (type === 0 || (card.type & type) === type) &&
       (card.type !== enumType.IJIN || powerMatched) &&
       levelMatched &&
       (term === 0 || (card.term & term) === term) &&

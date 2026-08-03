@@ -3,8 +3,8 @@
 const enumType = {
   IJIN: 1,
   HAIKEI: 2,
-  MAHOU: 3,
-  MARYOKU: 4,
+  MAHOU: 4,
+  MARYOKU: 8,
 }
 
 export default enumType

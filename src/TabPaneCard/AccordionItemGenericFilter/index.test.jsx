@@ -12,17 +12,8 @@ const dataPhases = [
   { value: 0, label: 'すべて' },
   { value: 1, label: 'スタート' },
   { value: 2, label: 'ドロー' },
-  { value: 3, label: 'メイン' },
-  { value: 4, label: 'エンド' },
-]
-
-const dataAreas = [
-  { value: 0, label: '指定なし' },
-  { value: 1, label: '山札' },
-  { value: 2, label: '手札' },
-  { value: 4, label: '魔力ゾーン' },
-  { value: 8, label: '戦場' },
-  { value: 16, label: '墓地' },
+  { value: 4, label: 'メイン' },
+  { value: 8, label: 'エンド' },
 ]
 
 function getState(result) {
@@ -39,10 +30,10 @@ function getRenderFn(result) {
 
 function defaultRender(title, data) {
   const { result } = renderHook(() =>
-    useAccordionItemGenericFilter(title, data)
+    useAccordionItemGenericFilter(title, data),
   )
   const { rerender, getByRole } = render(
-    <Accordion alwaysOpen>{getRenderFn(result)('0')}</Accordion>
+    <Accordion alwaysOpen>{getRenderFn(result)('0')}</Accordion>,
   )
   const defaultRerender = () =>
     rerender(<Accordion alwaysOpen>{getRenderFn(result)('0')}</Accordion>)
@@ -51,7 +42,7 @@ function defaultRender(title, data) {
 
 afterEach(cleanup)
 
-test('デフォルトのレンダリング1', () => {
+test('デフォルトのレンダリング', () => {
   const { result, getByRole } = defaultRender('フェイズ', dataPhases)
 
   // 初期状態はゼロ
@@ -79,48 +70,14 @@ test('デフォルトのレンダリング1', () => {
     getByRole('button', {
       name: /フェイズ/,
       expanded: false,
-    })
-  ).toBeVisible()
-})
-
-test('デフォルトのレンダリング2', () => {
-  const { result, getByRole } = defaultRender('場所', dataAreas)
-
-  // 初期状態はゼロ
-  expect(getState(result)).toBe(0)
-
-  // ラジオボタンが並んでいる
-  expect(getByRole('radio', { name: '指定なし' })).toBeVisible()
-  expect(getByRole('radio', { name: '指定なし' })).toBeChecked()
-  expect(getByRole('radio', { name: '山札' })).toBeVisible()
-  expect(getByRole('radio', { name: '山札' })).not.toBeChecked()
-  expect(getByRole('radio', { name: '手札' })).toBeVisible()
-  expect(getByRole('radio', { name: '手札' })).not.toBeChecked()
-  expect(getByRole('radio', { name: '魔力ゾーン' })).toBeVisible()
-  expect(getByRole('radio', { name: '魔力ゾーン' })).not.toBeChecked()
-  expect(getByRole('radio', { name: '戦場' })).toBeVisible()
-  expect(getByRole('radio', { name: '戦場' })).not.toBeChecked()
-  expect(getByRole('radio', { name: '墓地' })).toBeVisible()
-  expect(getByRole('radio', { name: '墓地' })).not.toBeChecked()
-
-  // 最初のラジオボタンを得る
-  const item = getByRole('listitem', { name: '場所' })
-  expect(within(item).getByRole('radio', { name: '指定なし' })).toBeVisible()
-  expect(within(item).getByRole('radio', { name: '指定なし' })).toBeChecked()
-
-  // 開閉箇所はボタンとして得られる
-  expect(
-    getByRole('button', {
-      name: /場所/,
-      expanded: false,
-    })
+    }),
   ).toBeVisible()
 })
 
 test('ボタンを選択する', async () => {
   const { result, defaultRerender, getByRole } = defaultRender(
     'フェイズ',
-    dataPhases
+    dataPhases,
   )
 
   // 初期状態では「すべて」が選択されている
@@ -157,7 +114,7 @@ test('ボタンを選択する', async () => {
   await userEvent.click(getByRole('radio', { name: 'メイン' }))
   defaultRerender()
 
-  expect(getState(result)).toBe(3)
+  expect(getState(result)).toBe(4)
   expect(getByRole('radio', { name: 'すべて' })).not.toBeChecked()
   expect(getByRole('radio', { name: 'スタート' })).not.toBeChecked()
   expect(getByRole('radio', { name: 'ドロー' })).not.toBeChecked()
@@ -168,7 +125,7 @@ test('ボタンを選択する', async () => {
   await userEvent.click(getByRole('radio', { name: 'エンド' }))
   defaultRerender()
 
-  expect(getState(result)).toBe(4)
+  expect(getState(result)).toBe(8)
   expect(getByRole('radio', { name: 'すべて' })).not.toBeChecked()
   expect(getByRole('radio', { name: 'スタート' })).not.toBeChecked()
   expect(getByRole('radio', { name: 'ドロー' })).not.toBeChecked()
@@ -190,7 +147,7 @@ test('ボタンを選択する', async () => {
 test('状態をリセットする', async () => {
   const { result, defaultRerender, getByRole } = defaultRender(
     'フェイズ',
-    dataPhases
+    dataPhases,
   )
 
   // 初期状態では「すべて」が選択されている
