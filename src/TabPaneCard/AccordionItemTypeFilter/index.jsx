@@ -14,16 +14,28 @@ function useAccordionItemTypeFilter() {
   const defferedPower = useDeferredValue(power)
   const defferedComparator = useDeferredValue(comparator)
   const handleChangeType = useCallback(
-    (e) => setType(Number(e.currentTarget.value)),
-    [setType]
+    (e) => {
+      const currentValue = Number(e.currentTarget.value)
+      if (currentValue === 0) {
+        // 「すべて」が押された
+        setType(0)
+      } else if (e.currentTarget.checked) {
+        // 未選択の状態で押された (選択済の状態にしたい)
+        setType(type | currentValue)
+      } else {
+        // 選択済の状態で押された (未選択の状態にしたい)
+        setType(type & ~currentValue)
+      }
+    },
+    [type, setType],
   )
   const handleChangePower = useCallback(
     (e) => setPower(Number(e.currentTarget.value)),
-    [setPower]
+    [setPower],
   )
   const handleChangeComparator = useCallback(
     (e) => setComparator(e.currentTarget.value),
-    [setComparator]
+    [setComparator],
   )
 
   const reset = () => {

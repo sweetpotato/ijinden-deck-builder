@@ -27,26 +27,25 @@ import './index.css'
 
 const dataExpansions = [
   { value: 0, label: 'すべて' },
-  { value: 10, label: '伝説の武将' },
-  { value: 11, label: '美と知の革命' },
-  { value: 12, label: '日本の大天才' },
-  { value: 15, label: '第１弾ブースター' },
-  { value: 20, label: '三国の英傑' },
-  { value: 25, label: '第２弾ブースター' },
-  { value: 30, label: '発展する医学' },
-  { value: 35, label: '第３弾ブースター' },
-  { value: 45, label: '第４弾ブースター' },
-  { value: 55, label: '第５弾ブースター' },
-  { value: 65, label: '第６弾ブースター' },
+  { value: 1, label: '伝説の武将' },
+  { value: 2, label: '美と知の革命' },
+  { value: 4, label: '日本の大天才' },
+  { value: 8, label: '第１弾ブースター' },
+  { value: 16, label: '三国の英傑' },
+  { value: 32, label: '第２弾ブースター' },
+  { value: 64, label: '発展する医学' },
+  { value: 128, label: '第３弾ブースター' },
+  { value: 256, label: '第４弾ブースター' },
+  { value: 512, label: '第５弾ブースター' },
+  { value: 1024, label: '第６弾ブースター' },
 ]
 
 const dataRarities = [
   { value: 0, label: 'すべて' },
-  { value: 1, label: 'Nのみ' },
-  { value: 3, label: 'NとR' },
-  { value: 2, label: 'Rのみ' },
-  { value: 6, label: 'RとSR' },
-  { value: 4, label: 'SRのみ' },
+  { value: 1, label: 'N' },
+  { value: 2, label: 'R' },
+  { value: 4, label: 'SR' },
+  { value: 8, label: 'PSR' },
 ]
 
 const dataColors = [
@@ -82,19 +81,20 @@ const dataTraits = [
 ]
 
 // 表示順を整えるため、値の昇順にしていない
+// カードデータと異なり、こちらは単一ビットのみでいい
 const dataLegacies = [
   { value: 0, label: '指定なし' },
   { value: 1, label: '遺業能力なし' },
   { value: 2, label: '遺業能力あり' },
-  { value: 6, label: '魔力化' },
-  { value: 10, label: '冥府発動' },
-  { value: 18, label: '復元' },
-  { value: 130, label: '反魂' },
-  { value: 514, label: '木霊' },
-  { value: 1026, label: '喪神' },
-  { value: 34, label: '1ドローする' },
-  { value: 66, label: '手札に戻す' },
-  { value: 258, label: '山札の上か下に戻す' },
+  { value: 4, label: '魔力化' },
+  { value: 8, label: '冥府発動' },
+  { value: 16, label: '復元' },
+  { value: 128, label: '反魂' },
+  { value: 512, label: '木霊' },
+  { value: 1024, label: '喪神' },
+  { value: 32, label: '1ドローする' },
+  { value: 64, label: '手札に戻す' },
+  { value: 256, label: '山札の上か下に戻す' },
 ]
 
 function TabPaneCard({
@@ -168,15 +168,15 @@ function TabPaneCard({
       includesTraitAndLegacy && card.legacyText ? '§' + card.legacyText : ''
     allText += '§' + card.illustration.toLowerCase()
     return (
-      (expansion === 0 || card.expansion === expansion) &&
-      (rarity === 0 || (card.rarity & rarity) === card.rarity) &&
-      (color === 0 || (card.color & color) === color) &&
-      (type === 0 || card.type === type) &&
+      (expansion === 0 || (card.expansion & expansion) !== 0) &&
+      (rarity === 0 || (card.rarity & rarity) !== 0) &&
+      (color === 0 || (card.color & color) !== 0) &&
+      (type === 0 || (card.type & type) !== 0) &&
       (card.type !== enumType.IJIN || powerMatched) &&
       levelMatched &&
-      (term === 0 || (card.term & term) === term) &&
-      (trait === 0 || (card.trait & trait) === trait) &&
-      (legacy === 0 || (card.legacy & legacy) === legacy) &&
+      (term === 0 || (card.term & term) !== 0) &&
+      (trait === 0 || (card.trait & trait) !== 0) &&
+      (legacy === 0 || (card.legacy & legacy) !== 0) &&
       deferredKeywords.every((e) => allText.includes(e.toLowerCase()))
     )
   }

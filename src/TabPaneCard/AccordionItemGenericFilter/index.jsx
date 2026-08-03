@@ -28,8 +28,20 @@ function useAccordionItemGenericFilter(title, data) {
 
   const reset = () => setState(0)
   const handleChangeState = useCallback(
-    (e) => setState(Number(e.currentTarget.value)),
-    [setState]
+    (e) => {
+      const currentValue = Number(e.currentTarget.value)
+      if (currentValue === 0) {
+        // 「すべて」または「指定なし」が押された
+        setState(0)
+      } else if (e.currentTarget.checked) {
+        // 未選択の状態で押された (選択済の状態にしたい)
+        setState(state | currentValue)
+      } else {
+        // 選択済の状態で押された (未選択の状態にしたい)
+        setState(state & ~currentValue)
+      }
+    },
+    [state, setState],
   )
   const render = (eventKey) => (
     <AccordionItemGenericFilter

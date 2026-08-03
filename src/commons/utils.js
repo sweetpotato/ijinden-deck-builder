@@ -10,3 +10,10 @@
 export function sum(iterable) {
   return [...iterable].reduce((a, b) => a + b, 0)
 }
+
+export function isBitButtonChecked(buttonBit, bitset) {
+  return (
+    (buttonBit === 0 && bitset === 0) ||
+    (buttonBit !== 0 && (buttonBit & bitset) !== 0)
+  )
+}
