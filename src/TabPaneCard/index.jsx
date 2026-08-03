@@ -81,19 +81,20 @@ const dataTraits = [
 ]
 
 // 表示順を整えるため、値の昇順にしていない
+// カードデータと異なり、こちらは単一ビットのみでいい
 const dataLegacies = [
   { value: 0, label: '指定なし' },
   { value: 1, label: '遺業能力なし' },
   { value: 2, label: '遺業能力あり' },
-  { value: 6, label: '魔力化' },
-  { value: 10, label: '冥府発動' },
-  { value: 18, label: '復元' },
-  { value: 130, label: '反魂' },
-  { value: 514, label: '木霊' },
-  { value: 1026, label: '喪神' },
-  { value: 34, label: '1ドローする' },
-  { value: 66, label: '手札に戻す' },
-  { value: 258, label: '山札の上か下に戻す' },
+  { value: 4, label: '魔力化' },
+  { value: 8, label: '冥府発動' },
+  { value: 16, label: '復元' },
+  { value: 128, label: '反魂' },
+  { value: 512, label: '木霊' },
+  { value: 1024, label: '喪神' },
+  { value: 32, label: '1ドローする' },
+  { value: 64, label: '手札に戻す' },
+  { value: 256, label: '山札の上か下に戻す' },
 ]
 
 function TabPaneCard({
@@ -167,15 +168,15 @@ function TabPaneCard({
       includesTraitAndLegacy && card.legacyText ? '§' + card.legacyText : ''
     allText += '§' + card.illustration.toLowerCase()
     return (
-      (expansion === 0 || (card.expansion & expansion) === expansion) &&
-      (rarity === 0 || (card.rarity & rarity) === rarity) &&
-      (color === 0 || (card.color & color) === color) &&
-      (type === 0 || (card.type & type) === type) &&
+      (expansion === 0 || (card.expansion & expansion) !== 0) &&
+      (rarity === 0 || (card.rarity & rarity) !== 0) &&
+      (color === 0 || (card.color & color) !== 0) &&
+      (type === 0 || (card.type & type) !== 0) &&
       (card.type !== enumType.IJIN || powerMatched) &&
       levelMatched &&
-      (term === 0 || (card.term & term) === term) &&
-      (trait === 0 || (card.trait & trait) === trait) &&
-      (legacy === 0 || (card.legacy & legacy) === legacy) &&
+      (term === 0 || (card.term & term) !== 0) &&
+      (trait === 0 || (card.trait & trait) !== 0) &&
+      (legacy === 0 || (card.legacy & legacy) !== 0) &&
       deferredKeywords.every((e) => allText.includes(e.toLowerCase()))
     )
   }
