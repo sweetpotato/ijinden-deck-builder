@@ -21,13 +21,13 @@ function useAccordionItemTypeFilter() {
         setType(0)
       } else if (e.currentTarget.checked) {
         // 未選択の状態で押された (選択済の状態にしたい)
-        setType(currentValue)
+        setType(type | currentValue)
       } else {
         // 選択済の状態で押された (未選択の状態にしたい)
-        setType(0)
+        setType(type & ~currentValue)
       }
     },
-    [setType],
+    [type, setType],
   )
   const handleChangePower = useCallback(
     (e) => setPower(Number(e.currentTarget.value)),

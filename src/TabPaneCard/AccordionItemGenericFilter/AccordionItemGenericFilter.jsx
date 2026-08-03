@@ -10,6 +10,8 @@ import {
 } from 'react-bootstrap'
 import { isAccordionItemSelected } from 'react-bootstrap/esm/AccordionContext'
 
+import { isBitButtonChecked } from '../../commons/utils'
+
 const AccordionItemGenericFilter = memo(function AccordionItemGenericFilter({
   eventKey,
   title,
@@ -21,7 +23,10 @@ const AccordionItemGenericFilter = memo(function AccordionItemGenericFilter({
   const name = useId()
   const { activeEventKey } = useContext(AccordionContext)
   const expanded = isAccordionItemSelected(activeEventKey, eventKey)
-  const label = new Map(data.map((e) => [e.value, e.label])).get(state)
+  const label = data
+    .filter((e) => isBitButtonChecked(e.value, state))
+    .map((e) => e.label)
+    .join('|')
 
   return (
     <AccordionItem
@@ -60,7 +65,7 @@ const AccordionItemGenericFilter = memo(function AccordionItemGenericFilter({
               name={name}
               value={element.value}
               onChange={handleChangeState}
-              checked={state === element.value}
+              checked={isBitButtonChecked(element.value, state)}
             >
               {element.label}
             </ToggleButton>

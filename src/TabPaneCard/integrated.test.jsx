@@ -446,6 +446,10 @@ test('エキスパンションによるフィルタ', async () => {
   expect(queryByRole('row', { name: '3-1' })).toBeNull()
   expect(queryByRole('row', { name: '4-1' })).toBeNull()
 
+  await userEvent.click(
+    getCheckboxInItem(getByRole, 'エキスパンション', 'すべて'),
+  )
+  defaultRerender()
   await userEvent.click(getByRole('checkbox', { name: '美と知の革命' }))
   defaultRerender()
   expect(queryByRole('row', { name: 'R-1' })).toBeNull()
@@ -458,6 +462,10 @@ test('エキスパンションによるフィルタ', async () => {
   expect(queryByRole('row', { name: '3-1' })).toBeNull()
   expect(queryByRole('row', { name: '4-1' })).toBeNull()
 
+  await userEvent.click(
+    getCheckboxInItem(getByRole, 'エキスパンション', 'すべて'),
+  )
+  defaultRerender()
   await userEvent.click(getByRole('checkbox', { name: '日本の大天才' }))
   defaultRerender()
   expect(queryByRole('row', { name: 'R-1' })).toBeNull()
@@ -470,6 +478,10 @@ test('エキスパンションによるフィルタ', async () => {
   expect(queryByRole('row', { name: '3-1' })).toBeNull()
   expect(queryByRole('row', { name: '4-1' })).toBeNull()
 
+  await userEvent.click(
+    getCheckboxInItem(getByRole, 'エキスパンション', 'すべて'),
+  )
+  defaultRerender()
   await userEvent.click(getByRole('checkbox', { name: '第１弾ブースター' }))
   defaultRerender()
   expect(queryByRole('row', { name: 'R-1' })).toBeNull()
@@ -482,6 +494,10 @@ test('エキスパンションによるフィルタ', async () => {
   expect(queryByRole('row', { name: '3-1' })).toBeNull()
   expect(queryByRole('row', { name: '4-1' })).toBeNull()
 
+  await userEvent.click(
+    getCheckboxInItem(getByRole, 'エキスパンション', 'すべて'),
+  )
+  defaultRerender()
   await userEvent.click(getByRole('checkbox', { name: '三国の英傑' }))
   defaultRerender()
   expect(queryByRole('row', { name: 'R-1' })).toBeNull()
@@ -494,6 +510,10 @@ test('エキスパンションによるフィルタ', async () => {
   expect(queryByRole('row', { name: '3-1' })).toBeNull()
   expect(queryByRole('row', { name: '4-1' })).toBeNull()
 
+  await userEvent.click(
+    getCheckboxInItem(getByRole, 'エキスパンション', 'すべて'),
+  )
+  defaultRerender()
   await userEvent.click(getByRole('checkbox', { name: '第２弾ブースター' }))
   defaultRerender()
   expect(queryByRole('row', { name: 'R-1' })).toBeNull()
@@ -506,6 +526,10 @@ test('エキスパンションによるフィルタ', async () => {
   expect(queryByRole('row', { name: '3-1' })).toBeNull()
   expect(queryByRole('row', { name: '4-1' })).toBeNull()
 
+  await userEvent.click(
+    getCheckboxInItem(getByRole, 'エキスパンション', 'すべて'),
+  )
+  defaultRerender()
   await userEvent.click(getByRole('checkbox', { name: '発展する医学' }))
   defaultRerender()
   expect(queryByRole('row', { name: 'R-1' })).toBeNull()
@@ -518,6 +542,10 @@ test('エキスパンションによるフィルタ', async () => {
   expect(queryByRole('row', { name: '3-1' })).toBeNull()
   expect(queryByRole('row', { name: '4-1' })).toBeNull()
 
+  await userEvent.click(
+    getCheckboxInItem(getByRole, 'エキスパンション', 'すべて'),
+  )
+  defaultRerender()
   await userEvent.click(getByRole('checkbox', { name: '第３弾ブースター' }))
   defaultRerender()
   expect(queryByRole('row', { name: 'R-1' })).toBeNull()
@@ -530,6 +558,10 @@ test('エキスパンションによるフィルタ', async () => {
   expect(getByRole('row', { name: '3-1' })).toBeVisible()
   expect(queryByRole('row', { name: '4-1' })).toBeNull()
 
+  await userEvent.click(
+    getCheckboxInItem(getByRole, 'エキスパンション', 'すべて'),
+  )
+  defaultRerender()
   await userEvent.click(getByRole('checkbox', { name: '第４弾ブースター' }))
   defaultRerender()
   expect(queryByRole('row', { name: 'R-1' })).toBeNull()
@@ -569,6 +601,8 @@ test('レアリティによるフィルタ', async () => {
   expect(getByRole('row', { name: '1-17' })).toBeVisible()
   expect(queryByRole('row', { name: '3-81' })).toBeNull()
 
+  await userEvent.click(getCheckboxInItem(getByRole, 'レアリティ', 'すべて'))
+  defaultRerender()
   await userEvent.click(getByRole('checkbox', { name: 'R' }))
   defaultRerender()
   expect(queryByRole('row', { name: '1-1' })).toBeNull()
@@ -576,6 +610,8 @@ test('レアリティによるフィルタ', async () => {
   expect(queryByRole('row', { name: '1-17' })).toBeNull()
   expect(queryByRole('row', { name: '3-81' })).toBeNull()
 
+  await userEvent.click(getCheckboxInItem(getByRole, 'レアリティ', 'すべて'))
+  defaultRerender()
   await userEvent.click(getByRole('checkbox', { name: 'SR' }))
   defaultRerender()
   expect(getByRole('row', { name: '1-1' })).toBeVisible()
@@ -583,6 +619,8 @@ test('レアリティによるフィルタ', async () => {
   expect(queryByRole('row', { name: '1-17' })).toBeNull()
   expect(queryByRole('row', { name: '3-81' })).toBeNull()
 
+  await userEvent.click(getCheckboxInItem(getByRole, 'レアリティ', 'すべて'))
+  defaultRerender()
   await userEvent.click(getByRole('checkbox', { name: 'PSR' }))
   defaultRerender()
   expect(queryByRole('row', { name: '1-1' })).toBeNull()
@@ -624,6 +662,8 @@ test('色によるフィルタ', async () => {
   expect(queryByRole('row', { name: '2-80' })).toBeNull()
   expect(queryByRole('row', { name: '3-80' })).toBeNull()
 
+  await userEvent.click(getCheckboxInItem(getByRole, '色', 'すべて'))
+  defaultRerender()
   await userEvent.click(getByRole('checkbox', { name: '青' }))
   defaultRerender()
   expect(queryByRole('row', { name: '3-15' })).toBeNull()
@@ -636,6 +676,8 @@ test('色によるフィルタ', async () => {
   expect(queryByRole('row', { name: '2-80' })).toBeNull()
   expect(queryByRole('row', { name: '3-80' })).toBeNull()
 
+  await userEvent.click(getCheckboxInItem(getByRole, '色', 'すべて'))
+  defaultRerender()
   await userEvent.click(getByRole('checkbox', { name: '緑' }))
   defaultRerender()
   expect(queryByRole('row', { name: '3-15' })).toBeNull()
@@ -648,6 +690,8 @@ test('色によるフィルタ', async () => {
   expect(getByRole('row', { name: '2-80' })).toBeVisible()
   expect(queryByRole('row', { name: '3-80' })).toBeNull()
 
+  await userEvent.click(getCheckboxInItem(getByRole, '色', 'すべて'))
+  defaultRerender()
   await userEvent.click(getByRole('checkbox', { name: '黄' }))
   defaultRerender()
   expect(queryByRole('row', { name: '3-15' })).toBeNull()
@@ -660,6 +704,8 @@ test('色によるフィルタ', async () => {
   expect(getByRole('row', { name: '2-80' })).toBeVisible()
   expect(queryByRole('row', { name: '3-80' })).toBeNull()
 
+  await userEvent.click(getCheckboxInItem(getByRole, '色', 'すべて'))
+  defaultRerender()
   await userEvent.click(getByRole('checkbox', { name: '紫' }))
   defaultRerender()
   expect(queryByRole('row', { name: '3-15' })).toBeNull()
@@ -672,6 +718,8 @@ test('色によるフィルタ', async () => {
   expect(queryByRole('row', { name: '2-80' })).toBeNull()
   expect(queryByRole('row', { name: '3-80' })).toBeNull()
 
+  await userEvent.click(getCheckboxInItem(getByRole, '色', 'すべて'))
+  defaultRerender()
   await userEvent.click(getByRole('checkbox', { name: '多色' }))
   defaultRerender()
   expect(queryByRole('row', { name: '3-15' })).toBeNull()
@@ -684,6 +732,8 @@ test('色によるフィルタ', async () => {
   expect(getByRole('row', { name: '2-80' })).toBeVisible()
   expect(queryByRole('row', { name: '3-80' })).toBeNull()
 
+  await userEvent.click(getCheckboxInItem(getByRole, '色', 'すべて'))
+  defaultRerender()
   await userEvent.click(getByRole('checkbox', { name: '無色' }))
   defaultRerender()
   expect(queryByRole('row', { name: '3-15' })).toBeNull()
@@ -695,6 +745,23 @@ test('色によるフィルタ', async () => {
   expect(queryByRole('row', { name: '2-79' })).toBeNull()
   expect(queryByRole('row', { name: '2-80' })).toBeNull()
   expect(getByRole('row', { name: '3-80' })).toBeVisible()
+
+  // 複数選択
+  await userEvent.click(getCheckboxInItem(getByRole, '色', 'すべて'))
+  defaultRerender()
+  await userEvent.click(getByRole('checkbox', { name: '黄' }))
+  defaultRerender()
+  await userEvent.click(getByRole('checkbox', { name: '紫' }))
+  defaultRerender()
+  expect(queryByRole('row', { name: '3-15' })).toBeNull()
+  expect(queryByRole('row', { name: '3-19' })).toBeNull()
+  expect(queryByRole('row', { name: '3-27' })).toBeNull()
+  expect(getByRole('row', { name: '3-35' })).toBeVisible()
+  expect(getByRole('row', { name: '3-45' })).toBeVisible()
+  expect(getByRole('row', { name: '2-78' })).toBeVisible()
+  expect(getByRole('row', { name: '2-79' })).toBeVisible()
+  expect(getByRole('row', { name: '2-80' })).toBeVisible()
+  expect(queryByRole('row', { name: '3-80' })).toBeNull()
 })
 
 test('種類によるフィルタ', async () => {
@@ -713,6 +780,8 @@ test('種類によるフィルタ', async () => {
   expect(getByRole('row', { name: 'B-11' })).toBeVisible() // フリート
   expect(getByRole('row', { name: 'B-13' })).toBeVisible() // ブルーストーン
 
+  await userEvent.click(getCheckboxInItem(getByRole, '種類とパワー', 'すべて'))
+  defaultRerender()
   await userEvent.click(getByRole('checkbox', { name: 'イジン' }))
   defaultRerender()
   expect(getByRole('row', { name: 'B-2' })).toBeVisible()
@@ -720,6 +789,8 @@ test('種類によるフィルタ', async () => {
   expect(queryByRole('row', { name: 'B-11' })).toBeNull()
   expect(queryByRole('row', { name: 'B-13' })).toBeNull()
 
+  await userEvent.click(getCheckboxInItem(getByRole, '種類とパワー', 'すべて'))
+  defaultRerender()
   await userEvent.click(getByRole('checkbox', { name: 'ハイケイ' }))
   defaultRerender()
   expect(queryByRole('row', { name: 'B-2' })).toBeNull()
@@ -727,6 +798,8 @@ test('種類によるフィルタ', async () => {
   expect(queryByRole('row', { name: 'B-11' })).toBeNull()
   expect(queryByRole('row', { name: 'B-13' })).toBeNull()
 
+  await userEvent.click(getCheckboxInItem(getByRole, '種類とパワー', 'すべて'))
+  defaultRerender()
   await userEvent.click(getByRole('checkbox', { name: 'マホウ' }))
   defaultRerender()
   expect(queryByRole('row', { name: 'B-2' })).toBeNull()
@@ -734,6 +807,8 @@ test('種類によるフィルタ', async () => {
   expect(getByRole('row', { name: 'B-11' })).toBeVisible()
   expect(queryByRole('row', { name: 'B-13' })).toBeNull()
 
+  await userEvent.click(getCheckboxInItem(getByRole, '種類とパワー', 'すべて'))
+  defaultRerender()
   await userEvent.click(getByRole('checkbox', { name: 'マリョク' }))
   defaultRerender()
   expect(queryByRole('row', { name: 'B-2' })).toBeNull()
@@ -1479,7 +1554,7 @@ test('遺業能力によるフィルタ (反魂)', async () => {
   expect(queryByRole('row', { name: '2-49' })).toBeNull() // 籠城戦 (テキストに反魂を持つハイケイ)
 })
 
-test('遺業能力によるフィルタ (その他)', async () => {
+test('遺業能力によるフィルタ (魔力化)', async () => {
   const { defaultRerender, getByRole, queryByRole } = defaultRender()
 
   // 「条件で絞り込む」を開く
@@ -1513,8 +1588,30 @@ test('遺業能力によるフィルタ (その他)', async () => {
   expect(queryByRole('row', { name: '4-11' })).toBeNull() // 島津斉彬 (1ドローする)
   expect(queryByRole('row', { name: '4-43' })).toBeNull() // 火と氷の大地 (手札に戻す)
   expect(queryByRole('row', { name: '4-48' })).toBeNull() // 遠征軍 (山札の上か下に戻す)
+})
 
-  // 冥府発動は別途実施
+test('遺業能力によるフィルタ (復元)', async () => {
+  const { defaultRerender, getByRole, queryByRole } = defaultRender()
+
+  // 「条件で絞り込む」を開く
+  await userEvent.click(getCollapsedButton(getByRole, '条件で絞り込む'))
+  defaultRerender()
+  expect(getExpandedButton(getByRole, '条件で絞り込む')).toBeVisible()
+
+  // 遺業能力を開く
+  await userEvent.click(getCollapsedButton(getByRole, /遺業能力/))
+  defaultRerender()
+  expect(getExpandedButton(getByRole, /遺業能力/)).toBeVisible()
+
+  expect(getByRole('row', { name: '4-46' })).toBeVisible() // 大日本沿海輿地全図 (魔力化)
+  expect(getByRole('row', { name: '4-58' })).toBeVisible() // ルーナ (冥府発動)
+  expect(getByRole('row', { name: '4-78' })).toBeVisible() // ホプロン (復元)
+  expect(getByRole('row', { name: '4-15' })).toBeVisible() // ねね (反魂)
+  expect(getByRole('row', { name: '4-18' })).toBeVisible() // ポンパドゥール夫人 (木霊)
+  expect(getByRole('row', { name: '4-47' })).toBeVisible() // マザーグース (喪神)
+  expect(getByRole('row', { name: '4-11' })).toBeVisible() // 島津斉彬 (1ドローする)
+  expect(getByRole('row', { name: '4-43' })).toBeVisible() // 火と氷の大地 (手札に戻す)
+  expect(getByRole('row', { name: '4-48' })).toBeVisible() // 遠征軍 (山札の上か下に戻す)
 
   await userEvent.click(getByRole('checkbox', { name: '復元' }))
   defaultRerender()
@@ -1527,8 +1624,30 @@ test('遺業能力によるフィルタ (その他)', async () => {
   expect(queryByRole('row', { name: '4-11' })).toBeNull() // 島津斉彬 (1ドローする)
   expect(queryByRole('row', { name: '4-43' })).toBeNull() // 火と氷の大地 (手札に戻す)
   expect(queryByRole('row', { name: '4-48' })).toBeNull() // 遠征軍 (山札の上か下に戻す)
+})
 
-  // 反魂は別途実施
+test('遺業能力によるフィルタ (木霊)', async () => {
+  const { defaultRerender, getByRole, queryByRole } = defaultRender()
+
+  // 「条件で絞り込む」を開く
+  await userEvent.click(getCollapsedButton(getByRole, '条件で絞り込む'))
+  defaultRerender()
+  expect(getExpandedButton(getByRole, '条件で絞り込む')).toBeVisible()
+
+  // 遺業能力を開く
+  await userEvent.click(getCollapsedButton(getByRole, /遺業能力/))
+  defaultRerender()
+  expect(getExpandedButton(getByRole, /遺業能力/)).toBeVisible()
+
+  expect(getByRole('row', { name: '4-46' })).toBeVisible() // 大日本沿海輿地全図 (魔力化)
+  expect(getByRole('row', { name: '4-58' })).toBeVisible() // ルーナ (冥府発動)
+  expect(getByRole('row', { name: '4-78' })).toBeVisible() // ホプロン (復元)
+  expect(getByRole('row', { name: '4-15' })).toBeVisible() // ねね (反魂)
+  expect(getByRole('row', { name: '4-18' })).toBeVisible() // ポンパドゥール夫人 (木霊)
+  expect(getByRole('row', { name: '4-47' })).toBeVisible() // マザーグース (喪神)
+  expect(getByRole('row', { name: '4-11' })).toBeVisible() // 島津斉彬 (1ドローする)
+  expect(getByRole('row', { name: '4-43' })).toBeVisible() // 火と氷の大地 (手札に戻す)
+  expect(getByRole('row', { name: '4-48' })).toBeVisible() // 遠征軍 (山札の上か下に戻す)
 
   await userEvent.click(getByRole('checkbox', { name: '木霊' }))
   defaultRerender()
@@ -1541,6 +1660,30 @@ test('遺業能力によるフィルタ (その他)', async () => {
   expect(queryByRole('row', { name: '4-11' })).toBeNull() // 島津斉彬 (1ドローする)
   expect(queryByRole('row', { name: '4-43' })).toBeNull() // 火と氷の大地 (手札に戻す)
   expect(queryByRole('row', { name: '4-48' })).toBeNull() // 遠征軍 (山札の上か下に戻す)
+})
+
+test('遺業能力によるフィルタ (喪神)', async () => {
+  const { defaultRerender, getByRole, queryByRole } = defaultRender()
+
+  // 「条件で絞り込む」を開く
+  await userEvent.click(getCollapsedButton(getByRole, '条件で絞り込む'))
+  defaultRerender()
+  expect(getExpandedButton(getByRole, '条件で絞り込む')).toBeVisible()
+
+  // 遺業能力を開く
+  await userEvent.click(getCollapsedButton(getByRole, /遺業能力/))
+  defaultRerender()
+  expect(getExpandedButton(getByRole, /遺業能力/)).toBeVisible()
+
+  expect(getByRole('row', { name: '4-46' })).toBeVisible() // 大日本沿海輿地全図 (魔力化)
+  expect(getByRole('row', { name: '4-58' })).toBeVisible() // ルーナ (冥府発動)
+  expect(getByRole('row', { name: '4-78' })).toBeVisible() // ホプロン (復元)
+  expect(getByRole('row', { name: '4-15' })).toBeVisible() // ねね (反魂)
+  expect(getByRole('row', { name: '4-18' })).toBeVisible() // ポンパドゥール夫人 (木霊)
+  expect(getByRole('row', { name: '4-47' })).toBeVisible() // マザーグース (喪神)
+  expect(getByRole('row', { name: '4-11' })).toBeVisible() // 島津斉彬 (1ドローする)
+  expect(getByRole('row', { name: '4-43' })).toBeVisible() // 火と氷の大地 (手札に戻す)
+  expect(getByRole('row', { name: '4-48' })).toBeVisible() // 遠征軍 (山札の上か下に戻す)
 
   await userEvent.click(getByRole('checkbox', { name: '喪神' }))
   defaultRerender()
@@ -1553,6 +1696,30 @@ test('遺業能力によるフィルタ (その他)', async () => {
   expect(queryByRole('row', { name: '4-11' })).toBeNull() // 島津斉彬 (1ドローする)
   expect(queryByRole('row', { name: '4-43' })).toBeNull() // 火と氷の大地 (手札に戻す)
   expect(queryByRole('row', { name: '4-48' })).toBeNull() // 遠征軍 (山札の上か下に戻す)
+})
+
+test('遺業能力によるフィルタ (1ドローする)', async () => {
+  const { defaultRerender, getByRole, queryByRole } = defaultRender()
+
+  // 「条件で絞り込む」を開く
+  await userEvent.click(getCollapsedButton(getByRole, '条件で絞り込む'))
+  defaultRerender()
+  expect(getExpandedButton(getByRole, '条件で絞り込む')).toBeVisible()
+
+  // 遺業能力を開く
+  await userEvent.click(getCollapsedButton(getByRole, /遺業能力/))
+  defaultRerender()
+  expect(getExpandedButton(getByRole, /遺業能力/)).toBeVisible()
+
+  expect(getByRole('row', { name: '4-46' })).toBeVisible() // 大日本沿海輿地全図 (魔力化)
+  expect(getByRole('row', { name: '4-58' })).toBeVisible() // ルーナ (冥府発動)
+  expect(getByRole('row', { name: '4-78' })).toBeVisible() // ホプロン (復元)
+  expect(getByRole('row', { name: '4-15' })).toBeVisible() // ねね (反魂)
+  expect(getByRole('row', { name: '4-18' })).toBeVisible() // ポンパドゥール夫人 (木霊)
+  expect(getByRole('row', { name: '4-47' })).toBeVisible() // マザーグース (喪神)
+  expect(getByRole('row', { name: '4-11' })).toBeVisible() // 島津斉彬 (1ドローする)
+  expect(getByRole('row', { name: '4-43' })).toBeVisible() // 火と氷の大地 (手札に戻す)
+  expect(getByRole('row', { name: '4-48' })).toBeVisible() // 遠征軍 (山札の上か下に戻す)
 
   await userEvent.click(getByRole('checkbox', { name: '1ドローする' }))
   defaultRerender()
@@ -1565,6 +1732,30 @@ test('遺業能力によるフィルタ (その他)', async () => {
   expect(getByRole('row', { name: '4-11' })).toBeVisible() // 島津斉彬 (1ドローする)
   expect(queryByRole('row', { name: '4-43' })).toBeNull() // 火と氷の大地 (手札に戻す)
   expect(queryByRole('row', { name: '4-48' })).toBeNull() // 遠征軍 (山札の上か下に戻す)
+})
+
+test('遺業能力によるフィルタ (手札に戻す)', async () => {
+  const { defaultRerender, getByRole, queryByRole } = defaultRender()
+
+  // 「条件で絞り込む」を開く
+  await userEvent.click(getCollapsedButton(getByRole, '条件で絞り込む'))
+  defaultRerender()
+  expect(getExpandedButton(getByRole, '条件で絞り込む')).toBeVisible()
+
+  // 遺業能力を開く
+  await userEvent.click(getCollapsedButton(getByRole, /遺業能力/))
+  defaultRerender()
+  expect(getExpandedButton(getByRole, /遺業能力/)).toBeVisible()
+
+  expect(getByRole('row', { name: '4-46' })).toBeVisible() // 大日本沿海輿地全図 (魔力化)
+  expect(getByRole('row', { name: '4-58' })).toBeVisible() // ルーナ (冥府発動)
+  expect(getByRole('row', { name: '4-78' })).toBeVisible() // ホプロン (復元)
+  expect(getByRole('row', { name: '4-15' })).toBeVisible() // ねね (反魂)
+  expect(getByRole('row', { name: '4-18' })).toBeVisible() // ポンパドゥール夫人 (木霊)
+  expect(getByRole('row', { name: '4-47' })).toBeVisible() // マザーグース (喪神)
+  expect(getByRole('row', { name: '4-11' })).toBeVisible() // 島津斉彬 (1ドローする)
+  expect(getByRole('row', { name: '4-43' })).toBeVisible() // 火と氷の大地 (手札に戻す)
+  expect(getByRole('row', { name: '4-48' })).toBeVisible() // 遠征軍 (山札の上か下に戻す)
 
   await userEvent.click(getByRole('checkbox', { name: '手札に戻す' }))
   defaultRerender()
@@ -1577,6 +1768,30 @@ test('遺業能力によるフィルタ (その他)', async () => {
   expect(queryByRole('row', { name: '4-11' })).toBeNull() // 島津斉彬 (1ドローする)
   expect(getByRole('row', { name: '4-43' })).toBeVisible() // 火と氷の大地 (手札に戻す)
   expect(queryByRole('row', { name: '4-48' })).toBeNull() // 遠征軍 (山札の上か下に戻す)
+})
+
+test('遺業能力によるフィルタ (山札の上か下に戻す)', async () => {
+  const { defaultRerender, getByRole, queryByRole } = defaultRender()
+
+  // 「条件で絞り込む」を開く
+  await userEvent.click(getCollapsedButton(getByRole, '条件で絞り込む'))
+  defaultRerender()
+  expect(getExpandedButton(getByRole, '条件で絞り込む')).toBeVisible()
+
+  // 遺業能力を開く
+  await userEvent.click(getCollapsedButton(getByRole, /遺業能力/))
+  defaultRerender()
+  expect(getExpandedButton(getByRole, /遺業能力/)).toBeVisible()
+
+  expect(getByRole('row', { name: '4-46' })).toBeVisible() // 大日本沿海輿地全図 (魔力化)
+  expect(getByRole('row', { name: '4-58' })).toBeVisible() // ルーナ (冥府発動)
+  expect(getByRole('row', { name: '4-78' })).toBeVisible() // ホプロン (復元)
+  expect(getByRole('row', { name: '4-15' })).toBeVisible() // ねね (反魂)
+  expect(getByRole('row', { name: '4-18' })).toBeVisible() // ポンパドゥール夫人 (木霊)
+  expect(getByRole('row', { name: '4-47' })).toBeVisible() // マザーグース (喪神)
+  expect(getByRole('row', { name: '4-11' })).toBeVisible() // 島津斉彬 (1ドローする)
+  expect(getByRole('row', { name: '4-43' })).toBeVisible() // 火と氷の大地 (手札に戻す)
+  expect(getByRole('row', { name: '4-48' })).toBeVisible() // 遠征軍 (山札の上か下に戻す)
 
   await userEvent.click(getByRole('checkbox', { name: '山札の上か下に戻す' }))
   defaultRerender()

@@ -11,33 +11,47 @@ import {
 import { isAccordionItemSelected } from 'react-bootstrap/esm/AccordionContext'
 import FormRange from 'react-bootstrap/esm/FormRange'
 
+import { isBitButtonChecked } from '../../commons/utils'
 import enumComparator from '../enumComparator'
 import enumType from '../enumType'
 
 function makeLabel(type, power, comparator) {
-  switch (type) {
-    case enumType.IJIN: {
-      switch (comparator) {
-        case enumComparator.GE: {
-          return `パワー${power}以上のイジン`
-        }
-        case enumComparator.LE: {
-          return `パワー${power}以下のイジン`
-        }
+  if (type === 0) {
+    return 'すべて'
+  }
+
+  const substrings = []
+
+  if ((enumType.IJIN & type) !== 0) {
+    switch (comparator) {
+      case enumComparator.GE: {
+        substrings.push(`パワー${power}以上のイジン`)
+        break
       }
-      return `パワー${power}に等しいイジン`
-    }
-    case enumType.HAIKEI: {
-      return 'ハイケイ'
-    }
-    case enumType.MAHOU: {
-      return 'マホウ'
-    }
-    case enumType.MARYOKU: {
-      return 'マリョク'
+      case enumComparator.LE: {
+        substrings.push(`パワー${power}以下のイジン`)
+        break
+      }
+      default: {
+        substrings.push(`パワー${power}に等しいイジン`)
+        break
+      }
     }
   }
-  return 'すべて'
+
+  if ((enumType.HAIKEI & type) !== 0) {
+    substrings.push('ハイケイ')
+  }
+
+  if ((enumType.MAHOU & type) !== 0) {
+    substrings.push('マホウ')
+  }
+
+  if ((enumType.MARYOKU & type) !== 0) {
+    substrings.push('マリョク')
+  }
+
+  return substrings.join('|')
 }
 
 const AccordionItemTypeFilter = memo(function AccordionItemTypeFilter({
@@ -55,7 +69,7 @@ const AccordionItemTypeFilter = memo(function AccordionItemTypeFilter({
   const { activeEventKey } = useContext(AccordionContext)
   const expanded = isAccordionItemSelected(activeEventKey, eventKey)
   const label = makeLabel(type, power, comparator)
-  const powerEnabled = type === enumType.IJIN
+  const powerEnabled = isBitButtonChecked(enumType.IJIN, type)
 
   return (
     <AccordionItem
@@ -91,7 +105,7 @@ const AccordionItemTypeFilter = memo(function AccordionItemTypeFilter({
             name={nameType}
             value={0}
             onChange={handleChangeType}
-            checked={type === 0}
+            checked={isBitButtonChecked(0, type)}
           >
             すべて
           </ToggleButton>
@@ -102,7 +116,7 @@ const AccordionItemTypeFilter = memo(function AccordionItemTypeFilter({
             name={nameType}
             value={enumType.IJIN}
             onChange={handleChangeType}
-            checked={type === enumType.IJIN}
+            checked={isBitButtonChecked(enumType.IJIN, type)}
           >
             イジン
           </ToggleButton>
@@ -113,7 +127,7 @@ const AccordionItemTypeFilter = memo(function AccordionItemTypeFilter({
             name={nameType}
             value={enumType.HAIKEI}
             onChange={handleChangeType}
-            checked={type === enumType.HAIKEI}
+            checked={isBitButtonChecked(enumType.HAIKEI, type)}
           >
             ハイケイ
           </ToggleButton>
@@ -124,7 +138,7 @@ const AccordionItemTypeFilter = memo(function AccordionItemTypeFilter({
             name={nameType}
             value={enumType.MAHOU}
             onChange={handleChangeType}
-            checked={type === enumType.MAHOU}
+            checked={isBitButtonChecked(enumType.MAHOU, type)}
           >
             マホウ
           </ToggleButton>
@@ -135,7 +149,7 @@ const AccordionItemTypeFilter = memo(function AccordionItemTypeFilter({
             name={nameType}
             value={enumType.MARYOKU}
             onChange={handleChangeType}
-            checked={type === enumType.MARYOKU}
+            checked={isBitButtonChecked(enumType.MARYOKU, type)}
           >
             マリョク
           </ToggleButton>

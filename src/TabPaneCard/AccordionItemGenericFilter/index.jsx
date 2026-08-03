@@ -35,13 +35,13 @@ function useAccordionItemGenericFilter(title, data) {
         setState(0)
       } else if (e.currentTarget.checked) {
         // 未選択の状態で押された (選択済の状態にしたい)
-        setState(currentValue)
+        setState(state | currentValue)
       } else {
         // 選択済の状態で押された (未選択の状態にしたい)
-        setState(0)
+        setState(state & ~currentValue)
       }
     },
-    [setState],
+    [state, setState],
   )
   const render = (eventKey) => (
     <AccordionItemGenericFilter
