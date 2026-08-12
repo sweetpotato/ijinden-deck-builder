@@ -4,7 +4,7 @@
  * カードリストの背景色付け
  * See https://cudo.jp/?page_id=1565
  */
-.table > :not(caption) > * > .bg-ijinden-red { --bs-table-bg-state: #ffca80; }
+.table > :not(caption) > * > .bg-ijinden-red { --bs-table-bg-state: #ffcabf; }
 .table-hover > tbody > tr:hover > .bg-ijinden-red { --bs-table-bg-state: #ff4b00; }
 .table > :not(caption) > * > .bg-ijinden-blue { --bs-table-bg-state: #bfe4ff; }
 .table-hover > tbody > tr:hover > .bg-ijinden-blue { --bs-table-bg-state: #005aff; }
@@ -20,7 +20,7 @@
 .table > :not(caption) > * > .bg-ijinden-red-green {
   --bs-table-color-state: initial;
   --bs-table-bg-state: initial;
-  background: linear-gradient(to bottom right, #ffca80 50%, #77d9a8 50%);
+  background: linear-gradient(to bottom right, #ffcabf 50%, #77d9a8 50%);
 }
 .table-hover > tbody > tr:hover > .bg-ijinden-red-green {
   --bs-table-color-state: initial;
@@ -40,7 +40,7 @@
 .table > :not(caption) > * > .bg-ijinden-red-yellow {
   --bs-table-color-state: initial;
   --bs-table-bg-state: initial;
-  background: linear-gradient(to bottom right, #ffca80 50%, #ffff80 50%);
+  background: linear-gradient(to bottom right, #ffcabf 50%, #ffff80 50%);
 }
 .table-hover > tbody > tr:hover > .bg-ijinden-red-yellow {
   --bs-table-color-state: initial;
@@ -91,7 +91,7 @@
 .table > :not(caption) > * > .bg-chromagic-red-yellow {
   --bs-table-color-state: initial;
   --bs-table-bg-state: initial;
-  background: linear-gradient(to bottom right, #ffca80 90%, #ffff80 90%);
+  background: linear-gradient(to bottom right, #ffcabf 90%, #ffff80 90%);
 }
 .table-hover > tbody > tr:hover > .bg-chromagic-red-yellow {
   --bs-table-color-state: initial;
@@ -101,7 +101,7 @@
 .table > :not(caption) > * > .bg-chromagic-yellow-red {
   --bs-table-color-state: initial;
   --bs-table-bg-state: initial;
-  background: linear-gradient(to bottom right, #ffff80 90%, #ffca80 90%);
+  background: linear-gradient(to bottom right, #ffff80 90%, #ffcabf 90%);
 }
 .table-hover > tbody > tr:hover > .bg-chromagic-yellow-red {
   --bs-table-color-state: initial;
@@ -131,7 +131,7 @@
 .table > :not(caption) > * > .bg-chromagic-colorless-red {
   --bs-table-color-state: initial;
   --bs-table-bg-state: initial;
-  background: linear-gradient(to bottom right, #c8c8cb 90%, #ffca80 90%);
+  background: linear-gradient(to bottom right, #c8c8cb 90%, #ffcabf 90%);
 }
 .table-hover > tbody > tr:hover > .bg-chromagic-colorless-red {
   --bs-table-color-state: initial;
