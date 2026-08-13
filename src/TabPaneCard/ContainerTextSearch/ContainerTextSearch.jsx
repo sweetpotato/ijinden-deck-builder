@@ -9,6 +9,7 @@ function ContainerTextSearch({
 }) {
   const ref = useRef(null)
   const idInput = useId()
+  const idIncludes = useId()
 
   function handleClickClear() {
     /*
@@ -50,7 +51,7 @@ function ContainerTextSearch({
       </div>
       <div className="m-2">
         <FormCheck
-          id="includes-trait-and-legacy"
+          id={idIncludes}
           type="checkbox"
           label="特性と遺業能力も検索する"
           defaultChecked={true}
