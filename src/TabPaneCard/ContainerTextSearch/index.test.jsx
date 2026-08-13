@@ -21,7 +21,7 @@ function getRenderFn(result) {
 function defaultRender() {
   const { result } = renderHook(() => useContainerTextSearch())
   const { rerender, getByPlaceholderText, getByRole } = render(
-    getRenderFn(result)()
+    getRenderFn(result)(),
   )
   const defaultRerender = () => rerender(getRenderFn(result)())
   return { result, defaultRerender, getByPlaceholderText, getByRole }
@@ -30,25 +30,20 @@ function defaultRender() {
 afterEach(cleanup)
 
 test('デフォルトのレンダリング', () => {
-  const { getByRole } = defaultRender()
+  const { getByRole, getByPlaceholderText } = defaultRender()
 
   // キーワードを入力するテキストボックスがある
-  expect(getByRole('textbox')).toBeVisible()
-  expect(getByRole('textbox')).toHaveValue('')
+  // prettier-ignore
+  expect(getByPlaceholderText('カード名、テキスト、イラストレータで検索')).toBeVisible()
+  // prettier-ignore
+  expect(getByPlaceholderText('カード名、テキスト、イラストレータで検索')).toHaveValue('')
+
   // クリアボタンがある
-  expect(getByRole('button')).toBeVisible()
-  // 特性や遺業能力を含めるか否かのチェックボックスがある
-  expect(getByRole('checkbox')).toBeVisible()
-  expect(getByRole('checkbox')).toBeChecked()
-})
-
-test('アクセシビリティ', () => {
-  const { getByPlaceholderText, getByRole } = defaultRender()
-
-  expect(
-    getByPlaceholderText('カード名、テキスト、イラストレータで検索')
-  ).toHaveValue('')
   expect(getByRole('button', { name: 'クリア' })).toBeVisible()
+
+  // 特性と遺業能力も検索するか否かのチェックボックスがある
+  // prettier-ignore
+  expect(getByRole('checkbox', { name: '特性と遺業能力も検索する' })).toBeVisible()
   // prettier-ignore
   expect(getByRole('checkbox', { name: '特性と遺業能力も検索する' })).toBeChecked()
 })
@@ -74,18 +69,30 @@ test('キーワードの入力とクリア', async () => {
   expect(getByRole('textbox')).toHaveValue('')
 })
 
-test('チェックボックスの切り替え', async () => {
+test('検索チェックボックスの切り替え', async () => {
   const { result, defaultRerender, getByRole } = defaultRender()
 
   expect(getIncludes(result)).toBe(true)
-  expect(getByRole('checkbox')).toBeChecked()
+  // prettier-ignore
+  expect(getByRole('checkbox', { name: '特性と遺業能力も検索する' })).toBeChecked()
 
   // チェックを外す
-  await userEvent.click(getByRole('checkbox'))
+  // prettier-ignore
+  await userEvent.click(getByRole('checkbox', { name: '特性と遺業能力も検索する' }))
   defaultRerender()
 
   expect(getIncludes(result)).toBe(false)
-  expect(getByRole('checkbox')).not.toBeChecked()
+  // prettier-ignore
+  expect(getByRole('checkbox', { name: '特性と遺業能力も検索する' })).not.toBeChecked()
+
+  // チェックを入れる
+  // prettier-ignore
+  await userEvent.click(getByRole('checkbox', { name: '特性と遺業能力も検索する' }))
+  defaultRerender()
+
+  expect(getIncludes(result)).toBe(true)
+  // prettier-ignore
+  expect(getByRole('checkbox', { name: '特性と遺業能力も検索する' })).toBeChecked()
 })
 
 test('スペース区切りのキーワード列', async () => {

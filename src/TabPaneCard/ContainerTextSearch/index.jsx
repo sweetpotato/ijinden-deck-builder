@@ -14,7 +14,7 @@ function useContainerTextSearch() {
       e.currentTarget.value
         .trim()
         .split(/\s+/)
-        .filter((e) => e.length > 0)
+        .filter((e) => e.length > 0),
     )
   }
 
@@ -25,6 +25,7 @@ function useContainerTextSearch() {
   const render = () => {
     return (
       <ContainerTextSearch
+        includesTraitAndLegacy={includesTraitAndLegacy}
         handleChangeKeywords={handleChangeKeywords}
         handleChangeIncludesTraitAndLegacy={handleChangeIncludesTraitAndLegacy}
       />

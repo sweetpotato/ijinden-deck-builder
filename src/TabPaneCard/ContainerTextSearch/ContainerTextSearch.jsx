@@ -4,11 +4,13 @@ import { useId, useRef } from 'react'
 import { Button, FormCheck, FormControl, InputGroup } from 'react-bootstrap'
 
 function ContainerTextSearch({
+  includesTraitAndLegacy,
   handleChangeKeywords,
   handleChangeIncludesTraitAndLegacy,
 }) {
   const ref = useRef(null)
   const idInput = useId()
+  const idIncludes = useId()
 
   function handleClickClear() {
     /*
@@ -50,10 +52,10 @@ function ContainerTextSearch({
       </div>
       <div className="m-2">
         <FormCheck
-          id="includes-trait-and-legacy"
+          id={idIncludes}
           type="checkbox"
           label="特性と遺業能力も検索する"
-          defaultChecked={true}
+          checked={includesTraitAndLegacy}
           onChange={handleChangeIncludesTraitAndLegacy}
         />
       </div>
