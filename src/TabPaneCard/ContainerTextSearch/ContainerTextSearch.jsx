@@ -4,6 +4,7 @@ import { useId, useRef } from 'react'
 import { Button, FormCheck, FormControl, InputGroup } from 'react-bootstrap'
 
 function ContainerTextSearch({
+  includesTraitAndLegacy,
   handleChangeKeywords,
   handleChangeIncludesTraitAndLegacy,
 }) {
@@ -54,7 +55,7 @@ function ContainerTextSearch({
           id={idIncludes}
           type="checkbox"
           label="特性と遺業能力も検索する"
-          defaultChecked={true}
+          checked={includesTraitAndLegacy}
           onChange={handleChangeIncludesTraitAndLegacy}
         />
       </div>
