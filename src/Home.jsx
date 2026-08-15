@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { Alert } from 'react-bootstrap'
 import Tab from 'react-bootstrap/Tab'
 import Tabs from 'react-bootstrap/Tabs'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
 import { decodeDeck } from './commons/dataCards'
 import useDeck from './hooks/useDeck'
@@ -29,16 +29,6 @@ function Home() {
   const [entriesMain, entriesSide] = resultsDecode
     ? [resultsDecode[0], resultsDecode[1]]
     : [[], []]
-
-  // 共有リンクからジャンプして来たらコード部分を削除する。
-  // HashRouter を使っているのでURL末尾が「/#/」になってしまうが、
-  // コード部分が残っているよりはよっぽどいい。
-  const navigate = useNavigate()
-  useEffect(() => {
-    if (code) {
-      navigate('/', { replace: true })
-    }
-  }, [code, navigate])
 
   const [activeTab, setActiveTab] = useState(
     code ? enumTabPane.DECK : enumTabPane.CARD,
