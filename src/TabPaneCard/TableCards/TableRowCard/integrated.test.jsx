@@ -16,28 +16,7 @@ function defaultRender(id, name, term, color, main, side) {
   const { rerender, getByRole } = render(
     <Table>
       <tbody>
-        <TableRowCard
-          id={id}
-          name={name}
-          term={term}
-          color={color}
-          counterMain={
-            result.current[0].has(id) ? result.current[0].get(id) : 0
-          }
-          counterSide={
-            result.current[1].has(id) ? result.current[1].get(id) : 0
-          }
-          dispatchDeck={result.current[2]}
-          zoomIn={zoomIn}
-          interruptSimulator={interruptSimulator}
-        />
-      </tbody>
-    </Table>,
-  )
-  const defaultRerender = () =>
-    rerender(
-      <Table>
-        <tbody>
+        <tr aria-labelledby={`cell0-${id}`}>
           <TableRowCard
             id={id}
             name={name}
@@ -53,6 +32,31 @@ function defaultRender(id, name, term, color, main, side) {
             zoomIn={zoomIn}
             interruptSimulator={interruptSimulator}
           />
+        </tr>
+      </tbody>
+    </Table>,
+  )
+  const defaultRerender = () =>
+    rerender(
+      <Table>
+        <tbody>
+          <tr aria-labelledby={`cell0-${id}`}>
+            <TableRowCard
+              id={id}
+              name={name}
+              term={term}
+              color={color}
+              counterMain={
+                result.current[0].has(id) ? result.current[0].get(id) : 0
+              }
+              counterSide={
+                result.current[1].has(id) ? result.current[1].get(id) : 0
+              }
+              dispatchDeck={result.current[2]}
+              zoomIn={zoomIn}
+              interruptSimulator={interruptSimulator}
+            />
+          </tr>
         </tbody>
       </Table>,
     )

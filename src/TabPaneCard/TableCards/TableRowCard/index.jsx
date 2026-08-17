@@ -122,7 +122,7 @@ const TableRowCard = memo(function TableRowCard({
   }
 
   return (
-    <tr aria-labelledby={`cell0-${id}`}>
+    <>
       <td className={classesColor} id={`cell0-${id}`}>
         {displayId}
       </td>
@@ -154,7 +154,7 @@ const TableRowCard = memo(function TableRowCard({
           dispatchIncrement={dispatchDeck.incrementSide}
         />
       </td>
-    </tr>
+    </>
   )
 })
 

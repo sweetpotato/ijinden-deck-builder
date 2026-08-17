@@ -32,24 +32,7 @@ function defaultRender(id, displayName, term, color, counterMain, counterSide) {
   const { rerender, getByRole, getAllByRole } = render(
     <Table>
       <tbody>
-        <TableRowCard
-          id={id}
-          displayName={displayName}
-          term={term}
-          color={color}
-          counterMain={counterMain}
-          counterSide={counterSide}
-          dispatchDeck={dispatchDeck}
-          zoomIn={zoomIn}
-          interruptSimulator={interruptSimulator}
-        />
-      </tbody>
-    </Table>,
-  )
-  const defaultRerender = (counterMain, counterSide) =>
-    rerender(
-      <Table>
-        <tbody>
+        <tr aria-labelledby={`cell0-${id}`}>
           <TableRowCard
             id={id}
             displayName={displayName}
@@ -61,6 +44,27 @@ function defaultRender(id, displayName, term, color, counterMain, counterSide) {
             zoomIn={zoomIn}
             interruptSimulator={interruptSimulator}
           />
+        </tr>
+      </tbody>
+    </Table>,
+  )
+  const defaultRerender = (counterMain, counterSide) =>
+    rerender(
+      <Table>
+        <tbody>
+          <tr aria-labelledby={`cell0-${id}`}>
+            <TableRowCard
+              id={id}
+              displayName={displayName}
+              term={term}
+              color={color}
+              counterMain={counterMain}
+              counterSide={counterSide}
+              dispatchDeck={dispatchDeck}
+              zoomIn={zoomIn}
+              interruptSimulator={interruptSimulator}
+            />
+          </tr>
         </tbody>
       </Table>,
     )
@@ -81,24 +85,26 @@ function defaultRenderColor(term, color) {
   return render(
     <Table>
       <tbody>
-        <TableRowCard
-          id="X-1"
-          displayName="ダミー"
-          term={term}
-          color={color}
-          counterMain={0}
-          counterSide={0}
-          dispatchDeck={{
-            decrementMain: vi.fn(),
-            incrementMain: vi.fn(),
-            decrementSide: vi.fn(),
-            incrementSide: vi.fn(),
-          }}
-          handleSetDeckMain={vi.fn()}
-          handleSetDeckSide={vi.fn()}
-          zoomIn={vi.fn()}
-          interruptSimulator={vi.fn()}
-        />
+        <tr aria-labelledby="cell0-X-1">
+          <TableRowCard
+            id="X-1"
+            displayName="ダミー"
+            term={term}
+            color={color}
+            counterMain={0}
+            counterSide={0}
+            dispatchDeck={{
+              decrementMain: vi.fn(),
+              incrementMain: vi.fn(),
+              decrementSide: vi.fn(),
+              incrementSide: vi.fn(),
+            }}
+            handleSetDeckMain={vi.fn()}
+            handleSetDeckSide={vi.fn()}
+            zoomIn={vi.fn()}
+            interruptSimulator={vi.fn()}
+          />
+        </tr>
       </tbody>
     </Table>,
   )
@@ -156,38 +162,42 @@ test('各行のアクセシブル名はIDである', async () => {
   const { getByRole } = render(
     <Table>
       <tbody>
-        <TableRowCard
-          id="1-1"
-          displayName="織田信長"
-          term={0}
-          color={enumColor.RED}
-          counterMain={1}
-          counterSide={2}
-          dispatchDeck={{
-            decrementMain: vi.fn(),
-            incrementMain: vi.fn(),
-            decrementSide: vi.fn(),
-            incrementSide: vi.fn(),
-          }}
-          zoomIn={vi.fn()}
-          interruptSimulator={vi.fn()}
-        />
-        <TableRowCard
-          id="1-2"
-          displayName="クレオパトラ"
-          term={0}
-          color={enumColor.RED}
-          counterMain={3}
-          counterSide={4}
-          dispatchDeck={{
-            decrementMain: vi.fn(),
-            incrementMain: vi.fn(),
-            decrementSide: vi.fn(),
-            incrementSide: vi.fn(),
-          }}
-          zoomIn={vi.fn()}
-          interruptSimulator={vi.fn()}
-        />
+        <tr aria-labelledby="cell0-1-1">
+          <TableRowCard
+            id="1-1"
+            displayName="織田信長"
+            term={0}
+            color={enumColor.RED}
+            counterMain={1}
+            counterSide={2}
+            dispatchDeck={{
+              decrementMain: vi.fn(),
+              incrementMain: vi.fn(),
+              decrementSide: vi.fn(),
+              incrementSide: vi.fn(),
+            }}
+            zoomIn={vi.fn()}
+            interruptSimulator={vi.fn()}
+          />
+        </tr>
+        <tr aria-labelledby="cell0-1-2">
+          <TableRowCard
+            id="1-2"
+            displayName="クレオパトラ"
+            term={0}
+            color={enumColor.RED}
+            counterMain={3}
+            counterSide={4}
+            dispatchDeck={{
+              decrementMain: vi.fn(),
+              incrementMain: vi.fn(),
+              decrementSide: vi.fn(),
+              incrementSide: vi.fn(),
+            }}
+            zoomIn={vi.fn()}
+            interruptSimulator={vi.fn()}
+          />
+        </tr>
       </tbody>
     </Table>,
   )

@@ -17,18 +17,19 @@ function TableCards({ model, dispatchDeck, zoomIn, interruptSimulator }) {
       </thead>
       <tbody>
         {model.map((element) => (
-          <TableRowCard
-            key={element.id}
-            id={element.id}
-            displayName={element.displayName}
-            color={element.color}
-            term={element.term}
-            counterMain={element.counterMain}
-            counterSide={element.counterSide}
-            dispatchDeck={dispatchDeck}
-            zoomIn={zoomIn}
-            interruptSimulator={interruptSimulator}
-          />
+          <tr key={element.id} aria-labelledby={`cell0-${element.id}`}>
+            <TableRowCard
+              id={element.id}
+              displayName={element.displayName}
+              color={element.color}
+              term={element.term}
+              counterMain={element.counterMain}
+              counterSide={element.counterSide}
+              dispatchDeck={dispatchDeck}
+              zoomIn={zoomIn}
+              interruptSimulator={interruptSimulator}
+            />
+          </tr>
         ))}
       </tbody>
     </Table>
