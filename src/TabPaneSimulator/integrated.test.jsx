@@ -4,208 +4,194 @@ import 'fake-indexeddb/auto'
 
 import { createRoutesStub } from 'react-router-dom'
 import { afterEach, expect, test } from 'vitest'
-import { cleanup, render, screen } from '@testing-library/react'
+import { cleanup, render, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import Home from '../Home'
 
+function within2(element) {
+  const props = within(element)
+  props['getButtonByName'] = (name) => props.getByRole('button', { name })
+  return props
+}
+
 function defaultRender() {
   const Stub = createRoutesStub([{ path: '/', Component: Home }])
-  render(<Stub initialEntries={['/']} />)
+  const props = render(<Stub initialEntries={['/']} />)
+  props['getTabPanelByName'] = (name) => props.getByRole('tabpanel', { name })
+  return props
 }
 
 afterEach(cleanup)
 
 test('メインデッキが9枚以下だとスタートできない', async () => {
-  defaultRender()
+  const id = 'R-1'
+  const { getByRole, getTabPanelByName } = defaultRender()
 
-  const user = userEvent.setup()
+  // 初期タブは「カード」
+  expect(getByRole('tab', { selected: true })).toHaveTextContent('カード')
+  let paneCard = getTabPanelByName('カード')
+  expect(paneCard).toHaveClass('active')
+  // メイン・サイドとも「0」枚
+  let row = within(paneCard).getByRole('row', { name: id })
+  let cellMain = within(row).getAllByRole('cell')[2]
+  expect(within(cellMain).getByRole('spinbutton')).toHaveValue(0)
+  let cellSide = within(row).getAllByRole('cell')[3]
+  expect(within(cellSide).getByRole('spinbutton')).toHaveValue(0)
 
-  const tabCard = screen.getAllByRole('tab')[0]
-  const tabSimulator = screen.getAllByRole('tab')[3]
-  const paneCard = screen.getAllByRole('tabpanel')[0]
-  const paneSimulator = screen.getAllByRole('tabpanel')[3]
-
-  // 適当なカードのメインとサイドのプラスボタンを得る
-  const buttonPlusMain = paneCard.querySelector(
-    'td:nth-child(3) button:nth-child(3)'
-  )
-  const buttonPlusSide = paneCard.querySelector(
-    'td:nth-child(4) button:nth-child(3)'
-  )
-
-  await user.click(tabSimulator)
-  expect(paneSimulator).toHaveClass('active')
-  expect(paneSimulator).toBeVisible()
-
-  const buttonReset = paneSimulator.querySelector(
-    '.container-button button:nth-child(1)'
-  )
-  const buttonStart = paneSimulator.querySelector(
-    '.container-button button:nth-child(2)'
-  )
-  const buttonMulligan = paneSimulator.querySelector(
-    '.container-button button:nth-child(3)'
-  )
-
-  expect(buttonReset.textContent).toBe('リセット')
-  expect(buttonStart.textContent).toBe('スタート')
-  expect(buttonMulligan.textContent).toBe('マリガン')
-
-  expect(buttonReset).toBeDisabled()
-  expect(buttonStart).toBeEnabled()
-  expect(buttonMulligan).toBeDisabled()
-  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0)
+  // シミュレータも空
+  await userEvent.click(getByRole('tab', { name: 'シミュ' }))
+  let paneSim = getTabPanelByName('シミュ')
+  expect(paneSim).toHaveClass('active')
+  expect(within(paneSim).queryByRole('alert')).toBeNull()
+  expect(within2(paneSim).getButtonByName('リセット')).toBeDisabled()
+  expect(within2(paneSim).getButtonByName('スタート')).toBeEnabled()
+  expect(within2(paneSim).getButtonByName('マリガン')).toBeDisabled()
 
   // メインのプラスボタンを9回押す
-  await user.click(tabCard)
+  await userEvent.click(getByRole('tab', { name: 'カード' }))
+  paneCard = getTabPanelByName('カード')
   expect(paneCard).toHaveClass('active')
-  expect(paneCard).toBeVisible()
-  await user.click(buttonPlusMain)
-  await user.click(buttonPlusMain)
-  await user.click(buttonPlusMain)
-  await user.click(buttonPlusMain)
-  await user.click(buttonPlusMain)
-  await user.click(buttonPlusMain)
-  await user.click(buttonPlusMain)
-  await user.click(buttonPlusMain)
-  await user.click(buttonPlusMain)
-
+  for (let i = 0; i < 9; ++i) {
+    row = within(paneCard).getByRole('row', { name: id })
+    cellMain = within(row).getAllByRole('cell')[2]
+    await userEvent.click(within2(cellMain).getButtonByName('+'))
+  }
   // サイドのプラスボタンを10回押す
-  await user.click(buttonPlusSide)
-  await user.click(buttonPlusSide)
-  await user.click(buttonPlusSide)
-  await user.click(buttonPlusSide)
-  await user.click(buttonPlusSide)
-  await user.click(buttonPlusSide)
-  await user.click(buttonPlusSide)
-  await user.click(buttonPlusSide)
-  await user.click(buttonPlusSide)
-  await user.click(buttonPlusSide)
+  for (let i = 0; i < 10; ++i) {
+    row = within(paneCard).getByRole('row', { name: id })
+    cellSide = within(row).getAllByRole('cell')[3]
+    await userEvent.click(within2(cellSide).getButtonByName('+'))
+  }
 
-  expect(buttonReset).toBeDisabled()
-  expect(buttonStart).toBeEnabled()
-  expect(buttonMulligan).toBeDisabled()
-  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0)
+  await userEvent.click(getByRole('tab', { name: 'シミュ' }))
+  paneSim = getTabPanelByName('シミュ')
+  expect(paneSim).toHaveClass('active')
+  expect(within(paneSim).queryByRole('alert')).toBeNull()
+  expect(within2(paneSim).getButtonByName('リセット')).toBeDisabled()
+  expect(within2(paneSim).getButtonByName('スタート')).toBeEnabled()
+  expect(within2(paneSim).getButtonByName('マリガン')).toBeDisabled()
 
   // スタートボタンを押す
-  await user.click(buttonStart)
+  await userEvent.click(within2(paneSim).getButtonByName('スタート'))
+  paneSim = getTabPanelByName('シミュ')
+  expect(paneSim).toHaveClass('active')
 
   // 開始できず、アラートが表示される
-  expect(buttonReset).toBeEnabled()
-  expect(buttonStart).toBeDisabled()
-  expect(buttonMulligan).toBeDisabled()
-  let alert = paneSimulator.querySelector('.alert-warning')
-  expect(alert.textContent).toBe(
-    'メインデッキの枚数が少なすぎます。10枚以上にしてください。'
-  )
+  let alert = within(paneSim).getByRole('alert')
   expect(alert).toBeVisible()
+  // prettier-ignore
+  expect(alert).toHaveTextContent('メインデッキの枚数が少なすぎます。10枚以上にしてください。')
+  expect(within2(paneSim).getButtonByName('リセット')).toBeEnabled()
+  expect(within2(paneSim).getButtonByName('スタート')).toBeDisabled()
+  expect(within2(paneSim).getButtonByName('マリガン')).toBeDisabled()
 
   // リセットボタンを押す
-  await user.click(buttonReset)
+  await userEvent.click(within2(paneSim).getButtonByName('リセット'))
+  paneSim = getTabPanelByName('シミュ')
+  expect(paneSim).toHaveClass('active')
 
   // アラートが消える
-  expect(buttonReset).toBeDisabled()
-  expect(buttonStart).toBeEnabled()
-  expect(buttonMulligan).toBeDisabled()
-  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0)
+  expect(within(paneSim).queryByRole('alert')).toBeNull()
+  expect(within2(paneSim).getButtonByName('リセット')).toBeDisabled()
+  expect(within2(paneSim).getButtonByName('スタート')).toBeEnabled()
+  expect(within2(paneSim).getButtonByName('マリガン')).toBeDisabled()
 })
 
 test('メインデッキが10枚以上ならスタートできる', async () => {
-  defaultRender()
+  const id = 'R-1'
+  const { getByRole, getTabPanelByName } = defaultRender()
 
-  const user = userEvent.setup()
+  // 初期タブは「カード」
+  expect(getByRole('tab', { selected: true })).toHaveTextContent('カード')
+  let paneCard = getTabPanelByName('カード')
+  expect(paneCard).toHaveClass('active')
+  // メイン・サイドとも「0」枚
+  let row = within(paneCard).getByRole('row', { name: id })
+  let cellMain = within(row).getAllByRole('cell')[2]
+  expect(within(cellMain).getByRole('spinbutton')).toHaveValue(0)
+  let cellSide = within(row).getAllByRole('cell')[3]
+  expect(within(cellSide).getByRole('spinbutton')).toHaveValue(0)
 
-  const tabCard = screen.getAllByRole('tab')[0]
-  const tabSimulator = screen.getAllByRole('tab')[3]
-  const paneCard = screen.getAllByRole('tabpanel')[0]
-  const paneSimulator = screen.getAllByRole('tabpanel')[3]
-
-  // 適当なカードのメインのプラスボタンを得る
-  const buttonPlusMain = paneCard.querySelector(
-    'td:nth-child(3) button:nth-child(3)'
-  )
-
-  await user.click(tabSimulator)
-  expect(paneSimulator).toHaveClass('active')
-  expect(paneSimulator).toBeVisible()
-
-  const buttonReset = paneSimulator.querySelector(
-    '.container-button button:nth-child(1)'
-  )
-  const buttonStart = paneSimulator.querySelector(
-    '.container-button button:nth-child(2)'
-  )
-  const buttonMulligan = paneSimulator.querySelector(
-    '.container-button button:nth-child(3)'
-  )
-
-  expect(buttonReset.textContent).toBe('リセット')
-  expect(buttonStart.textContent).toBe('スタート')
-  expect(buttonMulligan.textContent).toBe('マリガン')
-
-  expect(buttonReset).toBeDisabled()
-  expect(buttonStart).toBeEnabled()
-  expect(buttonMulligan).toBeDisabled()
-  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0)
+  // シミュレータも空
+  await userEvent.click(getByRole('tab', { name: 'シミュ' }))
+  let paneSim = getTabPanelByName('シミュ')
+  expect(paneSim).toHaveClass('active')
+  expect(within(paneSim).queryByRole('alert')).toBeNull()
+  expect(within2(paneSim).getButtonByName('リセット')).toBeDisabled()
+  expect(within2(paneSim).getButtonByName('スタート')).toBeEnabled()
+  expect(within2(paneSim).getButtonByName('マリガン')).toBeDisabled()
 
   // メインのプラスボタンを10回押す
-  await user.click(tabCard)
+  await userEvent.click(getByRole('tab', { name: 'カード' }))
+  paneCard = getTabPanelByName('カード')
   expect(paneCard).toHaveClass('active')
-  expect(paneCard).toBeVisible()
-  await user.click(buttonPlusMain)
-  await user.click(buttonPlusMain)
-  await user.click(buttonPlusMain)
-  await user.click(buttonPlusMain)
-  await user.click(buttonPlusMain)
-  await user.click(buttonPlusMain)
-  await user.click(buttonPlusMain)
-  await user.click(buttonPlusMain)
-  await user.click(buttonPlusMain)
-  await user.click(buttonPlusMain)
+  for (let i = 0; i < 10; ++i) {
+    row = within(paneCard).getByRole('row', { name: id })
+    cellMain = within(row).getAllByRole('cell')[2]
+    await userEvent.click(within2(cellMain).getButtonByName('+'))
+  }
+
+  await userEvent.click(getByRole('tab', { name: 'シミュ' }))
+  paneSim = getTabPanelByName('シミュ')
+  expect(paneSim).toHaveClass('active')
+  expect(within(paneSim).queryByRole('alert')).toBeNull()
+  expect(within2(paneSim).getButtonByName('リセット')).toBeDisabled()
+  expect(within2(paneSim).getButtonByName('スタート')).toBeEnabled()
+  expect(within2(paneSim).getButtonByName('マリガン')).toBeDisabled()
 
   // 1a. スタートボタンを押す
-  await user.click(buttonStart)
+  await userEvent.click(within2(paneSim).getButtonByName('スタート'))
+  paneSim = getTabPanelByName('シミュ')
+  expect(paneSim).toHaveClass('active')
 
   // 1b. シミュレータが開始される
-  expect(buttonReset).toBeEnabled()
-  expect(buttonStart).toBeDisabled()
-  expect(buttonMulligan).toBeEnabled()
-  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0)
+  expect(within(paneSim).queryByRole('alert')).toBeNull()
+  expect(within2(paneSim).getButtonByName('リセット')).toBeEnabled()
+  expect(within2(paneSim).getButtonByName('スタート')).toBeDisabled()
+  expect(within2(paneSim).getButtonByName('マリガン')).toBeEnabled()
 
   // 1c. リセットボタンを押す
-  await user.click(buttonReset)
+  await userEvent.click(within2(paneSim).getButtonByName('リセット'))
+  paneSim = getTabPanelByName('シミュ')
+  expect(paneSim).toHaveClass('active')
 
   // 1d. 初期状態に戻る
-  expect(buttonReset).toBeDisabled()
-  expect(buttonStart).toBeEnabled()
-  expect(buttonMulligan).toBeDisabled()
-  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0)
+  expect(within(paneSim).queryByRole('alert')).toBeNull()
+  expect(within2(paneSim).getButtonByName('リセット')).toBeDisabled()
+  expect(within2(paneSim).getButtonByName('スタート')).toBeEnabled()
+  expect(within2(paneSim).getButtonByName('マリガン')).toBeDisabled()
 
   // 2a. スタートボタンを押す
-  await user.click(buttonStart)
+  await userEvent.click(within2(paneSim).getButtonByName('スタート'))
+  paneSim = getTabPanelByName('シミュ')
+  expect(paneSim).toHaveClass('active')
 
   // 2b. シミュレータが開始される
-  expect(buttonReset).toBeEnabled()
-  expect(buttonStart).toBeDisabled()
-  expect(buttonMulligan).toBeEnabled()
-  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0)
+  expect(within(paneSim).queryByRole('alert')).toBeNull()
+  expect(within2(paneSim).getButtonByName('リセット')).toBeEnabled()
+  expect(within2(paneSim).getButtonByName('スタート')).toBeDisabled()
+  expect(within2(paneSim).getButtonByName('マリガン')).toBeEnabled()
 
   // 2c. マリガンボタンを押す
-  await user.click(buttonMulligan)
+  await userEvent.click(within2(paneSim).getButtonByName('マリガン'))
+  paneSim = getTabPanelByName('シミュ')
+  expect(paneSim).toHaveClass('active')
 
   // 2d. シミュレータは走り続ける
-  expect(buttonReset).toBeEnabled()
-  expect(buttonStart).toBeDisabled()
-  expect(buttonMulligan).toBeDisabled()
-  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0)
+  expect(within(paneSim).queryByRole('alert')).toBeNull()
+  expect(within2(paneSim).getButtonByName('リセット')).toBeEnabled()
+  expect(within2(paneSim).getButtonByName('スタート')).toBeDisabled()
+  expect(within2(paneSim).getButtonByName('マリガン')).toBeDisabled()
 
   // 2e. リセットボタンを押す
-  await user.click(buttonReset)
+  await userEvent.click(within2(paneSim).getButtonByName('リセット'))
+  paneSim = getTabPanelByName('シミュ')
+  expect(paneSim).toHaveClass('active')
 
   // 2f. 初期状態に戻る
-  expect(buttonReset).toBeDisabled()
-  expect(buttonStart).toBeEnabled()
-  expect(buttonMulligan).toBeDisabled()
-  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0)
+  expect(within(paneSim).queryByRole('alert')).toBeNull()
+  expect(within2(paneSim).getButtonByName('リセット')).toBeDisabled()
+  expect(within2(paneSim).getButtonByName('スタート')).toBeEnabled()
+  expect(within2(paneSim).getButtonByName('マリガン')).toBeDisabled()
 })

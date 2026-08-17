@@ -78,6 +78,8 @@ test('レシピに1枚でもあるなら保存できる', async () => {
   let cellMain = within(row).getAllByRole('cell')[2]
   expect(within(cellMain).getByRole('spinbutton')).toHaveValue(0)
   await userEvent.click(within2(cellMain).getButtonByName('+'))
+  row = within(paneCard).getByRole('row', { name: 'R-1' })
+  cellMain = within(row).getAllByRole('cell')[2]
   expect(within(cellMain).getByRole('spinbutton')).toHaveValue(1)
 
   // レシピペインの保存ボタンを押す
@@ -118,6 +120,8 @@ test('レシピに1枚でもあるなら保存できる', async () => {
   cellMain = within(row).getAllByRole('cell')[2]
   expect(within(cellMain).getByRole('spinbutton')).toHaveValue(1)
   await userEvent.click(within2(cellMain).getButtonByName('-'))
+  row = getByRole('row', { name: 'R-1' })
+  cellMain = within(row).getAllByRole('cell')[2]
   expect(within(cellMain).getByRole('spinbutton')).toHaveValue(0)
 
   // カードペインの適当なカードのサイドプラスボタンを押す
@@ -125,6 +129,8 @@ test('レシピに1枚でもあるなら保存できる', async () => {
   let cellSide = within(row).getAllByRole('cell')[3]
   expect(within(cellSide).getByRole('spinbutton')).toHaveValue(0)
   await userEvent.click(within2(cellSide).getButtonByName('+'))
+  row = getByRole('row', { name: 'R-2' })
+  cellSide = within(row).getAllByRole('cell')[3]
   expect(within(cellSide).getByRole('spinbutton')).toHaveValue(1)
 
   // レシピペインの保存ボタンを押す
