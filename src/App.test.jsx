@@ -319,10 +319,12 @@ test('レシピペインからカードペインへの作用', async () => {
   row = within(paneCard).getByRole('row', { name: id })
   cellMain = within(row).getAllByRole('cell')[2]
   await userEvent.click(within2(cellMain).getButtonByName('+'))
+  row = within(paneCard).getByRole('row', { name: id })
   cellMain = within(row).getAllByRole('cell')[2]
   expect(within(cellMain).getByRole('spinbutton')).toHaveValue(1)
   cellSide = within(row).getAllByRole('cell')[3]
   await userEvent.click(within2(cellSide).getButtonByName('+'))
+  row = within(paneCard).getByRole('row', { name: id })
   cellSide = within(row).getAllByRole('cell')[3]
   expect(within(cellSide).getByRole('spinbutton')).toHaveValue(1)
 
