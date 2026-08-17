@@ -44,7 +44,7 @@ function defaultRender(id, displayName, term, color, counterMain, counterSide) {
           interruptSimulator={interruptSimulator}
         />
       </tbody>
-    </Table>
+    </Table>,
   )
   const defaultRerender = (counterMain, counterSide) =>
     rerender(
@@ -62,7 +62,7 @@ function defaultRender(id, displayName, term, color, counterMain, counterSide) {
             interruptSimulator={interruptSimulator}
           />
         </tbody>
-      </Table>
+      </Table>,
     )
   return {
     decrementMain,
@@ -100,7 +100,7 @@ function defaultRenderColor(term, color) {
           interruptSimulator={vi.fn()}
         />
       </tbody>
-    </Table>
+    </Table>,
   )
 }
 
@@ -189,7 +189,7 @@ test('各行のアクセシブル名はIDである', async () => {
           interruptSimulator={vi.fn()}
         />
       </tbody>
-    </Table>
+    </Table>,
   )
 
   const row1 = getByRole('row', { name: '1-1' })
@@ -451,7 +451,7 @@ test('ボタンを押さずにメインデッキのカウンターを0から4に
     0,
     enumColor.RED,
     0,
-    0
+    0,
   )
   let main = within(within(getByRole('row')).getAllByRole('cell')[2])
   let side = within(within(getByRole('row')).getAllByRole('cell')[3])
@@ -482,7 +482,7 @@ test('ボタンを押さずにメインデッキのカウンターを4から0に
     0,
     enumColor.RED,
     4,
-    4
+    4,
   )
   let main = within(within(getByRole('row')).getAllByRole('cell')[2])
   let side = within(within(getByRole('row')).getAllByRole('cell')[3])
@@ -513,7 +513,7 @@ test('ボタンを押さずにサイドデッキのカウンターを0から4に
     0,
     enumColor.RED,
     0,
-    0
+    0,
   )
   let main = within(within(getByRole('row')).getAllByRole('cell')[2])
   let side = within(within(getByRole('row')).getAllByRole('cell')[3])
@@ -544,7 +544,7 @@ test('ボタンを押さずにサイドデッキのカウンターを4から0に
     0,
     enumColor.RED,
     4,
-    4
+    4,
   )
   let main = within(within(getByRole('row')).getAllByRole('cell')[2])
   let side = within(within(getByRole('row')).getAllByRole('cell')[3])
@@ -575,7 +575,7 @@ test('ボタンを押さずにメインデッキとサイドデッキのカウ�
     0,
     enumColor.RED,
     2,
-    2
+    2,
   )
   let main = within(within(getByRole('row')).getAllByRole('cell')[2])
   let side = within(within(getByRole('row')).getAllByRole('cell')[3])

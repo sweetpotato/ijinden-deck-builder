@@ -18,7 +18,7 @@ function defaultRenderMain(id, counter) {
       dispatchDecrement={dispatchDecrement}
       dispatchIncrement={dispatchIncrement}
       interruptSimulator={interruptSimulator}
-    />
+    />,
   )
   const defaultRerender = (counter) =>
     rerender(
@@ -28,7 +28,7 @@ function defaultRenderMain(id, counter) {
         dispatchDecrement={dispatchDecrement}
         dispatchIncrement={dispatchIncrement}
         interruptSimulator={interruptSimulator}
-      />
+      />,
     )
   return {
     dispatchDecrement,
@@ -49,7 +49,7 @@ function defaultRenderSide(id, counter) {
       counter={counter}
       dispatchDecrement={dispatchDecrement}
       dispatchIncrement={dispatchIncrement}
-    />
+    />,
   )
   const defaultRerender = (counter) =>
     rerender(
@@ -58,7 +58,7 @@ function defaultRenderSide(id, counter) {
         counter={counter}
         dispatchDecrement={dispatchDecrement}
         dispatchIncrement={dispatchIncrement}
-      />
+      />,
     )
   return { dispatchDecrement, dispatchIncrement, defaultRerender, getByRole }
 }
@@ -189,7 +189,7 @@ test('サイドデッキのカウンターを0から1に増やす', async () => 
   const id = '1-8'
   const { dispatchDecrement, dispatchIncrement, getByRole } = defaultRenderSide(
     id,
-    0
+    0,
   )
 
   expect(getByRole('button', { name: '-' })).toBeDisabled() // 無効
@@ -209,7 +209,7 @@ test('サイドデッキのカウンターを1から2に増やす', async () => 
   const id = '1-9'
   const { dispatchDecrement, dispatchIncrement, getByRole } = defaultRenderSide(
     id,
-    1
+    1,
   )
 
   expect(getByRole('button', { name: '-' })).toBeEnabled()
@@ -229,7 +229,7 @@ test('サイドデッキのカウンターを1から0に減らす', async () => 
   const id = '1-10'
   const { dispatchDecrement, dispatchIncrement, getByRole } = defaultRenderSide(
     id,
-    1
+    1,
   )
 
   expect(getByRole('button', { name: '-' })).toBeEnabled()

@@ -18,7 +18,7 @@ function defaultRenderMain(id, deck) {
       dispatchDecrement={result.current[2].decrementMain}
       dispatchIncrement={result.current[2].incrementMain}
       interruptSimulator={interruptSimulator}
-    />
+    />,
   )
   const defaultRerender = () => {
     rerender(
@@ -28,7 +28,7 @@ function defaultRenderMain(id, deck) {
         dispatchDecrement={result.current[2].decrementMain}
         dispatchIncrement={result.current[2].incrementMain}
         interruptSimulator={interruptSimulator}
-      />
+      />,
     )
   }
   return { defaultRerender, getByRole }
@@ -43,7 +43,7 @@ function defaultRenderSide(id, deck) {
       counter={result.current[1].has(id) ? result.current[1].get(id) : 0}
       dispatchDecrement={result.current[2].decrementSide}
       dispatchIncrement={result.current[2].incrementSide}
-    />
+    />,
   )
   const defaultRerender = () => {
     rerender(
@@ -52,7 +52,7 @@ function defaultRenderSide(id, deck) {
         counter={result.current[1].has(id) ? result.current[1].get(id) : 0}
         dispatchDecrement={result.current[2].decrementSide}
         dispatchIncrement={result.current[2].incrementSide}
-      />
+      />,
     )
   }
   return { defaultRerender, getByRole }
