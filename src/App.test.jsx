@@ -4,994 +4,955 @@ import 'fake-indexeddb/auto'
 
 import { createRoutesStub } from 'react-router-dom'
 import { afterEach, expect, test } from 'vitest'
-import { cleanup, render, screen } from '@testing-library/react'
+import { cleanup, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import Home from './Home'
 import { dataCardsMap } from './commons/dataCards'
-import { dbBulkAddDecks, dbClearDecks } from './commons/db'
+import { dbAddDeck, dbClearDecks } from './commons/db'
+import Home from './Home'
+
+function within2(element) {
+  const props = within(element)
+  props['getButtonByName'] = (name) => props.getByRole('button', { name })
+  return props
+}
 
 function defaultRender() {
   const Stub = createRoutesStub([{ path: '/', Component: Home }])
-  render(<Stub initialEntries={['/']} />)
+  const props = render(<Stub initialEntries={['/']} />)
+  props['getTabPanelByName'] = (name) => props.getByRole('tabpanel', { name })
+  return props
 }
 
 afterEach(cleanup)
 
 test('タブをクリックするとペインが表示される', async () => {
-  defaultRender()
-
-  const user = userEvent.setup()
-
-  const tabs = screen.getAllByRole('tab')
-  const panes = screen.getAllByRole('tabpanel')
+  const { getByRole, getAllByRole, getTabPanelByName } = defaultRender()
 
   // タブの数は5個
-  expect(tabs.length).toBe(5)
-  expect(panes.length).toBe(5)
+  expect(getAllByRole('tab').length).toBe(5)
+  expect(getAllByRole('tabpanel').length).toBe(5)
 
-  // 初期タブは0番
-  expect(screen.queryByRole('tab', { selected: true })).toBe(tabs[0])
-  expect(tabs[0]).toHaveClass('active')
-  expect(tabs[1]).not.toHaveClass('active')
-  expect(tabs[2]).not.toHaveClass('active')
-  expect(tabs[3]).not.toHaveClass('active')
-  expect(tabs[4]).not.toHaveClass('active')
+  // 初期タブは「カード」
+  expect(getByRole('tab', { selected: true })).toHaveTextContent('カード')
 
   // 次のアサーションは成功するが、ほぼ意味がない。
-  expect(panes[0]).toBeVisible()
+  expect(getTabPanelByName('カード')).toBeVisible()
   // なぜなら、次のアサーションも成功してしまうからだ。
-  expect(panes[1]).toBeVisible()
-  expect(panes[2]).toBeVisible()
-  expect(panes[3]).toBeVisible()
-  expect(panes[4]).toBeVisible()
+  expect(getTabPanelByName('レシピ')).toBeVisible()
+  expect(getTabPanelByName('マイデッキ')).toBeVisible()
+  expect(getTabPanelByName('シミュ')).toBeVisible()
+  expect(getTabPanelByName('ヘルプ')).toBeVisible()
   // Bootstrap を使用しているおかげか、可視性はスタイルで直接的にではなく、
   // CSS の active クラスで間接的に制御されているようだ。
   // したがって、toBeVisible のアサーションは上のものにとどめ、以降は行わない。
 
-  await user.click(tabs[1])
-  expect(screen.queryByRole('tab', { selected: true })).toBe(tabs[1])
-  expect(tabs[0]).not.toHaveClass('active')
-  expect(tabs[1]).toHaveClass('active')
-  expect(tabs[2]).not.toHaveClass('active')
-  expect(tabs[3]).not.toHaveClass('active')
-  expect(tabs[4]).not.toHaveClass('active')
+  // 代わりに active クラスを持っているか否かで可視性をテストする。
+  expect(getTabPanelByName('カード')).toHaveClass('active')
+  expect(getTabPanelByName('レシピ')).not.toHaveClass('active')
+  expect(getTabPanelByName('マイデッキ')).not.toHaveClass('active')
+  expect(getTabPanelByName('シミュ')).not.toHaveClass('active')
+  expect(getTabPanelByName('ヘルプ')).not.toHaveClass('active')
 
-  await user.click(tabs[2])
-  expect(screen.queryByRole('tab', { selected: true })).toBe(tabs[2])
-  expect(tabs[0]).not.toHaveClass('active')
-  expect(tabs[1]).not.toHaveClass('active')
-  expect(tabs[2]).toHaveClass('active')
-  expect(tabs[3]).not.toHaveClass('active')
-  expect(tabs[4]).not.toHaveClass('active')
+  await userEvent.click(getByRole('tab', { name: 'レシピ' }))
+  expect(getByRole('tab', { selected: true })).toHaveTextContent('レシピ')
 
-  await user.click(tabs[3])
-  expect(screen.queryByRole('tab', { selected: true })).toBe(tabs[3])
-  expect(tabs[0]).not.toHaveClass('active')
-  expect(tabs[1]).not.toHaveClass('active')
-  expect(tabs[2]).not.toHaveClass('active')
-  expect(tabs[3]).toHaveClass('active')
-  expect(tabs[4]).not.toHaveClass('active')
+  expect(getTabPanelByName('カード')).not.toHaveClass('active')
+  expect(getTabPanelByName('レシピ')).toHaveClass('active')
+  expect(getTabPanelByName('マイデッキ')).not.toHaveClass('active')
+  expect(getTabPanelByName('シミュ')).not.toHaveClass('active')
+  expect(getTabPanelByName('ヘルプ')).not.toHaveClass('active')
 
-  await user.click(tabs[4])
-  expect(screen.queryByRole('tab', { selected: true })).toBe(tabs[4])
-  expect(tabs[0]).not.toHaveClass('active')
-  expect(tabs[1]).not.toHaveClass('active')
-  expect(tabs[2]).not.toHaveClass('active')
-  expect(tabs[3]).not.toHaveClass('active')
-  expect(tabs[4]).toHaveClass('active')
+  await userEvent.click(getByRole('tab', { name: 'マイデッキ' }))
+  expect(getByRole('tab', { selected: true })).toHaveTextContent('マイデッキ')
+
+  expect(getTabPanelByName('カード')).not.toHaveClass('active')
+  expect(getTabPanelByName('レシピ')).not.toHaveClass('active')
+  expect(getTabPanelByName('マイデッキ')).toHaveClass('active')
+  expect(getTabPanelByName('シミュ')).not.toHaveClass('active')
+  expect(getTabPanelByName('ヘルプ')).not.toHaveClass('active')
+
+  await userEvent.click(getByRole('tab', { name: 'シミュ' }))
+  expect(getByRole('tab', { selected: true })).toHaveTextContent('シミュ')
+
+  expect(getTabPanelByName('カード')).not.toHaveClass('active')
+  expect(getTabPanelByName('レシピ')).not.toHaveClass('active')
+  expect(getTabPanelByName('マイデッキ')).not.toHaveClass('active')
+  expect(getTabPanelByName('シミュ')).toHaveClass('active')
+  expect(getTabPanelByName('ヘルプ')).not.toHaveClass('active')
+
+  await userEvent.click(getByRole('tab', { name: 'ヘルプ' }))
+  expect(getByRole('tab', { selected: true })).toHaveTextContent('ヘルプ')
+
+  expect(getTabPanelByName('カード')).not.toHaveClass('active')
+  expect(getTabPanelByName('レシピ')).not.toHaveClass('active')
+  expect(getTabPanelByName('マイデッキ')).not.toHaveClass('active')
+  expect(getTabPanelByName('シミュ')).not.toHaveClass('active')
+  expect(getTabPanelByName('ヘルプ')).toHaveClass('active')
 })
 
 test('カードペインからレシピペインへの作用', async () => {
-  defaultRender()
+  const id = 'R-1'
+  const { getByRole, queryByRole, getTabPanelByName } = defaultRender()
 
-  const user = userEvent.setup()
-
-  const tabCard = screen.getAllByRole('tab')[0]
-  const tabDeck = screen.getAllByRole('tab')[1]
-  const paneCard = screen.getAllByRole('tabpanel')[0]
-  const paneDeck = screen.getAllByRole('tabpanel')[1]
-
+  // 初期タブは「カード」
+  expect(getByRole('tab', { selected: true })).toHaveTextContent('カード')
+  let paneCard = getTabPanelByName('カード')
   expect(paneCard).toHaveClass('active')
-  expect(paneCard).toBeVisible()
 
-  const buttonMinusMain = paneCard.querySelector(
-    'tbody tr:nth-child(1) td:nth-child(3) button:nth-child(1)'
-  )
-  const inputMain = paneCard.querySelector(
-    'tbody tr:nth-child(1) td:nth-child(3) input'
-  )
-  const buttonPlusMain = paneCard.querySelector(
-    'tbody tr:nth-child(1) td:nth-child(3) button:nth-child(3)'
-  )
-  const buttonMinusSide = paneCard.querySelector(
-    'tbody tr:nth-child(1) td:nth-child(4) button:nth-child(1)'
-  )
-  const inputSide = paneCard.querySelector(
-    'tbody tr:nth-child(1) td:nth-child(4) input'
-  )
-  const buttonPlusSide = paneCard.querySelector(
-    'tbody tr:nth-child(1) td:nth-child(4) button:nth-child(3)'
-  )
+  // メイン・サイドとも「0」枚
+  let row = within(paneCard).getByRole('row', { name: id })
+  let cellMain = within(row).getAllByRole('cell')[2]
+  expect(within(cellMain).getByRole('spinbutton')).toHaveValue(0)
+  let cellSide = within(row).getAllByRole('cell')[3]
+  expect(within(cellSide).getByRole('spinbutton')).toHaveValue(0)
 
-  expect(buttonMinusMain.textContent).toBe('-')
-  expect(inputMain.value).toBe('0')
-  expect(buttonPlusMain.textContent).toBe('+')
-  expect(buttonMinusSide.textContent).toBe('-')
-  expect(inputSide.value).toBe('0')
-  expect(buttonPlusSide.textContent).toBe('+')
-
-  await user.click(tabDeck)
+  await userEvent.click(getByRole('tab', { name: 'レシピ' }))
+  let paneDeck = getTabPanelByName('レシピ')
   expect(paneDeck).toHaveClass('active')
-  expect(paneDeck).toBeVisible()
-
-  expect(
-    paneDeck.querySelectorAll(`img[src="${dataCardsMap.get('R-1').imageUrl}"]`)
-      .length
-  ).toBe(0)
+  let listMain = within(paneDeck).getByRole('list', { name: 'メインデッキ' })
+  expect(within(listMain).queryByRole('listitem', { name: id })).toBeNull()
+  let listSide = within(paneDeck).getByRole('list', { name: 'サイドデッキ' })
+  expect(within(listSide).queryByRole('listitem', { name: id })).toBeNull()
 
   // 1a. カードペインでメインのプラスボタンを押す
-  await user.click(tabCard)
+  await userEvent.click(getByRole('tab', { name: 'カード' }))
+  paneCard = getTabPanelByName('カード')
   expect(paneCard).toHaveClass('active')
-  expect(paneCard).toBeVisible()
-  await user.click(buttonPlusMain)
+  row = within(paneCard).getByRole('row', { name: id })
+  cellMain = within(row).getAllByRole('cell')[2]
+  await userEvent.click(within2(cellMain).getButtonByName('+'))
 
   // 1b. レシピペインのメインデッキに当該カードが表示される
-  await user.click(tabDeck)
+  await userEvent.click(getByRole('tab', { name: 'レシピ' }))
+  paneDeck = getTabPanelByName('レシピ')
   expect(paneDeck).toHaveClass('active')
-  expect(paneDeck).toBeVisible()
-  const imageMain = paneDeck.querySelectorAll(
-    `img[src="${dataCardsMap.get('R-1').imageUrl}"]`
-  )[0]
-  expect(imageMain).toBeVisible()
-  const numCopiesMain = imageMain.parentElement.querySelector(
-    '.container-num-copies'
-  )
-  expect(numCopiesMain).toBeVisible()
-  expect(numCopiesMain.textContent).toBe('1')
+  listMain = within(paneDeck).getByRole('list', { name: 'メインデッキ' })
+  let itemMain = within(listMain).getByRole('listitem', { name: id })
+  expect(within(itemMain).getByRole('img')).toBeVisible()
+  expect(within(itemMain).getByRole('textbox')).toBeVisible()
+  expect(within(itemMain).getByRole('textbox')).toHaveTextContent('1')
+  listSide = within(paneDeck).getByRole('list', { name: 'サイドデッキ' })
+  expect(within(listSide).queryByRole('listitem')).toBeNull()
 
   // 2a. カードペインでサイドのプラスボタンを押す
-  await user.click(tabCard)
+  await userEvent.click(getByRole('tab', { name: 'カード' }))
+  paneCard = getTabPanelByName('カード')
   expect(paneCard).toHaveClass('active')
-  expect(paneCard).toBeVisible()
-  await user.click(buttonPlusSide)
+  row = within(paneCard).getByRole('row', { name: id })
+  cellSide = within(row).getAllByRole('cell')[3]
+  await userEvent.click(within2(cellSide).getButtonByName('+'))
 
-  // 2b. レシピペインのメインデッキに当該カードが表示される
-  await user.click(tabDeck)
+  // 2b. レシピペインのサイドデッキに当該カードが表示される
+  await userEvent.click(getByRole('tab', { name: 'レシピ' }))
+  paneDeck = getTabPanelByName('レシピ')
   expect(paneDeck).toHaveClass('active')
-  expect(paneDeck).toBeVisible()
-  const imageSide = paneDeck.querySelectorAll(
-    `img[src="${dataCardsMap.get('R-1').imageUrl}"]`
-  )[1]
-  expect(imageSide).toBeVisible()
-  const numCopiesSide = imageMain.parentElement.querySelector(
-    '.container-num-copies'
-  )
-  expect(numCopiesSide).toBeVisible()
-  expect(numCopiesSide.textContent).toBe('1')
+  listMain = within(paneDeck).getByRole('list', { name: 'メインデッキ' })
+  itemMain = within(listMain).getByRole('listitem', { name: id })
+  expect(within(itemMain).getByRole('img')).toBeVisible()
+  expect(within(itemMain).getByRole('textbox')).toBeVisible()
+  expect(within(itemMain).getByRole('textbox')).toHaveTextContent('1')
+  listSide = within(paneDeck).getByRole('list', { name: 'サイドデッキ' })
+  let itemSide = within(listMain).getByRole('listitem', { name: id })
+  expect(within(itemSide).getByRole('img')).toBeVisible()
+  expect(within(itemSide).getByRole('textbox')).toBeVisible()
+  expect(within(itemSide).getByRole('textbox')).toHaveTextContent('1')
 
   // 3a. カードペインでメインのプラスボタンを再度押す
-  await user.click(tabCard)
+  await userEvent.click(getByRole('tab', { name: 'カード' }))
+  paneCard = getTabPanelByName('カード')
   expect(paneCard).toHaveClass('active')
-  expect(paneCard).toBeVisible()
-  await user.click(buttonPlusMain)
+  row = within(paneCard).getByRole('row', { name: id })
+  cellMain = within(row).getAllByRole('cell')[2]
+  await userEvent.click(within2(cellMain).getButtonByName('+'))
 
   // 3b. レシピペインのメインデッキで当該カードの枚数が増える
-  await user.click(tabDeck)
+  await userEvent.click(getByRole('tab', { name: 'レシピ' }))
+  paneDeck = getTabPanelByName('レシピ')
   expect(paneDeck).toHaveClass('active')
-  expect(paneDeck).toBeVisible()
-  expect(imageMain).toBeVisible()
-  expect(numCopiesMain).toBeVisible()
-  expect(numCopiesMain.textContent).toBe('2')
+  listMain = within(paneDeck).getByRole('list', { name: 'メインデッキ' })
+  itemMain = within(listMain).getByRole('listitem', { name: id })
+  expect(within(itemMain).getByRole('img')).toBeVisible()
+  expect(within(itemMain).getByRole('textbox')).toBeVisible()
+  expect(within(itemMain).getByRole('textbox')).toHaveTextContent('2')
+  listSide = within(paneDeck).getByRole('list', { name: 'サイドデッキ' })
+  itemSide = within(listSide).getByRole('listitem', { name: id })
+  expect(within(itemSide).getByRole('img')).toBeVisible()
+  expect(within(itemSide).getByRole('textbox')).toBeVisible()
+  expect(within(itemSide).getByRole('textbox')).toHaveTextContent('1')
 
   // 4a. カードペインでサイドのプラスボタンを再度押す
-  await user.click(tabCard)
+  await userEvent.click(getByRole('tab', { name: 'カード' }))
+  paneCard = getTabPanelByName('カード')
   expect(paneCard).toHaveClass('active')
-  expect(paneCard).toBeVisible()
-  await user.click(buttonPlusSide)
+  row = within(paneCard).getByRole('row', { name: id })
+  cellSide = within(row).getAllByRole('cell')[3]
+  await userEvent.click(within2(cellSide).getButtonByName('+'))
 
-  // 4b. レシピペインのメインデッキで当該カードの枚数が増える
-  await user.click(tabDeck)
+  // 4b. レシピペインのサイドデッキで当該カードの枚数が増える
+  await userEvent.click(getByRole('tab', { name: 'レシピ' }))
+  paneDeck = getTabPanelByName('レシピ')
   expect(paneDeck).toHaveClass('active')
-  expect(paneDeck).toBeVisible()
-  expect(imageSide).toBeVisible()
-  expect(imageSide).toBeVisible()
-  expect(numCopiesSide.textContent).toBe('2')
+  listMain = within(paneDeck).getByRole('list', { name: 'メインデッキ' })
+  itemMain = within(listMain).getByRole('listitem', { name: id })
+  expect(within(itemMain).getByRole('img')).toBeVisible()
+  expect(within(itemMain).getByRole('textbox')).toBeVisible()
+  expect(within(itemMain).getByRole('textbox')).toHaveTextContent('2')
+  listSide = within(paneDeck).getByRole('list', { name: 'サイドデッキ' })
+  itemSide = within(listSide).getByRole('listitem', { name: id })
+  expect(within(itemSide).getByRole('img')).toBeVisible()
+  expect(within(itemSide).getByRole('textbox')).toBeVisible()
+  expect(within(itemSide).getByRole('textbox')).toHaveTextContent('2')
 
   // 5a. カードペインでメインのマイナスボタンを押す
-  await user.click(tabCard)
+  await userEvent.click(getByRole('tab', { name: 'カード' }))
+  paneCard = getTabPanelByName('カード')
   expect(paneCard).toHaveClass('active')
-  expect(paneCard).toBeVisible()
-  await user.click(buttonMinusMain)
+  row = within(paneCard).getByRole('row', { name: id })
+  cellMain = within(row).getAllByRole('cell')[2]
+  await userEvent.click(within2(cellMain).getButtonByName('-'))
 
   // 5b. レシピペインのメインデッキで当該カードの枚数が減る
-  await user.click(tabDeck)
+  await userEvent.click(getByRole('tab', { name: 'レシピ' }))
+  paneDeck = getTabPanelByName('レシピ')
   expect(paneDeck).toHaveClass('active')
-  expect(paneDeck).toBeVisible()
-  expect(imageMain).toBeVisible()
-  expect(numCopiesMain).toBeVisible()
-  expect(numCopiesMain.textContent).toBe('1')
+  listMain = within(paneDeck).getByRole('list', { name: 'メインデッキ' })
+  itemMain = within(listMain).getByRole('listitem', { name: id })
+  expect(within(itemMain).getByRole('img')).toBeVisible()
+  expect(within(itemMain).getByRole('textbox')).toBeVisible()
+  expect(within(itemMain).getByRole('textbox')).toHaveTextContent('1')
+  listSide = within(paneDeck).getByRole('list', { name: 'サイドデッキ' })
+  itemSide = within(listSide).getByRole('listitem', { name: id })
+  expect(within(itemSide).getByRole('img')).toBeVisible()
+  expect(within(itemSide).getByRole('textbox')).toBeVisible()
+  expect(within(itemSide).getByRole('textbox')).toHaveTextContent('2')
 
   // 6a. カードペインでサイドのマイナスボタンを押す
-  await user.click(tabCard)
+  await userEvent.click(getByRole('tab', { name: 'カード' }))
+  paneCard = getTabPanelByName('カード')
   expect(paneCard).toHaveClass('active')
-  expect(paneCard).toBeVisible()
-  await user.click(buttonMinusSide)
+  row = within(paneCard).getByRole('row', { name: id })
+  cellSide = within(row).getAllByRole('cell')[3]
+  await userEvent.click(within2(cellSide).getButtonByName('-'))
 
   // 6b. レシピペインのサイドデッキで当該カードの枚数が減る
-  await user.click(tabDeck)
+  await userEvent.click(getByRole('tab', { name: 'レシピ' }))
+  paneDeck = getTabPanelByName('レシピ')
   expect(paneDeck).toHaveClass('active')
-  expect(paneDeck).toBeVisible()
-  expect(imageSide).toBeVisible()
-  expect(imageSide).toBeVisible()
-  expect(numCopiesSide.textContent).toBe('1')
+  listMain = within(paneDeck).getByRole('list', { name: 'メインデッキ' })
+  itemMain = within(listMain).getByRole('listitem', { name: id })
+  expect(within(itemMain).getByRole('img')).toBeVisible()
+  expect(within(itemMain).getByRole('textbox')).toBeVisible()
+  expect(within(itemMain).getByRole('textbox')).toHaveTextContent('1')
+  listSide = within(paneDeck).getByRole('list', { name: 'サイドデッキ' })
+  itemSide = within(listSide).getByRole('listitem', { name: id })
+  expect(within(itemSide).getByRole('img')).toBeVisible()
+  expect(within(itemSide).getByRole('textbox')).toBeVisible()
+  expect(within(itemSide).getByRole('textbox')).toHaveTextContent('1')
 
-  // 7a. カードペインでメインのマイナスボタンを押す
-  await user.click(tabCard)
+  // 7a. カードペインでメインのマイナスボタンを再度押す
+  await userEvent.click(getByRole('tab', { name: 'カード' }))
+  paneCard = getTabPanelByName('カード')
   expect(paneCard).toHaveClass('active')
-  expect(paneCard).toBeVisible()
-  await user.click(buttonMinusMain)
+  row = within(paneCard).getByRole('row', { name: id })
+  cellMain = within(row).getAllByRole('cell')[2]
+  await userEvent.click(within2(cellMain).getButtonByName('-'))
 
   // 7b. レシピペインのメインデッキで当該カードが非表示になる
-  await user.click(tabDeck)
+  await userEvent.click(getByRole('tab', { name: 'レシピ' }))
+  paneDeck = getTabPanelByName('レシピ')
   expect(paneDeck).toHaveClass('active')
-  expect(paneDeck).toBeVisible()
-  expect(imageMain).not.toBeVisible()
-  expect(numCopiesMain).not.toBeVisible()
+  listMain = within(paneDeck).getByRole('list', { name: 'メインデッキ' })
+  expect(within(listMain).queryByRole('listitem', { name: id })).toBeNull()
+  listSide = within(paneDeck).getByRole('list', { name: 'サイドデッキ' })
+  itemSide = within(listSide).getByRole('listitem', { name: id })
+  expect(within(itemSide).getByRole('img')).toBeVisible()
+  expect(within(itemSide).getByRole('textbox')).toBeVisible()
+  expect(within(itemSide).getByRole('textbox')).toHaveTextContent('1')
 
-  // 8a. カードペインでサイドのマイナスボタンを押す
-  await user.click(tabCard)
+  // 8a. カードペインでサイドのマイナスボタンを再度押す
+  await userEvent.click(getByRole('tab', { name: 'カード' }))
+  paneCard = getTabPanelByName('カード')
   expect(paneCard).toHaveClass('active')
-  expect(paneCard).toBeVisible()
-  await user.click(buttonMinusSide)
+  row = within(paneCard).getByRole('row', { name: id })
+  cellSide = within(row).getAllByRole('cell')[3]
+  await userEvent.click(within2(cellSide).getButtonByName('-'))
 
   // 8b. レシピペインのサイドデッキで当該カードが非表示になる
-  await user.click(tabDeck)
+  await userEvent.click(getByRole('tab', { name: 'レシピ' }))
+  paneDeck = getTabPanelByName('レシピ')
   expect(paneDeck).toHaveClass('active')
-  expect(paneDeck).toBeVisible()
-  expect(imageSide).not.toBeVisible()
-  expect(imageSide).not.toBeVisible()
+  listMain = within(paneDeck).getByRole('list', { name: 'メインデッキ' })
+  expect(within(listMain).queryByRole('listitem', { name: id })).toBeNull()
+  listSide = within(paneDeck).getByRole('list', { name: 'サイドデッキ' })
+  expect(within(listSide).queryByRole('listitem', { name: id })).toBeNull()
 })
 
 test('レシピペインからカードペインへの作用', async () => {
-  defaultRender()
+  const id = 'R-1'
+  const { getByRole, queryByRole, getTabPanelByName } = defaultRender()
 
-  const user = userEvent.setup()
-
-  const tabCard = screen.getAllByRole('tab')[0]
-  const tabDeck = screen.getAllByRole('tab')[1]
-  const paneCard = screen.getAllByRole('tabpanel')[0]
-  const paneDeck = screen.getAllByRole('tabpanel')[1]
-
+  // 初期タブは「カード」
+  expect(getByRole('tab', { selected: true })).toHaveTextContent('カード')
+  let paneCard = getTabPanelByName('カード')
   expect(paneCard).toHaveClass('active')
-  expect(paneCard).toBeVisible()
 
-  let buttonPlusMain = paneCard.querySelector(
-    'tbody tr:nth-child(1) td:nth-child(3) button:nth-child(3)'
-  )
-  let buttonPlusSide = paneCard.querySelector(
-    'tbody tr:nth-child(1) td:nth-child(4) button:nth-child(3)'
-  )
-  const inputMain = paneCard.querySelector(
-    'tbody tr:nth-child(1) td:nth-child(3) input'
-  )
-  const inputSide = paneCard.querySelector(
-    'tbody tr:nth-child(1) td:nth-child(4) input'
-  )
+  // メイン・サイドとも「0」枚
+  let row = within(paneCard).getByRole('row', { name: id })
+  let cellMain = within(row).getAllByRole('cell')[2]
+  expect(within(cellMain).getByRole('spinbutton')).toHaveValue(0)
+  let cellSide = within(row).getAllByRole('cell')[3]
+  expect(within(cellSide).getByRole('spinbutton')).toHaveValue(0)
 
-  expect(buttonPlusMain.textContent).toBe('+')
-  expect(buttonPlusSide.textContent).toBe('+')
-  expect(inputMain.value).toBe('0')
-  expect(inputSide.value).toBe('0')
-
-  await user.click(tabDeck)
+  // レシピタブには何も表示されていない
+  await userEvent.click(getByRole('tab', { name: 'レシピ' }))
+  let paneDeck = getTabPanelByName('レシピ')
   expect(paneDeck).toHaveClass('active')
-  expect(paneDeck).toBeVisible()
-
-  expect(
-    paneDeck.querySelectorAll(`img[src="${dataCardsMap.get('R-1').imageUrl}"]`)
-      .length
-  ).toBe(0)
+  let listMain = within(paneDeck).getByRole('list', { name: 'メインデッキ' })
+  expect(within(listMain).queryByRole('listitem', { name: id })).toBeNull()
+  let listSide = within(paneDeck).getByRole('list', { name: 'サイドデッキ' })
+  expect(within(listSide).queryByRole('listitem', { name: id })).toBeNull()
 
   // 初期状態として、カードペインでメインとサイドのプラスボタンを押す
-  await user.click(tabCard)
+  await userEvent.click(getByRole('tab', { name: 'カード' }))
+  paneCard = getTabPanelByName('カード')
   expect(paneCard).toHaveClass('active')
-  expect(paneCard).toBeVisible()
-  await user.click(buttonPlusMain)
-  await user.click(buttonPlusSide)
+  row = within(paneCard).getByRole('row', { name: id })
+  cellMain = within(row).getAllByRole('cell')[2]
+  await userEvent.click(within2(cellMain).getButtonByName('+'))
+  cellMain = within(row).getAllByRole('cell')[2]
+  expect(within(cellMain).getByRole('spinbutton')).toHaveValue(1)
+  cellSide = within(row).getAllByRole('cell')[3]
+  await userEvent.click(within2(cellSide).getButtonByName('+'))
+  cellSide = within(row).getAllByRole('cell')[3]
+  expect(within(cellSide).getByRole('spinbutton')).toHaveValue(1)
 
   // レシピペインのメインデッキとサイドデッキに当該カードが表示される
-  await user.click(tabDeck)
+  await userEvent.click(getByRole('tab', { name: 'レシピ' }))
+  paneDeck = getTabPanelByName('レシピ')
   expect(paneDeck).toHaveClass('active')
-  expect(paneDeck).toBeVisible()
-  const imageMain = paneDeck.querySelectorAll(
-    `img[src="${dataCardsMap.get('R-1').imageUrl}"]`
-  )[0]
-  expect(imageMain).toBeVisible()
-  const numCopiesMain = imageMain.parentElement.querySelector(
-    '.container-num-copies'
-  )
-  expect(numCopiesMain).toBeVisible()
-  expect(numCopiesMain.textContent).toBe('1')
-  const imageSide = paneDeck.querySelectorAll(
-    `img[src="${dataCardsMap.get('R-1').imageUrl}"]`
-  )[1]
-  expect(imageSide).toBeVisible()
-  const numCopiesSide = imageSide.parentElement.querySelector(
-    '.container-num-copies'
-  )
-  expect(numCopiesSide).toBeVisible()
-  expect(numCopiesSide.textContent).toBe('1')
-
-  buttonPlusMain = imageMain.parentElement.querySelector('.btn-push')
-  buttonPlusSide = imageSide.parentElement.querySelector('.btn-push')
-  const buttonMinusMain = imageMain.parentElement.querySelector('.btn-pop')
-  const buttonMinusSide = imageSide.parentElement.querySelector('.btn-pop')
-  const buttonDrop = imageMain.parentElement.querySelector('.btn-move')
-  const buttonRaise = imageSide.parentElement.querySelector('.btn-move')
-
-  expect(buttonPlusMain.textContent).toBe('+')
-  expect(buttonPlusSide.textContent).toBe('+')
-  expect(buttonMinusMain.textContent).toBe('-')
-  expect(buttonMinusSide.textContent).toBe('-')
-  expect(buttonDrop.textContent).toBe('v')
-  expect(buttonRaise.textContent).toBe('^')
+  listMain = within(paneDeck).getByRole('list', { name: 'メインデッキ' })
+  let itemMain = within(listMain).getByRole('listitem', { name: id })
+  expect(within(itemMain).getByRole('img')).toBeVisible()
+  expect(within(itemMain).getByRole('textbox')).toBeVisible()
+  expect(within(itemMain).getByRole('textbox')).toHaveTextContent('1')
+  listSide = within(paneDeck).getByRole('list', { name: 'サイドデッキ' })
+  let itemSide = within(listSide).getByRole('listitem', { name: id })
+  expect(within(itemSide).getByRole('img')).toBeVisible()
+  expect(within(itemSide).getByRole('textbox')).toBeVisible()
+  expect(within(itemSide).getByRole('textbox')).toHaveTextContent('1')
 
   // 既にレシピペインにいる
   // 1a. レシピペインのメインデッキのプラスボタンを押す
-  await user.click(buttonPlusMain)
+  await userEvent.click(within2(itemMain).getButtonByName('+'))
 
   // 1b. カードペインのメインで当該カードの枚数が増える
-  await user.click(tabCard)
+  await userEvent.click(getByRole('tab', { name: 'カード' }))
+  paneCard = getTabPanelByName('カード')
   expect(paneCard).toHaveClass('active')
-  expect(paneCard).toBeVisible()
-  expect(inputMain.value).toBe('2')
+  row = within(paneCard).getByRole('row', { name: id })
+  cellMain = within(row).getAllByRole('cell')[2]
+  expect(within(cellMain).getByRole('spinbutton')).toHaveValue(2)
+  cellSide = within(row).getAllByRole('cell')[3]
+  expect(within(cellSide).getByRole('spinbutton')).toHaveValue(1)
 
   // 2a. レシピペインのサイドデッキのプラスボタンを押す
-  await user.click(tabDeck)
+  await userEvent.click(getByRole('tab', { name: 'レシピ' }))
+  paneDeck = getTabPanelByName('レシピ')
   expect(paneDeck).toHaveClass('active')
-  expect(paneDeck).toBeVisible()
-  await user.click(buttonPlusSide)
+  listSide = within(paneDeck).getByRole('list', { name: 'サイドデッキ' })
+  itemSide = within(listSide).getByRole('listitem', { name: id })
+  await userEvent.click(within2(itemSide).getButtonByName('+'))
 
   // 2b. カードペインのサイドで当該カードの枚数が増える
-  await user.click(tabCard)
+  await userEvent.click(getByRole('tab', { name: 'カード' }))
+  paneCard = getTabPanelByName('カード')
   expect(paneCard).toHaveClass('active')
-  expect(paneCard).toBeVisible()
-  expect(inputSide.value).toBe('2')
+  row = within(paneCard).getByRole('row', { name: id })
+  cellMain = within(row).getAllByRole('cell')[2]
+  expect(within(cellMain).getByRole('spinbutton')).toHaveValue(2)
+  cellSide = within(row).getAllByRole('cell')[3]
+  expect(within(cellSide).getByRole('spinbutton')).toHaveValue(2)
 
   // 3a. レシピペインのメインデッキの「v」ボタンを押す
-  await user.click(tabDeck)
+  await userEvent.click(getByRole('tab', { name: 'レシピ' }))
+  paneDeck = getTabPanelByName('レシピ')
   expect(paneDeck).toHaveClass('active')
-  expect(paneDeck).toBeVisible()
-  await user.click(buttonDrop)
+  listMain = within(paneDeck).getByRole('list', { name: 'メインデッキ' })
+  itemMain = within(listMain).getByRole('listitem', { name: id })
+  await userEvent.click(within2(itemMain).getButtonByName('v'))
 
   // 3b. カードペインのメインとサイドで当該カードの枚数が変わる
-  await user.click(tabCard)
+  await userEvent.click(getByRole('tab', { name: 'カード' }))
+  paneCard = getTabPanelByName('カード')
   expect(paneCard).toHaveClass('active')
-  expect(paneCard).toBeVisible()
-  expect(inputMain.value).toBe('1')
-  expect(inputSide.value).toBe('3')
+  row = within(paneCard).getByRole('row', { name: id })
+  cellMain = within(row).getAllByRole('cell')[2]
+  expect(within(cellMain).getByRole('spinbutton')).toHaveValue(1)
+  cellSide = within(row).getAllByRole('cell')[3]
+  expect(within(cellSide).getByRole('spinbutton')).toHaveValue(3)
 
   // 4a. レシピペインのサイドデッキの「^」ボタンを押す
-  await user.click(tabDeck)
+  await userEvent.click(getByRole('tab', { name: 'レシピ' }))
+  paneDeck = getTabPanelByName('レシピ')
   expect(paneDeck).toHaveClass('active')
-  expect(paneDeck).toBeVisible()
-  await user.click(buttonRaise)
+  listSide = within(paneDeck).getByRole('list', { name: 'サイドデッキ' })
+  itemSide = within(listSide).getByRole('listitem', { name: id })
+  await userEvent.click(within2(itemSide).getButtonByName('^'))
 
   // 4b. カードペインのメインとサイドで当該カードの枚数が変わる
-  await user.click(tabCard)
+  await userEvent.click(getByRole('tab', { name: 'カード' }))
+  paneCard = getTabPanelByName('カード')
   expect(paneCard).toHaveClass('active')
-  expect(paneCard).toBeVisible()
-  expect(inputMain.value).toBe('2')
-  expect(inputSide.value).toBe('2')
+  row = within(paneCard).getByRole('row', { name: id })
+  cellMain = within(row).getAllByRole('cell')[2]
+  expect(within(cellMain).getByRole('spinbutton')).toHaveValue(2)
+  cellSide = within(row).getAllByRole('cell')[3]
+  expect(within(cellSide).getByRole('spinbutton')).toHaveValue(2)
 
   // 5a. レシピペインのメインデッキのマイナスボタンを押す
-  await user.click(tabDeck)
+  await userEvent.click(getByRole('tab', { name: 'レシピ' }))
+  paneDeck = getTabPanelByName('レシピ')
   expect(paneDeck).toHaveClass('active')
-  expect(paneDeck).toBeVisible()
-  await user.click(buttonMinusMain)
+  listMain = within(paneDeck).getByRole('list', { name: 'メインデッキ' })
+  itemMain = within(listMain).getByRole('listitem', { name: id })
+  await userEvent.click(within2(itemMain).getButtonByName('-'))
 
   // 5b. カードペインのメインで当該カードの枚数が減る
-  await user.click(tabCard)
+  await userEvent.click(getByRole('tab', { name: 'カード' }))
+  paneCard = getTabPanelByName('カード')
   expect(paneCard).toHaveClass('active')
-  expect(paneCard).toBeVisible()
-  expect(inputMain.value).toBe('1')
-  expect(inputSide.value).toBe('2')
+  row = within(paneCard).getByRole('row', { name: id })
+  cellMain = within(row).getAllByRole('cell')[2]
+  expect(within(cellMain).getByRole('spinbutton')).toHaveValue(1)
+  cellSide = within(row).getAllByRole('cell')[3]
+  expect(within(cellSide).getByRole('spinbutton')).toHaveValue(2)
 
   // 6a. レシピペインのサイドデッキのマイナスボタンを押す
-  await user.click(tabDeck)
+  await userEvent.click(getByRole('tab', { name: 'レシピ' }))
+  paneDeck = getTabPanelByName('レシピ')
   expect(paneDeck).toHaveClass('active')
-  expect(paneDeck).toBeVisible()
-  await user.click(buttonMinusSide)
+  listSide = within(paneDeck).getByRole('list', { name: 'サイドデッキ' })
+  itemSide = within(listSide).getByRole('listitem', { name: id })
+  await userEvent.click(within2(itemSide).getButtonByName('-'))
 
   // 6b. カードペインのサイドで当該カードの枚数が減る
-  await user.click(tabCard)
+  await userEvent.click(getByRole('tab', { name: 'カード' }))
+  paneCard = getTabPanelByName('カード')
   expect(paneCard).toHaveClass('active')
-  expect(paneCard).toBeVisible()
-  expect(inputMain.value).toBe('1')
-  expect(inputSide.value).toBe('1')
+  row = within(paneCard).getByRole('row', { name: id })
+  cellMain = within(row).getAllByRole('cell')[2]
+  expect(within(cellMain).getByRole('spinbutton')).toHaveValue(1)
+  cellSide = within(row).getAllByRole('cell')[3]
+  expect(within(cellSide).getByRole('spinbutton')).toHaveValue(1)
 
   // 7a. レシピペインのレシピをクリアボタンを押す
-  await user.click(tabDeck)
+  await userEvent.click(getByRole('tab', { name: 'レシピ' }))
+  paneDeck = getTabPanelByName('レシピ')
   expect(paneDeck).toHaveClass('active')
-  expect(paneDeck).toBeVisible()
-  const buttonClear = paneDeck.querySelector(
-    '.container-button button:nth-child(2)'
-  )
-  expect(buttonClear.textContent).toBe('レシピをクリア')
-  await user.click(buttonClear)
+  await userEvent.click(within2(paneDeck).getButtonByName('レシピをクリア'))
 
   // 7b. カードペインで当該カードの枚数がゼロになる
-  await user.click(tabCard)
+  await userEvent.click(getByRole('tab', { name: 'カード' }))
+  paneCard = getTabPanelByName('カード')
   expect(paneCard).toHaveClass('active')
-  expect(paneCard).toBeVisible()
-  expect(inputMain.value).toBe('0')
-  expect(inputSide.value).toBe('0')
+  row = within(paneCard).getByRole('row', { name: id })
+  cellMain = within(row).getAllByRole('cell')[2]
+  expect(within(cellMain).getByRole('spinbutton')).toHaveValue(0)
+  cellSide = within(row).getAllByRole('cell')[3]
+  expect(within(cellSide).getByRole('spinbutton')).toHaveValue(0)
 })
 
 test('保存したデッキを読み込んでレシピペインに表示する', async () => {
-  const decksSaved = [
-    { timestamp: new Date(), main: [['R-1', 3]], side: [['R-2', 4]] },
-  ]
-
+  const deckSaved = {
+    timestamp: new Date(),
+    main: [['R-1', 3]],
+    side: [['R-2', 4]],
+  }
   await dbClearDecks()
-  await dbBulkAddDecks(decksSaved)
+  await dbAddDeck(deckSaved)
 
-  defaultRender()
+  const { getByRole, queryByRole, getTabPanelByName } = defaultRender()
 
-  const user = userEvent.setup()
-
-  const tabDeck = screen.getAllByRole('tab')[1]
-  const tabSave = screen.getAllByRole('tab')[2]
-  const paneDeck = screen.getAllByRole('tabpanel')[1]
-  const paneSave = screen.getAllByRole('tabpanel')[2]
+  // 初期タブは「カード」
+  expect(getByRole('tab', { selected: true })).toHaveTextContent('カード')
+  let paneCard = getTabPanelByName('カード')
+  expect(paneCard).toHaveClass('active')
 
   // レシピタブをクリックする
-  await user.click(tabDeck)
+  await userEvent.click(getByRole('tab', { name: 'レシピ' }))
+  let paneDeck = getTabPanelByName('レシピ')
   expect(paneDeck).toHaveClass('active')
-  expect(paneDeck).toBeVisible()
 
   // 初期状態でカードは非表示
-  expect(
-    paneDeck.querySelectorAll(`img[src="${dataCardsMap.get('R-1').imageUrl}"]`)
-      .length
-  ).toBe(0)
-  expect(
-    paneDeck.querySelectorAll(`img[src="${dataCardsMap.get('R-2').imageUrl}"]`)
-      .length
-  ).toBe(0)
+  let listMain = within(paneDeck).getByRole('list', { name: 'メインデッキ' })
+  expect(within(listMain).queryByRole('listitem', { name: 'R-1' })).toBeNull()
+  let listSide = within(paneDeck).getByRole('list', { name: 'サイドデッキ' })
+  expect(within(listSide).queryByRole('listitem', { name: 'R-2' })).toBeNull()
 
   // マイデッキタブをクリックしてアコーディオンを開き、読込みボタンを押す
-  await user.click(tabSave)
+  await userEvent.click(getByRole('tab', { name: 'マイデッキ' }))
+  let paneSave = getTabPanelByName('マイデッキ')
   expect(paneSave).toHaveClass('active')
-  expect(paneSave).toBeVisible()
-  await user.click(
-    paneSave.querySelector('.accordion-item .accordion-header button')
+  const listSaved = within(paneSave).getByRole('list', { name: 'ロード' })
+  const itemSaved = within(listSaved).getByRole('listitem', { name: /^#/ })
+  await userEvent.click(
+    within(within(itemSaved).getAllByRole('heading')[0]).getByRole('button'),
   )
-  const buttonLoad = paneSave.querySelector(
-    '.accordion-item .container-button button:nth-child(1)'
-  )
-  expect(buttonLoad.textContent).toBe('読込み')
-  await user.click(buttonLoad)
+  await userEvent.click(within2(itemSaved).getButtonByName('読込み'))
 
   // レシピタブに遷移し、読み込まれたデッキのカードが表示された
+  paneDeck = getTabPanelByName('レシピ')
   expect(paneDeck).toHaveClass('active')
-  expect(paneDeck).toBeVisible()
-  const imageAlphaMain = paneDeck.querySelectorAll(
-    `img[src="${dataCardsMap.get('R-1').imageUrl}"]`
-  )[0]
-  expect(imageAlphaMain).toBeVisible()
-  const imageBravoSide = paneDeck.querySelectorAll(
-    `img[src="${dataCardsMap.get('R-2').imageUrl}"]`
-  )[0]
-  expect(imageBravoSide).toBeVisible()
-  const numCopiesAlphaMain = imageAlphaMain.parentElement.querySelector(
-    '.container-num-copies'
-  )
-  expect(numCopiesAlphaMain.textContent).toBe('3')
-  const numCopiesBravoSide = imageBravoSide.parentElement.querySelector(
-    '.container-num-copies'
-  )
-  expect(numCopiesBravoSide.textContent).toBe('4')
+  // 初期状態でカードは非表示
+  listMain = within(paneDeck).getByRole('list', { name: 'メインデッキ' })
+  const itemMain = within(listMain).getByRole('listitem', { name: 'R-1' })
+  expect(within(itemMain).getByRole('img')).toBeVisible()
+  expect(within(itemMain).getByRole('textbox')).toBeVisible()
+  expect(within(itemMain).getByRole('textbox')).toHaveTextContent('3')
+  listSide = within(paneDeck).getByRole('list', { name: 'サイドデッキ' })
+  const itemSide = within(listSide).getByRole('listitem', { name: 'R-2' })
+  expect(within(itemSide).getByRole('img')).toBeVisible()
+  expect(within(itemSide).getByRole('textbox')).toBeVisible()
+  expect(within(itemSide).getByRole('textbox')).toHaveTextContent('4')
 })
 
 test('シミュレータがカードペインの操作でアボートする', async () => {
-  defaultRender()
+  const id = 'R-1'
+  const { getByRole, queryByRole, getTabPanelByName } = defaultRender()
 
-  const user = userEvent.setup()
-
-  const tabCard = screen.getAllByRole('tab')[0]
-  const tabSimulator = screen.getAllByRole('tab')[3]
-  const paneCard = screen.getAllByRole('tabpanel')[0]
-  const paneSimulator = screen.getAllByRole('tabpanel')[3]
-
+  // 初期タブは「カード」
+  expect(getByRole('tab', { selected: true })).toHaveTextContent('カード')
+  let paneCard = getTabPanelByName('カード')
   expect(paneCard).toHaveClass('active')
-  expect(paneCard).toBeVisible()
 
-  let buttonMinusMain = paneCard.querySelector(
-    'tbody tr:nth-child(1) td:nth-child(3) button:nth-child(1)'
-  )
-  let buttonPlusMain = paneCard.querySelector(
-    'tbody tr:nth-child(1) td:nth-child(3) button:nth-child(3)'
-  )
-  let buttonMinusSide = paneCard.querySelector(
-    'tbody tr:nth-child(1) td:nth-child(4) button:nth-child(1)'
-  )
-  let buttonPlusSide = paneCard.querySelector(
-    'tbody tr:nth-child(1) td:nth-child(4) button:nth-child(3)'
-  )
-  expect(buttonMinusMain.textContent).toBe('-')
-  expect(buttonPlusMain.textContent).toBe('+')
-  expect(buttonMinusSide.textContent).toBe('-')
-  expect(buttonPlusSide.textContent).toBe('+')
+  // メイン・サイドとも「0」枚
+  let row = within(paneCard).getByRole('row', { name: id })
+  let cellMain = within(row).getAllByRole('cell')[2]
+  expect(within(cellMain).getByRole('spinbutton')).toHaveValue(0)
+  let cellSide = within(row).getAllByRole('cell')[3]
+  expect(within(cellSide).getByRole('spinbutton')).toHaveValue(0)
 
-  await user.click(tabSimulator)
-  expect(paneSimulator).toHaveClass('active')
-  expect(paneSimulator).toBeVisible()
+  // レシピタブには何も表示されていない
+  await userEvent.click(getByRole('tab', { name: 'レシピ' }))
+  let paneDeck = getTabPanelByName('レシピ')
+  expect(paneDeck).toHaveClass('active')
+  let listMain = within(paneDeck).getByRole('list', { name: 'メインデッキ' })
+  expect(within(listMain).queryByRole('listitem', { name: id })).toBeNull()
+  let listSide = within(paneDeck).getByRole('list', { name: 'サイドデッキ' })
+  expect(within(listSide).queryByRole('listitem', { name: id })).toBeNull()
 
-  const buttonReset = paneSimulator.querySelector(
-    '.container-button button:nth-child(1)'
-  )
-  const buttonStart = paneSimulator.querySelector(
-    '.container-button button:nth-child(2)'
-  )
-  const buttonMulligan = paneSimulator.querySelector(
-    '.container-button button:nth-child(3)'
-  )
-
-  expect(buttonReset).toBeDisabled()
-  expect(buttonStart).toBeEnabled()
-  expect(buttonMulligan).toBeDisabled()
-  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0)
+  // シミュレータタブも同様
+  await userEvent.click(getByRole('tab', { name: 'シミュ' }))
+  let paneSim = getTabPanelByName('シミュ')
+  expect(paneSim).toHaveClass('active')
+  expect(within(paneSim).queryByRole('alert')).toBeNull()
+  expect(within2(paneSim).getButtonByName('リセット')).toBeDisabled()
+  expect(within2(paneSim).getButtonByName('スタート')).toBeEnabled()
+  expect(within2(paneSim).getButtonByName('マリガン')).toBeDisabled()
 
   // 初期状態として、メインデッキにカードを10枚適当に加える
-  await user.click(tabCard)
+  await userEvent.click(getByRole('tab', { name: 'カード' }))
+  paneCard = getTabPanelByName('カード')
   expect(paneCard).toHaveClass('active')
-  expect(paneCard).toBeVisible()
-  await user.click(buttonPlusMain)
-  await user.click(buttonPlusMain)
-  await user.click(buttonPlusMain)
-  await user.click(buttonPlusMain)
-  await user.click(buttonPlusMain)
-  await user.click(buttonPlusMain)
-  await user.click(buttonPlusMain)
-  await user.click(buttonPlusMain)
-  await user.click(buttonPlusMain)
-  await user.click(buttonPlusMain)
+  for (let i = 0; i < 10; ++i) {
+    row = within(paneCard).getByRole('row', { name: id })
+    cellMain = within(row).getAllByRole('cell')[2]
+    await userEvent.click(within2(cellMain).getButtonByName('+'))
+  }
 
-  await user.click(tabSimulator)
-  expect(paneSimulator).toHaveClass('active')
-  expect(paneSimulator).toBeVisible()
-  expect(buttonReset).toBeDisabled()
-  expect(buttonStart).toBeEnabled()
-  expect(buttonMulligan).toBeDisabled()
-  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0)
+  await userEvent.click(getByRole('tab', { name: 'シミュ' }))
+  paneSim = getTabPanelByName('シミュ')
+  expect(within(paneSim).queryByRole('alert')).toBeNull()
+  expect(within2(paneSim).getButtonByName('リセット')).toBeDisabled()
+  expect(within2(paneSim).getButtonByName('スタート')).toBeEnabled()
+  expect(within2(paneSim).getButtonByName('マリガン')).toBeDisabled()
 
   // 既にシミュタブにいる
   // 1a. スタートボタンを押す
-  await user.click(buttonStart)
-  expect(buttonReset).toBeEnabled()
-  expect(buttonStart).toBeDisabled()
-  expect(buttonMulligan).toBeEnabled()
-  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0)
+  await userEvent.click(within2(paneSim).getButtonByName('スタート'))
+  expect(within(paneSim).queryByRole('alert')).toBeNull()
+  expect(within2(paneSim).getButtonByName('リセット')).toBeEnabled()
+  expect(within2(paneSim).getButtonByName('スタート')).toBeDisabled()
+  expect(within2(paneSim).getButtonByName('マリガン')).toBeEnabled()
 
   // 1b. カードペインでメインデッキのプラスボタンを押す
-  await user.click(tabCard)
+  await userEvent.click(getByRole('tab', { name: 'カード' }))
+  paneCard = getTabPanelByName('カード')
   expect(paneCard).toHaveClass('active')
-  expect(paneCard).toBeVisible()
-  await user.click(buttonPlusMain)
+  row = within(paneCard).getByRole('row', { name: id })
+  cellMain = within(row).getAllByRole('cell')[2]
+  await userEvent.click(within2(cellMain).getButtonByName('+'))
 
   // 1c. 手札シミュレータがアボートする
-  await user.click(tabSimulator)
-  expect(paneSimulator).toHaveClass('active')
-  expect(paneSimulator).toBeVisible()
-  expect(buttonReset).toBeEnabled()
-  expect(buttonStart).toBeDisabled()
-  expect(buttonMulligan).toBeDisabled()
-  let alert = paneSimulator.querySelector('.alert-warning')
-  expect(alert).toBeVisible()
-  expect(alert.textContent).toBe(
-    'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
+  await userEvent.click(getByRole('tab', { name: 'シミュ' }))
+  paneSim = getTabPanelByName('シミュ')
+  expect(within(paneSim).getByRole('alert')).toHaveTextContent(
+    'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。',
   )
+  expect(within2(paneSim).getButtonByName('リセット')).toBeEnabled()
+  expect(within2(paneSim).getButtonByName('スタート')).toBeDisabled()
+  expect(within2(paneSim).getButtonByName('マリガン')).toBeDisabled()
 
   // 2a. リセットボタン、スタートボタンと押す
-  await user.click(buttonReset)
-  await user.click(buttonStart)
-  expect(buttonReset).toBeEnabled()
-  expect(buttonStart).toBeDisabled()
-  expect(buttonMulligan).toBeEnabled()
-  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0)
+  await userEvent.click(within2(paneSim).getButtonByName('リセット'))
+  await userEvent.click(within2(paneSim).getButtonByName('スタート'))
+  expect(within(paneSim).queryByRole('alert')).toBeNull()
+  expect(within2(paneSim).getButtonByName('リセット')).toBeEnabled()
+  expect(within2(paneSim).getButtonByName('スタート')).toBeDisabled()
+  expect(within2(paneSim).getButtonByName('マリガン')).toBeEnabled()
 
   // 2b. カードペインでメインデッキのマイナスボタンを押す
-  await user.click(tabCard)
+  await userEvent.click(getByRole('tab', { name: 'カード' }))
+  paneCard = getTabPanelByName('カード')
   expect(paneCard).toHaveClass('active')
-  expect(paneCard).toBeVisible()
-  await user.click(buttonMinusMain)
+  row = within(paneCard).getByRole('row', { name: id })
+  cellMain = within(row).getAllByRole('cell')[2]
+  await userEvent.click(within2(cellMain).getButtonByName('-'))
 
   // 2c. シミュレータがアボートする
-  await user.click(tabSimulator)
-  expect(paneSimulator).toHaveClass('active')
-  expect(paneSimulator).toBeVisible()
-  expect(buttonReset).toBeEnabled()
-  expect(buttonStart).toBeDisabled()
-  expect(buttonMulligan).toBeDisabled()
-  alert = paneSimulator.querySelector('.alert-warning')
-  expect(alert).toBeVisible()
-  expect(alert.textContent).toBe(
-    'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
+  await userEvent.click(getByRole('tab', { name: 'シミュ' }))
+  paneSim = getTabPanelByName('シミュ')
+  expect(within(paneSim).getByRole('alert')).toHaveTextContent(
+    'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。',
   )
+  expect(within2(paneSim).getButtonByName('リセット')).toBeEnabled()
+  expect(within2(paneSim).getButtonByName('スタート')).toBeDisabled()
+  expect(within2(paneSim).getButtonByName('マリガン')).toBeDisabled()
 
   // 3a. リセットボタン、スタートボタンと押す
-  await user.click(buttonReset)
-  await user.click(buttonStart)
-  expect(buttonReset).toBeEnabled()
-  expect(buttonStart).toBeDisabled()
-  expect(buttonMulligan).toBeEnabled()
-  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0)
+  await userEvent.click(within2(paneSim).getButtonByName('リセット'))
+  await userEvent.click(within2(paneSim).getButtonByName('スタート'))
+  expect(within(paneSim).queryByRole('alert')).toBeNull()
+  expect(within2(paneSim).getButtonByName('リセット')).toBeEnabled()
+  expect(within2(paneSim).getButtonByName('スタート')).toBeDisabled()
+  expect(within2(paneSim).getButtonByName('マリガン')).toBeEnabled()
 
   // 3b. カードペインでサイドデッキのプラスボタンを押す
-  await user.click(tabCard)
-  expect(tabCard).toHaveClass('active')
-  expect(tabCard).toBeVisible()
-  await user.click(buttonPlusSide)
+  await userEvent.click(getByRole('tab', { name: 'カード' }))
+  paneCard = getTabPanelByName('カード')
+  expect(paneCard).toHaveClass('active')
+  row = within(paneCard).getByRole('row', { name: id })
+  cellSide = within(row).getAllByRole('cell')[3]
+  await userEvent.click(within2(cellSide).getButtonByName('+'))
 
   // 3c. シミュレータはアボートしない
-  await user.click(tabSimulator)
-  expect(paneSimulator).toHaveClass('active')
-  expect(paneSimulator).toBeVisible()
-  expect(buttonReset).toBeEnabled()
-  expect(buttonStart).toBeDisabled()
-  expect(buttonMulligan).toBeEnabled()
-  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0)
+  await userEvent.click(getByRole('tab', { name: 'シミュ' }))
+  paneSim = getTabPanelByName('シミュ')
+  expect(within(paneSim).queryByRole('alert')).toBeNull()
+  expect(within2(paneSim).getButtonByName('リセット')).toBeEnabled()
+  expect(within2(paneSim).getButtonByName('スタート')).toBeDisabled()
+  expect(within2(paneSim).getButtonByName('マリガン')).toBeEnabled()
 
   // 4a. カードペインでサイドデッキのマイナスボタンを押す
-  await user.click(tabCard)
-  expect(tabCard).toHaveClass('active')
-  expect(tabCard).toBeVisible()
-  await user.click(buttonMinusSide)
+  await userEvent.click(getByRole('tab', { name: 'カード' }))
+  paneCard = getTabPanelByName('カード')
+  expect(paneCard).toHaveClass('active')
+  row = within(paneCard).getByRole('row', { name: id })
+  cellSide = within(row).getAllByRole('cell')[3]
+  await userEvent.click(within2(cellSide).getButtonByName('-'))
 
   // 4b. やはりシミュレータはアボートしない
-  await user.click(tabSimulator)
-  expect(paneSimulator).toHaveClass('active')
-  expect(paneSimulator).toBeVisible()
-  expect(buttonReset).toBeEnabled()
-  expect(buttonStart).toBeDisabled()
-  expect(buttonMulligan).toBeEnabled()
-  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0)
+  await userEvent.click(getByRole('tab', { name: 'シミュ' }))
+  paneSim = getTabPanelByName('シミュ')
+  expect(within(paneSim).queryByRole('alert')).toBeNull()
+  expect(within2(paneSim).getButtonByName('リセット')).toBeEnabled()
+  expect(within2(paneSim).getButtonByName('スタート')).toBeDisabled()
+  expect(within2(paneSim).getButtonByName('マリガン')).toBeEnabled()
 })
 
 test('シミュレータがレシピペインの操作でアボートする', async () => {
-  defaultRender()
+  const id = 'R-1'
+  const { getByRole, queryByRole, getTabPanelByName } = defaultRender()
 
-  const user = userEvent.setup()
-
-  const tabCard = screen.getAllByRole('tab')[0]
-  const tabDeck = screen.getAllByRole('tab')[1]
-  const tabSimulator = screen.getAllByRole('tab')[3]
-  const paneCard = screen.getAllByRole('tabpanel')[0]
-  const paneDeck = screen.getAllByRole('tabpanel')[1]
-  const paneSimulator = screen.getAllByRole('tabpanel')[3]
-
+  // 初期タブは「カード」
+  expect(getByRole('tab', { selected: true })).toHaveTextContent('カード')
+  let paneCard = getTabPanelByName('カード')
   expect(paneCard).toHaveClass('active')
-  expect(paneCard).toBeVisible()
+  // メイン・サイドとも「0」枚
+  let row = within(paneCard).getByRole('row', { name: id })
+  let cellMain = within(row).getAllByRole('cell')[2]
+  expect(within(cellMain).getByRole('spinbutton')).toHaveValue(0)
+  let cellSide = within(row).getAllByRole('cell')[3]
+  expect(within(cellSide).getByRole('spinbutton')).toHaveValue(0)
 
-  let buttonPlusMain = paneCard.querySelector(
-    'tbody tr:nth-child(1) td:nth-child(3) button:nth-child(3)'
-  )
-  let buttonPlusSide = paneCard.querySelector(
-    'tbody tr:nth-child(1) td:nth-child(4) button:nth-child(3)'
-  )
-  expect(buttonPlusMain.textContent).toBe('+')
-  expect(buttonPlusSide.textContent).toBe('+')
-
-  await user.click(tabSimulator)
-  expect(paneSimulator).toHaveClass('active')
-  expect(paneSimulator).toBeVisible()
-
-  const buttonReset = paneSimulator.querySelector(
-    '.container-button button:nth-child(1)'
-  )
-  const buttonStart = paneSimulator.querySelector(
-    '.container-button button:nth-child(2)'
-  )
-  const buttonMulligan = paneSimulator.querySelector(
-    '.container-button button:nth-child(3)'
-  )
-
-  expect(buttonReset).toBeDisabled()
-  expect(buttonStart).toBeEnabled()
-  expect(buttonMulligan).toBeDisabled()
-  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0)
-
-  // 初期状態として、メインデッキにカードを01枚適当に加える
-  await user.click(tabCard)
-  expect(paneCard).toHaveClass('active')
-  expect(paneCard).toBeVisible()
-  await user.click(buttonPlusMain)
-  await user.click(buttonPlusMain)
-  await user.click(buttonPlusMain)
-  await user.click(buttonPlusMain)
-  await user.click(buttonPlusMain)
-  await user.click(buttonPlusMain)
-  await user.click(buttonPlusMain)
-  await user.click(buttonPlusMain)
-  await user.click(buttonPlusMain)
-  await user.click(buttonPlusMain)
-  // サイドデッキにもカードを1枚適当に加える
-  await user.click(buttonPlusSide)
-
-  await user.click(tabSimulator)
-  expect(paneSimulator).toHaveClass('active')
-  expect(paneSimulator).toBeVisible()
-  expect(buttonReset).toBeDisabled()
-  expect(buttonStart).toBeEnabled()
-  expect(buttonMulligan).toBeDisabled()
-  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0)
-
-  await user.click(tabDeck)
+  // レシピタブには何も表示されていない
+  await userEvent.click(getByRole('tab', { name: 'レシピ' }))
+  let paneDeck = getTabPanelByName('レシピ')
   expect(paneDeck).toHaveClass('active')
-  expect(paneDeck).toBeVisible()
-  const imageMain = paneDeck.querySelectorAll(
-    `img[src="${dataCardsMap.get('R-1').imageUrl}"]`
-  )[0]
-  const imageSide = paneDeck.querySelectorAll(
-    `img[src="${dataCardsMap.get('R-1').imageUrl}"]`
-  )[1]
-  buttonPlusMain = imageMain.parentElement.querySelector('.btn-push')
-  buttonPlusSide = imageSide.parentElement.querySelector('.btn-push')
-  const buttonMinusMain = imageMain.parentElement.querySelector('.btn-pop')
-  const buttonMinusSide = imageSide.parentElement.querySelector('.btn-pop')
-  const buttonDrop = imageMain.parentElement.querySelector('.btn-move')
-  const buttonRaise = imageSide.parentElement.querySelector('.btn-move')
-  expect(buttonPlusMain.textContent).toBe('+')
-  expect(buttonPlusSide.textContent).toBe('+')
-  expect(buttonMinusMain.textContent).toBe('-')
-  expect(buttonMinusSide.textContent).toBe('-')
-  expect(buttonDrop.textContent).toBe('v')
-  expect(buttonRaise.textContent).toBe('^')
+  let listMain = within(paneDeck).getByRole('list', { name: 'メインデッキ' })
+  expect(within(listMain).queryByRole('listitem', { name: id })).toBeNull()
+  let listSide = within(paneDeck).getByRole('list', { name: 'サイドデッキ' })
+  expect(within(listSide).queryByRole('listitem', { name: id })).toBeNull()
 
+  // シミュレータタブも同様
+  await userEvent.click(getByRole('tab', { name: 'シミュ' }))
+  let paneSim = getTabPanelByName('シミュ')
+  expect(paneSim).toHaveClass('active')
+  expect(within(paneSim).queryByRole('alert')).toBeNull()
+  expect(within2(paneSim).getButtonByName('リセット')).toBeDisabled()
+  expect(within2(paneSim).getButtonByName('スタート')).toBeEnabled()
+  expect(within2(paneSim).getButtonByName('マリガン')).toBeDisabled()
+
+  // 初期状態として、メインデッキにカードを10枚適当に加える
+  await userEvent.click(getByRole('tab', { name: 'カード' }))
+  paneCard = getTabPanelByName('カード')
+  expect(paneCard).toHaveClass('active')
+  for (let i = 0; i < 10; ++i) {
+    row = within(paneCard).getByRole('row', { name: id })
+    cellMain = within(row).getAllByRole('cell')[2]
+    await userEvent.click(within2(cellMain).getButtonByName('+'))
+  }
+  // サイドデッキにもカードを1枚適当に加える
+  row = within(paneCard).getByRole('row', { name: id })
+  cellSide = within(row).getAllByRole('cell')[3]
+  await userEvent.click(within2(cellSide).getButtonByName('+'))
+
+  // レシピペインのメインデッキとサイドデッキに当該カードが表示される
+  await userEvent.click(getByRole('tab', { name: 'レシピ' }))
+  paneDeck = getTabPanelByName('レシピ')
+  expect(paneDeck).toHaveClass('active')
+  listMain = within(paneDeck).getByRole('list', { name: 'メインデッキ' })
+  let itemMain = within(listMain).getByRole('listitem', { name: id })
+  expect(within(itemMain).getByRole('img')).toBeVisible()
+  expect(within(itemMain).getByRole('textbox')).toBeVisible()
+  expect(within(itemMain).getByRole('textbox')).toHaveTextContent('10')
+  expect(within2(itemMain).getButtonByName('+')).toBeVisible()
+  expect(within2(itemMain).getButtonByName('-')).toBeVisible()
+  expect(within2(itemMain).getButtonByName('v')).toBeVisible()
+  listSide = within(paneDeck).getByRole('list', { name: 'サイドデッキ' })
+  let itemSide = within(listSide).getByRole('listitem', { name: id })
+  expect(within(itemSide).getByRole('img')).toBeVisible()
+  expect(within(itemSide).getByRole('textbox')).toBeVisible()
+  expect(within(itemSide).getByRole('textbox')).toHaveTextContent('1')
+  expect(within2(itemSide).getButtonByName('+')).toBeVisible()
+  expect(within2(itemSide).getButtonByName('-')).toBeVisible()
+  expect(within2(itemSide).getButtonByName('^')).toBeVisible()
+
+  await userEvent.click(getByRole('tab', { name: 'シミュ' }))
+  paneSim = getTabPanelByName('シミュ')
+  expect(within(paneSim).queryByRole('alert')).toBeNull()
+  expect(within2(paneSim).getButtonByName('リセット')).toBeDisabled()
+  expect(within2(paneSim).getButtonByName('スタート')).toBeEnabled()
+  expect(within2(paneSim).getButtonByName('マリガン')).toBeDisabled()
+
+  // 既にシミュペインにいる
   // 1a. スタートボタンを押す
-  await user.click(tabSimulator)
-  expect(paneSimulator).toHaveClass('active')
-  expect(paneSimulator).toBeVisible()
-  await user.click(buttonStart)
-  expect(buttonReset).toBeEnabled()
-  expect(buttonStart).toBeDisabled()
-  expect(buttonMulligan).toBeEnabled()
-  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0)
+  await userEvent.click(within2(paneSim).getButtonByName('スタート'))
+  expect(within(paneSim).queryByRole('alert')).toBeNull()
+  expect(within2(paneSim).getButtonByName('リセット')).toBeEnabled()
+  expect(within2(paneSim).getButtonByName('スタート')).toBeDisabled()
+  expect(within2(paneSim).getButtonByName('マリガン')).toBeEnabled()
 
   // 1b. レシピペインでメインデッキのプラスボタンを押す
-  await user.click(tabDeck)
+  await userEvent.click(getByRole('tab', { name: 'レシピ' }))
+  paneDeck = getTabPanelByName('レシピ')
   expect(paneDeck).toHaveClass('active')
-  expect(paneDeck).toBeVisible()
-  await user.click(buttonPlusMain)
+  listMain = within(paneDeck).getByRole('list', { name: 'メインデッキ' })
+  itemMain = within(listMain).getByRole('listitem', { name: id })
+  await userEvent.click(within2(itemMain).getButtonByName('+'))
 
   // 1c. 手札シミュレータがアボートする
-  await user.click(tabSimulator)
-  expect(paneSimulator).toHaveClass('active')
-  expect(paneSimulator).toBeVisible()
-  expect(buttonReset).toBeEnabled()
-  expect(buttonStart).toBeDisabled()
-  expect(buttonMulligan).toBeDisabled()
-  let alert = paneSimulator.querySelector('.alert-warning')
-  expect(alert).toBeVisible()
-  expect(alert.textContent).toBe(
-    'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
+  await userEvent.click(getByRole('tab', { name: 'シミュ' }))
+  paneSim = getTabPanelByName('シミュ')
+  expect(within(paneSim).getByRole('alert')).toHaveTextContent(
+    'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。',
   )
+  expect(within2(paneSim).getButtonByName('リセット')).toBeEnabled()
+  expect(within2(paneSim).getButtonByName('スタート')).toBeDisabled()
+  expect(within2(paneSim).getButtonByName('マリガン')).toBeDisabled()
 
   // 2a. リセットボタン、スタートボタンと押す
-  await user.click(buttonReset)
-  await user.click(buttonStart)
-  expect(buttonReset).toBeEnabled()
-  expect(buttonStart).toBeDisabled()
-  expect(buttonMulligan).toBeEnabled()
-  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0)
+  await userEvent.click(within2(paneSim).getButtonByName('リセット'))
+  await userEvent.click(within2(paneSim).getButtonByName('スタート'))
+  expect(within(paneSim).queryByRole('alert')).toBeNull()
+  expect(within2(paneSim).getButtonByName('リセット')).toBeEnabled()
+  expect(within2(paneSim).getButtonByName('スタート')).toBeDisabled()
+  expect(within2(paneSim).getButtonByName('マリガン')).toBeEnabled()
 
   // 2b. レシピペインでメインデッキの「v」ボタンを押す
-  await user.click(tabDeck)
+  await userEvent.click(getByRole('tab', { name: 'レシピ' }))
+  paneDeck = getTabPanelByName('レシピ')
   expect(paneDeck).toHaveClass('active')
-  expect(paneDeck).toBeVisible()
-  await user.click(buttonDrop)
+  listMain = within(paneDeck).getByRole('list', { name: 'メインデッキ' })
+  itemMain = within(listMain).getByRole('listitem', { name: id })
+  await userEvent.click(within2(itemMain).getButtonByName('v'))
 
   // 2c. シミュレータがアボートする
-  await user.click(tabSimulator)
-  expect(paneSimulator).toHaveClass('active')
-  expect(paneSimulator).toBeVisible()
-  expect(buttonReset).toBeEnabled()
-  expect(buttonStart).toBeDisabled()
-  expect(buttonMulligan).toBeDisabled()
-  alert = paneSimulator.querySelector('.alert-warning')
-  expect(alert).toBeVisible()
-  expect(alert.textContent).toBe(
-    'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
+  await userEvent.click(getByRole('tab', { name: 'シミュ' }))
+  paneSim = getTabPanelByName('シミュ')
+  expect(within(paneSim).getByRole('alert')).toHaveTextContent(
+    'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。',
   )
+  expect(within2(paneSim).getButtonByName('リセット')).toBeEnabled()
+  expect(within2(paneSim).getButtonByName('スタート')).toBeDisabled()
+  expect(within2(paneSim).getButtonByName('マリガン')).toBeDisabled()
 
   // 3a. リセットボタン、スタートボタンと押す
-  await user.click(buttonReset)
-  await user.click(buttonStart)
-  expect(buttonReset).toBeEnabled()
-  expect(buttonStart).toBeDisabled()
-  expect(buttonMulligan).toBeEnabled()
-  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0)
+  await userEvent.click(within2(paneSim).getButtonByName('リセット'))
+  await userEvent.click(within2(paneSim).getButtonByName('スタート'))
+  expect(within(paneSim).queryByRole('alert')).toBeNull()
+  expect(within2(paneSim).getButtonByName('リセット')).toBeEnabled()
+  expect(within2(paneSim).getButtonByName('スタート')).toBeDisabled()
+  expect(within2(paneSim).getButtonByName('マリガン')).toBeEnabled()
 
   // 3b. レシピペインでサイドデッキの「^」ボタンを押す
-  await user.click(tabDeck)
+  await userEvent.click(getByRole('tab', { name: 'レシピ' }))
+  paneDeck = getTabPanelByName('レシピ')
   expect(paneDeck).toHaveClass('active')
-  expect(paneDeck).toBeVisible()
-  await user.click(buttonRaise)
+  listSide = within(paneDeck).getByRole('list', { name: 'サイドデッキ' })
+  itemSide = within(listSide).getByRole('listitem', { name: id })
+  await userEvent.click(within2(itemSide).getButtonByName('^'))
 
   // 3c. シミュレータがアボートする
-  await user.click(tabSimulator)
-  expect(paneSimulator).toHaveClass('active')
-  expect(paneSimulator).toBeVisible()
-  expect(buttonReset).toBeEnabled()
-  expect(buttonStart).toBeDisabled()
-  expect(buttonMulligan).toBeDisabled()
-  alert = paneSimulator.querySelector('.alert-warning')
-  expect(alert).toBeVisible()
-  expect(alert.textContent).toBe(
-    'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
+  await userEvent.click(getByRole('tab', { name: 'シミュ' }))
+  paneSim = getTabPanelByName('シミュ')
+  expect(within(paneSim).getByRole('alert')).toHaveTextContent(
+    'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。',
   )
+  expect(within2(paneSim).getButtonByName('リセット')).toBeEnabled()
+  expect(within2(paneSim).getButtonByName('スタート')).toBeDisabled()
+  expect(within2(paneSim).getButtonByName('マリガン')).toBeDisabled()
 
   // 4a. リセットボタン、スタートボタンと押す
-  await user.click(buttonReset)
-  await user.click(buttonStart)
-  expect(buttonReset).toBeEnabled()
-  expect(buttonStart).toBeDisabled()
-  expect(buttonMulligan).toBeEnabled()
-  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0)
+  await userEvent.click(within2(paneSim).getButtonByName('リセット'))
+  await userEvent.click(within2(paneSim).getButtonByName('スタート'))
+  expect(within(paneSim).queryByRole('alert')).toBeNull()
+  expect(within2(paneSim).getButtonByName('リセット')).toBeEnabled()
+  expect(within2(paneSim).getButtonByName('スタート')).toBeDisabled()
+  expect(within2(paneSim).getButtonByName('マリガン')).toBeEnabled()
 
   // 4b. レシピペインでメインデッキのマイナスボタンを押す
-  await user.click(tabDeck)
+  await userEvent.click(getByRole('tab', { name: 'レシピ' }))
+  paneDeck = getTabPanelByName('レシピ')
   expect(paneDeck).toHaveClass('active')
-  expect(paneDeck).toBeVisible()
-  await user.click(buttonMinusMain)
+  listMain = within(paneDeck).getByRole('list', { name: 'メインデッキ' })
+  itemMain = within(listMain).getByRole('listitem', { name: id })
+  await userEvent.click(within2(itemMain).getButtonByName('-'))
 
   // 4c. シミュレータがアボートする
-  await user.click(tabSimulator)
-  expect(paneSimulator).toHaveClass('active')
-  expect(paneSimulator).toBeVisible()
-  expect(buttonReset).toBeEnabled()
-  expect(buttonStart).toBeDisabled()
-  expect(buttonMulligan).toBeDisabled()
-  alert = paneSimulator.querySelector('.alert-warning')
-  expect(alert).toBeVisible()
-  expect(alert.textContent).toBe(
-    'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
+  await userEvent.click(getByRole('tab', { name: 'シミュ' }))
+  paneSim = getTabPanelByName('シミュ')
+  expect(within(paneSim).getByRole('alert')).toHaveTextContent(
+    'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。',
   )
+  expect(within2(paneSim).getButtonByName('リセット')).toBeEnabled()
+  expect(within2(paneSim).getButtonByName('スタート')).toBeDisabled()
+  expect(within2(paneSim).getButtonByName('マリガン')).toBeDisabled()
 
   // 5a. リセットボタン、スタートボタンと押す
-  await user.click(buttonReset)
-  await user.click(buttonStart)
-  expect(buttonReset).toBeEnabled()
-  expect(buttonStart).toBeDisabled()
-  expect(buttonMulligan).toBeEnabled()
-  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0)
+  await userEvent.click(within2(paneSim).getButtonByName('リセット'))
+  await userEvent.click(within2(paneSim).getButtonByName('スタート'))
+  expect(within(paneSim).queryByRole('alert')).toBeNull()
+  expect(within2(paneSim).getButtonByName('リセット')).toBeEnabled()
+  expect(within2(paneSim).getButtonByName('スタート')).toBeDisabled()
+  expect(within2(paneSim).getButtonByName('マリガン')).toBeEnabled()
 
   // 5b. レシピペインでサイドデッキのプラスボタンを押す
-  await user.click(tabDeck)
+  await userEvent.click(getByRole('tab', { name: 'レシピ' }))
+  paneDeck = getTabPanelByName('レシピ')
   expect(paneDeck).toHaveClass('active')
-  expect(paneDeck).toBeVisible()
-  await user.click(buttonPlusSide)
+  listSide = within(paneDeck).getByRole('list', { name: 'サイドデッキ' })
+  itemSide = within(listSide).getByRole('listitem', { name: id })
+  await userEvent.click(within2(itemSide).getButtonByName('+'))
 
   // 5c. シミュレータはアボートしない
-  await user.click(tabSimulator)
-  expect(paneSimulator).toHaveClass('active')
-  expect(paneSimulator).toBeVisible()
-  expect(buttonReset).toBeEnabled()
-  expect(buttonStart).toBeDisabled()
-  expect(buttonMulligan).toBeEnabled()
-  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0)
+  await userEvent.click(getByRole('tab', { name: 'シミュ' }))
+  paneSim = getTabPanelByName('シミュ')
+  expect(within(paneSim).queryByRole('alert')).toBeNull()
+  expect(within2(paneSim).getButtonByName('リセット')).toBeEnabled()
+  expect(within2(paneSim).getButtonByName('スタート')).toBeDisabled()
+  expect(within2(paneSim).getButtonByName('マリガン')).toBeEnabled()
 
   // 6a. レシピペインでサイドデッキのマイナスボタンを押す
-  await user.click(tabDeck)
+  await userEvent.click(getByRole('tab', { name: 'レシピ' }))
+  paneDeck = getTabPanelByName('レシピ')
   expect(paneDeck).toHaveClass('active')
-  expect(paneDeck).toBeVisible()
-  await user.click(buttonMinusSide)
+  listSide = within(paneDeck).getByRole('list', { name: 'サイドデッキ' })
+  itemSide = within(listSide).getByRole('listitem', { name: id })
+  await userEvent.click(within2(itemSide).getButtonByName('-'))
 
   // 6b. やはりシミュレータはアボートしない
-  await user.click(tabSimulator)
-  expect(paneSimulator).toHaveClass('active')
-  expect(paneSimulator).toBeVisible()
-  expect(buttonReset).toBeEnabled()
-  expect(buttonStart).toBeDisabled()
-  expect(buttonMulligan).toBeEnabled()
-  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0)
+  await userEvent.click(getByRole('tab', { name: 'シミュ' }))
+  paneSim = getTabPanelByName('シミュ')
+  expect(within(paneSim).queryByRole('alert')).toBeNull()
+  expect(within2(paneSim).getButtonByName('リセット')).toBeEnabled()
+  expect(within2(paneSim).getButtonByName('スタート')).toBeDisabled()
+  expect(within2(paneSim).getButtonByName('マリガン')).toBeEnabled()
 
   // 7a. レシピペインでレシピをクリアボタンを押す
-  await user.click(tabDeck)
+  await userEvent.click(getByRole('tab', { name: 'レシピ' }))
+  paneDeck = getTabPanelByName('レシピ')
   expect(paneDeck).toHaveClass('active')
-  expect(paneDeck).toBeVisible()
-  const buttonClear = paneDeck.querySelector(
-    '.container-button button:nth-child(2)'
-  )
-  expect(buttonClear.textContent).toBe('レシピをクリア')
-  await user.click(buttonClear)
+  await userEvent.click(within2(paneDeck).getButtonByName('レシピをクリア'))
 
   // 7b. シミュレータがアボートする
-  await user.click(tabSimulator)
-  expect(paneSimulator).toHaveClass('active')
-  expect(paneSimulator).toBeVisible()
-  expect(buttonReset).toBeEnabled()
-  expect(buttonStart).toBeDisabled()
-  expect(buttonMulligan).toBeDisabled()
-  alert = paneSimulator.querySelector('.alert-warning')
-  expect(alert).toBeVisible()
-  expect(alert.textContent).toBe(
-    'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
+  await userEvent.click(getByRole('tab', { name: 'シミュ' }))
+  paneSim = getTabPanelByName('シミュ')
+  expect(within(paneSim).getByRole('alert')).toHaveTextContent(
+    'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。',
   )
+  expect(within2(paneSim).getButtonByName('リセット')).toBeEnabled()
+  expect(within2(paneSim).getButtonByName('スタート')).toBeDisabled()
+  expect(within2(paneSim).getButtonByName('マリガン')).toBeDisabled()
 })
 
 test('シミュレータがマイデッキペインの操作でアボートする', async () => {
-  const decksSaved = [{ timestamp: new Date(), main: [['R-1', 10]], side: [] }]
+  const deckSaved = { timestamp: new Date(), main: [['R-1', 10]], side: [] }
 
   await dbClearDecks()
-  await dbBulkAddDecks(decksSaved)
+  await dbAddDeck(deckSaved)
 
-  defaultRender()
+  const { getByRole, queryByRole, getTabPanelByName } = defaultRender()
 
-  const user = userEvent.setup()
+  // 初期タブは「カード」
+  expect(getByRole('tab', { selected: true })).toHaveTextContent('カード')
+  let paneCard = getTabPanelByName('カード')
+  expect(paneCard).toHaveClass('active')
 
-  const tabSave = screen.getAllByRole('tab')[2]
-  const tabSimulator = screen.getAllByRole('tab')[3]
-  const paneSave = screen.getAllByRole('tabpanel')[2]
-  const paneSimulator = screen.getAllByRole('tabpanel')[3]
-
-  await user.click(tabSimulator)
-  expect(paneSimulator).toHaveClass('active')
-  expect(paneSimulator).toBeVisible()
-
-  const buttonReset = paneSimulator.querySelector(
-    '.container-button button:nth-child(1)'
-  )
-  const buttonStart = paneSimulator.querySelector(
-    '.container-button button:nth-child(2)'
-  )
-  const buttonMulligan = paneSimulator.querySelector(
-    '.container-button button:nth-child(3)'
-  )
-
-  expect(buttonReset).toBeDisabled()
-  expect(buttonStart).toBeEnabled()
-  expect(buttonMulligan).toBeDisabled()
-  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0)
+  // シミュレータタブには何も表示されていない
+  await userEvent.click(getByRole('tab', { name: 'シミュ' }))
+  let paneSim = getTabPanelByName('シミュ')
+  expect(paneSim).toHaveClass('active')
+  expect(within(paneSim).queryByRole('alert')).toBeNull()
+  expect(within2(paneSim).getButtonByName('リセット')).toBeDisabled()
+  expect(within2(paneSim).getButtonByName('スタート')).toBeEnabled()
+  expect(within2(paneSim).getButtonByName('マリガン')).toBeDisabled()
 
   // 1. メインデッキにカードが10枚入った保存済みデッキを読み込む
-  await user.click(tabSave)
+  await userEvent.click(getByRole('tab', { name: 'マイデッキ' }))
+  let paneSave = getTabPanelByName('マイデッキ')
   expect(paneSave).toHaveClass('active')
-  expect(paneSave).toBeVisible()
-  const buttonLoad = paneSave.querySelector(
-    '.accordion-item .container-button button:nth-child(1)'
-  )
-  expect(buttonLoad.textContent).toBe('読込み')
-  await user.click(buttonLoad)
+  let listSaved = within(paneSave).getByRole('list', { name: 'ロード' })
+  let itemSaved = within(listSaved).getByRole('listitem', { name: /^#/ })
+  // prettier-ignore
+  await userEvent.click(within(within(itemSaved).getAllByRole('heading')[0]).getByRole('button'))
+  await userEvent.click(within2(itemSaved).getButtonByName('読込み'))
 
   // 2a. スタートボタンを押す
-  await user.click(tabSimulator)
-  expect(paneSimulator).toHaveClass('active')
-  expect(paneSimulator).toBeVisible()
-  await user.click(buttonStart)
-  expect(buttonReset).toBeEnabled()
-  expect(buttonStart).toBeDisabled()
-  expect(buttonMulligan).toBeEnabled()
-  expect(paneSimulator.querySelectorAll('.alert-warning').length).toBe(0)
+  await userEvent.click(within2(paneSim).getButtonByName('スタート'))
+  expect(within(paneSim).queryByRole('alert')).toBeNull()
+  expect(within2(paneSim).getButtonByName('リセット')).toBeEnabled()
+  expect(within2(paneSim).getButtonByName('スタート')).toBeDisabled()
+  expect(within2(paneSim).getButtonByName('マリガン')).toBeEnabled()
 
   // 2b. マイデッキペインで読込みボタンを押す
-  await user.click(tabSave)
+  await userEvent.click(getByRole('tab', { name: 'マイデッキ' }))
+  paneSave = getTabPanelByName('マイデッキ')
   expect(paneSave).toHaveClass('active')
-  expect(paneSave).toBeVisible()
-  await user.click(buttonLoad)
+  listSaved = within(paneSave).getByRole('list', { name: 'ロード' })
+  itemSaved = within(listSaved).getByRole('listitem', { name: /^#/ })
+  // prettier-ignore
+  await userEvent.click(within(within(itemSaved).getAllByRole('heading')[0]).getByRole('button'))
+  await userEvent.click(within2(itemSaved).getButtonByName('読込み'))
 
   // 2c. シミュレータがアボートする
-  await user.click(tabSimulator)
-  expect(paneSimulator).toHaveClass('active')
-  expect(paneSimulator).toBeVisible()
-  expect(buttonReset).toBeEnabled()
-  expect(buttonStart).toBeDisabled()
-  expect(buttonMulligan).toBeDisabled()
-  const alert = paneSimulator.querySelector('.alert-warning')
-  expect(alert).toBeVisible()
-  expect(alert.textContent).toBe(
-    'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。'
+  await userEvent.click(getByRole('tab', { name: 'シミュ' }))
+  paneSim = getTabPanelByName('シミュ')
+  expect(within(paneSim).getByRole('alert')).toHaveTextContent(
+    'シミュレーション中にメインデッキが編集されました。新しいデッキでシミュレーションを再開するにはリセットしてください。',
   )
+  expect(within2(paneSim).getButtonByName('リセット')).toBeEnabled()
+  expect(within2(paneSim).getButtonByName('スタート')).toBeDisabled()
+  expect(within2(paneSim).getButtonByName('マリガン')).toBeDisabled()
 })
