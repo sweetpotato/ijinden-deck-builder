@@ -4,155 +4,160 @@ import 'fake-indexeddb/auto'
 
 import { createRoutesStub } from 'react-router-dom'
 import { afterEach, expect, test } from 'vitest'
-import { cleanup, render, screen, waitFor } from '@testing-library/react'
+import {
+  cleanup,
+  render,
+  screen,
+  waitFor,
+  within,
+} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
+import { dbAddDeck, dbClearDecks, dbQueryDecks } from '../commons/db'
 import Home from '../Home'
-import { dbBulkAddDecks, dbClearDecks, dbQueryDecks } from '../commons/db'
+
+function within2(element) {
+  const props = within(element)
+  props['getButtonByName'] = (name) => props.getByRole('button', { name })
+  return props
+}
 
 function defaultRender() {
   const Stub = createRoutesStub([{ path: '/', Component: Home }])
-  render(<Stub initialEntries={['/']} />)
+  const props = render(<Stub initialEntries={['/']} />)
+  props['getTabPanelByName'] = (name) => props.getByRole('tabpanel', { name })
+  return props
 }
 
 afterEach(cleanup)
 
 test('レシピが空だと保存できない', async () => {
   await dbClearDecks()
+  const { getByRole, queryByRole, getTabPanelByName } = defaultRender()
 
-  defaultRender()
-
-  const user = userEvent.setup()
-
+  // 初期タブは「カード」
+  expect(getByRole('tab', { selected: true })).toHaveTextContent('カード')
   // モーダルはまだない
-  await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull())
+  expect(queryByRole('dialog')).toBeNull()
 
-  const tabDeck = screen.getAllByRole('tab')[1]
-  const paneDeck = screen.getAllByRole('tabpanel')[1]
-
-  // 保存ボタンをクリック
-  await user.click(tabDeck)
+  // レシピペインの保存ボタンをクリック
+  await userEvent.click(getByRole('tab', { name: 'レシピ' }))
+  const paneDeck = getTabPanelByName('レシピ')
   expect(paneDeck).toHaveClass('active')
-  expect(paneDeck).toBeVisible()
-  const buttonSave = paneDeck.querySelector('div:nth-child(2) button')
-  expect(buttonSave.textContent).toBe('マイデッキに保存')
-  await user.click(buttonSave)
+  await userEvent.click(within2(paneDeck).getButtonByName('マイデッキに保存'))
 
+  // モーダルが現れる
+  await waitFor(() => expect(queryByRole('dialog')).not.toBeNull())
+  const dialog = getByRole('dialog')
+  await waitFor(() =>
+    expect(dialog).toHaveTextContent('現在のレシピが空のため保存できません。'),
+  )
   // 現在のレシピが空のため保存されない
   await waitFor(async () => expect(await dbQueryDecks()).toStrictEqual([]))
 
-  // モーダルが表示される
-  const modal = screen.getByRole('dialog')
-  expect(modal.querySelector('.modal-body').textContent).toBe(
-    '現在のレシピが空のため保存できません。',
-  )
-
   // OK ボタンを押す
-  const buttonOk = modal.querySelector('.modal-footer button')
-  expect(buttonOk.textContent).toBe('OK')
-  await user.click(buttonOk)
+  await userEvent.click(within2(dialog).getButtonByName('OK'))
   // モーダルがひっこむ
-  await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull())
+  await waitFor(() => expect(queryByRole('dialog')).toBeNull())
 })
 
 test('レシピに1枚でもあるなら保存できる', async () => {
   await dbClearDecks()
+  const { getByRole, queryByRole, getTabPanelByName } = defaultRender()
 
-  defaultRender()
-
-  const user = userEvent.setup()
-
-  const tabCard = screen.getAllByRole('tab')[0]
-  const tabDeck = screen.getAllByRole('tab')[1]
-  const paneCard = screen.getAllByRole('tabpanel')[0]
-  const paneDeck = screen.getAllByRole('tabpanel')[1]
-  const paneSave = screen.getAllByRole('tabpanel')[2]
+  // 初期タブは「カード」
+  expect(getByRole('tab', { selected: true })).toHaveTextContent('カード')
+  // モーダルはない
+  expect(queryByRole('dialog')).toBeNull()
 
   // カードペインの適当なカードのメインプラスボタンを押す
+  // 既にカードペインにいる
+  let paneCard = getTabPanelByName('カード')
   expect(paneCard).toHaveClass('active')
-  expect(paneCard).toBeVisible()
-  const buttonPlusMain = paneCard.querySelector(
-    'tbody tr:nth-child(1) td:nth-child(3) button:nth-child(3)',
-  )
-  expect(buttonPlusMain.textContent).toBe('+')
-  const inputMain = paneCard.querySelector(
-    'tbody tr:nth-child(1) td:nth-child(3) input',
-  )
-  expect(inputMain.value).toBe('0')
-  await user.click(buttonPlusMain)
-  expect(inputMain.value).toBe('1')
+  let row = within(paneCard).getByRole('row', { name: 'R-1' })
+  let cellMain = within(row).getAllByRole('cell')[2]
+  expect(within(cellMain).getByRole('spinbutton')).toHaveValue(0)
+  await userEvent.click(within2(cellMain).getButtonByName('+'))
+  expect(within(cellMain).getByRole('spinbutton')).toHaveValue(1)
 
-  // 保存ボタンを押す
-  await user.click(tabDeck)
+  // レシピペインの保存ボタンを押す
+  await userEvent.click(getByRole('tab', { name: 'レシピ' }))
+  let paneDeck = getTabPanelByName('レシピ')
   expect(paneDeck).toHaveClass('active')
-  expect(paneDeck).toBeVisible()
-  const buttonSave = paneDeck.querySelector('div:nth-child(2) button')
-  expect(buttonSave.textContent).toBe('マイデッキに保存')
-  await user.click(buttonSave)
+  await userEvent.click(within2(paneDeck).getButtonByName('マイデッキに保存'))
 
   // マイデッキペインに移動した
-  // 保存されたデッキの表示の確認
-  await waitFor(() => expect(paneSave).toHaveClass('active')) // waitFor で包まないと不安定
-  expect(paneSave).toBeVisible()
   await waitFor(() =>
-    expect(paneSave.querySelectorAll('.accordion-item').length).toBe(1),
+    expect(getTabPanelByName('マイデッキ')).toHaveClass('active'),
   )
+  let paneLoad = getTabPanelByName('マイデッキ')
+  // 保存されたデッキの表示の確認
+  await waitFor(() =>
+    expect(
+      within(
+        within(paneLoad).getByRole('list', { name: 'ロード' }),
+      ).getAllByRole('listitem', {
+        name: /^#/,
+      }),
+    ).toHaveLength(1),
+  )
+  // モーダルは出ない
+  expect(queryByRole('dialog')).toBeNull()
 
   // 保存されたデータの検証
   let decksSaved = await dbQueryDecks()
-  expect(decksSaved.length).toBe(1)
-  expect(decksSaved[0].main.length).toBe(1)
-  expect(decksSaved[0].main[0][0]).toBe('R-1')
-  expect(decksSaved[0].main[0][1]).toBe(1)
-  expect(decksSaved[0].side.length).toBe(0)
+  expect(decksSaved).toHaveLength(1)
+  expect(decksSaved[0].main).toStrictEqual([['R-1', 1]])
+  expect(decksSaved[0].side).toStrictEqual([])
 
   // メインデッキに増やしたカードを元に戻して0枚にする
-  await user.click(tabCard)
+  await userEvent.click(getByRole('tab', { name: 'カード' }))
+  paneCard = getTabPanelByName('カード')
   expect(paneCard).toHaveClass('active')
-  expect(paneCard).toBeVisible()
-  const buttonMinusMain = paneCard.querySelector(
-    'tbody tr:nth-child(1) td:nth-child(3) button:nth-child(1)',
-  )
-  expect(buttonMinusMain.textContent).toBe('-')
-  await user.click(buttonMinusMain)
-  expect(inputMain.value).toBe('0')
+  row = getByRole('row', { name: 'R-1' })
+  cellMain = within(row).getAllByRole('cell')[2]
+  expect(within(cellMain).getByRole('spinbutton')).toHaveValue(1)
+  await userEvent.click(within2(cellMain).getButtonByName('-'))
+  expect(within(cellMain).getByRole('spinbutton')).toHaveValue(0)
 
   // カードペインの適当なカードのサイドプラスボタンを押す
-  const buttonPlusSide = paneCard.querySelector(
-    'tbody tr:nth-child(2) td:nth-child(4) button:nth-child(3)',
-  )
-  expect(buttonPlusSide.textContent).toBe('+')
-  const inputSide = paneCard.querySelector(
-    'tbody tr:nth-child(2) td:nth-child(4) input',
-  )
-  expect(inputSide.value).toBe('0')
-  await user.click(buttonPlusSide)
-  expect(inputSide.value).toBe('1')
+  row = getByRole('row', { name: 'R-2' })
+  let cellSide = within(row).getAllByRole('cell')[3]
+  expect(within(cellSide).getByRole('spinbutton')).toHaveValue(0)
+  await userEvent.click(within2(cellSide).getButtonByName('+'))
+  expect(within(cellSide).getByRole('spinbutton')).toHaveValue(1)
 
-  // 保存ボタンを押す
-  await user.click(tabDeck)
+  // レシピペインの保存ボタンを押す
+  await userEvent.click(getByRole('tab', { name: 'レシピ' }))
+  paneDeck = getTabPanelByName('レシピ')
   expect(paneDeck).toHaveClass('active')
-  expect(paneDeck).toBeVisible()
-  await user.click(buttonSave)
+  await userEvent.click(within2(paneDeck).getButtonByName('マイデッキに保存'))
 
   // マイデッキペインに移動した
-  // 保存されたデッキの表示の確認
-  await waitFor(() => expect(paneSave).toHaveClass('active')) // waitFor で包まないと不安定
-  expect(paneSave).toBeVisible()
   await waitFor(() =>
-    expect(paneSave.querySelectorAll('.accordion-item').length).toBe(2),
+    expect(getTabPanelByName('マイデッキ')).toHaveClass('active'),
   )
-  // 新しく保存されたデッキはリストの戦闘に追加される
+  paneLoad = getTabPanelByName('マイデッキ')
+  // 保存されたデッキの表示の確認
+  await waitFor(() =>
+    expect(
+      within(
+        within(paneLoad).getByRole('list', { name: 'ロード' }),
+      ).getAllByRole('listitem', {
+        name: /^#/,
+      }),
+    ).toHaveLength(2),
+  )
+  // モーダルは出ない
+  expect(queryByRole('dialog')).toBeNull()
+
+  // 新しく保存されたデッキはリストの先頭に追加される
   decksSaved = await dbQueryDecks()
-  expect(decksSaved.length).toBe(2)
-  expect(decksSaved[0].main.length).toBe(0)
-  expect(decksSaved[0].side.length).toBe(1)
-  expect(decksSaved[0].side[0][0]).toBe('R-2')
-  expect(decksSaved[0].side[0][1]).toBe(1)
-  expect(decksSaved[1].main.length).toBe(1)
-  expect(decksSaved[1].main[0][0]).toBe('R-1')
-  expect(decksSaved[1].main[0][1]).toBe(1)
-  expect(decksSaved[1].side.length).toBe(0)
+  expect(decksSaved).toHaveLength(2)
+  expect(decksSaved[0].main).toStrictEqual([])
+  expect(decksSaved[0].side).toStrictEqual([['R-2', 1]])
+  expect(decksSaved[1].main).toStrictEqual([['R-1', 1]])
+  expect(decksSaved[1].side).toStrictEqual([])
 })
 
 test('保存済みデッキの表示と削除', async () => {
@@ -163,101 +168,105 @@ test('保存済みデッキの表示と削除', async () => {
   ]
 
   await dbClearDecks()
-  await dbBulkAddDecks(decksSaved)
+  await dbAddDeck(decksSaved[0])
+  await dbAddDeck(decksSaved[1])
+  await dbAddDeck(decksSaved[2])
+  const { getByRole, queryByRole, getTabPanelByName } = defaultRender()
 
-  defaultRender()
-
-  const user = userEvent.setup()
-
-  const tabSave = screen.getAllByRole('tab')[2]
-  const paneSave = screen.getAllByRole('tabpanel')[2]
+  // 初期タブは「カード」
+  expect(getByRole('tab', { selected: true })).toHaveTextContent('カード')
+  // モーダルはない
+  expect(queryByRole('dialog')).toBeNull()
 
   // 初期状態では保存済みデッキが表示される
-  await user.click(tabSave)
-  expect(paneSave).toHaveClass('active')
-  expect(paneSave).toBeVisible()
+  await userEvent.click(getByRole('tab', { name: 'マイデッキ' }))
+  let paneLoad = getTabPanelByName('マイデッキ')
+  expect(paneLoad).toHaveClass('active')
   await waitFor(() =>
-    expect(paneSave.querySelectorAll('.accordion-item').length).toBe(3),
+    expect(
+      within(
+        within(paneLoad).getByRole('list', { name: 'ロード' }),
+      ).getAllByRole('listitem', {
+        name: /^#/,
+      }),
+    ).toHaveLength(3),
   )
 
   // 3つあるデッキのうち2つ目を削除する
-  const buttonDelete = paneSave.querySelector(
-    '.accordion-item:nth-child(2) .container-button button:nth-child(2)',
-  )
-  expect(buttonDelete.textContent).toBe('削除')
-  await user.click(buttonDelete)
+  const items = within(
+    within(paneLoad).getByRole('list', { name: 'ロード' }),
+  ).getAllByRole('listitem', {
+    name: /^#/,
+  })
+  await userEvent.click(within2(items[1]).getButtonByName('削除'))
 
   // 保存済みデッキの表示が減る
   await waitFor(() =>
-    expect(paneSave.querySelectorAll('.accordion-item').length).toBe(2),
+    expect(
+      within(
+        within(paneLoad).getByRole('list', { name: 'ロード' }),
+      ).getAllByRole('listitem', {
+        name: /^#/,
+      }),
+    ).toHaveLength(2),
   )
+
   // 保存されたデータの検証
   decksSaved = await dbQueryDecks()
-  expect(decksSaved.length).toBe(2)
-  expect(decksSaved[0].main.length).toBe(0)
-  expect(decksSaved[0].side.length).toBe(1)
-  expect(decksSaved[0].side[0][0]).toBe('R-4')
-  expect(decksSaved[0].side[0][1]).toBe(4)
-  expect(decksSaved[1].main.length).toBe(1)
-  expect(decksSaved[1].main[0][0]).toBe('R-1')
-  expect(decksSaved[1].main[0][1]).toBe(1)
-  expect(decksSaved[1].side.length).toBe(0)
+  expect(decksSaved).toHaveLength(2)
+  expect(decksSaved[0].main).toStrictEqual([])
+  expect(decksSaved[0].side).toStrictEqual([['R-4', 4]])
+  expect(decksSaved[1].main).toStrictEqual([['R-1', 1]])
+  expect(decksSaved[1].side).toStrictEqual([])
 
   // 保存済みレシピをすべて削除ボタンを押す
-  const buttonClear = paneSave.querySelector('div:nth-child(4) button')
-  expect(buttonClear.textContent).toBe('保存済みレシピをすべて削除')
-  await user.click(buttonClear)
-
-  // モーダルが表示される
-  let modal = screen.getByRole('dialog')
-  expect(modal.querySelector('.modal-body').textContent).toBe(
-    '保存済みレシピをすべて削除します。よろしいですか？',
+  await userEvent.click(
+    within2(paneLoad).getButtonByName('保存済みレシピをすべて削除'),
   )
 
+  // モーダルが表示される
+  await waitFor(() => expect(getByRole('dialog')).not.toBeNull())
+  let dialog = getByRole('dialog')
+  expect(dialog).toHaveTextContent(
+    '保存済みレシピをすべて削除します。よろしいですか？',
+  )
   // キャンセルボタンを押す
-  const buttonCancel = modal.querySelector('.modal-footer button:nth-child(1)')
-  expect(buttonCancel.textContent).toBe('キャンセル')
-  await user.click(buttonCancel)
-
+  await userEvent.click(within2(dialog).getButtonByName('キャンセル'))
   // モーダルがひっこむ
-  await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull())
+  await waitFor(() => expect(queryByRole('dialog')).toBeNull())
 
   // デッキはクリアされていない
   decksSaved = await dbQueryDecks()
-  expect(decksSaved.length).toBe(2)
-  expect(decksSaved[0].main.length).toBe(0)
-  expect(decksSaved[0].side.length).toBe(1)
-  expect(decksSaved[0].side[0][0]).toBe('R-4')
-  expect(decksSaved[0].side[0][1]).toBe(4)
-  expect(decksSaved[1].main.length).toBe(1)
-  expect(decksSaved[1].main[0][0]).toBe('R-1')
-  expect(decksSaved[1].main[0][1]).toBe(1)
-  expect(decksSaved[1].side.length).toBe(0)
+  expect(decksSaved).toHaveLength(2)
+  expect(decksSaved[0].main).toStrictEqual([])
+  expect(decksSaved[0].side).toStrictEqual([['R-4', 4]])
+  expect(decksSaved[1].main).toStrictEqual([['R-1', 1]])
+  expect(decksSaved[1].side).toStrictEqual([])
 
-  // 保存済みレシピをすべて削除ボタンを再度押す
-  await user.click(buttonClear)
-
-  // モーダルが再度表示される
-  modal = screen.getByRole('dialog')
-  expect(modal.querySelector('.modal-body').textContent).toBe(
+  // 保存済みレシピをすべて削除ボタンを押す
+  // prettier-ignore
+  await userEvent.click(within2(paneLoad).getButtonByName('保存済みレシピをすべて削除'))
+  // モーダルが表示される
+  dialog = screen.getByRole('dialog')
+  expect(dialog).toHaveTextContent(
     '保存済みレシピをすべて削除します。よろしいですか？',
   )
-
-  // 削除するボタンを押す
-  const buttonConfirmDelete = modal.querySelector(
-    '.modal-footer button:nth-child(2)',
-  )
-  expect(buttonConfirmDelete.textContent).toBe('削除する')
-  await user.click(buttonConfirmDelete)
-
+  // 削除を確定する
+  await userEvent.click(within2(dialog).getButtonByName('削除する'))
   // モーダルがひっこむ
-  await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull()) // waitFor で包まないと不安定
-
+  await waitFor(() => expect(queryByRole('dialog')).toBeNull())
   // 保存済みデッキの表示がなくなる
   await waitFor(() =>
-    expect(paneSave.querySelectorAll('.accordion-item').length).toBe(0),
+    expect(
+      within(
+        within(paneLoad).getByRole('list', { name: 'ロード' }),
+      ).queryByRole('listitem', {
+        name: /^#/,
+      }),
+    ).toBeNull(),
   )
+
   // 保存されたデータの検証
   decksSaved = await dbQueryDecks()
-  expect(decksSaved.length).toBe(0)
+  expect(decksSaved).toHaveLength(0)
 })
