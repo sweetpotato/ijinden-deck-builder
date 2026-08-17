@@ -314,28 +314,26 @@ function TabPaneCard({
           </tr>
         </thead>
         <tbody>
-          {makeSortedDataCards().map((element) => {
-            return (
-              filterCard(element) && (
-                <TableRowCard
-                  key={element.id}
-                  id={element.id}
-                  displayName={element.displayName}
-                  color={element.color}
-                  term={element.term}
-                  counterMain={
-                    deckMain.has(element.id) ? deckMain.get(element.id) : 0
-                  }
-                  counterSide={
-                    deckSide.has(element.id) ? deckSide.get(element.id) : 0
-                  }
-                  dispatchDeck={dispatchDeck}
-                  zoomIn={zoomIn}
-                  interruptSimulator={interruptSimulator}
-                />
-              )
-            )
-          })}
+          {makeSortedDataCards()
+            .filter(filterCard)
+            .map((element) => (
+              <TableRowCard
+                key={element.id}
+                id={element.id}
+                displayName={element.displayName}
+                color={element.color}
+                term={element.term}
+                counterMain={
+                  deckMain.has(element.id) ? deckMain.get(element.id) : 0
+                }
+                counterSide={
+                  deckSide.has(element.id) ? deckSide.get(element.id) : 0
+                }
+                dispatchDeck={dispatchDeck}
+                zoomIn={zoomIn}
+                interruptSimulator={interruptSimulator}
+              />
+            ))}
         </tbody>
       </Table>
     </>
