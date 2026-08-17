@@ -4,7 +4,7 @@ import { afterEach, expect, test, vi } from 'vitest'
 import { cleanup, render, renderHook } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import useDeck from '../../../hooks/useDeck'
+import useDeck from '../../../../hooks/useDeck'
 import InputGroupCounter from '.'
 
 // interruptSimulator がある

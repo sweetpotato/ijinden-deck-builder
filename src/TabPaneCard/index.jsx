@@ -7,7 +7,6 @@ import {
   AccordionHeader,
   AccordionItem,
   Button,
-  Table,
 } from 'react-bootstrap'
 
 import { dataCardsArrayForTable as dataCards } from '../commons/dataCards'
@@ -21,7 +20,7 @@ import useAccordionItemLevelFilter from './AccordionItemLevelFilter'
 import useAccordionItemSortBy from './AccordionItemSortBy'
 import useAccordionItemTypeFilter from './AccordionItemTypeFilter'
 import useContainerTextSearch from './ContainerTextSearch'
-import TableRowCard from './TableRowCard'
+import TableCards from './TableCards'
 
 import './index.css'
 
@@ -302,36 +301,15 @@ function TabPaneCard({
         </AccordionItem>
         {renderSortBy('1')}
       </Accordion>
-      <Table hover variant="light">
-        <thead className="sticky-top">
-          <tr>
-            <th scope="col">ID</th>
-            <th scope="col">カード名</th>
-            <th scope="col">メイン</th>
-            <th scope="col">サイド</th>
-          </tr>
-        </thead>
-        <tbody>
-          {dataCards
-            .filter(filterCard)
-            .map(mergeCounter)
-            .sort(compareCards)
-            .map((element) => (
-              <TableRowCard
-                key={element.id}
-                id={element.id}
-                displayName={element.displayName}
-                color={element.color}
-                term={element.term}
-                counterMain={element.counterMain}
-                counterSide={element.counterSide}
-                dispatchDeck={dispatchDeck}
-                zoomIn={zoomIn}
-                interruptSimulator={interruptSimulator}
-              />
-            ))}
-        </tbody>
-      </Table>
+      <TableCards
+        model={dataCards
+          .filter(filterCard)
+          .map(mergeCounter)
+          .sort(compareCards)}
+        dispatchDeck={dispatchDeck}
+        zoomIn={zoomIn}
+        interruptSimulator={interruptSimulator}
+      />
     </>
   )
 }

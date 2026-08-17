@@ -5,9 +5,9 @@ import { afterEach, expect, test, vi } from 'vitest'
 import { cleanup, render, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import enumChromagic from '../enumChromagic'
-import enumColor from '../enumColor'
-import enumTerm from '../enumTerm'
+import enumChromagic from '../../enumChromagic'
+import enumColor from '../../enumColor'
+import enumTerm from '../../enumTerm'
 import TableRowCard from '.'
 
 const TERM_CHROMAGIC_RED = enumTerm.CHROMAGIC | enumChromagic.RED

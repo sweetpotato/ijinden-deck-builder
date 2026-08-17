@@ -5,8 +5,8 @@ import { afterEach, expect, test, vi } from 'vitest'
 import { cleanup, render, renderHook, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import useDeck from '../../hooks/useDeck'
-import enumColor from '../enumColor'
+import useDeck from '../../../hooks/useDeck'
+import enumColor from '../../enumColor'
 import TableRowCard from '.'
 
 function defaultRender(id, name, term, color, main, side) {

@@ -3,9 +3,9 @@
 import classNames from 'classnames'
 import { Button } from 'react-bootstrap'
 
-import enumChromagic from '../enumChromagic'
-import enumColor from '../enumColor'
-import enumTerm from '../enumTerm'
+import enumChromagic from '../../enumChromagic'
+import enumColor from '../../enumColor'
+import enumTerm from '../../enumTerm'
 import InputGroupCounter from './InputGroupCounter'
 
 import './index.css'
