@@ -4,10 +4,9 @@ import 'fake-indexeddb/auto'
 
 import { createRoutesStub } from 'react-router-dom'
 import { afterEach, expect, test } from 'vitest'
-import { cleanup, render, screen, within } from '@testing-library/react'
+import { cleanup, render, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import { dataCardsMap } from './commons/dataCards'
 import { dbAddDeck, dbClearDecks } from './commons/db'
 import Home from './Home'
 
@@ -93,7 +92,7 @@ test('タブをクリックするとペインが表示される', async () => {
 
 test('カードペインからレシピペインへの作用', async () => {
   const id = 'R-1'
-  const { getByRole, queryByRole, getTabPanelByName } = defaultRender()
+  const { getByRole, getTabPanelByName } = defaultRender()
 
   // 初期タブは「カード」
   expect(getByRole('tab', { selected: true })).toHaveTextContent('カード')
@@ -290,7 +289,7 @@ test('カードペインからレシピペインへの作用', async () => {
 
 test('レシピペインからカードペインへの作用', async () => {
   const id = 'R-1'
-  const { getByRole, queryByRole, getTabPanelByName } = defaultRender()
+  const { getByRole, getTabPanelByName } = defaultRender()
 
   // 初期タブは「カード」
   expect(getByRole('tab', { selected: true })).toHaveTextContent('カード')
@@ -472,7 +471,7 @@ test('保存したデッキを読み込んでレシピペインに表示する',
   await dbClearDecks()
   await dbAddDeck(deckSaved)
 
-  const { getByRole, queryByRole, getTabPanelByName } = defaultRender()
+  const { getByRole, getTabPanelByName } = defaultRender()
 
   // 初期タブは「カード」
   expect(getByRole('tab', { selected: true })).toHaveTextContent('カード')
@@ -519,7 +518,7 @@ test('保存したデッキを読み込んでレシピペインに表示する',
 
 test('シミュレータがカードペインの操作でアボートする', async () => {
   const id = 'R-1'
-  const { getByRole, queryByRole, getTabPanelByName } = defaultRender()
+  const { getByRole, getTabPanelByName } = defaultRender()
 
   // 初期タブは「カード」
   expect(getByRole('tab', { selected: true })).toHaveTextContent('カード')
@@ -663,7 +662,7 @@ test('シミュレータがカードペインの操作でアボートする', as
 
 test('シミュレータがレシピペインの操作でアボートする', async () => {
   const id = 'R-1'
-  const { getByRole, queryByRole, getTabPanelByName } = defaultRender()
+  const { getByRole, getTabPanelByName } = defaultRender()
 
   // 初期タブは「カード」
   expect(getByRole('tab', { selected: true })).toHaveTextContent('カード')
@@ -903,7 +902,7 @@ test('シミュレータがマイデッキペインの操作でアボートす�
   await dbClearDecks()
   await dbAddDeck(deckSaved)
 
-  const { getByRole, queryByRole, getTabPanelByName } = defaultRender()
+  const { getByRole, getTabPanelByName } = defaultRender()
 
   // 初期タブは「カード」
   expect(getByRole('tab', { selected: true })).toHaveTextContent('カード')
