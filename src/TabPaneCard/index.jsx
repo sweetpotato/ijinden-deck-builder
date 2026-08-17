@@ -7,7 +7,6 @@ import {
   AccordionHeader,
   AccordionItem,
   Button,
-  Table,
 } from 'react-bootstrap'
 
 import { dataCardsArrayForTable as dataCards } from '../commons/dataCards'
@@ -21,7 +20,7 @@ import useAccordionItemLevelFilter from './AccordionItemLevelFilter'
 import useAccordionItemSortBy from './AccordionItemSortBy'
 import useAccordionItemTypeFilter from './AccordionItemTypeFilter'
 import useContainerTextSearch from './ContainerTextSearch'
-import TableRowCard from './TableRowCard'
+import TableCards from './TableCards'
 
 import './index.css'
 
@@ -181,88 +180,86 @@ function TabPaneCard({
     )
   }
 
-  function makeSortedDataCards() {
+  function mergeCounter(card) {
+    return {
+      counterMain: deckMain.has(card.id) ? deckMain.get(card.id) : 0,
+      counterSide: deckSide.has(card.id) ? deckSide.get(card.id) : 0,
+      ...card,
+    }
+  }
+
+  function compareCards(a, b) {
     switch (sortBy) {
       case enumSortBy.COLOR_TYPE: {
-        return dataCards.toSorted((a, b) => {
-          if (a.color === b.color && a.type === b.type) {
+        if (a.color === b.color && a.type === b.type) {
+          return a.orderTable - b.orderTable
+        } else if (a.color === b.color) {
+          return a.type - b.type
+        } else {
+          return a.color - b.color
+        }
+      }
+      case enumSortBy.TYPE_COLOR: {
+        if (a.type === b.type && a.color === b.color) {
+          return a.orderTable - b.orderTable
+        } else if (a.type === b.type) {
+          return a.color - b.color
+        } else {
+          return a.type - b.type
+        }
+      }
+      case enumSortBy.POWER_COLOR_TYPE: {
+        if (a.power === null || b.power === null) {
+          // パワーを持たないカードは後ろへ送る
+          if (a.power !== null && b.power === null) {
+            return -1
+          } else if (a.power === null && b.power !== null) {
+            return 1
+          } else if (a.color === b.color && a.type === b.type) {
             return a.orderTable - b.orderTable
           } else if (a.color === b.color) {
             return a.type - b.type
           } else {
-            return a.color - b.color
+            return a.color === b.color
           }
-        })
-      }
-      case enumSortBy.TYPE_COLOR: {
-        return dataCards.toSorted((a, b) => {
-          if (a.type === b.type && a.color === b.color) {
-            return a.orderTable - b.orderTable
-          } else if (a.type === b.type) {
-            return a.color - b.color
-          } else {
-            return a.type - b.type
-          }
-        })
-      }
-      case enumSortBy.POWER_COLOR_TYPE: {
-        return dataCards.toSorted((a, b) => {
-          if (a.power === null || b.power === null) {
-            // パワーを持たないカードは後ろへ送る
-            if (a.power !== null && b.power === null) {
-              return -1
-            } else if (a.power === null && b.power !== null) {
-              return 1
-            } else if (a.color === b.color && a.type === b.type) {
-              return a.orderTable - b.orderTable
-            } else if (a.color === b.color) {
-              return a.type - b.type
-            } else {
-              return a.color === b.color
-            }
-          } else if (
-            a.power === b.power &&
-            a.color === b.color &&
-            a.type === b.type
-          ) {
-            return a.orderTable - b.orderTable
-          } else if (a.power === b.power && a.color === b.color) {
-            return a.type - b.type
-          } else if (a.power === b.power) {
-            return a.color - b.color
-          } else {
-            return a.power - b.power
-          }
-        })
+        } else if (
+          a.power === b.power &&
+          a.color === b.color &&
+          a.type === b.type
+        ) {
+          return a.orderTable - b.orderTable
+        } else if (a.power === b.power && a.color === b.color) {
+          return a.type - b.type
+        } else if (a.power === b.power) {
+          return a.color - b.color
+        } else {
+          return a.power - b.power
+        }
       }
       case enumSortBy.LEVEL_COLOR_TYPE: {
-        return dataCards.toSorted((a, b) => {
-          if (a.level === b.level && a.color === b.color && a.type === b.type) {
-            return a.orderTable - b.orderTable
-          } else if (a.level === b.level && a.color === b.color) {
-            return a.type - b.type
-          } else if (a.level === b.level) {
-            return a.color - b.color
-          } else {
-            return a.level - b.level
-          }
-        })
+        if (a.level === b.level && a.color === b.color && a.type === b.type) {
+          return a.orderTable - b.orderTable
+        } else if (a.level === b.level && a.color === b.color) {
+          return a.type - b.type
+        } else if (a.level === b.level) {
+          return a.color - b.color
+        } else {
+          return a.level - b.level
+        }
       }
       case enumSortBy.LEVEL_TYPE_COLOR: {
-        return dataCards.toSorted((a, b) => {
-          if (a.level === b.level && a.type === b.type && a.color === b.color) {
-            return a.orderTable - b.orderTable
-          } else if (a.level === b.level && a.type === b.type) {
-            return a.color - b.color
-          } else if (a.level === b.level) {
-            return a.type - b.type
-          } else {
-            return a.level - b.level
-          }
-        })
+        if (a.level === b.level && a.type === b.type && a.color === b.color) {
+          return a.orderTable - b.orderTable
+        } else if (a.level === b.level && a.type === b.type) {
+          return a.color - b.color
+        } else if (a.level === b.level) {
+          return a.type - b.type
+        } else {
+          return a.level - b.level
+        }
       }
       default: {
-        return dataCards
+        return a.orderTable - b.orderTable
       }
     }
   }
@@ -304,40 +301,15 @@ function TabPaneCard({
         </AccordionItem>
         {renderSortBy('1')}
       </Accordion>
-      <Table hover variant="light">
-        <thead className="sticky-top">
-          <tr>
-            <th scope="col">ID</th>
-            <th scope="col">カード名</th>
-            <th scope="col">メイン</th>
-            <th scope="col">サイド</th>
-          </tr>
-        </thead>
-        <tbody>
-          {makeSortedDataCards().map((element) => {
-            return (
-              filterCard(element) && (
-                <TableRowCard
-                  key={element.id}
-                  id={element.id}
-                  displayName={element.displayName}
-                  color={element.color}
-                  term={element.term}
-                  counterMain={
-                    deckMain.has(element.id) ? deckMain.get(element.id) : 0
-                  }
-                  counterSide={
-                    deckSide.has(element.id) ? deckSide.get(element.id) : 0
-                  }
-                  dispatchDeck={dispatchDeck}
-                  zoomIn={zoomIn}
-                  interruptSimulator={interruptSimulator}
-                />
-              )
-            )
-          })}
-        </tbody>
-      </Table>
+      <TableCards
+        model={dataCards
+          .filter(filterCard)
+          .map(mergeCounter)
+          .sort(compareCards)}
+        dispatchDeck={dispatchDeck}
+        zoomIn={zoomIn}
+        interruptSimulator={interruptSimulator}
+      />
     </>
   )
 }

@@ -77,7 +77,7 @@ test.each(['R-1', 'R-2'])(
     expect(zoomIn.mock.calls.length).toBe(0)
     expect(interruptSimulator.mock.calls.length).toBe(1) // 呼ばれた
     expect(interruptSimulator.mock.lastCall.length).toBe(0)
-  }
+  },
 )
 
 test.each(['R-1', 'R-2'])(
@@ -115,7 +115,7 @@ test.each(['R-1', 'R-2'])(
     expect(zoomIn.mock.calls.length).toBe(0)
     expect(interruptSimulator.mock.calls.length).toBe(1) // 呼ばれた
     expect(interruptSimulator.mock.lastCall.length).toBe(0)
-  }
+  },
 )
 
 test.each(['R-1', 'R-2'])(
@@ -152,7 +152,7 @@ test.each(['R-1', 'R-2'])(
     expect(dispatchDeck.incrementSide.mock.lastCall[0]).toBe(id)
     expect(zoomIn.mock.calls.length).toBe(0)
     expect(interruptSimulator.mock.calls.length).toBe(0)
-  }
+  },
 )
 
 test.each(['R-1', 'R-2'])(
@@ -189,7 +189,7 @@ test.each(['R-1', 'R-2'])(
     expect(dispatchDeck.incrementSide.mock.lastCall[0]).toBe(id)
     expect(zoomIn.mock.calls.length).toBe(0)
     expect(interruptSimulator.mock.calls.length).toBe(0)
-  }
+  },
 )
 
 test.each(['R-1', 'R-2'])(
@@ -226,13 +226,13 @@ test.each(['R-1', 'R-2'])(
     expect(dispatchDeck.incrementSide.mock.calls.length).toBe(0)
     expect(zoomIn.mock.calls.length).toBe(0)
     expect(interruptSimulator.mock.calls.length).toBe(0)
-  }
+  },
 )
 
 test.each(['R-1', 'R-2'])('虫眼鏡ボタンの操作 (%s)', async (id) => {
   const { dispatchDeck, zoomIn, interruptSimulator, getByRole } = defaultRender(
     new Map(),
-    new Map()
+    new Map(),
   )
 
   expect(dispatchDeck.decrementMain.mock.calls.length).toBe(0)

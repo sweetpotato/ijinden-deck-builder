@@ -3,13 +3,13 @@
 import classNames from 'classnames'
 import { Button } from 'react-bootstrap'
 
-import enumChromagic from '../enumChromagic'
-import enumColor from '../enumColor'
-import enumTerm from '../enumTerm'
+import enumChromagic from '../../enumChromagic'
+import enumColor from '../../enumColor'
+import enumTerm from '../../enumTerm'
 import InputGroupCounter from './InputGroupCounter'
 
 import './index.css'
-import { memo, useId } from 'react'
+import { memo } from 'react'
 
 const dataColorsToCss = [
   { color: enumColor.RED, css: 'bg-ijinden-red' },
@@ -92,7 +92,6 @@ const TableRowCard = memo(function TableRowCard({
   zoomIn,
   interruptSimulator,
 }) {
-  const rowId = useId()
   let classesColor
   if ((term & enumTerm.CHROMAGIC) === enumTerm.CHROMAGIC) {
     classesColor = classNames(
@@ -123,14 +122,8 @@ const TableRowCard = memo(function TableRowCard({
   }
 
   return (
-    /*
-     * プラスボタンやマイナスボタンをセレクタで特定できるように
-     * 各行にカードIDを含む data-testid を設定する。
-     * 実際のユーザはID列を見て一意に識別できるため、
-     * アクセシビリティとしては問題ないはずである。
-     */
-    <tr aria-labelledby={rowId}>
-      <td className={classesColor} id={rowId}>
+    <>
+      <td className={classesColor} id={`cell0-${id}`}>
         {displayId}
       </td>
       <td>
@@ -161,7 +154,7 @@ const TableRowCard = memo(function TableRowCard({
           dispatchIncrement={dispatchDeck.incrementSide}
         />
       </td>
-    </tr>
+    </>
   )
 })
 

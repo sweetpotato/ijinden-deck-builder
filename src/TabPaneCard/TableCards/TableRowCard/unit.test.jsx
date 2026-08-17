@@ -5,9 +5,9 @@ import { afterEach, expect, test, vi } from 'vitest'
 import { cleanup, render, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import enumChromagic from '../enumChromagic'
-import enumColor from '../enumColor'
-import enumTerm from '../enumTerm'
+import enumChromagic from '../../enumChromagic'
+import enumColor from '../../enumColor'
+import enumTerm from '../../enumTerm'
 import TableRowCard from '.'
 
 const TERM_CHROMAGIC_RED = enumTerm.CHROMAGIC | enumChromagic.RED
@@ -32,24 +32,7 @@ function defaultRender(id, displayName, term, color, counterMain, counterSide) {
   const { rerender, getByRole, getAllByRole } = render(
     <Table>
       <tbody>
-        <TableRowCard
-          id={id}
-          displayName={displayName}
-          term={term}
-          color={color}
-          counterMain={counterMain}
-          counterSide={counterSide}
-          dispatchDeck={dispatchDeck}
-          zoomIn={zoomIn}
-          interruptSimulator={interruptSimulator}
-        />
-      </tbody>
-    </Table>
-  )
-  const defaultRerender = (counterMain, counterSide) =>
-    rerender(
-      <Table>
-        <tbody>
+        <tr aria-labelledby={`cell0-${id}`}>
           <TableRowCard
             id={id}
             displayName={displayName}
@@ -61,8 +44,29 @@ function defaultRender(id, displayName, term, color, counterMain, counterSide) {
             zoomIn={zoomIn}
             interruptSimulator={interruptSimulator}
           />
+        </tr>
+      </tbody>
+    </Table>,
+  )
+  const defaultRerender = (counterMain, counterSide) =>
+    rerender(
+      <Table>
+        <tbody>
+          <tr aria-labelledby={`cell0-${id}`}>
+            <TableRowCard
+              id={id}
+              displayName={displayName}
+              term={term}
+              color={color}
+              counterMain={counterMain}
+              counterSide={counterSide}
+              dispatchDeck={dispatchDeck}
+              zoomIn={zoomIn}
+              interruptSimulator={interruptSimulator}
+            />
+          </tr>
         </tbody>
-      </Table>
+      </Table>,
     )
   return {
     decrementMain,
@@ -81,26 +85,28 @@ function defaultRenderColor(term, color) {
   return render(
     <Table>
       <tbody>
-        <TableRowCard
-          id="X-1"
-          displayName="ダミー"
-          term={term}
-          color={color}
-          counterMain={0}
-          counterSide={0}
-          dispatchDeck={{
-            decrementMain: vi.fn(),
-            incrementMain: vi.fn(),
-            decrementSide: vi.fn(),
-            incrementSide: vi.fn(),
-          }}
-          handleSetDeckMain={vi.fn()}
-          handleSetDeckSide={vi.fn()}
-          zoomIn={vi.fn()}
-          interruptSimulator={vi.fn()}
-        />
+        <tr aria-labelledby="cell0-X-1">
+          <TableRowCard
+            id="X-1"
+            displayName="ダミー"
+            term={term}
+            color={color}
+            counterMain={0}
+            counterSide={0}
+            dispatchDeck={{
+              decrementMain: vi.fn(),
+              incrementMain: vi.fn(),
+              decrementSide: vi.fn(),
+              incrementSide: vi.fn(),
+            }}
+            handleSetDeckMain={vi.fn()}
+            handleSetDeckSide={vi.fn()}
+            zoomIn={vi.fn()}
+            interruptSimulator={vi.fn()}
+          />
+        </tr>
       </tbody>
-    </Table>
+    </Table>,
   )
 }
 
@@ -156,40 +162,44 @@ test('各行のアクセシブル名はIDである', async () => {
   const { getByRole } = render(
     <Table>
       <tbody>
-        <TableRowCard
-          id="1-1"
-          displayName="織田信長"
-          term={0}
-          color={enumColor.RED}
-          counterMain={1}
-          counterSide={2}
-          dispatchDeck={{
-            decrementMain: vi.fn(),
-            incrementMain: vi.fn(),
-            decrementSide: vi.fn(),
-            incrementSide: vi.fn(),
-          }}
-          zoomIn={vi.fn()}
-          interruptSimulator={vi.fn()}
-        />
-        <TableRowCard
-          id="1-2"
-          displayName="クレオパトラ"
-          term={0}
-          color={enumColor.RED}
-          counterMain={3}
-          counterSide={4}
-          dispatchDeck={{
-            decrementMain: vi.fn(),
-            incrementMain: vi.fn(),
-            decrementSide: vi.fn(),
-            incrementSide: vi.fn(),
-          }}
-          zoomIn={vi.fn()}
-          interruptSimulator={vi.fn()}
-        />
+        <tr aria-labelledby="cell0-1-1">
+          <TableRowCard
+            id="1-1"
+            displayName="織田信長"
+            term={0}
+            color={enumColor.RED}
+            counterMain={1}
+            counterSide={2}
+            dispatchDeck={{
+              decrementMain: vi.fn(),
+              incrementMain: vi.fn(),
+              decrementSide: vi.fn(),
+              incrementSide: vi.fn(),
+            }}
+            zoomIn={vi.fn()}
+            interruptSimulator={vi.fn()}
+          />
+        </tr>
+        <tr aria-labelledby="cell0-1-2">
+          <TableRowCard
+            id="1-2"
+            displayName="クレオパトラ"
+            term={0}
+            color={enumColor.RED}
+            counterMain={3}
+            counterSide={4}
+            dispatchDeck={{
+              decrementMain: vi.fn(),
+              incrementMain: vi.fn(),
+              decrementSide: vi.fn(),
+              incrementSide: vi.fn(),
+            }}
+            zoomIn={vi.fn()}
+            interruptSimulator={vi.fn()}
+          />
+        </tr>
       </tbody>
-    </Table>
+    </Table>,
   )
 
   const row1 = getByRole('row', { name: '1-1' })
@@ -451,7 +461,7 @@ test('ボタンを押さずにメインデッキのカウンターを0から4に
     0,
     enumColor.RED,
     0,
-    0
+    0,
   )
   let main = within(within(getByRole('row')).getAllByRole('cell')[2])
   let side = within(within(getByRole('row')).getAllByRole('cell')[3])
@@ -482,7 +492,7 @@ test('ボタンを押さずにメインデッキのカウンターを4から0に
     0,
     enumColor.RED,
     4,
-    4
+    4,
   )
   let main = within(within(getByRole('row')).getAllByRole('cell')[2])
   let side = within(within(getByRole('row')).getAllByRole('cell')[3])
@@ -513,7 +523,7 @@ test('ボタンを押さずにサイドデッキのカウンターを0から4に
     0,
     enumColor.RED,
     0,
-    0
+    0,
   )
   let main = within(within(getByRole('row')).getAllByRole('cell')[2])
   let side = within(within(getByRole('row')).getAllByRole('cell')[3])
@@ -544,7 +554,7 @@ test('ボタンを押さずにサイドデッキのカウンターを4から0に
     0,
     enumColor.RED,
     4,
-    4
+    4,
   )
   let main = within(within(getByRole('row')).getAllByRole('cell')[2])
   let side = within(within(getByRole('row')).getAllByRole('cell')[3])
@@ -575,7 +585,7 @@ test('ボタンを押さずにメインデッキとサイドデッキのカウ�
     0,
     enumColor.RED,
     2,
-    2
+    2,
   )
   let main = within(within(getByRole('row')).getAllByRole('cell')[2])
   let side = within(within(getByRole('row')).getAllByRole('cell')[3])
