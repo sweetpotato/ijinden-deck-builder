@@ -181,6 +181,14 @@ function TabPaneCard({
     )
   }
 
+  function mergeCounter(card) {
+    return {
+      counterMain: deckMain.has(card.id) ? deckMain.get(card.id) : 0,
+      counterSide: deckSide.has(card.id) ? deckSide.get(card.id) : 0,
+      ...card,
+    }
+  }
+
   function compareCards(a, b) {
     switch (sortBy) {
       case enumSortBy.COLOR_TYPE: {
@@ -306,6 +314,7 @@ function TabPaneCard({
         <tbody>
           {dataCards
             .filter(filterCard)
+            .map(mergeCounter)
             .sort(compareCards)
             .map((element) => (
               <TableRowCard
@@ -314,12 +323,8 @@ function TabPaneCard({
                 displayName={element.displayName}
                 color={element.color}
                 term={element.term}
-                counterMain={
-                  deckMain.has(element.id) ? deckMain.get(element.id) : 0
-                }
-                counterSide={
-                  deckSide.has(element.id) ? deckSide.get(element.id) : 0
-                }
+                counterMain={element.counterMain}
+                counterSide={element.counterSide}
                 dispatchDeck={dispatchDeck}
                 zoomIn={zoomIn}
                 interruptSimulator={interruptSimulator}
