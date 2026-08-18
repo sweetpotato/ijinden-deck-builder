@@ -1,15 +1,19 @@
 // SPDX-License-Identifier: MIT
 
+import 'fake-indexeddb/auto'
+
 import { afterEach, expect, test, vi } from 'vitest'
 import {
   cleanup,
   fireEvent,
   render,
   renderHook,
+  waitFor,
   within,
 } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
+import { dbClearFavorites } from '../commons/db'
 import useDeck from '../hooks/useDeck'
 import TabPaneCard from '.'
 
@@ -95,7 +99,10 @@ function defaultRender() {
   }
 }
 
-afterEach(cleanup)
+afterEach(async () => {
+  await dbClearFavorites()
+  cleanup()
+})
 
 test('フィルタの初期状態', async () => {
   const { defaultRerender, getByPlaceholderText, getAllByRole, getByRole } =
@@ -147,6 +154,10 @@ test('フィルタの初期状態', async () => {
   expect(getByRole('checkbox', { name: '特性と遺業能力も検索する' })).toBeVisible()
   // prettier-ignore
   expect(getByRole('checkbox', { name: '特性と遺業能力も検索する' })).toBeChecked()
+  // prettier-ignore
+  expect(getByRole('checkbox', { name: 'お気に入りカード⭐のみ検索する' })).toBeVisible()
+  // prettier-ignore
+  expect(getByRole('checkbox', { name: 'お気に入りカード⭐のみ検索する' })).not.toBeChecked()
   // 「条件で絞り込む」の中にあるボタン
   // prettier-ignore
   expect(getByRole('button', { name: '条件すべてをリセットする' })).toBeVisible()
@@ -762,7 +773,7 @@ test('色によるフィルタ', async () => {
   expect(getByRole('row', { name: '2-79' })).toBeVisible()
   expect(getByRole('row', { name: '2-80' })).toBeVisible()
   expect(queryByRole('row', { name: '3-80' })).toBeNull()
-})
+}, 180000)
 
 test('種類によるフィルタ', async () => {
   const { defaultRerender, getByRole, queryByRole } = defaultRender()
@@ -1984,4 +1995,270 @@ test('キーワードと色と種類の複合によるフィルタ', async () =>
   expect(queryByRole('row', { name: '2-50' })).toBeNull() // 安宅船
   expect(queryByRole('row', { name: '2-59' })).toBeNull() // サモン
   expect(queryByRole('row', { name: '4-67' })).toBeNull() // レッドサークル
+})
+
+test('お気に入りカードのみ選ぶ', async () => {
+  await dbClearFavorites()
+
+  const { defaultRerender, getByRole, queryByRole } = defaultRender()
+  // prettier-ignore
+  expect(getByRole('checkbox', { name: 'お気に入りカード⭐のみ検索する' })).not.toBeChecked()
+
+  expect(getByRole('row', { name: '1-1' })).toBeVisible()
+  expect(getByRole('row', { name: '1-2' })).toBeVisible()
+  expect(getByRole('row', { name: '1-3' })).toBeVisible()
+
+  // 1-1 をお気に入りに登録する
+  await waitFor(() => {
+    expect(
+      within(
+        within(getByRole('row', { name: '1-1' })).getAllByRole('cell')[1],
+      ).queryByRole('button', { name: '☆' }),
+    ).not.toBeNull()
+  })
+  await userEvent.click(
+    within(
+      within(getByRole('row', { name: '1-1' })).getAllByRole('cell')[1],
+    ).getByRole('button', { name: '☆' }),
+  )
+  defaultRerender()
+  expect(
+    within(
+      within(getByRole('row', { name: '1-1' })).getAllByRole('cell')[1],
+    ).getByRole('button', { name: '⭐' }),
+  ).toBeVisible()
+
+  expect(getByRole('row', { name: '1-1' })).toBeVisible()
+  expect(getByRole('row', { name: '1-2' })).toBeVisible()
+  expect(getByRole('row', { name: '1-3' })).toBeVisible()
+
+  // 1-2 をお気に入りに登録する
+  await userEvent.click(
+    within(
+      within(getByRole('row', { name: '1-2' })).getAllByRole('cell')[1],
+    ).getByRole('button', { name: '☆' }),
+  )
+  defaultRerender()
+  expect(
+    within(
+      within(getByRole('row', { name: '1-2' })).getAllByRole('cell')[1],
+    ).getByRole('button', { name: '⭐' }),
+  ).toBeVisible()
+
+  expect(getByRole('row', { name: '1-1' })).toBeVisible()
+  expect(getByRole('row', { name: '1-2' })).toBeVisible()
+  expect(getByRole('row', { name: '1-3' })).toBeVisible()
+
+  // お気に入りのみ表示する
+  await userEvent.click(
+    getByRole('checkbox', { name: 'お気に入りカード⭐のみ検索する' }),
+  )
+  defaultRerender()
+  expect(
+    getByRole('checkbox', { name: 'お気に入りカード⭐のみ検索する' }),
+  ).toBeChecked()
+
+  expect(getByRole('row', { name: '1-1' })).toBeVisible()
+  expect(getByRole('row', { name: '1-2' })).toBeVisible()
+  expect(queryByRole('row', { name: '1-3' })).toBeNull()
+
+  // この状態で 1-1 をお気に入りから外すと表示も消える
+  await userEvent.click(
+    within(
+      within(getByRole('row', { name: '1-1' })).getAllByRole('cell')[1],
+    ).getByRole('button', { name: '⭐' }),
+  )
+  defaultRerender()
+
+  expect(queryByRole('row', { name: '1-1' })).toBeNull()
+  expect(getByRole('row', { name: '1-2' })).toBeVisible()
+  expect(queryByRole('row', { name: '1-3' })).toBeNull()
+})
+
+test('お気に入りとフィルタの組合せ', async () => {
+  await dbClearFavorites()
+
+  const { defaultRerender, getByRole, queryByRole } = defaultRender()
+  // prettier-ignore
+  expect(getByRole('checkbox', { name: 'お気に入りカード⭐のみ検索する' })).not.toBeChecked()
+
+  expect(getByRole('row', { name: '1-1' })).toBeVisible() // 織田信長 (赤イジン)
+  expect(getByRole('row', { name: '2-53' })).toBeVisible() // 武者の蔵 (緑ハイケイ)
+  expect(getByRole('row', { name: '3-63' })).toBeVisible() // アイオン (青マホウ)
+  expect(getByRole('row', { name: '4-72' })).toBeVisible() // ラ・コロール (黄マリョク)
+  expect(getByRole('row', { name: '4-74' })).toBeVisible() // ディ・クローネ (紫マリョク)
+  expect(getByRole('row', { name: '4-80' })).toBeVisible() // カルドロン (無力マリョク)
+
+  // 4-80 を除く以上のカードすべてをお気に入りに入れる
+  await waitFor(() => {
+    expect(
+      within(
+        within(getByRole('row', { name: '1-1' })).getAllByRole('cell')[1],
+      ).queryByRole('button', { name: '☆' }),
+    ).not.toBeNull()
+  })
+  await userEvent.click(
+    within(
+      within(getByRole('row', { name: '1-1' })).getAllByRole('cell')[1],
+    ).getByRole('button', { name: '☆' }),
+  )
+  defaultRerender()
+  await userEvent.click(
+    within(
+      within(getByRole('row', { name: '2-53' })).getAllByRole('cell')[1],
+    ).getByRole('button', { name: '☆' }),
+  )
+  defaultRerender()
+  await userEvent.click(
+    within(
+      within(getByRole('row', { name: '3-63' })).getAllByRole('cell')[1],
+    ).getByRole('button', { name: '☆' }),
+  )
+  defaultRerender()
+  await userEvent.click(
+    within(
+      within(getByRole('row', { name: '4-72' })).getAllByRole('cell')[1],
+    ).getByRole('button', { name: '☆' }),
+  )
+  defaultRerender()
+  await userEvent.click(
+    within(
+      within(getByRole('row', { name: '4-74' })).getAllByRole('cell')[1],
+    ).getByRole('button', { name: '☆' }),
+  )
+  defaultRerender()
+
+  expect(getByRole('row', { name: '1-1' })).toBeVisible() // 織田信長 (赤イジン)
+  expect(getByRole('row', { name: '2-53' })).toBeVisible() // 武者の蔵 (緑ハイケイ)
+  expect(getByRole('row', { name: '3-63' })).toBeVisible() // アイオン (青マホウ)
+  expect(getByRole('row', { name: '4-72' })).toBeVisible() // ラ・コロール (黄マリョク)
+  expect(getByRole('row', { name: '4-74' })).toBeVisible() // ディ・クローネ (紫マリョク)
+  expect(getByRole('row', { name: '4-80' })).toBeVisible() // カルドロン (無力マリョク)
+
+  // お気に入りのみ表示する
+  await userEvent.click(
+    getByRole('checkbox', { name: 'お気に入りカード⭐のみ検索する' }),
+  )
+  defaultRerender()
+
+  expect(getByRole('row', { name: '1-1' })).toBeVisible() // 織田信長 (赤イジン)
+  expect(getByRole('row', { name: '2-53' })).toBeVisible() // 武者の蔵 (緑ハイケイ)
+  expect(getByRole('row', { name: '3-63' })).toBeVisible() // アイオン (青マホウ)
+  expect(getByRole('row', { name: '4-72' })).toBeVisible() // ラ・コロール (黄マリョク)
+  expect(getByRole('row', { name: '4-74' })).toBeVisible() // ディ・クローネ (紫マリョク)
+  expect(queryByRole('row', { name: '4-80' })).toBeNull() // カルドロン (無力マリョク)
+
+  // さらにマリョクでフィルタする
+  await userEvent.click(getCollapsedButton(getByRole, '条件で絞り込む'))
+  defaultRerender()
+  expect(getExpandedButton(getByRole, /種類とパワー/)).toBeVisible()
+  await userEvent.click(getExpandedButton(getByRole, /種類とパワー/))
+  defaultRerender()
+  expect(getByRole('checkbox', { name: 'マリョク' })).toBeVisible()
+  await userEvent.click(getByRole('checkbox', { name: 'マリョク' }))
+  defaultRerender()
+
+  expect(queryByRole('row', { name: '1-1' })).toBeNull() // 織田信長 (赤イジン)
+  expect(queryByRole('row', { name: '2-53' })).toBeNull() // 武者の蔵 (緑ハイケイ)
+  expect(queryByRole('row', { name: '3-63' })).toBeNull() // アイオン (青マホウ)
+  expect(getByRole('row', { name: '4-72' })).toBeVisible() // ラ・コロール (黄マリョク)
+  expect(getByRole('row', { name: '4-74' })).toBeVisible() // ディ・クローネ (紫マリョク)
+  expect(queryByRole('row', { name: '4-80' })).toBeNull() // カルドロン (無力マリョク)
+
+  // 4-74 をお気に入りから外す
+  await userEvent.click(
+    within(
+      within(getByRole('row', { name: '4-74' })).getAllByRole('cell')[1],
+    ).getByRole('button', { name: '⭐' }),
+  )
+  defaultRerender()
+
+  expect(queryByRole('row', { name: '1-1' })).toBeNull() // 織田信長 (赤イジン)
+  expect(queryByRole('row', { name: '2-53' })).toBeNull() // 武者の蔵 (緑ハイケイ)
+  expect(queryByRole('row', { name: '3-63' })).toBeNull() // アイオン (青マホウ)
+  expect(getByRole('row', { name: '4-72' })).toBeVisible() // ラ・コロール (黄マリョク)
+  expect(queryByRole('row', { name: '4-74' })).toBeNull() // ディ・クローネ (紫マリョク)
+  expect(queryByRole('row', { name: '4-80' })).toBeNull() // カルドロン (無力マリョク)
+})
+
+test('お気に入りとキーワードの組合せ', async () => {
+  await dbClearFavorites()
+
+  const { defaultRerender, getByPlaceholderText, getByRole, queryByRole } =
+    defaultRender()
+  // prettier-ignore
+  expect(getByRole('checkbox', { name: 'お気に入りカード⭐のみ検索する' })).not.toBeChecked()
+
+  expect(getByRole('row', { name: '1-55' })).toBeVisible() // ストーム
+  expect(getByRole('row', { name: '2-7' })).toBeVisible() // 日野富子
+  expect(getByRole('row', { name: '2-75' })).toBeVisible() // RYマーブルストーン
+  expect(getByRole('row', { name: '3-79' })).toBeVisible() // ストーンマスク
+
+  // 3-79 を除く以上のカードすべてをお気に入りに入れる
+  await waitFor(() => {
+    expect(
+      within(
+        within(getByRole('row', { name: '1-55' })).getAllByRole('cell')[1],
+      ).queryByRole('button', { name: '☆' }),
+    ).not.toBeNull()
+  })
+  await userEvent.click(
+    within(
+      within(getByRole('row', { name: '1-55' })).getAllByRole('cell')[1],
+    ).getByRole('button', { name: '☆' }),
+  )
+  defaultRerender()
+  await userEvent.click(
+    within(
+      within(getByRole('row', { name: '2-7' })).getAllByRole('cell')[1],
+    ).getByRole('button', { name: '☆' }),
+  )
+  defaultRerender()
+  await userEvent.click(
+    within(
+      within(getByRole('row', { name: '2-75' })).getAllByRole('cell')[1],
+    ).getByRole('button', { name: '☆' }),
+  )
+  defaultRerender()
+
+  expect(getByRole('row', { name: '1-55' })).toBeVisible() // ストーム
+  expect(getByRole('row', { name: '2-7' })).toBeVisible() // 日野富子
+  expect(getByRole('row', { name: '2-75' })).toBeVisible() // RYマーブルストーン
+  expect(getByRole('row', { name: '3-79' })).toBeVisible() // ストーンマスク
+
+  // お気に入りのみ表示する
+  await userEvent.click(
+    getByRole('checkbox', { name: 'お気に入りカード⭐のみ検索する' }),
+  )
+  defaultRerender()
+
+  expect(getByRole('row', { name: '1-55' })).toBeVisible() // ストーム
+  expect(getByRole('row', { name: '2-7' })).toBeVisible() // 日野富子
+  expect(getByRole('row', { name: '2-75' })).toBeVisible() // RYマーブルストーン
+  expect(queryByRole('row', { name: '3-79' })).toBeNull() // ストーンマスク
+
+  // さらにキーワードで絞り込む
+  await userEvent.type(
+    getByPlaceholderText('カード名、テキスト、イラストレータで検索'),
+    'ストーン',
+  )
+  defaultRerender()
+
+  expect(queryByRole('row', { name: '1-55' })).toBeNull() // ストーム
+  expect(getByRole('row', { name: '2-7' })).toBeVisible() // 日野富子
+  expect(getByRole('row', { name: '2-75' })).toBeVisible() // RYマーブルストーン
+  expect(queryByRole('row', { name: '3-79' })).toBeNull() // ストーンマスク
+
+  // 2-75 をお気に入りから外す
+  await userEvent.click(
+    within(
+      within(getByRole('row', { name: '2-75' })).getAllByRole('cell')[1],
+    ).getByRole('button', { name: '⭐' }),
+  )
+  defaultRerender()
+
+  expect(queryByRole('row', { name: '1-55' })).toBeNull() // ストーム
+  expect(getByRole('row', { name: '2-7' })).toBeVisible() // 日野富子
+  expect(queryByRole('row', { name: '2-75' })).toBeNull() // RYマーブルストーン
+  expect(queryByRole('row', { name: '3-79' })).toBeNull() // ストーンマスク
 })

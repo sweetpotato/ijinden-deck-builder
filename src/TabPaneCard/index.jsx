@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 
+import { useLiveQuery } from 'dexie-react-hooks'
 import { useId } from 'react'
 import {
   Accordion,
@@ -10,6 +11,11 @@ import {
 } from 'react-bootstrap'
 
 import { dataCardsArrayForTable as dataCards } from '../commons/dataCards'
+import {
+  dbDeleteFavorite,
+  dbPutFavorite,
+  dbQueryFavorites,
+} from '../commons/db'
 import enumColor from './enumColor'
 import enumComparator from './enumComparator'
 import enumSortBy from './enumSortBy'
@@ -96,6 +102,14 @@ const dataLegacies = [
   { value: 256, label: '山札の上か下に戻す' },
 ]
 
+async function registerFavorite(id) {
+  await dbPutFavorite(id)
+}
+
+async function unregisterFavorite(id) {
+  await dbDeleteFavorite(id)
+}
+
 function TabPaneCard({
   deckMain,
   deckSide,
@@ -104,6 +118,12 @@ function TabPaneCard({
   interruptSimulator,
 }) {
   const idTitle = useId()
+  const rawFavorites = useLiveQuery(dbQueryFavorites)
+  const favorites =
+    rawFavorites === undefined
+      ? undefined
+      : new Set(rawFavorites.map(({ id }) => id))
+
   const [expansion, resetExpansion, renderExpansion] =
     useAccordionItemGenericFilter('エキスパンション', dataExpansions)
   const [rarity, resetRarity, renderRarity] = useAccordionItemGenericFilter(
@@ -130,8 +150,12 @@ function TabPaneCard({
     '遺業能力',
     dataLegacies,
   )
-  const [deferredKeywords, includesTraitAndLegacy, renderTextSearch] =
-    useContainerTextSearch()
+  const [
+    deferredKeywords,
+    includesTraitAndLegacy,
+    onlyFavorites,
+    renderTextSearch,
+  ] = useContainerTextSearch()
   const [sortBy, renderSortBy] = useAccordionItemSortBy()
 
   function handleClickResetConditions() {
@@ -176,12 +200,14 @@ function TabPaneCard({
       (term === 0 || (card.term & term) !== 0) &&
       (trait === 0 || (card.trait & trait) !== 0) &&
       (legacy === 0 || (card.legacy & legacy) !== 0) &&
-      deferredKeywords.every((e) => allText.includes(e.toLowerCase()))
+      deferredKeywords.every((e) => allText.includes(e.toLowerCase())) &&
+      (!onlyFavorites || favorites === undefined || favorites.has(card.id))
     )
   }
 
   function mergeCounter(card) {
     return {
+      favorite: favorites === undefined ? undefined : favorites.has(card.id),
       counterMain: deckMain.has(card.id) ? deckMain.get(card.id) : 0,
       counterSide: deckSide.has(card.id) ? deckSide.get(card.id) : 0,
       ...card,
@@ -308,6 +334,8 @@ function TabPaneCard({
           .sort(compareCards)}
         dispatchDeck={dispatchDeck}
         zoomIn={zoomIn}
+        registerFavorite={registerFavorite}
+        unregisterFavorite={unregisterFavorite}
         interruptSimulator={interruptSimulator}
       />
     </>

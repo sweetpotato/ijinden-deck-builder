@@ -4,7 +4,14 @@ import { Table } from 'react-bootstrap'
 
 import TableRowCard from './TableRowCard'
 
-function TableCards({ model, dispatchDeck, zoomIn, interruptSimulator }) {
+function TableCards({
+  model,
+  dispatchDeck,
+  zoomIn,
+  registerFavorite,
+  unregisterFavorite,
+  interruptSimulator,
+}) {
   return (
     <Table hover variant="light">
       <thead className="sticky-top">
@@ -23,10 +30,13 @@ function TableCards({ model, dispatchDeck, zoomIn, interruptSimulator }) {
               displayName={element.displayName}
               color={element.color}
               term={element.term}
+              favorite={element.favorite}
               counterMain={element.counterMain}
               counterSide={element.counterSide}
               dispatchDeck={dispatchDeck}
               zoomIn={zoomIn}
+              registerFavorite={registerFavorite}
+              unregisterFavorite={unregisterFavorite}
               interruptSimulator={interruptSimulator}
             />
           </tr>

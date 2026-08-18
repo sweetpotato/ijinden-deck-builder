@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 
 import classNames from 'classnames'
+import { memo } from 'react'
 import { Button } from 'react-bootstrap'
 
 import enumChromagic from '../../enumChromagic'
@@ -9,7 +10,6 @@ import enumTerm from '../../enumTerm'
 import InputGroupCounter from './InputGroupCounter'
 
 import './index.css'
-import { memo } from 'react'
 
 const dataColorsToCss = [
   { color: enumColor.RED, css: 'bg-ijinden-red' },
@@ -86,10 +86,13 @@ const TableRowCard = memo(function TableRowCard({
   displayName,
   color,
   term,
+  favorite,
   counterMain,
   counterSide,
   dispatchDeck,
   zoomIn,
+  registerFavorite,
+  unregisterFavorite,
   interruptSimulator,
 }) {
   let classesColor
@@ -136,6 +139,28 @@ const TableRowCard = memo(function TableRowCard({
           🔎
         </Button>
         {displayName}
+        {
+          /* favorite is a tristate boolean (true, false, and undefined) */
+          favorite === undefined ? undefined : favorite ? (
+            <Button
+              variant="secondary-outline"
+              size="sm"
+              className="m-0 p-0 border-0"
+              onClick={() => unregisterFavorite(id)}
+            >
+              ⭐
+            </Button>
+          ) : (
+            <Button
+              variant="secondary-outline"
+              size="sm"
+              className="ms-1 p-0 border-0"
+              onClick={() => registerFavorite(id)}
+            >
+              ☆
+            </Button>
+          )
+        }
       </td>
       <td>
         <InputGroupCounter

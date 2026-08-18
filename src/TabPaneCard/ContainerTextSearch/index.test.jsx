@@ -14,8 +14,12 @@ function getIncludes(result) {
   return result.current[1]
 }
 
-function getRenderFn(result) {
+function getOnlyFavorites(result) {
   return result.current[2]
+}
+
+function getRenderFn(result) {
+  return result.current[3]
 }
 
 function defaultRender() {
@@ -46,6 +50,12 @@ test('デフォルトのレンダリング', () => {
   expect(getByRole('checkbox', { name: '特性と遺業能力も検索する' })).toBeVisible()
   // prettier-ignore
   expect(getByRole('checkbox', { name: '特性と遺業能力も検索する' })).toBeChecked()
+
+  // お気に入りカードのみ検索するか否かのチェックボックスがある
+  // prettier-ignore
+  expect(getByRole('checkbox', { name: 'お気に入りカード⭐のみ検索する' })).toBeVisible()
+  // prettier-ignore
+  expect(getByRole('checkbox', { name: 'お気に入りカード⭐のみ検索する' })).not.toBeChecked()
 })
 
 test('キーワードの入力とクリア', async () => {
@@ -93,6 +103,32 @@ test('検索チェックボックスの切り替え', async () => {
   expect(getIncludes(result)).toBe(true)
   // prettier-ignore
   expect(getByRole('checkbox', { name: '特性と遺業能力も検索する' })).toBeChecked()
+})
+
+test('お気に入りチェックボックスの切り替え', async () => {
+  const { result, defaultRerender, getByRole } = defaultRender()
+
+  expect(getOnlyFavorites(result)).toBe(false)
+  // prettier-ignore
+  expect(getByRole('checkbox', { name: 'お気に入りカード⭐のみ検索する' })).not.toBeChecked()
+
+  // チェックを入れる
+  // prettier-ignore
+  await userEvent.click(getByRole('checkbox', { name: 'お気に入りカード⭐のみ検索する' }))
+  defaultRerender()
+
+  expect(getOnlyFavorites(result)).toBe(true)
+  // prettier-ignore
+  expect(getByRole('checkbox', { name: 'お気に入りカード⭐のみ検索する' })).toBeChecked()
+
+  // チェックを外す
+  // prettier-ignore
+  await userEvent.click(getByRole('checkbox', { name: 'お気に入りカード⭐のみ検索する' }))
+  defaultRerender()
+
+  expect(getOnlyFavorites(result)).toBe(false)
+  // prettier-ignore
+  expect(getByRole('checkbox', { name: 'お気に入りカード⭐のみ検索する' })).not.toBeChecked()
 })
 
 test('スペース区切りのキーワード列', async () => {
