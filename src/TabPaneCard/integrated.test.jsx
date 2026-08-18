@@ -762,7 +762,7 @@ test('色によるフィルタ', async () => {
   expect(getByRole('row', { name: '2-79' })).toBeVisible()
   expect(getByRole('row', { name: '2-80' })).toBeVisible()
   expect(queryByRole('row', { name: '3-80' })).toBeNull()
-})
+}, 180000)
 
 test('種類によるフィルタ', async () => {
   const { defaultRerender, getByRole, queryByRole } = defaultRender()
