@@ -17,6 +17,7 @@ db.version(2)
         deck.side = upgradeDeck(deck.side)
       })
   })
+db.version(3).stores({ decks: '++id', favorites: 'id' })
 
 /*
  * データ作成時の不注意が原因で、4-1 から 4-9 までとあるべきIDが
@@ -64,4 +65,19 @@ const dbDeleteDeck = (id) => db.decks.delete(id)
 const dbClearDecks = () => db.decks.clear()
 const dbBulkAddDecks = (decks) => db.decks.bulkAdd(decks)
 
-export { dbQueryDecks, dbAddDeck, dbDeleteDeck, dbClearDecks, dbBulkAddDecks }
+const dbQueryFavorites = () => db.favorites.toArray()
+const dbPutFavorite = (id) => db.favorites.put({ id })
+const dbDeleteFavorite = (id) => db.favorites.delete(id)
+const dbClearFavorites = () => db.favorites.clear()
+
+export {
+  dbQueryDecks,
+  dbAddDeck,
+  dbDeleteDeck,
+  dbClearDecks,
+  dbBulkAddDecks,
+  dbQueryFavorites,
+  dbPutFavorite,
+  dbDeleteFavorite,
+  dbClearFavorites,
+}

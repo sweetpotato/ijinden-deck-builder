@@ -1,15 +1,19 @@
 // SPDX-License-Identifier: MIT
 
+import 'fake-indexeddb/auto'
+
 import { afterEach, expect, test, vi } from 'vitest'
 import {
   cleanup,
   fireEvent,
   render,
   renderHook,
+  waitFor,
   within,
 } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
+import { dbClearFavorites } from '../commons/db'
 import useDeck from '../hooks/useDeck'
 import TabPaneCard from '.'
 
@@ -95,7 +99,10 @@ function defaultRender() {
   }
 }
 
-afterEach(cleanup)
+afterEach(async () => {
+  await dbClearFavorites()
+  cleanup()
+})
 
 test('フィルタの初期状態', async () => {
   const { defaultRerender, getByPlaceholderText, getAllByRole, getByRole } =
@@ -1991,6 +1998,8 @@ test('キーワードと色と種類の複合によるフィルタ', async () =>
 })
 
 test('お気に入りカードのみ選ぶ', async () => {
+  await dbClearFavorites()
+
   const { defaultRerender, getByRole, queryByRole } = defaultRender()
   // prettier-ignore
   expect(getByRole('checkbox', { name: 'お気に入りカード⭐のみ検索する' })).not.toBeChecked()
@@ -2000,6 +2009,13 @@ test('お気に入りカードのみ選ぶ', async () => {
   expect(getByRole('row', { name: '1-3' })).toBeVisible()
 
   // 1-1 をお気に入りに登録する
+  await waitFor(() => {
+    expect(
+      within(
+        within(getByRole('row', { name: '1-1' })).getAllByRole('cell')[1],
+      ).queryByRole('button', { name: '☆' }),
+    ).not.toBeNull()
+  })
   await userEvent.click(
     within(
       within(getByRole('row', { name: '1-1' })).getAllByRole('cell')[1],
@@ -2060,6 +2076,8 @@ test('お気に入りカードのみ選ぶ', async () => {
 })
 
 test('お気に入りとフィルタの組合せ', async () => {
+  await dbClearFavorites()
+
   const { defaultRerender, getByRole, queryByRole } = defaultRender()
   // prettier-ignore
   expect(getByRole('checkbox', { name: 'お気に入りカード⭐のみ検索する' })).not.toBeChecked()
@@ -2072,6 +2090,13 @@ test('お気に入りとフィルタの組合せ', async () => {
   expect(getByRole('row', { name: '4-80' })).toBeVisible() // カルドロン (無力マリョク)
 
   // 4-80 を除く以上のカードすべてをお気に入りに入れる
+  await waitFor(() => {
+    expect(
+      within(
+        within(getByRole('row', { name: '1-1' })).getAllByRole('cell')[1],
+      ).queryByRole('button', { name: '☆' }),
+    ).not.toBeNull()
+  })
   await userEvent.click(
     within(
       within(getByRole('row', { name: '1-1' })).getAllByRole('cell')[1],
@@ -2157,6 +2182,8 @@ test('お気に入りとフィルタの組合せ', async () => {
 })
 
 test('お気に入りとキーワードの組合せ', async () => {
+  await dbClearFavorites()
+
   const { defaultRerender, getByPlaceholderText, getByRole, queryByRole } =
     defaultRender()
   // prettier-ignore
@@ -2168,6 +2195,13 @@ test('お気に入りとキーワードの組合せ', async () => {
   expect(getByRole('row', { name: '3-79' })).toBeVisible() // ストーンマスク
 
   // 3-79 を除く以上のカードすべてをお気に入りに入れる
+  await waitFor(() => {
+    expect(
+      within(
+        within(getByRole('row', { name: '1-55' })).getAllByRole('cell')[1],
+      ).queryByRole('button', { name: '☆' }),
+    ).not.toBeNull()
+  })
   await userEvent.click(
     within(
       within(getByRole('row', { name: '1-55' })).getAllByRole('cell')[1],

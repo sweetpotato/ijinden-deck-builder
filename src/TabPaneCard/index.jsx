@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 
-import { useCallback, useId, useState } from 'react'
+import { useLiveQuery } from 'dexie-react-hooks'
+import { useId } from 'react'
 import {
   Accordion,
   AccordionBody,
@@ -10,6 +11,11 @@ import {
 } from 'react-bootstrap'
 
 import { dataCardsArrayForTable as dataCards } from '../commons/dataCards'
+import {
+  dbDeleteFavorite,
+  dbPutFavorite,
+  dbQueryFavorites,
+} from '../commons/db'
 import enumColor from './enumColor'
 import enumComparator from './enumComparator'
 import enumSortBy from './enumSortBy'
@@ -96,6 +102,14 @@ const dataLegacies = [
   { value: 256, label: '山札の上か下に戻す' },
 ]
 
+async function registerFavorite(id) {
+  await dbPutFavorite(id)
+}
+
+async function unregisterFavorite(id) {
+  await dbDeleteFavorite(id)
+}
+
 function TabPaneCard({
   deckMain,
   deckSide,
@@ -104,7 +118,12 @@ function TabPaneCard({
   interruptSimulator,
 }) {
   const idTitle = useId()
-  const [favorites, setFavorites] = useState(new Set())
+  const rawFavorites = useLiveQuery(dbQueryFavorites)
+  const favorites =
+    rawFavorites === undefined
+      ? undefined
+      : new Set(rawFavorites.map(({ id }) => id))
+
   const [expansion, resetExpansion, renderExpansion] =
     useAccordionItemGenericFilter('エキスパンション', dataExpansions)
   const [rarity, resetRarity, renderRarity] = useAccordionItemGenericFilter(
@@ -182,13 +201,13 @@ function TabPaneCard({
       (trait === 0 || (card.trait & trait) !== 0) &&
       (legacy === 0 || (card.legacy & legacy) !== 0) &&
       deferredKeywords.every((e) => allText.includes(e.toLowerCase())) &&
-      (!onlyFavorites || favorites.has(card.id))
+      (!onlyFavorites || favorites === undefined || favorites.has(card.id))
     )
   }
 
   function mergeCounter(card) {
     return {
-      favorite: favorites.has(card.id),
+      favorite: favorites === undefined ? undefined : favorites.has(card.id),
       counterMain: deckMain.has(card.id) ? deckMain.get(card.id) : 0,
       counterSide: deckSide.has(card.id) ? deckSide.get(card.id) : 0,
       ...card,
@@ -270,31 +289,6 @@ function TabPaneCard({
       }
     }
   }
-
-  /*
-   * registerFavorite と unregisterFavorite は
-   * favorites が変わるたびに更新される。
-   * そのため、TableRowCard の memo が効きにくくなる。
-   * これは favorites の更新をDB経由で行うことによって
-   * 解消されるはずである。
-   */
-  const registerFavorite = useCallback(
-    (id) => {
-      const newFavorites = new Set(favorites.values())
-      newFavorites.add(id)
-      setFavorites(newFavorites)
-    },
-    [favorites, setFavorites],
-  )
-
-  const unregisterFavorite = useCallback(
-    (id) => {
-      const newFavorites = new Set(favorites.values())
-      newFavorites.delete(id)
-      setFavorites(newFavorites)
-    },
-    [favorites, setFavorites],
-  )
 
   return (
     <>

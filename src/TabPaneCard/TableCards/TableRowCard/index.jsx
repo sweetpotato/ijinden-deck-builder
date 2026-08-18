@@ -139,25 +139,28 @@ const TableRowCard = memo(function TableRowCard({
           🔎
         </Button>
         {displayName}
-        {favorite ? (
-          <Button
-            variant="secondary-outline"
-            size="sm"
-            className="m-0 p-0 border-0"
-            onClick={() => unregisterFavorite(id)}
-          >
-            ⭐
-          </Button>
-        ) : (
-          <Button
-            variant="secondary-outline"
-            size="sm"
-            className="ms-1 p-0 border-0"
-            onClick={() => registerFavorite(id)}
-          >
-            ☆
-          </Button>
-        )}
+        {
+          /* favorite is a tristate boolean (true, false, and undefined) */
+          favorite === undefined ? undefined : favorite ? (
+            <Button
+              variant="secondary-outline"
+              size="sm"
+              className="m-0 p-0 border-0"
+              onClick={() => unregisterFavorite(id)}
+            >
+              ⭐
+            </Button>
+          ) : (
+            <Button
+              variant="secondary-outline"
+              size="sm"
+              className="ms-1 p-0 border-0"
+              onClick={() => registerFavorite(id)}
+            >
+              ☆
+            </Button>
+          )
+        }
       </td>
       <td>
         <InputGroupCounter
