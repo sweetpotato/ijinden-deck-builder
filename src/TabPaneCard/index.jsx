@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-import { useId } from 'react'
+import { useCallback, useId, useState } from 'react'
 import {
   Accordion,
   AccordionBody,
@@ -104,6 +104,7 @@ function TabPaneCard({
   interruptSimulator,
 }) {
   const idTitle = useId()
+  const [favorites, setFavorites] = useState(new Set())
   const [expansion, resetExpansion, renderExpansion] =
     useAccordionItemGenericFilter('エキスパンション', dataExpansions)
   const [rarity, resetRarity, renderRarity] = useAccordionItemGenericFilter(
@@ -130,8 +131,12 @@ function TabPaneCard({
     '遺業能力',
     dataLegacies,
   )
-  const [deferredKeywords, includesTraitAndLegacy, renderTextSearch] =
-    useContainerTextSearch()
+  const [
+    deferredKeywords,
+    includesTraitAndLegacy,
+    onlyFavorites,
+    renderTextSearch,
+  ] = useContainerTextSearch()
   const [sortBy, renderSortBy] = useAccordionItemSortBy()
 
   function handleClickResetConditions() {
@@ -176,12 +181,14 @@ function TabPaneCard({
       (term === 0 || (card.term & term) !== 0) &&
       (trait === 0 || (card.trait & trait) !== 0) &&
       (legacy === 0 || (card.legacy & legacy) !== 0) &&
-      deferredKeywords.every((e) => allText.includes(e.toLowerCase()))
+      deferredKeywords.every((e) => allText.includes(e.toLowerCase())) &&
+      (!onlyFavorites || favorites.has(card.id))
     )
   }
 
   function mergeCounter(card) {
     return {
+      favorite: favorites.has(card.id),
       counterMain: deckMain.has(card.id) ? deckMain.get(card.id) : 0,
       counterSide: deckSide.has(card.id) ? deckSide.get(card.id) : 0,
       ...card,
@@ -264,6 +271,31 @@ function TabPaneCard({
     }
   }
 
+  /*
+   * registerFavorite と unregisterFavorite は
+   * favorites が変わるたびに更新される。
+   * そのため、TableRowCard の memo が効きにくくなる。
+   * これは favorites の更新をDB経由で行うことによって
+   * 解消されるはずである。
+   */
+  const registerFavorite = useCallback(
+    (id) => {
+      const newFavorites = new Set(favorites.values())
+      newFavorites.add(id)
+      setFavorites(newFavorites)
+    },
+    [favorites, setFavorites],
+  )
+
+  const unregisterFavorite = useCallback(
+    (id) => {
+      const newFavorites = new Set(favorites.values())
+      newFavorites.delete(id)
+      setFavorites(newFavorites)
+    },
+    [favorites, setFavorites],
+  )
+
   return (
     <>
       {renderTextSearch()}
@@ -308,6 +340,8 @@ function TabPaneCard({
           .sort(compareCards)}
         dispatchDeck={dispatchDeck}
         zoomIn={zoomIn}
+        registerFavorite={registerFavorite}
+        unregisterFavorite={unregisterFavorite}
         interruptSimulator={interruptSimulator}
       />
     </>

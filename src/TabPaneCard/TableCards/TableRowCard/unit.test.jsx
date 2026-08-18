@@ -16,7 +16,15 @@ const TERM_CHROMAGIC_GREEN = enumTerm.CHROMAGIC | enumChromagic.GREEN
 const TERM_CHROMAGIC_YELLOW = enumTerm.CHROMAGIC | enumChromagic.YELLOW
 const TERM_CHROMAGIC_PURPLE = enumTerm.CHROMAGIC | enumChromagic.PURPLE
 
-function defaultRender(id, displayName, term, color, counterMain, counterSide) {
+function defaultRender(
+  id,
+  displayName,
+  term,
+  color,
+  favorite,
+  counterMain,
+  counterSide,
+) {
   const decrementMain = vi.fn()
   const incrementMain = vi.fn()
   const decrementSide = vi.fn()
@@ -28,6 +36,8 @@ function defaultRender(id, displayName, term, color, counterMain, counterSide) {
     incrementSide,
   }
   const zoomIn = vi.fn()
+  const registerFavorite = vi.fn()
+  const unregisterFavorite = vi.fn()
   const interruptSimulator = vi.fn()
   const { rerender, getByRole, getAllByRole } = render(
     <Table>
@@ -38,17 +48,20 @@ function defaultRender(id, displayName, term, color, counterMain, counterSide) {
             displayName={displayName}
             term={term}
             color={color}
+            favorite={favorite}
             counterMain={counterMain}
             counterSide={counterSide}
             dispatchDeck={dispatchDeck}
             zoomIn={zoomIn}
+            registerFavorite={registerFavorite}
+            unregisterFavorite={unregisterFavorite}
             interruptSimulator={interruptSimulator}
           />
         </tr>
       </tbody>
     </Table>,
   )
-  const defaultRerender = (counterMain, counterSide) =>
+  const defaultRerender = (favorite, counterMain, counterSide) =>
     rerender(
       <Table>
         <tbody>
@@ -58,10 +71,13 @@ function defaultRender(id, displayName, term, color, counterMain, counterSide) {
               displayName={displayName}
               term={term}
               color={color}
+              favorite={favorite}
               counterMain={counterMain}
               counterSide={counterSide}
               dispatchDeck={dispatchDeck}
               zoomIn={zoomIn}
+              registerFavorite={registerFavorite}
+              unregisterFavorite={unregisterFavorite}
               interruptSimulator={interruptSimulator}
             />
           </tr>
@@ -74,6 +90,8 @@ function defaultRender(id, displayName, term, color, counterMain, counterSide) {
     decrementSide,
     incrementSide,
     zoomIn,
+    registerFavorite,
+    unregisterFavorite,
     interruptSimulator,
     defaultRerender,
     getByRole,
@@ -91,6 +109,7 @@ function defaultRenderColor(term, color) {
             displayName="ダミー"
             term={term}
             color={color}
+            favorite={false}
             counterMain={0}
             counterSide={0}
             dispatchDeck={{
@@ -102,6 +121,8 @@ function defaultRenderColor(term, color) {
             handleSetDeckMain={vi.fn()}
             handleSetDeckSide={vi.fn()}
             zoomIn={vi.fn()}
+            registerFavorite={vi.fn()}
+            unregisterFavorite={vi.fn()}
             interruptSimulator={vi.fn()}
           />
         </tr>
@@ -113,7 +134,15 @@ function defaultRenderColor(term, color) {
 afterEach(cleanup)
 
 test('デフォルトのレンダリング', () => {
-  const { getByRole } = defaultRender('1-1', '織田信長', 0, enumColor.RED, 0, 0)
+  const { getByRole } = defaultRender(
+    '1-1',
+    '織田信長',
+    0,
+    enumColor.RED,
+    false,
+    0,
+    0,
+  )
 
   // 表の行としてレンダリングされる
   const row = getByRole('row')
@@ -128,9 +157,11 @@ test('デフォルトのレンダリング', () => {
   expect(columns[1]).toBeVisible()
   expect(columns[1]).toHaveTextContent('織田信長')
   // 2列目にはさらに虫眼鏡ボタンがある
-  const buttonZoom = within(columns[1]).getByRole('button')
+  const buttonZoom = within(columns[1]).getByRole('button', { name: '🔎' })
   expect(buttonZoom).toBeVisible()
-  expect(buttonZoom).toHaveTextContent('🔎')
+  // 2列目にはさらにお気に入りボタンがある
+  const buttonFavorite = within(columns[1]).getByRole('button', { name: '☆' })
+  expect(buttonFavorite).toBeVisible()
   // 3列目には (メインデッキの) カウンターがある
   expect(columns[2]).toBeVisible()
   const buttonMinusMain = within(columns[2]).getByRole('button', { name: '-' })
@@ -168,6 +199,7 @@ test('各行のアクセシブル名はIDである', async () => {
             displayName="織田信長"
             term={0}
             color={enumColor.RED}
+            favorite={false}
             counterMain={1}
             counterSide={2}
             dispatchDeck={{
@@ -177,6 +209,8 @@ test('各行のアクセシブル名はIDである', async () => {
               incrementSide: vi.fn(),
             }}
             zoomIn={vi.fn()}
+            registerFavorite={vi.fn()}
+            unregisterFavorite={vi.fn()}
             interruptSimulator={vi.fn()}
           />
         </tr>
@@ -186,6 +220,7 @@ test('各行のアクセシブル名はIDである', async () => {
             displayName="クレオパトラ"
             term={0}
             color={enumColor.RED}
+            favorite={false}
             counterMain={3}
             counterSide={4}
             dispatchDeck={{
@@ -195,6 +230,8 @@ test('各行のアクセシブル名はIDである', async () => {
               incrementSide: vi.fn(),
             }}
             zoomIn={vi.fn()}
+            registerFavorite={vi.fn()}
+            unregisterFavorite={vi.fn()}
             interruptSimulator={vi.fn()}
           />
         </tr>
@@ -229,13 +266,15 @@ test('虫眼鏡ボタンを押す', async () => {
     decrementSide,
     incrementSide,
     zoomIn,
+    registerFavorite,
+    unregisterFavorite,
     interruptSimulator,
     defaultRerender,
     getByRole,
-  } = defaultRender(id, '織田信長', 0, enumColor.RED, 0, 0)
+  } = defaultRender(id, '織田信長', 0, enumColor.RED, false, 0, 0)
 
   await userEvent.click(getByRole('button', { name: '🔎' }))
-  defaultRerender(0, 0)
+  defaultRerender(false, 0, 0)
 
   expect(decrementMain.mock.calls.length).toBe(0)
   expect(incrementMain.mock.calls.length).toBe(0)
@@ -244,6 +283,68 @@ test('虫眼鏡ボタンを押す', async () => {
   expect(zoomIn.mock.calls.length).toBe(1) // 呼ばれた
   expect(zoomIn.mock.lastCall.length).toBe(1)
   expect(zoomIn.mock.lastCall[0]).toBe(id)
+  expect(registerFavorite.mock.calls.length).toBe(0)
+  expect(unregisterFavorite.mock.calls.length).toBe(0)
+  expect(interruptSimulator.mock.calls.length).toBe(0)
+})
+
+test('お気に入りに入れる', async () => {
+  const id = '1-1'
+  const {
+    decrementMain,
+    incrementMain,
+    decrementSide,
+    incrementSide,
+    zoomIn,
+    registerFavorite,
+    unregisterFavorite,
+    interruptSimulator,
+    defaultRerender,
+    getByRole,
+  } = defaultRender(id, '織田信長', 0, enumColor.RED, false, 0, 0)
+
+  await userEvent.click(getByRole('button', { name: '☆' }))
+  defaultRerender(true, 0, 0)
+
+  expect(decrementMain.mock.calls.length).toBe(0)
+  expect(incrementMain.mock.calls.length).toBe(0)
+  expect(decrementSide.mock.calls.length).toBe(0)
+  expect(incrementSide.mock.calls.length).toBe(0)
+  expect(zoomIn.mock.calls.length).toBe(0)
+  expect(registerFavorite.mock.calls.length).toBe(1) // 呼ばれた
+  expect(registerFavorite.mock.lastCall.length).toBe(1)
+  expect(registerFavorite.mock.lastCall[0]).toBe(id)
+  expect(unregisterFavorite.mock.calls.length).toBe(0)
+  expect(interruptSimulator.mock.calls.length).toBe(0)
+})
+
+test('お気に入りから外す', async () => {
+  const id = '1-1'
+  const {
+    decrementMain,
+    incrementMain,
+    decrementSide,
+    incrementSide,
+    zoomIn,
+    registerFavorite,
+    unregisterFavorite,
+    interruptSimulator,
+    defaultRerender,
+    getByRole,
+  } = defaultRender(id, '織田信長', 0, enumColor.RED, true, 0, 0)
+
+  await userEvent.click(getByRole('button', { name: '⭐' }))
+  defaultRerender(false, 0, 0)
+
+  expect(decrementMain.mock.calls.length).toBe(0)
+  expect(incrementMain.mock.calls.length).toBe(0)
+  expect(decrementSide.mock.calls.length).toBe(0)
+  expect(incrementSide.mock.calls.length).toBe(0)
+  expect(zoomIn.mock.calls.length).toBe(0)
+  expect(registerFavorite.mock.calls.length).toBe(0)
+  expect(unregisterFavorite.mock.calls.length).toBe(1) // 呼ばれた
+  expect(unregisterFavorite.mock.lastCall.length).toBe(1)
+  expect(unregisterFavorite.mock.lastCall[0]).toBe(id)
   expect(interruptSimulator.mock.calls.length).toBe(0)
 })
 
@@ -255,9 +356,11 @@ test('メインデッキのカウンターを0から1に増やす', async () => 
     decrementSide,
     incrementSide,
     zoomIn,
+    registerFavorite,
+    unregisterFavorite,
     interruptSimulator,
     getByRole,
-  } = defaultRender(id, '織田信長', 0, enumColor.RED, 0, 0)
+  } = defaultRender(id, '織田信長', 0, enumColor.RED, false, 0, 0)
   const main = within(within(getByRole('row')).getAllByRole('cell')[2])
   const side = within(within(getByRole('row')).getAllByRole('cell')[3])
 
@@ -278,6 +381,8 @@ test('メインデッキのカウンターを0から1に増やす', async () => 
   expect(decrementSide.mock.calls.length).toBe(0)
   expect(incrementSide.mock.calls.length).toBe(0)
   expect(zoomIn.mock.calls.length).toBe(0)
+  expect(registerFavorite.mock.calls.length).toBe(0)
+  expect(unregisterFavorite.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(1) // 呼ばれた
   expect(interruptSimulator.mock.lastCall.length).toBe(0)
 })
@@ -290,9 +395,11 @@ test('メインデッキのカウンターを1から2に増やす', async () => 
     decrementSide,
     incrementSide,
     zoomIn,
+    registerFavorite,
+    unregisterFavorite,
     interruptSimulator,
     getByRole,
-  } = defaultRender(id, '織田信長', 0, enumColor.RED, 1, 1)
+  } = defaultRender(id, '織田信長', 0, enumColor.RED, false, 1, 1)
   const main = within(within(getByRole('row')).getAllByRole('cell')[2])
   const side = within(within(getByRole('row')).getAllByRole('cell')[3])
 
@@ -313,6 +420,8 @@ test('メインデッキのカウンターを1から2に増やす', async () => 
   expect(decrementSide.mock.calls.length).toBe(0)
   expect(incrementSide.mock.calls.length).toBe(0)
   expect(zoomIn.mock.calls.length).toBe(0)
+  expect(registerFavorite.mock.calls.length).toBe(0)
+  expect(unregisterFavorite.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(1) // 呼ばれた
   expect(interruptSimulator.mock.lastCall.length).toBe(0)
 })
@@ -325,9 +434,11 @@ test('メインデッキのカウンターを1から0に減らす', async () => 
     decrementSide,
     incrementSide,
     zoomIn,
+    registerFavorite,
+    unregisterFavorite,
     interruptSimulator,
     getByRole,
-  } = defaultRender(id, '織田信長', 0, enumColor.RED, 1, 1)
+  } = defaultRender(id, '織田信長', 0, enumColor.RED, false, 1, 1)
   const main = within(within(getByRole('row')).getAllByRole('cell')[2])
   const side = within(within(getByRole('row')).getAllByRole('cell')[3])
 
@@ -348,6 +459,8 @@ test('メインデッキのカウンターを1から0に減らす', async () => 
   expect(decrementSide.mock.calls.length).toBe(0)
   expect(incrementSide.mock.calls.length).toBe(0)
   expect(zoomIn.mock.calls.length).toBe(0)
+  expect(registerFavorite.mock.calls.length).toBe(0)
+  expect(unregisterFavorite.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(1) // 呼ばれた
   expect(interruptSimulator.mock.lastCall.length).toBe(0)
 })
@@ -360,9 +473,11 @@ test('サイドデッキのカウンターを0から1に増やす', async () => 
     decrementSide,
     incrementSide,
     zoomIn,
+    registerFavorite,
+    unregisterFavorite,
     interruptSimulator,
     getByRole,
-  } = defaultRender(id, '織田信長', 0, enumColor.RED, 0, 0)
+  } = defaultRender(id, '織田信長', 0, enumColor.RED, false, 0, 0)
   const main = within(within(getByRole('row')).getAllByRole('cell')[2])
   const side = within(within(getByRole('row')).getAllByRole('cell')[3])
 
@@ -383,6 +498,8 @@ test('サイドデッキのカウンターを0から1に増やす', async () => 
   expect(incrementSide.mock.lastCall.length).toBe(1)
   expect(incrementSide.mock.lastCall[0]).toBe(id)
   expect(zoomIn.mock.calls.length).toBe(0)
+  expect(registerFavorite.mock.calls.length).toBe(0)
+  expect(unregisterFavorite.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(0)
 })
 
@@ -394,9 +511,11 @@ test('サイドデッキのカウンターを1から2に増やす', async () => 
     decrementSide,
     incrementSide,
     zoomIn,
+    registerFavorite,
+    unregisterFavorite,
     interruptSimulator,
     getByRole,
-  } = defaultRender(id, '織田信長', 0, enumColor.RED, 1, 1)
+  } = defaultRender(id, '織田信長', 0, enumColor.RED, false, 1, 1)
   const main = within(within(getByRole('row')).getAllByRole('cell')[2])
   const side = within(within(getByRole('row')).getAllByRole('cell')[3])
 
@@ -417,6 +536,8 @@ test('サイドデッキのカウンターを1から2に増やす', async () => 
   expect(incrementSide.mock.lastCall.length).toBe(1)
   expect(incrementSide.mock.lastCall[0]).toBe(id)
   expect(zoomIn.mock.calls.length).toBe(0)
+  expect(registerFavorite.mock.calls.length).toBe(0)
+  expect(unregisterFavorite.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(0)
 })
 
@@ -428,9 +549,11 @@ test('サイドデッキのカウンターを1から0に減らす', async () => 
     decrementSide,
     incrementSide,
     zoomIn,
+    registerFavorite,
+    unregisterFavorite,
     interruptSimulator,
     getByRole,
-  } = defaultRender(id, '織田信長', 0, enumColor.RED, 1, 1)
+  } = defaultRender(id, '織田信長', 0, enumColor.RED, false, 1, 1)
   const main = within(within(getByRole('row')).getAllByRole('cell')[2])
   const side = within(within(getByRole('row')).getAllByRole('cell')[3])
 
@@ -451,6 +574,8 @@ test('サイドデッキのカウンターを1から0に減らす', async () => 
   expect(decrementSide.mock.lastCall[0]).toBe(id)
   expect(incrementSide.mock.calls.length).toBe(0)
   expect(zoomIn.mock.calls.length).toBe(0)
+  expect(registerFavorite.mock.calls.length).toBe(0)
+  expect(unregisterFavorite.mock.calls.length).toBe(0)
   expect(interruptSimulator.mock.calls.length).toBe(0)
 })
 
@@ -460,6 +585,7 @@ test('ボタンを押さずにメインデッキのカウンターを0から4に
     '織田信長',
     0,
     enumColor.RED,
+    false,
     0,
     0,
   )
@@ -473,7 +599,7 @@ test('ボタンを押さずにメインデッキのカウンターを0から4に
   expect(side.getByRole('spinbutton')).toHaveValue(0)
   expect(side.getByRole('button', { name: '+' })).toBeEnabled()
 
-  defaultRerender(4, 0)
+  defaultRerender(false, 4, 0)
   main = within(within(getByRole('row')).getAllByRole('cell')[2])
   side = within(within(getByRole('row')).getAllByRole('cell')[3])
 
@@ -491,6 +617,7 @@ test('ボタンを押さずにメインデッキのカウンターを4から0に
     '織田信長',
     0,
     enumColor.RED,
+    false,
     4,
     4,
   )
@@ -504,7 +631,7 @@ test('ボタンを押さずにメインデッキのカウンターを4から0に
   expect(side.getByRole('spinbutton')).toHaveValue(4)
   expect(side.getByRole('button', { name: '+' })).toBeEnabled()
 
-  defaultRerender(0, 4)
+  defaultRerender(false, 0, 4)
   main = within(within(getByRole('row')).getAllByRole('cell')[2])
   side = within(within(getByRole('row')).getAllByRole('cell')[3])
 
@@ -522,6 +649,7 @@ test('ボタンを押さずにサイドデッキのカウンターを0から4に
     '織田信長',
     0,
     enumColor.RED,
+    false,
     0,
     0,
   )
@@ -535,7 +663,7 @@ test('ボタンを押さずにサイドデッキのカウンターを0から4に
   expect(side.getByRole('spinbutton')).toHaveValue(0)
   expect(side.getByRole('button', { name: '+' })).toBeEnabled()
 
-  defaultRerender(0, 4)
+  defaultRerender(false, 0, 4)
   main = within(within(getByRole('row')).getAllByRole('cell')[2])
   side = within(within(getByRole('row')).getAllByRole('cell')[3])
 
@@ -553,6 +681,7 @@ test('ボタンを押さずにサイドデッキのカウンターを4から0に
     '織田信長',
     0,
     enumColor.RED,
+    false,
     4,
     4,
   )
@@ -566,7 +695,7 @@ test('ボタンを押さずにサイドデッキのカウンターを4から0に
   expect(side.getByRole('spinbutton')).toHaveValue(4)
   expect(side.getByRole('button', { name: '+' })).toBeEnabled()
 
-  defaultRerender(4, 0)
+  defaultRerender(false, 4, 0)
   main = within(within(getByRole('row')).getAllByRole('cell')[2])
   side = within(within(getByRole('row')).getAllByRole('cell')[3])
 
@@ -584,6 +713,7 @@ test('ボタンを押さずにメインデッキとサイドデッキのカウ�
     '織田信長',
     0,
     enumColor.RED,
+    false,
     2,
     2,
   )
@@ -597,7 +727,7 @@ test('ボタンを押さずにメインデッキとサイドデッキのカウ�
   expect(side.getByRole('spinbutton')).toHaveValue(2)
   expect(side.getByRole('button', { name: '+' })).toBeEnabled()
 
-  defaultRerender(3, 1)
+  defaultRerender(false, 3, 1)
   main = within(within(getByRole('row')).getAllByRole('cell')[2])
   side = within(within(getByRole('row')).getAllByRole('cell')[3])
 

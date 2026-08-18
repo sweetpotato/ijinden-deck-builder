@@ -9,8 +9,10 @@ import useDeck from '../../../hooks/useDeck'
 import enumColor from '../../enumColor'
 import TableRowCard from '.'
 
-function defaultRender(id, name, term, color, main, side) {
+function defaultRender(id, name, term, color, favorite, main, side) {
   const zoomIn = vi.fn()
+  const registerFavorite = vi.fn()
+  const unregisterFavorite = vi.fn()
   const interruptSimulator = vi.fn()
   const { result } = renderHook(() => useDeck(main, side))
   const { rerender, getByRole } = render(
@@ -22,6 +24,7 @@ function defaultRender(id, name, term, color, main, side) {
             name={name}
             term={term}
             color={color}
+            favorite={favorite}
             counterMain={
               result.current[0].has(id) ? result.current[0].get(id) : 0
             }
@@ -30,6 +33,8 @@ function defaultRender(id, name, term, color, main, side) {
             }
             dispatchDeck={result.current[2]}
             zoomIn={zoomIn}
+            registerFavorite={registerFavorite}
+            unregisterFavorite={unregisterFavorite}
             interruptSimulator={interruptSimulator}
           />
         </tr>
@@ -46,6 +51,7 @@ function defaultRender(id, name, term, color, main, side) {
               name={name}
               term={term}
               color={color}
+              favorite={favorite}
               counterMain={
                 result.current[0].has(id) ? result.current[0].get(id) : 0
               }
@@ -54,6 +60,8 @@ function defaultRender(id, name, term, color, main, side) {
               }
               dispatchDeck={result.current[2]}
               zoomIn={zoomIn}
+              registerFavorite={registerFavorite}
+              unregisterFavorite={unregisterFavorite}
               interruptSimulator={interruptSimulator}
             />
           </tr>
@@ -71,6 +79,7 @@ test('メインデッキのカウンターを0から1に増やす', async () => 
     '織田信長',
     0,
     enumColor.RED,
+    false,
     [],
     [],
   )
@@ -104,6 +113,7 @@ test('メインデッキのカウンターを1から2に増やす', async () => 
     '織田信長',
     0,
     enumColor.RED,
+    false,
     [['1-1', 1]],
     [['1-1', 1]],
   )
@@ -137,6 +147,7 @@ test('メインデッキのカウンターを2から1に減らす', async () => 
     '織田信長',
     0,
     enumColor.RED,
+    false,
     [['1-1', 2]],
     [['1-1', 2]],
   )
@@ -170,6 +181,7 @@ test('メインデッキのカウンターを1から0に減らす', async () => 
     '織田信長',
     0,
     enumColor.RED,
+    false,
     [['1-1', 1]],
     [['1-1', 1]],
   )
@@ -203,6 +215,7 @@ test('サイドデッキのカウンターを0から1に増やす', async () => 
     '織田信長',
     0,
     enumColor.RED,
+    false,
     [],
     [],
   )
@@ -236,6 +249,7 @@ test('サイドデッキのカウンターを1から2に増やす', async () => 
     '織田信長',
     0,
     enumColor.RED,
+    false,
     [['1-1', 1]],
     [['1-1', 1]],
   )
@@ -269,6 +283,7 @@ test('サイドデッキのカウンターを2から1に減らす', async () => 
     '織田信長',
     0,
     enumColor.RED,
+    false,
     [['1-1', 2]],
     [['1-1', 2]],
   )
@@ -302,6 +317,7 @@ test('サイドデッキのカウンターを1から0に減らす', async () => 
     '織田信長',
     0,
     enumColor.RED,
+    false,
     [['1-1', 1]],
     [['1-1', 1]],
   )

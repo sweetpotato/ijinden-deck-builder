@@ -5,12 +5,15 @@ import { Button, FormCheck, FormControl, InputGroup } from 'react-bootstrap'
 
 function ContainerTextSearch({
   includesTraitAndLegacy,
+  onlyFavorites,
   handleChangeKeywords,
   handleChangeIncludesTraitAndLegacy,
+  handleChangeOnlyFavorites,
 }) {
   const ref = useRef(null)
   const idInput = useId()
   const idIncludes = useId()
+  const idFavorites = useId()
 
   function handleClickClear() {
     /*
@@ -57,6 +60,13 @@ function ContainerTextSearch({
           label="特性と遺業能力も検索する"
           checked={includesTraitAndLegacy}
           onChange={handleChangeIncludesTraitAndLegacy}
+        />
+        <FormCheck
+          id={idFavorites}
+          type="checkbox"
+          label="お気に入りカード⭐のみ検索する"
+          checked={onlyFavorites}
+          onChange={handleChangeOnlyFavorites}
         />
       </div>
     </>
