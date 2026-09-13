@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: MIT
 
-import { act } from 'react'
 import { afterEach, expect, test } from 'vitest'
-import { cleanup, renderHook } from '@testing-library/react'
+import { act, cleanup, renderHook } from '@testing-library/react'
 
 import useDeck from './useDeck'
 
@@ -156,8 +155,8 @@ test('セットとクリア', async () => {
       [
         ['R-3', 2],
         ['R-4', 1],
-      ]
-    )
+      ],
+    ),
   )
   expect(getMain(result).size).toBe(2)
   expect(getMain(result).has('R-1')).toBe(true)
@@ -179,8 +178,8 @@ test('セットとクリア', async () => {
       [
         ['B-3', 3],
         ['B-4', 4],
-      ]
-    )
+      ],
+    ),
   )
   expect(getMain(result).size).toBe(2)
   expect(getMain(result).has('B-1')).toBe(true)
