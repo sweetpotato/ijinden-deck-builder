@@ -1,7 +1,9 @@
-import { act } from 'react'
+// SPDX-License-Identifier: MIT
+
 import { Accordion } from 'react-bootstrap'
 import { afterEach, beforeEach, describe, expect, test } from 'vitest'
 import {
+  act,
   cleanup,
   fireEvent,
   render,

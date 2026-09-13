@@ -2,15 +2,12 @@
 
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 import { cleanup, render } from '@testing-library/react'
-
-import ContainerDeckExport from '.'
 import userEvent from '@testing-library/user-event'
 
+import ContainerDeckExport from '.'
+
 function defaultRender(deckMain, deckSide) {
-  const { getByRole } = render(
-    <ContainerDeckExport deckMain={deckMain} deckSide={deckSide} />
-  )
-  return { getByRole }
+  return render(<ContainerDeckExport deckMain={deckMain} deckSide={deckSide} />)
 }
 
 beforeEach(() => {
@@ -29,23 +26,25 @@ test('レンダリングとアクセシビリティ', async () => {
   const { getByRole } = defaultRender(deckMain, deckSide)
 
   // 「テキストデータをコピー」ボタンがある
-  expect(getByRole('button')).toBeVisible()
-  expect(getByRole('button')).toHaveTextContent('▼テキストデータをコピー')
+  expect(getByRole('button', { name: '▼テキストデータをコピー' })).toBeVisible()
   // テキストデータを保持したテキストエリアがある
   // prettier-ignore
-  expect(getByRole('textbox'), { name: '▼テキストデータをコピー' }).toBeVisible()
+  expect(getByRole('textbox', { name: '▼テキストデータをコピー' })).toBeVisible()
   // 空のデッキのテキストデータ
   // 改行は LF である
-  expect(getByRole('textbox')).toHaveValue('メインデッキ\t0\n\nサイドデッキ\t0')
+  expect(getByRole('textbox', { name: '▼テキストデータをコピー' })).toHaveValue(
+    'メインデッキ\t0\n\nサイドデッキ\t0',
+  )
 
   // 「テキストデータをコピーボタン」を押すと
+  await userEvent.click(
+    getByRole('button', { name: '▼テキストデータをコピー' }),
+  )
+
   // テキストデータがクリップボードにコピーされる
   // 改行は CRLF である
-  await userEvent.click(getByRole('button'))
-  expect(navigator.clipboard.writeText.mock.calls.length).toBe(1)
-  expect(navigator.clipboard.writeText.mock.lastCall.length).toBe(1)
-  expect(navigator.clipboard.writeText.mock.lastCall[0]).toBe(
-    'メインデッキ\t0\r\n\r\nサイドデッキ\t0'
+  expect(navigator.clipboard.writeText).toHaveBeenCalledExactlyOnceWith(
+    'メインデッキ\t0\r\n\r\nサイドデッキ\t0',
   )
 })
 
@@ -184,14 +183,17 @@ test.each([
   '同じカードの枚数が何枚でもテキストデータをコピーできる (%s)',
   async (_, deckMain, deckSide, expectedText) => {
     const { getByRole } = defaultRender(deckMain, deckSide)
-    expect(getByRole('textbox')).toHaveValue(expectedText)
 
-    await userEvent.click(getByRole('button'))
-    expect(navigator.clipboard.writeText.mock.calls.length).toBe(1)
-    expect(navigator.clipboard.writeText.mock.lastCall.length).toBe(1)
-    // LF を CRLF に変換してアサーションする
-    expect(navigator.clipboard.writeText.mock.lastCall[0]).toBe(
-      expectedText.replaceAll('\n', '\r\n')
+    expect(
+      getByRole('textbox', { name: '▼テキストデータをコピー' }),
+    ).toHaveValue(expectedText)
+
+    await userEvent.click(
+      getByRole('button', { name: '▼テキストデータをコピー' }),
     )
-  }
+
+    expect(navigator.clipboard.writeText).toHaveBeenCalledExactlyOnceWith(
+      expectedText.replaceAll('\n', '\r\n'),
+    )
+  },
 )

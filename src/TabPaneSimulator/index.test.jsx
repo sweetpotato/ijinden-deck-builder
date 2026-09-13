@@ -1,8 +1,13 @@
 // SPDX-License-Identifier: MIT
 
-import { act } from 'react'
 import { afterEach, beforeEach, describe, expect, test } from 'vitest'
-import { cleanup, render, renderHook, within } from '@testing-library/react'
+import {
+  act,
+  cleanup,
+  render,
+  renderHook,
+  within,
+} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import useTabPaneSimulator from '.'
@@ -34,7 +39,7 @@ function getRenderFn(result) {
 function defaultRender(deck) {
   const { result } = renderHook(() => useTabPaneSimulator())
   const { rerender, getByRole, queryByRole, getByText, queryByText } = render(
-    <>{getRenderFn(result)(deck)}</>
+    <>{getRenderFn(result)(deck)}</>,
   )
   const defaultRerender = (deck) => rerender(<>{getRenderFn(result)(deck)}</>)
   return {

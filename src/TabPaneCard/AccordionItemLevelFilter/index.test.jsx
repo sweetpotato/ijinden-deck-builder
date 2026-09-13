@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 
-import { act } from 'react'
 import { Accordion } from 'react-bootstrap'
 import { afterEach, expect, test } from 'vitest'
 import {
+  act,
   cleanup,
   fireEvent,
   render,
@@ -34,7 +34,7 @@ function getRenderFn(result) {
 function defaultRender() {
   const { result } = renderHook(() => useAccordionItemLevelFilter())
   const { rerender, getByRole } = render(
-    <Accordion alwaysOpen>{getRenderFn(result)('0')}</Accordion>
+    <Accordion alwaysOpen>{getRenderFn(result)('0')}</Accordion>,
   )
   const defaultRerender = () =>
     rerender(<Accordion alwaysOpen>{getRenderFn(result)('0')}</Accordion>)

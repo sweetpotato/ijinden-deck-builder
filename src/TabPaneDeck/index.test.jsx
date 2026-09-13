@@ -2,10 +2,10 @@
 
 import 'fake-indexeddb/auto'
 
-import { act } from 'react'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 import {
+  act,
   cleanup,
   render,
   renderHook,
@@ -19,27 +19,6 @@ import { dbClearDecks, dbQueryDecks } from '../commons/db'
 import useDeck from '../hooks/useDeck'
 import TabPaneDeck from './TabPaneDeck'
 import useTabPaneDeck from '.'
-
-function getAllListItem(getByRole, section) {
-  return within(getByRole('list', { name: section })).getAllByRole('listitem')
-}
-
-function queryListItem(getByRole, section) {
-  return within(getByRole('list', { name: section })).queryByRole('listitem')
-}
-
-function getButton(getByRole, section, index, name) {
-  // prettier-ignore
-  return within(getAllListItem(getByRole, section)[index]).getByRole('button', { name })
-}
-
-function getImg(getByRole, section, index) {
-  return within(getAllListItem(getByRole, section)[index]).getByRole('img')
-}
-
-function getTextbox(getByRole, section, index) {
-  return within(getAllListItem(getByRole, section)[index]).getByRole('textbox')
-}
 
 function getDeckMain(result) {
   return result.current[0]
@@ -74,20 +53,19 @@ async function defaultRender(entriesMain, entriesSide) {
       interruptSimulator,
     ),
   )
-  let rerender, getByPlaceholderText, getByRole, getAllByRole, queryByRole
+  let props
   await act(async () => {
-    ;({ rerender, getByPlaceholderText, getByRole, getAllByRole, queryByRole } =
-      render(
-        getRenderFn(resultTabPaneDeck)(
-          getDeckMain(result),
-          getDeckSide(result),
-          setActiveDeckSaved,
-        ),
-      ))
+    props = render(
+      getRenderFn(resultTabPaneDeck)(
+        getDeckMain(result),
+        getDeckSide(result),
+        setActiveDeckSaved,
+      ),
+    )
   })
-  const defaultRerender = async (result) => {
+  const defaultRerender = async () => {
     await act(async () => {
-      rerender(
+      props.rerender(
         getRenderFn(resultTabPaneDeck)(
           getDeckMain(result),
           getDeckSide(result),
@@ -96,22 +74,31 @@ async function defaultRender(entriesMain, entriesSide) {
       )
     })
   }
+  const queryListItem = (list, item) =>
+    within(props.getByRole('list', { name: list })).queryByRole(
+      'listitem',
+      item === undefined ? item : { name: item },
+    )
+  const getAllListItem = (name) =>
+    within(props.getByRole('list', { name })).getAllByRole('listitem')
+  const getListItem = (list, item) =>
+    within(props.getByRole('list', { name: list })).getByRole('listitem', {
+      name: item,
+    })
   return {
-    result,
+    ...props,
     zoomIn,
     moveToLoad,
     setActiveDeckSaved,
     interruptSimulator,
     defaultRerender,
-    getByPlaceholderText,
-    getByRole,
-    getAllByRole,
-    queryByRole,
+    getListItem,
+    getAllListItem,
+    queryListItem,
   }
 }
 
 beforeEach(dbClearDecks)
-
 afterEach(cleanup)
 
 test('コードが正しい場合のレンダリング', async () => {
@@ -219,11 +206,11 @@ test('コードが誤っている場合のレンダリング', async () => {
   // アラートを閉じる
   await userEvent.click(getByRole('button', { name: 'Close alert' }))
 
-  expect(setDeckTitle.mock.calls.length).toBe(0)
-  expect(zoomIn.mock.calls.length).toBe(0)
-  expect(moveToLoad.mock.calls.length).toBe(0)
-  expect(setActiveDeckSaved.mock.calls.length).toBe(0)
-  expect(interruptSimulator.mock.calls.length).toBe(0)
+  expect(setDeckTitle).not.toHaveBeenCalled()
+  expect(zoomIn).not.toHaveBeenCalled()
+  expect(moveToLoad).not.toHaveBeenCalled()
+  expect(setActiveDeckSaved).not.toHaveBeenCalled()
+  expect(interruptSimulator).not.toHaveBeenCalled()
 
   rerender(
     <TabPaneDeck
@@ -245,8 +232,8 @@ test('コードが誤っている場合のレンダリング', async () => {
 })
 
 test('デフォルトのレンダリング', async () => {
-  // prettier-ignore
-  const { getByPlaceholderText, getByRole, queryByRole } = await defaultRender([], [], '')
+  const { getByPlaceholderText, getByRole, queryByRole, queryListItem } =
+    await defaultRender([], [], '')
 
   // モーダルダイアログは表示されていない
   expect(queryByRole('dialog')).toBeNull()
@@ -255,8 +242,8 @@ test('デフォルトのレンダリング', async () => {
   expect(queryByRole('alert')).toBeNull()
 
   // 画像は表示されていない
-  expect(queryListItem(getByRole, 'メインデッキ')).toBeNull()
-  expect(queryListItem(getByRole, 'サイドデッキ')).toBeNull()
+  expect(queryListItem('メインデッキ')).toBeNull()
+  expect(queryListItem('サイドデッキ')).toBeNull()
 
   // テキストボックスには空のデッキの値
   expect(getByPlaceholderText('デッキ名を入力 (任意)')).toBeVisible()
@@ -282,17 +269,18 @@ test('デフォルトのレンダリング', async () => {
 })
 
 test.each([
-  ['源義経', 'メインデッキ', 0, 'R-2'],
-  ['武田勝頼', 'メインデッキ', 1, 'R-3'],
-  ['坂上田村麻呂', 'サイドデッキ', 0, 'R-5'],
-  ['楠木正成', 'サイドデッキ', 1, 'R-6'],
-])('虫眼鏡ボタンで拡大 (%s)', async (_, section, index, expectedId) => {
+  ['源義経', 'メインデッキ', 'R-2'],
+  ['武田勝頼', 'メインデッキ', 'R-3'],
+  ['坂上田村麻呂', 'サイドデッキ', 'R-5'],
+  ['楠木正成', 'サイドデッキ', 'R-6'],
+])('虫眼鏡ボタンで拡大 (%s)', async (_, section, id) => {
   const {
     zoomIn,
     moveToLoad,
     setActiveDeckSaved,
     interruptSimulator,
-    getByRole,
+    getAllListItem,
+    getListItem,
   } = await defaultRender(
     [
       ['R-2', 1],
@@ -304,23 +292,21 @@ test.each([
     ],
   )
 
-  expect(getAllListItem(getByRole, 'メインデッキ').length).toBe(2)
-  expect(getAllListItem(getByRole, 'サイドデッキ').length).toBe(2)
+  expect(getAllListItem('メインデッキ')).toHaveLength(2)
+  expect(getAllListItem('サイドデッキ')).toHaveLength(2)
 
   // 虫眼鏡ボタンを押す
-  await userEvent.click(getButton(getByRole, section, index, '🔍'))
+  const item = within(getListItem(section, id))
+  await userEvent.click(item.getByRole('button', { name: '🔍' }))
 
-  expect(zoomIn.mock.calls.length).toBe(1) // 呼ばれた
-  expect(zoomIn.mock.lastCall.length).toBe(1)
-  expect(zoomIn.mock.lastCall[0]).toBe(expectedId)
-  expect(moveToLoad.mock.calls.length).toBe(0)
-  expect(setActiveDeckSaved.mock.calls.length).toBe(0)
-  expect(interruptSimulator.mock.calls.length).toBe(0)
+  expect(zoomIn).toHaveBeenCalledExactlyOnceWith(id) // 呼ばれた
+  expect(moveToLoad).not.toHaveBeenCalled()
+  expect(setActiveDeckSaved).not.toHaveBeenCalled()
+  expect(interruptSimulator).not.toHaveBeenCalled()
 })
 
 test('マイデッキに保存', async () => {
   const {
-    result,
     defaultRerender,
     zoomIn,
     moveToLoad,
@@ -328,6 +314,7 @@ test('マイデッキに保存', async () => {
     interruptSimulator,
     getByRole,
     queryByRole,
+    getAllListItem,
   } = await defaultRender(
     [
       ['R-1', 1],
@@ -337,11 +324,11 @@ test('マイデッキに保存', async () => {
   )
 
   expect(queryByRole('dialog')).toBeNull()
-  expect(getAllListItem(getByRole, 'メインデッキ').length).toBe(2)
-  expect(getAllListItem(getByRole, 'サイドデッキ').length).toBe(1)
+  expect(getAllListItem('メインデッキ')).toHaveLength(2)
+  expect(getAllListItem('サイドデッキ')).toHaveLength(1)
 
   // 初期状態ではデータベースは空
-  expect((await dbQueryDecks()).length).toBe(0)
+  expect(await dbQueryDecks()).toHaveLength(0)
 
   // 「マイデッキに保存」ボタンを押す
   // handleClickSave は async 関数のため完了を待つ必要がある
@@ -349,19 +336,17 @@ test('マイデッキに保存', async () => {
     await userEvent.click(getByRole('button', { name: 'マイデッキに保存' }))
   })
 
-  expect(zoomIn.mock.calls.length).toBe(0)
-  expect(moveToLoad.mock.calls.length).toBe(1) // 呼ばれた
-  expect(setActiveDeckSaved.mock.calls.length).toBe(1) // 呼ばれた
-  expect(setActiveDeckSaved.mock.lastCall.length).toBe(1)
-  expect(setActiveDeckSaved.mock.lastCall[0]).toBe(1) // 最初のレコード
-  expect(interruptSimulator.mock.calls.length).toBe(0)
+  expect(zoomIn).not.toHaveBeenCalled()
+  expect(moveToLoad).toHaveBeenCalledExactlyOnceWith() // 呼ばれた
+  expect(setActiveDeckSaved).toHaveBeenCalledExactlyOnceWith(1) // 最初のレコード
+  expect(interruptSimulator).not.toHaveBeenCalled()
 
   // 成功したらダイアログは表示されない
-  await defaultRerender(result)
+  await defaultRerender()
   expect(queryByRole('dialog')).toBeNull()
 
   // データベースにデッキが追加されている
-  expect((await dbQueryDecks()).length).toBe(1)
+  expect(await dbQueryDecks()).toHaveLength(1)
   const deck = (await dbQueryDecks())[0]
   expect(typeof deck.id).toBe('number')
   expect(deck.timestamp).not.toBeFalsy()
@@ -374,7 +359,6 @@ test('マイデッキに保存', async () => {
 
 test('空のデッキは保存できない', async () => {
   const {
-    result,
     defaultRerender,
     zoomIn,
     moveToLoad,
@@ -382,53 +366,56 @@ test('空のデッキは保存できない', async () => {
     interruptSimulator,
     getByRole,
     queryByRole,
+    queryListItem,
   } = await defaultRender([], [])
 
   expect(queryByRole('dialog')).toBeNull()
-  expect(queryListItem(getByRole, 'メインデッキ')).toBeNull()
-  expect(queryListItem(getByRole, 'サイドデッキ')).toBeNull()
-
+  expect(queryListItem('メインデッキ')).toBeNull()
+  expect(queryListItem('サイドデッキ')).toBeNull()
   // 初期状態ではデータベースは空
-  expect((await dbQueryDecks()).length).toBe(0)
+  expect(await dbQueryDecks()).toHaveLength(0)
 
   // 「マイデッキに保存」ボタンを押す
   await userEvent.click(getByRole('button', { name: 'マイデッキに保存' }))
 
-  expect(zoomIn.mock.calls.length).toBe(0)
-  expect(moveToLoad.mock.calls.length).toBe(0)
-  expect(setActiveDeckSaved.mock.calls.length).toBe(0)
-  expect(interruptSimulator.mock.calls.length).toBe(0)
+  expect(zoomIn).not.toHaveBeenCalled()
+  expect(moveToLoad).not.toHaveBeenCalled()
+  expect(setActiveDeckSaved).not.toHaveBeenCalled()
+  expect(interruptSimulator).not.toHaveBeenCalled()
 
   // ダイアログが表示される
-  await defaultRerender(result)
+  await defaultRerender()
   expect(getByRole('dialog')).toBeVisible()
-
   // データベースには追加されていない
-  expect((await dbQueryDecks()).length).toBe(0)
+  expect(await dbQueryDecks()).toHaveLength(0)
 
   // ダイアログを閉じる
-  // prettier-ignore
-  await userEvent.click(within(getByRole('dialog')).getByRole('button', { name: 'OK' }))
-  expect(zoomIn.mock.calls.length).toBe(0)
-  expect(moveToLoad.mock.calls.length).toBe(0)
-  expect(setActiveDeckSaved.mock.calls.length).toBe(0)
-  expect(interruptSimulator.mock.calls.length).toBe(0)
+  await userEvent.click(
+    within(getByRole('dialog')).getByRole('button', { name: 'OK' }),
+  )
+
+  expect(zoomIn).not.toHaveBeenCalled()
+  expect(moveToLoad).not.toHaveBeenCalled()
+  expect(setActiveDeckSaved).not.toHaveBeenCalled()
+  expect(interruptSimulator).not.toHaveBeenCalled()
+
+  await defaultRerender()
 
   // ダイアログは閉じられた
-  await defaultRerender(result)
-  // TODO 冗長に見えるが脆いテストを直すためである
+  // Transitional に閉じるので waitFor する必要あり
   await waitFor(() => expect(queryByRole('dialog')).toBeNull())
 })
 
 test('レシピをクリア', async () => {
   const {
-    result,
     defaultRerender,
     zoomIn,
     moveToLoad,
     setActiveDeckSaved,
     interruptSimulator,
     getByRole,
+    queryListItem,
+    getAllListItem,
   } = await defaultRender(
     [['R-1', 1]],
     [
@@ -437,30 +424,31 @@ test('レシピをクリア', async () => {
     ],
   )
 
-  expect(getAllListItem(getByRole, 'メインデッキ').length).toBe(1)
-  expect(getAllListItem(getByRole, 'サイドデッキ').length).toBe(2)
+  expect(getAllListItem('メインデッキ')).toHaveLength(1)
+  expect(getAllListItem('サイドデッキ')).toHaveLength(2)
 
   // 「レシピをクリア」ボタンを押す
   await userEvent.click(getByRole('button', { name: 'レシピをクリア' }))
-  expect(zoomIn.mock.calls.length).toBe(0)
-  expect(moveToLoad.mock.calls.length).toBe(0)
-  expect(setActiveDeckSaved.mock.calls.length).toBe(0)
-  expect(interruptSimulator.mock.calls.length).toBe(1) // 呼ばれた
+
+  expect(zoomIn).not.toHaveBeenCalled()
+  expect(moveToLoad).not.toHaveBeenCalled()
+  expect(setActiveDeckSaved).not.toHaveBeenCalled()
+  expect(interruptSimulator).toHaveBeenCalledExactlyOnceWith() // 呼ばれた
+
+  await defaultRerender()
 
   // 画像リストが空になる
-  await defaultRerender(result)
-  expect(queryListItem(getByRole, 'メインデッキ')).toBeNull()
-  expect(queryListItem(getByRole, 'サイドデッキ')).toBeNull()
+  expect(queryListItem('メインデッキ')).toBeNull()
+  expect(queryListItem('サイドデッキ')).toBeNull()
 })
 
 test.each([
   [
-    'メインデッキのインデックス0を1枚から2枚に増やす',
+    'メインデッキのR-2を1枚から2枚に増やす',
     'メインデッキ',
     'サイドデッキ',
     1,
-    '1',
-    0,
+    'R-2',
     '+',
     1,
     '2',
@@ -469,12 +457,11 @@ test.each([
     '1',
   ],
   [
-    'メインデッキのインデックス1を1枚から2枚に増やす',
+    'メインデッキのR-3を1枚から2枚に増やす',
     'メインデッキ',
     'サイドデッキ',
     1,
-    '1',
-    1,
+    'R-3',
     '+',
     1,
     '1',
@@ -483,12 +470,11 @@ test.each([
     '1',
   ],
   [
-    'サイドデッキのインデックス0を1枚から2枚に増やす',
+    'サイドデッキのR-2を1枚から2枚に増やす',
     'サイドデッキ',
     'メインデッキ',
     1,
-    '1',
-    0,
+    'R-2',
     '+',
     0,
     '2',
@@ -497,12 +483,11 @@ test.each([
     '1',
   ],
   [
-    'サイドデッキのインデックス1を1枚から2枚に増やす',
+    'サイドデッキのR-3を1枚から2枚に増やす',
     'サイドデッキ',
     'メインデッキ',
     1,
-    '1',
-    1,
+    'R-3',
     '+',
     0,
     '1',
@@ -511,12 +496,11 @@ test.each([
     '1',
   ],
   [
-    'メインデッキのインデックス0を2枚から1枚に減らす',
+    'メインデッキのR-2を2枚から1枚に減らす',
     'メインデッキ',
     'サイドデッキ',
     2,
-    '2',
-    0,
+    'R-2',
     '-',
     1,
     '1',
@@ -525,12 +509,11 @@ test.each([
     '2',
   ],
   [
-    'メインデッキのインデックス1を2枚から1枚に減らす',
+    'メインデッキのR-3を2枚から1枚に減らす',
     'メインデッキ',
     'サイドデッキ',
     2,
-    '2',
-    1,
+    'R-3',
     '-',
     1,
     '2',
@@ -539,12 +522,11 @@ test.each([
     '2',
   ],
   [
-    'サイドデッキのインデックス0を2枚から1枚に減らす',
+    'サイドデッキのR-2を2枚から1枚に減らす',
     'サイドデッキ',
     'メインデッキ',
     2,
-    '2',
-    0,
+    'R-2',
     '-',
     0,
     '1',
@@ -553,12 +535,11 @@ test.each([
     '2',
   ],
   [
-    'サイドデッキのインデックス1を2枚から1枚に減らす',
+    'サイドデッキのR-3を2枚から1枚に減らす',
     'サイドデッキ',
     'メインデッキ',
     2,
-    '2',
-    1,
+    'R-3',
     '-',
     0,
     '2',
@@ -567,12 +548,11 @@ test.each([
     '2',
   ],
   [
-    'メインデッキのインデックス0をサイドデッキへ移動する',
+    'メインデッキのR-2をサイドデッキへ移動する',
     'メインデッキ',
     'サイドデッキ',
     2,
-    '2',
-    0,
+    'R-2',
     'v',
     1,
     '1',
@@ -581,12 +561,11 @@ test.each([
     '2',
   ],
   [
-    'メインデッキのインデックス1をサイドデッキへ移動する',
+    'メインデッキのR-3をサイドデッキへ移動する',
     'メインデッキ',
     'サイドデッキ',
     2,
-    '2',
-    1,
+    'R-3',
     'v',
     1,
     '2',
@@ -595,12 +574,11 @@ test.each([
     '3',
   ],
   [
-    'サイドデッキのインデックス0をメインデッキへ移動する',
+    'サイドデッキのR-2をメインデッキへ移動する',
     'サイドデッキ',
     'メインデッキ',
     2,
-    '2',
-    0,
+    'R-2',
     '^',
     1,
     '1',
@@ -609,12 +587,11 @@ test.each([
     '2',
   ],
   [
-    'サイドデッキのインデックス1をメインデッキへ移動する',
+    'サイドデッキのR-3をメインデッキへ移動する',
     'サイドデッキ',
     'メインデッキ',
     2,
-    '2',
-    1,
+    'R-3',
     '^',
     1,
     '2',
@@ -626,11 +603,10 @@ test.each([
   'アイテム数が変わらない枚数の変更 (%s)',
   async (
     _,
-    sectionThis,
-    sectionThat,
+    listThis,
+    listThat,
     initial,
-    expectedInitial,
-    index,
+    id,
     buttonName,
     expectedInterrupted,
     expectedThis0,
@@ -639,13 +615,13 @@ test.each([
     expectedThat1,
   ) => {
     const {
-      result,
       zoomIn,
       moveToLoad,
       setActiveDeckSaved,
       interruptSimulator,
       defaultRerender,
-      getByRole,
+      getAllListItem,
+      getListItem,
     } = await defaultRender(
       [
         ['R-2', initial],
@@ -657,147 +633,143 @@ test.each([
       ],
     )
 
-    expect(getAllListItem(getByRole, sectionThis).length).toBe(2)
-    expect(getAllListItem(getByRole, sectionThat).length).toBe(2)
-    // prettier-ignore
-    expect(getTextbox(getByRole, sectionThis, 0)).toHaveTextContent(expectedInitial)
-    // prettier-ignore
-    expect(getTextbox(getByRole, sectionThis, 1)).toHaveTextContent(expectedInitial)
-    // prettier-ignore
-    expect(getTextbox(getByRole, sectionThat, 0)).toHaveTextContent(expectedInitial)
-    // prettier-ignore
-    expect(getTextbox(getByRole, sectionThat, 1)).toHaveTextContent(expectedInitial)
+    expect(getAllListItem(listThis)).toHaveLength(2)
+    expect(getAllListItem(listThat)).toHaveLength(2)
+    let itemThis0 = within(getListItem(listThis, 'R-2'))
+    let itemThis1 = within(getListItem(listThis, 'R-3'))
+    let itemThat0 = within(getListItem(listThat, 'R-2'))
+    let itemThat1 = within(getListItem(listThat, 'R-3'))
+    expect(itemThis0.getByRole('textbox')).toHaveTextContent(String(initial))
+    expect(itemThis1.getByRole('textbox')).toHaveTextContent(String(initial))
+    expect(itemThat0.getByRole('textbox')).toHaveTextContent(String(initial))
+    expect(itemThat1.getByRole('textbox')).toHaveTextContent(String(initial))
 
-    await userEvent.click(getButton(getByRole, sectionThis, index, buttonName))
-    expect(zoomIn.mock.calls.length).toBe(0)
-    expect(moveToLoad.mock.calls.length).toBe(0)
-    expect(setActiveDeckSaved.mock.calls.length).toBe(0)
-    expect(interruptSimulator.mock.calls.length).toBe(expectedInterrupted)
+    // ボタンを押す
+    const item = within(getListItem(listThis, id))
+    await userEvent.click(item.getByRole('button', { name: buttonName }))
 
-    await defaultRerender(result)
-    expect(getAllListItem(getByRole, sectionThis).length).toBe(2)
-    expect(getAllListItem(getByRole, sectionThat).length).toBe(2)
-    // prettier-ignore
-    expect(getTextbox(getByRole, sectionThis, 0)).toHaveTextContent(expectedThis0)
-    // prettier-ignore
-    expect(getTextbox(getByRole, sectionThis, 1)).toHaveTextContent(expectedThis1)
-    // prettier-ignore
-    expect(getTextbox(getByRole, sectionThat, 0)).toHaveTextContent(expectedThat0)
-    // prettier-ignore
-    expect(getTextbox(getByRole, sectionThat, 1)).toHaveTextContent(expectedThat1)
+    expect(zoomIn).not.toHaveBeenCalled()
+    expect(moveToLoad).not.toHaveBeenCalled()
+    expect(setActiveDeckSaved).not.toHaveBeenCalled()
+    expect(interruptSimulator).toHaveBeenCalledTimes(expectedInterrupted)
+
+    await defaultRerender()
+
+    expect(getAllListItem(listThis)).toHaveLength(2)
+    expect(getAllListItem(listThat)).toHaveLength(2)
+    itemThis0 = within(getListItem(listThis, 'R-2'))
+    itemThis1 = within(getListItem(listThis, 'R-3'))
+    itemThat0 = within(getListItem(listThat, 'R-2'))
+    itemThat1 = within(getListItem(listThat, 'R-3'))
+    expect(itemThis0.getByRole('textbox')).toHaveTextContent(expectedThis0)
+    expect(itemThis1.getByRole('textbox')).toHaveTextContent(expectedThis1)
+    expect(itemThat0.getByRole('textbox')).toHaveTextContent(expectedThat0)
+    expect(itemThat1.getByRole('textbox')).toHaveTextContent(expectedThat1)
   },
 )
 
 test.each([
   [
-    'メインデッキのインデックス0を1枚から0枚に減らす',
+    'メインデッキのR-2を1枚から0枚に減らす',
     'メインデッキ',
     'サイドデッキ',
-    0,
-    1,
+    'R-2',
+    'R-3',
     '-',
     1,
     '1',
-    '1',
   ],
   [
-    'メインデッキのインデックス1を1枚から0枚に減らす',
+    'メインデッキのR-3を1枚から0枚に減らす',
     'メインデッキ',
     'サイドデッキ',
-    1,
-    0,
+    'R-3',
+    'R-2',
     '-',
     1,
     '1',
-    '1',
   ],
   [
-    'サイドデッキのインデックス0を1枚から0枚に減らす',
+    'サイドデッキのR-2を1枚から0枚に減らす',
     'サイドデッキ',
     'メインデッキ',
-    0,
-    1,
+    'R-2',
+    'R-3',
     '-',
     0,
     '1',
-    '1',
   ],
   [
-    'サイドデッキのインデックス1を1枚から0枚に減らす',
+    'サイドデッキのR-3を1枚から0枚に減らす',
     'サイドデッキ',
     'メインデッキ',
-    1,
-    0,
+    'R-3',
+    'R-2',
     '-',
     0,
     '1',
-    '1',
   ],
   [
-    'メインデッキのインデックス0をサイドデッキへ移動する',
+    'メインデッキのR-2をサイドデッキへ移動する',
     'メインデッキ',
     'サイドデッキ',
-    0,
-    1,
+    'R-2',
+    'R-3',
     'v',
     1,
     '2',
-    '1',
   ],
   [
-    'メインデッキのインデックス1をサイドデッキへ移動する',
+    'メインデッキのR-3をサイドデッキへ移動する',
     'メインデッキ',
     'サイドデッキ',
-    1,
-    0,
+    'R-3',
+    'R-2',
     'v',
     1,
-    '1',
     '2',
   ],
   [
-    'サイドデッキのインデックス0をメインデッキへ移動する',
+    'サイドデッキのR-2をメインデッキへ移動する',
     'サイドデッキ',
     'メインデッキ',
-    0,
-    1,
+    'R-2',
+    'R-3',
     '^',
     1,
     '2',
-    '1',
   ],
   [
-    'サイドデッキのインデックス1をメインデッキへ移動する',
+    'サイドデッキのR-3をメインデッキへ移動する',
     'サイドデッキ',
     'メインデッキ',
-    1,
-    0,
+    'R-3',
+    'R-2',
     '^',
     1,
-    '1',
     '2',
   ],
 ])(
   'アイテム数が減る枚数の変更 (%s)',
   async (
     _,
-    sectionThis,
-    sectionThat,
-    indexDecrement,
-    indexRemaining,
+    listThis,
+    listThat,
+    idDec,
+    idRem,
     buttonName,
     expectInterurpted,
-    expected0,
-    expected1,
+    expectedRem,
   ) => {
     const {
-      result,
       zoomIn,
       moveToLoad,
       setActiveDeckSaved,
       interruptSimulator,
       defaultRerender,
-      getByRole,
+      getAllListItem,
+      getListItem,
+      queryListItem,
     } = await defaultRender(
       [
         ['R-2', 1],
@@ -809,37 +781,45 @@ test.each([
       ],
     )
 
-    expect(getAllListItem(getByRole, sectionThis).length).toBe(2)
-    expect(getAllListItem(getByRole, sectionThat).length).toBe(2)
-    expect(getTextbox(getByRole, sectionThis, 0)).toHaveTextContent('1')
-    expect(getTextbox(getByRole, sectionThis, 1)).toHaveTextContent('1')
-    expect(getTextbox(getByRole, sectionThat, 0)).toHaveTextContent('1')
-    expect(getTextbox(getByRole, sectionThat, 1)).toHaveTextContent('1')
+    expect(getAllListItem(listThis)).toHaveLength(2)
+    expect(getAllListItem(listThat)).toHaveLength(2)
+    let itemThisDec = within(getListItem(listThis, 'R-2'))
+    let itemThisRem = within(getListItem(listThis, 'R-3'))
+    let itemThatDec = within(getListItem(listThat, 'R-2'))
+    let itemThatRem = within(getListItem(listThat, 'R-3'))
+    expect(itemThisDec.getByRole('textbox')).toHaveTextContent('1')
+    expect(itemThisRem.getByRole('textbox')).toHaveTextContent('1')
+    expect(itemThatDec.getByRole('textbox')).toHaveTextContent('1')
+    expect(itemThatRem.getByRole('textbox')).toHaveTextContent('1')
 
-    // prettier-ignore
-    const src = getImg(getByRole, sectionThis, indexRemaining).getAttribute('src')
+    // ボタンを押す
+    const item = within(getListItem(listThis, idDec))
+    await userEvent.click(item.getByRole('button', { name: buttonName }))
 
-    // prettier-ignore
-    await userEvent.click(getButton(getByRole, sectionThis, indexDecrement, buttonName))
+    expect(zoomIn).not.toHaveBeenCalled()
+    expect(moveToLoad).not.toHaveBeenCalled()
+    expect(setActiveDeckSaved).not.toHaveBeenCalled()
+    expect(interruptSimulator).toHaveBeenCalledTimes(expectInterurpted)
 
-    expect(zoomIn.mock.calls.length).toBe(0)
-    expect(moveToLoad.mock.calls.length).toBe(0)
-    expect(setActiveDeckSaved.mock.calls.length).toBe(0)
-    expect(interruptSimulator.mock.calls.length).toBe(expectInterurpted)
+    await defaultRerender()
 
-    await defaultRerender(result)
-    expect(getAllListItem(getByRole, sectionThis).length).toBe(1) // 減った
-    expect(getAllListItem(getByRole, sectionThat).length).toBe(2)
-    expect(getTextbox(getByRole, sectionThis, 0)).toHaveTextContent('1')
-    expect(getImg(getByRole, sectionThis, 0)).toHaveAttribute('src', src)
-    expect(getTextbox(getByRole, sectionThat, 0)).toHaveTextContent(expected0)
-    expect(getTextbox(getByRole, sectionThat, 1)).toHaveTextContent(expected1)
+    // 減らしたアイテムが消える
+    expect(queryListItem(listThis, idDec)).toBeNull()
+
+    expect(getAllListItem(listThis)).toHaveLength(1) // 減った
+    expect(getAllListItem(listThat)).toHaveLength(2)
+    itemThisRem = within(getListItem(listThis, idRem))
+    itemThatDec = within(getListItem(listThat, idDec))
+    itemThatRem = within(getListItem(listThat, idRem))
+    expect(itemThisRem.getByRole('textbox')).toHaveTextContent('1')
+    expect(itemThatDec.getByRole('textbox')).toHaveTextContent(expectedRem)
+    expect(itemThatRem.getByRole('textbox')).toHaveTextContent('1')
   },
 )
 
 test.each([
   [
-    'メインデッキのインデックス0をサイドデッキへ移動する',
+    'メインデッキのR-2をサイドデッキへ移動する',
     [
       ['R-2', 2],
       ['R-3', 2],
@@ -847,13 +827,12 @@ test.each([
     [],
     'メインデッキ',
     'サイドデッキ',
-    0,
+    'R-2',
+    'R-3',
     'v',
-    '1',
-    '2',
   ],
   [
-    'メインデッキのインデックス1をサイドデッキへ移動する',
+    'メインデッキのR-3をサイドデッキへ移動する',
     [
       ['R-2', 2],
       ['R-3', 2],
@@ -861,13 +840,12 @@ test.each([
     [],
     'メインデッキ',
     'サイドデッキ',
-    1,
+    'R-3',
+    'R-2',
     'v',
-    '2',
-    '1',
   ],
   [
-    'サイドのインデックス0をメインデッキへ移動する',
+    'サイドのR-2をメインデッキへ移動する',
     [],
     [
       ['R-2', 2],
@@ -875,13 +853,12 @@ test.each([
     ],
     'サイドデッキ',
     'メインデッキ',
-    0,
+    'R-2',
+    'R-3',
     '^',
-    '1',
-    '2',
   ],
   [
-    'サイドのインデックス1をメインデッキへ移動する',
+    'サイドのR-3をメインデッキへ移動する',
     [],
     [
       ['R-2', 2],
@@ -889,10 +866,9 @@ test.each([
     ],
     'サイドデッキ',
     'メインデッキ',
-    1,
+    'R-3',
+    'R-2',
     '^',
-    '2',
-    '1',
   ],
 ])(
   'アイテム数が増える枚数の変更 (%s)',
@@ -900,50 +876,56 @@ test.each([
     _,
     initialMain,
     initialSide,
-    sectionThis,
-    sectionThat,
-    index,
+    listThis,
+    listThat,
+    idInc,
+    idRem,
     buttonName,
-    expected0,
-    expected1,
   ) => {
     const {
-      result,
       zoomIn,
       moveToLoad,
       setActiveDeckSaved,
       interruptSimulator,
       defaultRerender,
-      getByRole,
+      queryListItem,
+      getAllListItem,
+      getListItem,
     } = await defaultRender(initialMain, initialSide)
 
-    expect(getAllListItem(getByRole, sectionThis).length).toBe(2)
-    expect(queryListItem(getByRole, sectionThat)).toBeNull()
-    expect(getTextbox(getByRole, sectionThis, 0)).toHaveTextContent('2')
-    expect(getTextbox(getByRole, sectionThis, 1)).toHaveTextContent('2')
+    expect(getAllListItem(listThis)).toHaveLength(2)
+    expect(queryListItem(listThat)).toBeNull()
 
-    const src = getImg(getByRole, sectionThis, index).getAttribute('src')
+    let itemThisInc = within(getListItem(listThis, 'R-2'))
+    let itemThisRem = within(getListItem(listThis, 'R-3'))
+    expect(itemThisInc.getByRole('textbox')).toHaveTextContent('2')
+    expect(itemThisRem.getByRole('textbox')).toHaveTextContent('2')
 
-    await userEvent.click(getButton(getByRole, sectionThis, index, buttonName))
+    // ボタンを押す
+    const item = within(getListItem(listThis, idInc))
+    await userEvent.click(item.getByRole('button', { name: buttonName }))
 
-    expect(zoomIn.mock.calls.length).toBe(0)
-    expect(moveToLoad.mock.calls.length).toBe(0)
-    expect(setActiveDeckSaved.mock.calls.length).toBe(0)
-    expect(interruptSimulator.mock.calls.length).toBe(1) // 呼ばれた
+    expect(zoomIn).not.toHaveBeenCalled()
+    expect(moveToLoad).not.toHaveBeenCalled()
+    expect(setActiveDeckSaved).not.toHaveBeenCalled()
+    expect(interruptSimulator).toHaveBeenCalledExactlyOnceWith() // 呼ばれた
 
-    await defaultRerender(result)
-    expect(getAllListItem(getByRole, sectionThis).length).toBe(2)
-    expect(getAllListItem(getByRole, sectionThat).length).toBe(1) // 増えた
-    expect(getTextbox(getByRole, sectionThis, 0)).toHaveTextContent(expected0)
-    expect(getTextbox(getByRole, sectionThis, 1)).toHaveTextContent(expected1)
-    expect(getTextbox(getByRole, sectionThat, 0)).toHaveTextContent(1)
-    expect(getImg(getByRole, sectionThat, 0)).toHaveAttribute('src', src)
+    await defaultRerender()
+
+    expect(getAllListItem(listThis)).toHaveLength(2)
+    expect(getAllListItem(listThat)).toHaveLength(1) // 増えた
+    itemThisInc = within(getListItem(listThis, idInc))
+    itemThisRem = within(getListItem(listThis, idRem))
+    const itemThatInc = within(getListItem(listThis, idInc))
+    expect(itemThisInc.getByRole('textbox')).toHaveTextContent('1') // 枚数は減った
+    expect(itemThisRem.getByRole('textbox')).toHaveTextContent('2')
+    expect(itemThatInc.getByRole('textbox')).toHaveTextContent('1') // アイテムは増えた
   },
 )
 
 test.each([
   [
-    'メインデッキのインデックス0をサイドデッキへ移動する',
+    'メインデッキのR-1をサイドデッキへ移動する',
     [
       ['R-1', 1],
       ['R-2', 1],
@@ -951,12 +933,12 @@ test.each([
     [],
     'メインデッキ',
     'サイドデッキ',
-    0,
-    1,
+    'R-1',
+    'R-2',
     'v',
   ],
   [
-    'メインデッキのインデックス1をサイドデッキへ移動する',
+    'メインデッキのR-2をサイドデッキへ移動する',
     [
       ['R-1', 1],
       ['R-2', 1],
@@ -964,12 +946,12 @@ test.each([
     [],
     'メインデッキ',
     'サイドデッキ',
-    1,
-    0,
+    'R-2',
+    'R-1',
     'v',
   ],
   [
-    'サイドデッキのインデックス0をメインデッキへ移動する',
+    'サイドデッキのR-1をメインデッキへ移動する',
     [],
     [
       ['R-1', 1],
@@ -977,12 +959,12 @@ test.each([
     ],
     'サイドデッキ',
     'メインデッキ',
-    0,
-    1,
+    'R-1',
+    'R-2',
     '^',
   ],
   [
-    'サイドデッキのインデックス1をメインデッキへ移動する',
+    'サイドデッキのR-2をメインデッキへ移動する',
     [],
     [
       ['R-1', 1],
@@ -990,8 +972,8 @@ test.each([
     ],
     'サイドデッキ',
     'メインデッキ',
-    1,
-    0,
+    'R-2',
+    'R-1',
     '^',
   ],
 ])(
@@ -1000,47 +982,50 @@ test.each([
     _,
     initialMain,
     initialSide,
-    sectionThis,
-    sectionThat,
-    indexMoved,
-    indexRemaining,
+    listThis,
+    listThat,
+    idMov,
+    idRem,
     buttonName,
   ) => {
     const {
-      result,
       zoomIn,
       moveToLoad,
       setActiveDeckSaved,
       interruptSimulator,
       defaultRerender,
-      getByRole,
+      getListItem,
+      getAllListItem,
+      queryListItem,
     } = await defaultRender(initialMain, initialSide)
 
-    expect(getAllListItem(getByRole, sectionThis).length).toBe(2)
-    expect(queryListItem(getByRole, sectionThat)).toBeNull()
-    expect(getTextbox(getByRole, sectionThis, 0)).toHaveTextContent('1')
-    expect(getTextbox(getByRole, sectionThis, 1)).toHaveTextContent('1')
+    expect(getAllListItem(listThis)).toHaveLength(2)
+    expect(queryListItem(listThat)).toBeNull()
 
-    // prettier-ignore
-    const srcMoved = getImg(getByRole, sectionThis, indexMoved).getAttribute('src')
-    // prettier-ignore
-    const srcRemaining = getImg(getByRole, sectionThis, indexRemaining).getAttribute('src')
+    let itemThisMov = within(getListItem(listThis, idMov))
+    let itemThisRem = within(getListItem(listThis, idRem))
+    expect(itemThisMov.getByRole('textbox')).toHaveTextContent('1')
+    expect(itemThisRem.getByRole('textbox')).toHaveTextContent('1')
 
-    // prettier-ignore
-    await userEvent.click(getButton(getByRole, sectionThis, indexMoved, buttonName))
+    // ボタンを押す
+    const item = within(getListItem(listThis, idMov))
+    await userEvent.click(item.getByRole('button', { name: buttonName }))
 
-    expect(zoomIn.mock.calls.length).toBe(0)
-    expect(moveToLoad.mock.calls.length).toBe(0)
-    expect(setActiveDeckSaved.mock.calls.length).toBe(0)
-    expect(interruptSimulator.mock.calls.length).toBe(1) // 呼ばれた
+    expect(zoomIn).not.toHaveBeenCalled()
+    expect(moveToLoad).not.toHaveBeenCalled()
+    expect(setActiveDeckSaved).not.toHaveBeenCalled()
+    expect(interruptSimulator).toHaveBeenCalledExactlyOnceWith() // 呼ばれた
 
-    await defaultRerender(result)
-    expect(getAllListItem(getByRole, sectionThis).length).toBe(1) // 減った
-    expect(getAllListItem(getByRole, sectionThat).length).toBe(1) // 増えた
-    expect(getTextbox(getByRole, sectionThis, 0)).toHaveTextContent(1)
-    // prettier-ignore
-    expect(getImg(getByRole, sectionThis, 0)).toHaveAttribute('src', srcRemaining)
-    expect(getTextbox(getByRole, sectionThat, 0)).toHaveTextContent(1)
-    expect(getImg(getByRole, sectionThat, 0)).toHaveAttribute('src', srcMoved)
+    await defaultRerender()
+
+    // 移動して行った
+    expect(queryListItem(listThis, idMov)).toBeNull()
+
+    expect(getAllListItem(listThis)).toHaveLength(1) // 減った
+    expect(getAllListItem(listThat)).toHaveLength(1) // 増えた
+    itemThisRem = within(getListItem(listThis, idRem))
+    const itemThatMov = within(getListItem(listThat, idMov))
+    expect(itemThisRem.getByRole('textbox')).toHaveTextContent('1')
+    expect(itemThatMov.getByRole('textbox')).toHaveTextContent('1')
   },
 )

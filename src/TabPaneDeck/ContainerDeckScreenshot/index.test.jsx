@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: MIT
 
-import { act } from 'react'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
-import { cleanup, render } from '@testing-library/react'
+import { act, cleanup, render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import ContainerDeckScreenshot from '.'

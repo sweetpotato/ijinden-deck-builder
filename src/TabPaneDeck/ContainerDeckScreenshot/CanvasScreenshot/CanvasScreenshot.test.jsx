@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 
-import { act, useRef } from 'react'
+import { useRef } from 'react'
 import { afterEach, expect, test } from 'vitest'
-import { cleanup, render, renderHook } from '@testing-library/react'
+import { act, cleanup, render, renderHook } from '@testing-library/react'
 
 import { IMAGE_HEIGHT, IMAGE_WIDTH } from './constants'
 import { getCanvasSpec } from './utils'
@@ -46,21 +46,21 @@ test.each([
       [...Array(numEntriesSide)].map((_, i) => [`2nd1-${i + 1}`, 1]),
     )
     expect(deckSide.size).toEqual(numEntriesSide)
-    const spec = getCanvasSpec(deckMain.size, deckSide.size)
 
-    let container
-    await act(async () => {
-      ;({ container } = render(
+    const container = document.body
+    await act(async () =>
+      render(
         <CanvasScreenshot
           refCanvas={getRef(result)}
           deckMain={deckMain}
           deckSide={deckSide}
-          spec={spec}
+          spec={getCanvasSpec(deckMain.size, deckSide.size)}
         />,
-      ))
-    })
+        { container },
+      ),
+    )
 
-    expect(container.getElementsByTagName('canvas').length).toEqual(1)
+    expect(container.getElementsByTagName('canvas')).toHaveLength(1)
     const canvas = container.getElementsByTagName('canvas')[0]
     expect(canvas).not.toBeVisible()
     expect(canvas).toHaveAttribute('width')
