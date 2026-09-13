@@ -401,7 +401,8 @@ test('空のデッキは保存できない', async () => {
   await defaultRerender()
 
   // ダイアログは閉じられた
-  expect(queryByRole('dialog')).toBeNull()
+  // Transitional に閉じるので waitFor する必要あり
+  await waitFor(() => expect(queryByRole('dialog')).toBeNull())
 })
 
 test('レシピをクリア', async () => {
