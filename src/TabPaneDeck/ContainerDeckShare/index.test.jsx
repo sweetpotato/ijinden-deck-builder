@@ -7,10 +7,7 @@ import userEvent from '@testing-library/user-event'
 import ContainerDeckShare from '.'
 
 function defaultRender(deckMain, deckSide) {
-  const { getByRole } = render(
-    <ContainerDeckShare deckMain={deckMain} deckSide={deckSide} />,
-  )
-  return { getByRole }
+  return render(<ContainerDeckShare deckMain={deckMain} deckSide={deckSide} />)
 }
 
 beforeEach(() => {
@@ -29,10 +26,9 @@ test('レンダリングとアクセシビリティ', () => {
   const { getByRole } = defaultRender(deckMain, deckSide)
 
   // 「▶共有リンクをコピー」ボタンがある
-  const button = getByRole('button')
+  const button = getByRole('button', { name: '▶共有リンクをコピー' })
   expect(button).toBeVisible()
   expect(button).toBeEnabled()
-  expect(button).toHaveTextContent('▶共有リンクをコピー')
   // 共有リンクが入力された読み取り専用のテキストボックスがある
   const textbox = getByRole('textbox', { name: '▶共有リンクをコピー' })
   expect(textbox).toBeVisible()
@@ -130,15 +126,18 @@ test.each([
     const { getByRole } = defaultRender(deckMain, deckSide)
 
     // 共有リンクをコピーボタンは有効
-    expect(getByRole('button')).toBeEnabled()
-    expect(getByRole('textbox')).toHaveValue(expectedCode)
+    expect(getByRole('button', { name: '▶共有リンクをコピー' })).toBeEnabled()
+    expect(getByRole('textbox', { name: '▶共有リンクをコピー' })).toHaveValue(
+      expectedCode,
+    )
 
     // 共有リンクをコピーボタンを押す
-    await userEvent.click(getByRole('button'))
+    await userEvent.click(getByRole('button', { name: '▶共有リンクをコピー' }))
+
     // クリップボードに共有リンクがコピーされる
-    expect(navigator.clipboard.writeText.mock.calls.length).toBe(1)
-    expect(navigator.clipboard.writeText.mock.lastCall.length).toBe(1)
-    expect(navigator.clipboard.writeText.mock.lastCall[0]).toBe(expectedCode)
+    expect(navigator.clipboard.writeText).toHaveBeenCalledExactlyOnceWith(
+      expectedCode,
+    )
   },
 )
 
@@ -148,7 +147,9 @@ test('同じカードの枚数が65枚以上ならコードは無効', async () 
   const { getByRole } = defaultRender(deckMain, deckSide)
 
   // 共有リンクをコピーボタンは無効
-  expect(getByRole('button')).toBeDisabled()
+  expect(getByRole('button', { name: '▶共有リンクをコピー' })).toBeDisabled()
   // 共有リンクは表示されない
-  expect(getByRole('textbox')).toHaveValue('(共有できる条件を満たしていません)')
+  expect(getByRole('textbox', { name: '▶共有リンクをコピー' })).toHaveValue(
+    '(共有できる条件を満たしていません)',
+  )
 })

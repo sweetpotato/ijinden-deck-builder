@@ -26,7 +26,7 @@ test('レンダリング', () => {
 
   expect(getRef(result).current.toDataURL).toBeTypeOf('function')
 
-  expect(container.getElementsByTagName('canvas').length).toEqual(1)
+  expect(container.getElementsByTagName('canvas')).toHaveLength(1)
   const canvas = container.getElementsByTagName('canvas')[0]
   expect(canvas).not.toBeVisible()
   expect(canvas).toHaveAttribute('width')

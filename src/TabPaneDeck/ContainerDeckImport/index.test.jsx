@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 import { cleanup, render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -6,19 +8,12 @@ import ContainerDeckImport from '.'
 
 function defaultRender() {
   const dispatchSetFromEntries = vi.fn()
-  const { rerender, getByPlaceholderText, getByRole, queryByRole } = render(
+  const props = render(
     <ContainerDeckImport dispatchSetFromEntries={dispatchSetFromEntries} />,
   )
-  const defaultRerender = () =>
-    rerender(
-      <ContainerDeckImport dispatchSetFromEntries={dispatchSetFromEntries} />,
-    )
   return {
+    ...props,
     dispatchSetFromEntries,
-    defaultRerender,
-    getByPlaceholderText,
-    getByRole,
-    queryByRole,
   }
 }
 
@@ -39,7 +34,6 @@ test('デフォルトのレンダリングとアクセシビリティ', () => {
 test('共有リンクが正しくない', async () => {
   const {
     dispatchSetFromEntries,
-    defaultRerender,
     getByPlaceholderText,
     getByRole,
     queryByRole,
@@ -51,15 +45,14 @@ test('共有リンクが正しくない', async () => {
     '/#/deck/BAAA', // 1文字多い
   )
   await userEvent.click(getByRole('button', { name: 'インポート◀' }))
-  expect(dispatchSetFromEntries.mock.calls.length).toBe(0)
-  expect(window.scrollTo.mock.calls.length).toBe(0)
 
-  defaultRerender()
+  expect(dispatchSetFromEntries).not.toHaveBeenCalled()
+  expect(window.scrollTo).not.toHaveBeenCalled()
+
   // 入力した値はまだ残っている
   expect(getByPlaceholderText('ここに共有リンクを貼り付け')).toHaveValue(
     '/#/deck/BAAA',
   )
-  // prettier-ignore
   expect(getByRole('alert')).toHaveTextContent('共有リンクが正しくありません。')
 
   // 正しい共有リンクを入力し直してインポートボタンを押す
@@ -69,19 +62,15 @@ test('共有リンクが正しくない', async () => {
     '/#/deck/BAA', // 空のデッキ
   )
   await userEvent.click(getByRole('button', { name: 'インポート◀' }))
-  expect(dispatchSetFromEntries.mock.calls.length).toBe(1)
-  expect(dispatchSetFromEntries.mock.lastCall.length).toBe(2)
-  expect(dispatchSetFromEntries.mock.lastCall[0]).toEqual([])
-  expect(dispatchSetFromEntries.mock.lastCall[1]).toEqual([])
-  expect(window.scrollTo.mock.calls.length).toBe(1)
-  expect(window.scrollTo.mock.lastCall.length).toBe(1)
-  // prettier-ignore
-  expect(window.scrollTo.mock.lastCall[0]).toEqual({ top: 0, behavior: 'smooth' })
 
-  defaultRerender()
+  expect(dispatchSetFromEntries).toHaveBeenCalledExactlyOnceWith([], [])
+  expect(window.scrollTo).toHaveBeenCalledExactlyOnceWith({
+    top: 0,
+    behavior: 'smooth',
+  })
+
   // 成功すると入力した値はクリアされる
   expect(getByPlaceholderText('ここに共有リンクを貼り付け')).toHaveValue('')
-  // prettier-ignore
   expect(queryByRole('alert')).toBeNull()
 })
 
@@ -157,7 +146,6 @@ test.each([
 ])('インポート成功 (%s)', async (_, code, expectedMain, expectedSide) => {
   const {
     dispatchSetFromEntries,
-    defaultRerender,
     getByPlaceholderText,
     getByRole,
     queryByRole,
@@ -166,16 +154,16 @@ test.each([
   // 共有リンクを入力してインポートボタンを押す
   await userEvent.type(getByPlaceholderText('ここに共有リンクを貼り付け'), code)
   await userEvent.click(getByRole('button', { name: 'インポート◀' }))
-  expect(dispatchSetFromEntries.mock.calls.length).toBe(1)
-  expect(dispatchSetFromEntries.mock.lastCall.length).toBe(2)
-  expect(dispatchSetFromEntries.mock.lastCall[0]).toEqual(expectedMain)
-  expect(dispatchSetFromEntries.mock.lastCall[1]).toEqual(expectedSide)
-  expect(window.scrollTo.mock.calls.length).toBe(1)
-  expect(window.scrollTo.mock.lastCall.length).toBe(1)
-  // prettier-ignore
-  expect(window.scrollTo.mock.lastCall[0]).toEqual({ top: 0, behavior: 'smooth' })
 
-  defaultRerender()
+  expect(dispatchSetFromEntries).toHaveBeenCalledExactlyOnceWith(
+    expectedMain,
+    expectedSide,
+  )
+  expect(window.scrollTo).toHaveBeenCalledExactlyOnceWith({
+    top: 0,
+    behavior: 'smooth',
+  })
+
   expect(getByPlaceholderText('ここに共有リンクを貼り付け')).toHaveValue('')
   expect(queryByRole('alert')).toBeNull()
 })

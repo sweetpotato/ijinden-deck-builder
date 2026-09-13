@@ -4,510 +4,362 @@ import { afterEach, expect, test } from 'vitest'
 import ContainerDeckValidator from '.'
 
 function defaultRender(deckMain, deckSide) {
-  const { getByRole } = render(
+  const props = render(
     <ContainerDeckValidator deckMain={deckMain} deckSide={deckSide} />,
   )
-  return { getByRole }
+  const getStatusWithName = (name) => props.getByRole('status', { name })
+  return {
+    ...props,
+    getStatusWithName,
+  }
 }
 
 afterEach(cleanup)
 
-test('空のデッキ', () => {
-  const deckMain = new Map()
-  const deckSide = new Map()
-  const { getByRole } = defaultRender(deckMain, deckSide)
-  // prettier-ignore
-  expect(getByRole('status', { name: '最強ダイバー決定戦2026' })).toHaveTextContent('❌')
-  expect(getByRole('status', { name: 'いわゆる002' })).toHaveTextContent('❌')
-  // prettier-ignore
-  expect(getByRole('status', { name: '推奨レギュレーション' })).toHaveTextContent('❌')
-  expect(getByRole('status', { name: '封印なし' })).toHaveTextContent('❌')
-})
+test.each([
+  ['空のデッキ', [], []],
+  [
+    'メイン39枚',
+    [
+      ['R-1', 4],
+      ['R-2', 4],
+      ['R-3', 4],
+      ['R-4', 4],
+      ['R-5', 4],
+      ['R-6', 4],
+      ['R-7', 4],
+      ['R-8', 4],
+      ['R-9', 4],
+      ['R-10', 3],
+    ],
+    [],
+  ],
+  [
+    'メイン39枚サイド1枚',
+    [
+      ['R-1', 4],
+      ['R-2', 4],
+      ['R-3', 4],
+      ['R-4', 4],
+      ['R-5', 4],
+      ['R-6', 4],
+      ['R-7', 4],
+      ['R-8', 4],
+      ['R-9', 4],
+      ['R-10', 3],
+    ],
+    [['B-1', 1]],
+  ],
+  [
+    'メイン40枚サイド11枚',
+    [
+      ['R-1', 4],
+      ['R-2', 4],
+      ['R-3', 4],
+      ['R-4', 4],
+      ['R-5', 4],
+      ['R-6', 4],
+      ['R-7', 4],
+      ['R-8', 4],
+      ['R-9', 4],
+      ['R-10', 4],
+    ],
+    [
+      ['B-1', 4],
+      ['B-2', 4],
+      ['B-3', 3],
+    ],
+  ],
+  [
+    'メイン51枚サイド10枚',
+    [
+      ['R-1', 4],
+      ['R-2', 4],
+      ['R-3', 4],
+      ['R-4', 4],
+      ['R-5', 4],
+      ['R-6', 4],
+      ['R-7', 4],
+      ['R-8', 4],
+      ['R-9', 4],
+      ['R-10', 4],
+      ['B-1', 4],
+      ['B-2', 4],
+      ['B-3', 3],
+    ],
+    [
+      ['B-4', 4],
+      ['B-5', 4],
+      ['B-6', 2],
+    ],
+  ],
+  [
+    'メイン60枚サイド1枚',
+    [
+      ['R-1', 4],
+      ['R-2', 4],
+      ['R-3', 4],
+      ['R-4', 4],
+      ['R-5', 4],
+      ['R-6', 4],
+      ['R-7', 4],
+      ['R-8', 4],
+      ['R-9', 4],
+      ['R-10', 4],
+      ['B-1', 4],
+      ['B-2', 4],
+      ['B-3', 4],
+      ['B-4', 4],
+      ['B-5', 4],
+    ],
+    [['B-6', 1]],
+  ],
+  [
+    'メインサイドあわせて4枚超過',
+    [
+      ['R-1', 4],
+      ['R-2', 4],
+      ['R-3', 4],
+      ['R-4', 4],
+      ['R-5', 4],
+      ['R-6', 4],
+      ['R-7', 4],
+      ['R-8', 4],
+      ['R-9', 4],
+      ['R-10', 2],
+      ['R-11', 2],
+    ],
+    [
+      ['R-10', 2],
+      ['R-11', 3], // 超過
+    ],
+  ],
+  [
+    '色違いヒエロスガモスメインサイドあわせて4枚超過',
+    [
+      ['R-1', 4],
+      ['R-2', 4],
+      ['R-3', 4],
+      ['R-4', 4],
+      ['R-5', 4],
+      ['R-6', 4],
+      ['R-7', 4],
+      ['R-8', 4],
+      ['R-9', 4],
+      ['2nd2-60', 4], // 赤緑
+    ],
+    [
+      ['2nd2-61', 1], // 赤黄
+    ],
+  ],
+])('デッキ枚数でNG (%s)', (_, entriesMain, entriesSide) => {
+  const deckMain = new Map(entriesMain)
+  const deckSide = new Map(entriesSide)
+  const { getStatusWithName } = defaultRender(deckMain, deckSide)
 
-test('メイン39枚', () => {
-  const deckMain = new Map([
-    ['R-1', 4],
-    ['R-2', 4],
-    ['R-3', 4],
-    ['R-4', 4],
-    ['R-5', 4],
-    ['R-6', 4],
-    ['R-7', 4],
-    ['R-8', 4],
-    ['R-9', 4],
-    ['R-10', 3],
-  ])
-  const deckSide = new Map()
-  const { getByRole } = defaultRender(deckMain, deckSide)
-  // prettier-ignore
-  expect(getByRole('status', { name: '最強ダイバー決定戦2026' })).toHaveTextContent('❌')
-  expect(getByRole('status', { name: 'いわゆる002' })).toHaveTextContent('❌')
-  // prettier-ignore
-  expect(getByRole('status', { name: '推奨レギュレーション' })).toHaveTextContent('❌')
-  expect(getByRole('status', { name: '封印なし' })).toHaveTextContent('❌')
-})
-
-test('メイン40枚', () => {
-  const deckMain = new Map([
-    ['R-1', 4],
-    ['R-2', 4],
-    ['R-3', 4],
-    ['R-4', 4],
-    ['R-5', 4],
-    ['R-6', 4],
-    ['R-7', 4],
-    ['R-8', 4],
-    ['R-9', 4],
-    ['R-10', 4],
-  ])
-  const deckSide = new Map()
-  const { getByRole } = defaultRender(deckMain, deckSide)
-  // prettier-ignore
-  expect(getByRole('status', { name: '最強ダイバー決定戦2026' })).toHaveTextContent('✅')
-  expect(getByRole('status', { name: 'いわゆる002' })).toHaveTextContent('✅')
-  // prettier-ignore
-  expect(getByRole('status', { name: '推奨レギュレーション' })).toHaveTextContent('✅')
-  expect(getByRole('status', { name: '封印なし' })).toHaveTextContent('✅')
-})
-
-test('メイン41枚', () => {
-  const deckMain = new Map([
-    ['R-1', 4],
-    ['R-2', 4],
-    ['R-3', 4],
-    ['R-4', 4],
-    ['R-5', 4],
-    ['R-6', 4],
-    ['R-7', 4],
-    ['R-8', 4],
-    ['R-9', 4],
-    ['R-10', 4],
-    ['B-1', 1],
-  ])
-  const deckSide = new Map()
-  const { getByRole } = defaultRender(deckMain, deckSide)
-  // prettier-ignore
-  expect(getByRole('status', { name: '最強ダイバー決定戦2026' })).toHaveTextContent('✅')
-  expect(getByRole('status', { name: 'いわゆる002' })).toHaveTextContent('✅')
-  // prettier-ignore
-  expect(getByRole('status', { name: '推奨レギュレーション' })).toHaveTextContent('✅')
-  expect(getByRole('status', { name: '封印なし' })).toHaveTextContent('✅')
-})
-
-test('メイン60枚', () => {
-  const deckMain = new Map([
-    ['R-1', 4],
-    ['R-2', 4],
-    ['R-3', 4],
-    ['R-4', 4],
-    ['R-5', 4],
-    ['R-6', 4],
-    ['R-7', 4],
-    ['R-8', 4],
-    ['R-9', 4],
-    ['R-10', 4],
-    ['B-1', 4],
-    ['B-2', 4],
-    ['B-3', 4],
-    ['B-4', 4],
-    ['B-5', 4],
-  ])
-  const deckSide = new Map()
-  const { getByRole } = defaultRender(deckMain, deckSide)
-  // prettier-ignore
-  expect(getByRole('status', { name: '最強ダイバー決定戦2026' })).toHaveTextContent('✅')
-  expect(getByRole('status', { name: 'いわゆる002' })).toHaveTextContent('✅')
-  // prettier-ignore
-  expect(getByRole('status', { name: '推奨レギュレーション' })).toHaveTextContent('✅')
-  expect(getByRole('status', { name: '封印なし' })).toHaveTextContent('✅')
-})
-
-test('メイン61枚', () => {
-  const deckMain = new Map([
-    ['R-1', 4],
-    ['R-2', 4],
-    ['R-3', 4],
-    ['R-4', 4],
-    ['R-5', 4],
-    ['R-6', 4],
-    ['R-7', 4],
-    ['R-8', 4],
-    ['R-9', 4],
-    ['R-10', 4],
-    ['B-1', 4],
-    ['B-2', 4],
-    ['B-3', 4],
-    ['B-4', 4],
-    ['B-5', 4],
-    ['B-6', 1],
-  ])
-  const deckSide = new Map()
-  const { getByRole } = defaultRender(deckMain, deckSide)
-  // prettier-ignore
-  expect(getByRole('status', { name: '最強ダイバー決定戦2026' })).toHaveTextContent('✅')
-  expect(getByRole('status', { name: 'いわゆる002' })).toHaveTextContent('✅')
-  // prettier-ignore
-  expect(getByRole('status', { name: '推奨レギュレーション' })).toHaveTextContent('✅')
-  expect(getByRole('status', { name: '封印なし' })).toHaveTextContent('✅')
-})
-
-test('メイン39枚サイド1枚', () => {
-  const deckMain = new Map([
-    ['R-1', 4],
-    ['R-2', 4],
-    ['R-3', 4],
-    ['R-4', 4],
-    ['R-5', 4],
-    ['R-6', 4],
-    ['R-7', 4],
-    ['R-8', 4],
-    ['R-9', 4],
-    ['R-10', 3],
-  ])
-  const deckSide = new Map([['B-1', 1]])
-  const { getByRole } = defaultRender(deckMain, deckSide)
-  // prettier-ignore
-  expect(getByRole('status', { name: '最強ダイバー決定戦2026' })).toHaveTextContent('❌')
-  expect(getByRole('status', { name: 'いわゆる002' })).toHaveTextContent('❌')
-  // prettier-ignore
-  expect(getByRole('status', { name: '推奨レギュレーション' })).toHaveTextContent('❌')
-  expect(getByRole('status', { name: '封印なし' })).toHaveTextContent('❌')
-})
-
-test('メイン40枚サイド1枚', () => {
-  const deckMain = new Map([
-    ['R-1', 4],
-    ['R-2', 4],
-    ['R-3', 4],
-    ['R-4', 4],
-    ['R-5', 4],
-    ['R-6', 4],
-    ['R-7', 4],
-    ['R-8', 4],
-    ['R-9', 4],
-    ['R-10', 4],
-  ])
-  const deckSide = new Map([['B-1', 1]])
-  const { getByRole } = defaultRender(deckMain, deckSide)
-  // prettier-ignore
-  expect(getByRole('status', { name: '最強ダイバー決定戦2026' })).toHaveTextContent('✅')
-  expect(getByRole('status', { name: 'いわゆる002' })).toHaveTextContent('✅')
-  // prettier-ignore
-  expect(getByRole('status', { name: '推奨レギュレーション' })).toHaveTextContent('✅')
-  expect(getByRole('status', { name: '封印なし' })).toHaveTextContent('✅')
-})
-
-test('メイン40枚サイド10枚', () => {
-  const deckMain = new Map([
-    ['R-1', 4],
-    ['R-2', 4],
-    ['R-3', 4],
-    ['R-4', 4],
-    ['R-5', 4],
-    ['R-6', 4],
-    ['R-7', 4],
-    ['R-8', 4],
-    ['R-9', 4],
-    ['R-10', 4],
-  ])
-  const deckSide = new Map([
-    ['B-1', 4],
-    ['B-2', 4],
-    ['B-3', 2],
-  ])
-  const { getByRole } = defaultRender(deckMain, deckSide)
-  // prettier-ignore
-  expect(getByRole('status', { name: '最強ダイバー決定戦2026' })).toHaveTextContent('✅')
-  expect(getByRole('status', { name: 'いわゆる002' })).toHaveTextContent('✅')
-  // prettier-ignore
-  expect(getByRole('status', { name: '推奨レギュレーション' })).toHaveTextContent('✅')
-  expect(getByRole('status', { name: '封印なし' })).toHaveTextContent('✅')
-})
-
-test('メイン40枚サイド11枚', () => {
-  const deckMain = new Map([
-    ['R-1', 4],
-    ['R-2', 4],
-    ['R-3', 4],
-    ['R-4', 4],
-    ['R-5', 4],
-    ['R-6', 4],
-    ['R-7', 4],
-    ['R-8', 4],
-    ['R-9', 4],
-    ['R-10', 4],
-  ])
-  const deckSide = new Map([
-    ['B-1', 4],
-    ['B-2', 4],
-    ['B-3', 3],
-  ])
-  const { getByRole } = defaultRender(deckMain, deckSide)
-  // prettier-ignore
-  expect(getByRole('status', { name: '最強ダイバー決定戦2026' })).toHaveTextContent('❌')
-  expect(getByRole('status', { name: 'いわゆる002' })).toHaveTextContent('❌')
-  // prettier-ignore
-  expect(getByRole('status', { name: '推奨レギュレーション' })).toHaveTextContent('❌')
-  expect(getByRole('status', { name: '封印なし' })).toHaveTextContent('❌')
-})
-
-test('メイン50枚サイド10枚', () => {
-  const deckMain = new Map([
-    ['R-1', 4],
-    ['R-2', 4],
-    ['R-3', 4],
-    ['R-4', 4],
-    ['R-5', 4],
-    ['R-6', 4],
-    ['R-7', 4],
-    ['R-8', 4],
-    ['R-9', 4],
-    ['R-10', 4],
-    ['B-1', 4],
-    ['B-2', 4],
-    ['B-3', 2],
-  ])
-  const deckSide = new Map([
-    ['B-4', 4],
-    ['B-5', 4],
-    ['B-6', 2],
-  ])
-  const { getByRole } = defaultRender(deckMain, deckSide)
-  // prettier-ignore
-  expect(getByRole('status', { name: '最強ダイバー決定戦2026' })).toHaveTextContent('✅')
-  expect(getByRole('status', { name: 'いわゆる002' })).toHaveTextContent('✅')
-  // prettier-ignore
-  expect(getByRole('status', { name: '推奨レギュレーション' })).toHaveTextContent('✅')
-  expect(getByRole('status', { name: '封印なし' })).toHaveTextContent('✅')
-})
-
-test('メイン51枚サイド10枚', () => {
-  const deckMain = new Map([
-    ['R-1', 4],
-    ['R-2', 4],
-    ['R-3', 4],
-    ['R-4', 4],
-    ['R-5', 4],
-    ['R-6', 4],
-    ['R-7', 4],
-    ['R-8', 4],
-    ['R-9', 4],
-    ['R-10', 4],
-    ['B-1', 4],
-    ['B-2', 4],
-    ['B-3', 3],
-  ])
-  const deckSide = new Map([
-    ['B-4', 4],
-    ['B-5', 4],
-    ['B-6', 2],
-  ])
-  const { getByRole } = defaultRender(deckMain, deckSide)
-  // prettier-ignore
-  expect(getByRole('status', { name: '最強ダイバー決定戦2026' })).toHaveTextContent('❌')
-  expect(getByRole('status', { name: 'いわゆる002' })).toHaveTextContent('❌')
-  // prettier-ignore
-  expect(getByRole('status', { name: '推奨レギュレーション' })).toHaveTextContent('❌')
-  expect(getByRole('status', { name: '封印なし' })).toHaveTextContent('❌')
-})
-
-test('メイン60枚サイド1枚', () => {
-  const deckMain = new Map([
-    ['R-1', 4],
-    ['R-2', 4],
-    ['R-3', 4],
-    ['R-4', 4],
-    ['R-5', 4],
-    ['R-6', 4],
-    ['R-7', 4],
-    ['R-8', 4],
-    ['R-9', 4],
-    ['R-10', 4],
-    ['B-1', 4],
-    ['B-2', 4],
-    ['B-3', 4],
-    ['B-4', 4],
-    ['B-5', 4],
-  ])
-  const deckSide = new Map([['B-6', 1]])
-  const { getByRole } = defaultRender(deckMain, deckSide)
-  // prettier-ignore
-  expect(getByRole('status', { name: '最強ダイバー決定戦2026' })).toHaveTextContent('❌')
-  expect(getByRole('status', { name: 'いわゆる002' })).toHaveTextContent('❌')
-  // prettier-ignore
-  expect(getByRole('status', { name: '推奨レギュレーション' })).toHaveTextContent('❌')
-  expect(getByRole('status', { name: '封印なし' })).toHaveTextContent('❌')
-})
-
-test('メインサイドあわせて4枚以下', () => {
-  const deckMain = new Map([
-    ['R-1', 4],
-    ['R-2', 4],
-    ['R-3', 4],
-    ['R-4', 4],
-    ['R-5', 4],
-    ['R-6', 4],
-    ['R-7', 4],
-    ['R-8', 4],
-    ['R-9', 4],
-    ['R-10', 2],
-    ['R-11', 2],
-  ])
-  const deckSide = new Map([
-    ['R-10', 2],
-    ['R-11', 2],
-  ])
-  const { getByRole } = defaultRender(deckMain, deckSide)
-  // prettier-ignore
-  expect(getByRole('status', { name: '最強ダイバー決定戦2026' })).toHaveTextContent('✅')
-  expect(getByRole('status', { name: 'いわゆる002' })).toHaveTextContent('✅')
-  // prettier-ignore
-  expect(getByRole('status', { name: '推奨レギュレーション' })).toHaveTextContent('✅')
-  expect(getByRole('status', { name: '封印なし' })).toHaveTextContent('✅')
-})
-
-test('メインサイドあわせて4枚超過', () => {
-  const deckMain = new Map([
-    ['R-1', 4],
-    ['R-2', 4],
-    ['R-3', 4],
-    ['R-4', 4],
-    ['R-5', 4],
-    ['R-6', 4],
-    ['R-7', 4],
-    ['R-8', 4],
-    ['R-9', 4],
-    ['R-10', 2],
-    ['R-11', 2],
-  ])
-  const deckSide = new Map([
-    ['R-10', 2],
-    ['R-11', 3],
-  ])
-  const { getByRole } = defaultRender(deckMain, deckSide)
-  // prettier-ignore
-  expect(getByRole('status', { name: '最強ダイバー決定戦2026' })).toHaveTextContent('❌')
-  expect(getByRole('status', { name: 'いわゆる002' })).toHaveTextContent('❌')
-  // prettier-ignore
-  expect(getByRole('status', { name: '推奨レギュレーション' })).toHaveTextContent('❌')
-  expect(getByRole('status', { name: '封印なし' })).toHaveTextContent('❌')
-})
-
-test('絵違い土方歳三あわせて4枚以下', () => {
-  const deckMain = new Map([
-    ['R-1', 4],
-    ['R-2', 4],
-    ['R-3', 4],
-    ['R-4', 4],
-    ['R-5', 4],
-    ['R-6', 4],
-    ['R-7', 4],
-    ['R-8', 4],
-    ['R-9', 4],
-    ['3-9', 2], // 土方歳三
-    ['3-81', 2], // 土方歳三 (PSR)
-  ])
-  const deckSide = new Map()
-  const { getByRole } = defaultRender(deckMain, deckSide)
-  // prettier-ignore
-  expect(getByRole('status', { name: '最強ダイバー決定戦2026' })).toHaveTextContent('✅')
-  expect(getByRole('status', { name: 'いわゆる002' })).toHaveTextContent('✅')
-  // prettier-ignore
-  expect(getByRole('status', { name: '推奨レギュレーション' })).toHaveTextContent('✅')
-  expect(getByRole('status', { name: '封印なし' })).toHaveTextContent('✅')
-})
-
-test('絵違い土方歳三あわせて4枚超過', () => {
-  const deckMain = new Map([
-    ['R-1', 4],
-    ['R-2', 4],
-    ['R-3', 4],
-    ['R-4', 4],
-    ['R-5', 4],
-    ['R-6', 4],
-    ['R-7', 4],
-    ['R-8', 4],
-    ['R-9', 4],
-    ['3-9', 2], // 土方歳三
-    ['3-81', 3], // 土方歳三 (PSR)
-  ])
-  const deckSide = new Map()
-  const { getByRole } = defaultRender(deckMain, deckSide)
-  // prettier-ignore
-  expect(getByRole('status', { name: '最強ダイバー決定戦2026' })).toHaveTextContent('❌')
-  expect(getByRole('status', { name: 'いわゆる002' })).toHaveTextContent('❌')
-  // prettier-ignore
-  expect(getByRole('status', { name: '推奨レギュレーション' })).toHaveTextContent('❌')
-  expect(getByRole('status', { name: '封印なし' })).toHaveTextContent('❌')
-})
-
-test('絵違いカール大帝あわせて4枚以下', () => {
-  const deckMain = new Map([
-    ['R-1', 4],
-    ['R-2', 4],
-    ['R-3', 4],
-    ['R-4', 4],
-    ['R-5', 4],
-    ['R-6', 4],
-    ['R-7', 4],
-    ['R-8', 4],
-    ['R-9', 4],
-    ['4-10', 2], // カール大帝
-    ['4-81', 2], // カール大帝 (PSR)
-  ])
-  const deckSide = new Map()
-  const { getByRole } = defaultRender(deckMain, deckSide)
-  // prettier-ignore
-  expect(getByRole('status', { name: '最強ダイバー決定戦2026' })).toHaveTextContent('✅')
-  expect(getByRole('status', { name: 'いわゆる002' })).toHaveTextContent('✅')
-  // prettier-ignore
-  expect(getByRole('status', { name: '推奨レギュレーション' })).toHaveTextContent('✅')
-  expect(getByRole('status', { name: '封印なし' })).toHaveTextContent('✅')
-})
-
-test('絵違いカール大帝あわせて4枚超過', () => {
-  const deckMain = new Map([
-    ['R-1', 4],
-    ['R-2', 4],
-    ['R-3', 4],
-    ['R-4', 4],
-    ['R-5', 4],
-    ['R-6', 4],
-    ['R-7', 4],
-    ['R-8', 4],
-    ['R-9', 4],
-    ['4-10', 2], // カール大帝
-    ['4-81', 3], // カール大帝 (PSR)
-  ])
-  const deckSide = new Map()
-  const { getByRole } = defaultRender(deckMain, deckSide)
-  // prettier-ignore
-  expect(getByRole('status', { name: '最強ダイバー決定戦2026' })).toHaveTextContent('❌')
-  expect(getByRole('status', { name: 'いわゆる002' })).toHaveTextContent('❌')
-  // prettier-ignore
-  expect(getByRole('status', { name: '推奨レギュレーション' })).toHaveTextContent('❌')
-  expect(getByRole('status', { name: '封印なし' })).toHaveTextContent('❌')
+  expect(getStatusWithName('最強ダイバー決定戦2026')).toHaveTextContent('❌')
+  expect(getStatusWithName('いわゆる002')).toHaveTextContent('❌')
+  expect(getStatusWithName('推奨レギュレーション')).toHaveTextContent('❌')
+  expect(getStatusWithName('封印なし')).toHaveTextContent('❌')
 })
 
 test.each([
-  ['レッドストーン', 'R-13'],
-  ['ブルーストーン', 'B-13'],
-  ['グリーンストーン', 'G-13'],
-  ['イエローストーン', 'Y-13'],
-  ['パープルストーン', 'P-16'],
-])('ストーン40枚 (%s)', (_, id) => {
-  const deckMain = new Map([[id, 40]])
-  const deckSide = new Map()
-  const { getByRole } = defaultRender(deckMain, deckSide)
-  // prettier-ignore
-  expect(getByRole('status', { name: '最強ダイバー決定戦2026' })).toHaveTextContent('✅')
-  expect(getByRole('status', { name: 'いわゆる002' })).toHaveTextContent('✅')
-  // prettier-ignore
-  expect(getByRole('status', { name: '推奨レギュレーション' })).toHaveTextContent('✅')
-  expect(getByRole('status', { name: '封印なし' })).toHaveTextContent('✅')
+  ['土方歳三 (SR/PSR)', '3-9', '3-81'],
+  ['カール大帝 (SR/PSR)', '4-10', '4-81'],
+  ['武田信玄 (SR/PSR)', '2nd1-1', '2nd1-110'],
+  ['ヴィクトリア女王 (SR/PSR)', '2nd1-2', '2nd1-111'],
+  ['ロイヤリティ (新旧)', 'R-11', '2nd1-78'],
+  ['地上の紫微垣 (新旧)', 'Y-10', '2nd1-72'],
+  ['レッドオーブ (新旧)', '1-61', '2nd1-96'],
+  ['ブルーオーブ (新旧)', '1-65', '2nd1-97'],
+  ['グリーンオーブ (新旧)', '1-69', '2nd1-98'],
+  ['イエローオーブ (新旧)', '2-74', '2nd1-99'],
+  ['パープルオーブ (新旧)', 'P-15', '2nd1-100'],
+  ['玄奘 (SR/PSR)', '2nd2-4', '2nd2-74'],
+  ['ジャンヌ・ダルク (新旧)', '1-22', '2nd2-7'],
+  ['安倍晴明 (SR/PSR)', '2nd2-10', '2nd2-75'],
+  ['ヒエロスガモス (色違い)', '2nd2-60', '2nd2-61'],
+])('同じ名前で異なるIDのカードが4枚超過でNG (%s)', (_, id1, id2) => {
+  const deckMain = new Map([
+    ['R-1', 4],
+    ['R-2', 4],
+    ['R-3', 4],
+    ['R-4', 4],
+    ['R-5', 4],
+    ['R-6', 4],
+    ['R-7', 4],
+    ['R-8', 4],
+    ['R-9', 3], // 合計で40枚になるように調整
+    [id1, 2],
+    [id2, 3],
+  ])
+  const deckSide = new Map([])
+  const { getStatusWithName } = defaultRender(deckMain, deckSide)
+
+  expect(getStatusWithName('最強ダイバー決定戦2026')).toHaveTextContent('❌')
+  expect(getStatusWithName('いわゆる002')).toHaveTextContent('❌')
+  expect(getStatusWithName('推奨レギュレーション')).toHaveTextContent('❌')
+  expect(getStatusWithName('封印なし')).toHaveTextContent('❌')
 })
 
-test('封印なしでメインにメディチ・リユニオン4枚ずつ', () => {
+test.each([
+  [
+    'メイン40枚',
+    [
+      ['R-1', 4],
+      ['R-2', 4],
+      ['R-3', 4],
+      ['R-4', 4],
+      ['R-5', 4],
+      ['R-6', 4],
+      ['R-7', 4],
+      ['R-8', 4],
+      ['R-9', 4],
+      ['R-10', 4],
+    ],
+    [],
+  ],
+  [
+    'メイン41枚',
+    [
+      ['R-1', 4],
+      ['R-2', 4],
+      ['R-3', 4],
+      ['R-4', 4],
+      ['R-5', 4],
+      ['R-6', 4],
+      ['R-7', 4],
+      ['R-8', 4],
+      ['R-9', 4],
+      ['R-10', 4],
+      ['B-1', 1],
+    ],
+    [],
+  ],
+  [
+    'メイン60枚',
+    [
+      ['R-1', 4],
+      ['R-2', 4],
+      ['R-3', 4],
+      ['R-4', 4],
+      ['R-5', 4],
+      ['R-6', 4],
+      ['R-7', 4],
+      ['R-8', 4],
+      ['R-9', 4],
+      ['R-10', 4],
+      ['B-1', 4],
+      ['B-2', 4],
+      ['B-3', 4],
+      ['B-4', 4],
+      ['B-5', 4],
+    ],
+    [],
+  ],
+  [
+    'メイン61枚',
+    [
+      ['R-1', 4],
+      ['R-2', 4],
+      ['R-3', 4],
+      ['R-4', 4],
+      ['R-5', 4],
+      ['R-6', 4],
+      ['R-7', 4],
+      ['R-8', 4],
+      ['R-9', 4],
+      ['R-10', 4],
+      ['B-1', 4],
+      ['B-2', 4],
+      ['B-3', 4],
+      ['B-4', 4],
+      ['B-5', 4],
+      ['B-6', 1],
+    ],
+    [],
+  ],
+  [
+    'メイン40枚サイド1枚',
+    [
+      ['R-1', 4],
+      ['R-2', 4],
+      ['R-3', 4],
+      ['R-4', 4],
+      ['R-5', 4],
+      ['R-6', 4],
+      ['R-7', 4],
+      ['R-8', 4],
+      ['R-9', 4],
+      ['R-10', 4],
+    ],
+    [['B-1', 1]],
+  ],
+  [
+    'メイン40枚サイド10枚',
+    [
+      ['R-1', 4],
+      ['R-2', 4],
+      ['R-3', 4],
+      ['R-4', 4],
+      ['R-5', 4],
+      ['R-6', 4],
+      ['R-7', 4],
+      ['R-8', 4],
+      ['R-9', 4],
+      ['R-10', 4],
+    ],
+    [
+      ['B-1', 4],
+      ['B-2', 4],
+      ['B-3', 2],
+    ],
+  ],
+  [
+    'メイン50枚サイド10枚',
+    [
+      ['R-1', 4],
+      ['R-2', 4],
+      ['R-3', 4],
+      ['R-4', 4],
+      ['R-5', 4],
+      ['R-6', 4],
+      ['R-7', 4],
+      ['R-8', 4],
+      ['R-9', 4],
+      ['R-10', 4],
+      ['B-1', 4],
+      ['B-2', 4],
+      ['B-3', 2],
+    ],
+    [
+      ['B-4', 4],
+      ['B-5', 4],
+      ['B-6', 2],
+    ],
+  ],
+  ['スターターのレッドストーン40枚', [['R-13', 40]], []],
+  ['スターターのブルーストーン40枚', [['B-13', 40]], []],
+  ['スターターのグリーンストーン40枚', [['G-13', 40]], []],
+  ['スターターのイエローストーン40枚', [['Y-13', 40]], []],
+  ['スターターのパープルストーン40枚', [['P-16', 40]], []],
+  ['第5弾のレッドストーン40枚', [['2nd1-91', 40]], []],
+  ['第5弾のブルーストーン40枚', [['2nd1-92', 40]], []],
+  ['第5弾のグリーンストーン40枚', [['2nd1-93', 40]], []],
+  ['第5弾のイエローストーン40枚', [['2nd1-94', 40]], []],
+  ['第5弾のパープルストーン40枚', [['2nd1-95', 40]], []],
+])('すべてのレギュレーションでOK (%s)', (_, entriesMain, entriesSide) => {
+  const deckMain = new Map(entriesMain)
+  const deckSide = new Map(entriesSide)
+  const { getStatusWithName } = defaultRender(deckMain, deckSide)
+
+  expect(getStatusWithName('最強ダイバー決定戦2026')).toHaveTextContent('✅')
+  expect(getStatusWithName('いわゆる002')).toHaveTextContent('✅')
+  expect(getStatusWithName('推奨レギュレーション')).toHaveTextContent('✅')
+  expect(getStatusWithName('封印なし')).toHaveTextContent('✅')
+})
+
+test('封印なしのみOK (メインにメディチ・リユニオン4枚ずつ)', () => {
   const deckMain = new Map([
     ['R-1', 4],
     ['R-2', 4],
@@ -521,16 +373,15 @@ test('封印なしでメインにメディチ・リユニオン4枚ずつ', () =
     ['4-59', 4], // リユニオン
   ])
   const deckSide = new Map()
-  const { getByRole } = defaultRender(deckMain, deckSide)
-  // prettier-ignore
-  expect(getByRole('status', { name: '最強ダイバー決定戦2026' })).toHaveTextContent('❌')
-  expect(getByRole('status', { name: 'いわゆる002' })).toHaveTextContent('❌')
-  // prettier-ignore
-  expect(getByRole('status', { name: '推奨レギュレーション' })).toHaveTextContent('❌')
-  expect(getByRole('status', { name: '封印なし' })).toHaveTextContent('✅')
+  const { getStatusWithName } = defaultRender(deckMain, deckSide)
+
+  expect(getStatusWithName('最強ダイバー決定戦2026')).toHaveTextContent('❌')
+  expect(getStatusWithName('いわゆる002')).toHaveTextContent('❌')
+  expect(getStatusWithName('推奨レギュレーション')).toHaveTextContent('❌')
+  expect(getStatusWithName('封印なし')).toHaveTextContent('✅')
 })
 
-test('封印なしでメイン・サイド合計でメディチ・リユニオン4枚ずつ', () => {
+test('封印なしのみOK (メイン・サイド合計でメディチ・リユニオン4枚ずつ)', () => {
   const deckMain = new Map([
     ['R-1', 4],
     ['R-2', 4],
@@ -548,16 +399,15 @@ test('封印なしでメイン・サイド合計でメディチ・リユニオ�
     ['4-36', 2], // メディチ
     ['4-59', 2], // リユニオン
   ])
-  const { getByRole } = defaultRender(deckMain, deckSide)
-  // prettier-ignore
-  expect(getByRole('status', { name: '最強ダイバー決定戦2026' })).toHaveTextContent('❌')
-  expect(getByRole('status', { name: 'いわゆる002' })).toHaveTextContent('❌')
-  // prettier-ignore
-  expect(getByRole('status', { name: '推奨レギュレーション' })).toHaveTextContent('❌')
-  expect(getByRole('status', { name: '封印なし' })).toHaveTextContent('✅')
+  const { getStatusWithName } = defaultRender(deckMain, deckSide)
+
+  expect(getStatusWithName('最強ダイバー決定戦2026')).toHaveTextContent('❌')
+  expect(getStatusWithName('いわゆる002')).toHaveTextContent('❌')
+  expect(getStatusWithName('推奨レギュレーション')).toHaveTextContent('❌')
+  expect(getStatusWithName('封印なし')).toHaveTextContent('✅')
 })
 
-test('推奨レギュレーションでメディチ・リユニオン2枚ずつ', () => {
+test('推奨レギュレーション以下でのみOK (メディチ・リユニオン2枚ずつ)', () => {
   const deckMain = new Map([
     ['R-1', 4],
     ['R-2', 4],
@@ -572,16 +422,15 @@ test('推奨レギュレーションでメディチ・リユニオン2枚ずつ'
     ['4-59', 2], // リユニオン
   ])
   const deckSide = new Map()
-  const { getByRole } = defaultRender(deckMain, deckSide)
-  // prettier-ignore
-  expect(getByRole('status', { name: '最強ダイバー決定戦2026' })).toHaveTextContent('❌')
-  expect(getByRole('status', { name: 'いわゆる002' })).toHaveTextContent('❌')
-  // prettier-ignore
-  expect(getByRole('status', { name: '推奨レギュレーション' })).toHaveTextContent('✅')
-  expect(getByRole('status', { name: '封印なし' })).toHaveTextContent('✅')
+  const { getStatusWithName } = defaultRender(deckMain, deckSide)
+
+  expect(getStatusWithName('最強ダイバー決定戦2026')).toHaveTextContent('❌')
+  expect(getStatusWithName('いわゆる002')).toHaveTextContent('❌')
+  expect(getStatusWithName('推奨レギュレーション')).toHaveTextContent('✅')
+  expect(getStatusWithName('封印なし')).toHaveTextContent('✅')
 })
 
-test('002で千利休1枚', () => {
+test('002以下でOK (千利休入り)', () => {
   const deckMain = new Map([
     ['R-1', 4],
     ['R-2', 4],
@@ -596,13 +445,12 @@ test('002で千利休1枚', () => {
     ['1-33', 1], // 千利休
   ])
   const deckSide = new Map()
-  const { getByRole } = defaultRender(deckMain, deckSide)
-  // prettier-ignore
-  expect(getByRole('status', { name: '最強ダイバー決定戦2026' })).toHaveTextContent('❌')
-  expect(getByRole('status', { name: 'いわゆる002' })).toHaveTextContent('✅')
-  // prettier-ignore
-  expect(getByRole('status', { name: '推奨レギュレーション' })).toHaveTextContent('✅')
-  expect(getByRole('status', { name: '封印なし' })).toHaveTextContent('✅')
+  const { getStatusWithName } = defaultRender(deckMain, deckSide)
+
+  expect(getStatusWithName('最強ダイバー決定戦2026')).toHaveTextContent('❌')
+  expect(getStatusWithName('いわゆる002')).toHaveTextContent('✅')
+  expect(getStatusWithName('推奨レギュレーション')).toHaveTextContent('✅')
+  expect(getStatusWithName('封印なし')).toHaveTextContent('✅')
 })
 
 test('メインデッキの平均レベル', () => {
@@ -628,8 +476,8 @@ test('メインデッキの平均レベル', () => {
     ['1-10', 2],
     ['1-11', 2],
   ])
-  const { getByRole } = defaultRender(deckMain, deckSide)
-  expect(
-    getByRole('status', { name: 'メインデッキの平均レベル' }),
-  ).toHaveTextContent('2.55')
+  const { getStatusWithName } = defaultRender(deckMain, deckSide)
+  expect(getStatusWithName('メインデッキの平均レベル')).toHaveTextContent(
+    '2.55',
+  )
 })
