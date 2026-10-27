@@ -4,6 +4,7 @@ import { dataCardsMap } from '../../commons/dataCards'
 import { sum } from '../../commons/utils'
 
 function ContainerDeckValidator({ deckMain, deckSide }) {
+  const idIjinkaiStandard202611 = useId()
   const idSDK2026 = useId()
   const id002 = useId()
   const idUnrestricted = useId()
@@ -12,6 +13,13 @@ function ContainerDeckValidator({ deckMain, deckSide }) {
   return (
     <div className="m-2">
       <ul style={{ padding: 0, listStyle: 'none' }}>
+        <li>
+          <span role="status" aria-labelledby={idIjinkaiStandard202611}>
+            {isDeckValidIjinkaiStandard202611(deckMain, deckSide) ? '✅' : '❌'}
+          </span>
+          <span id={idIjinkaiStandard202611}>イジン会スタンダード202611</span>{' '}
+          (メディチ0・リユニオン0・千利休0・米百俵0)
+        </li>
         <li>
           <span role="status" aria-labelledby={idSDK2026}>
             {isDeckValidSDK2026(deckMain, deckSide) ? '✅' : '❌'}
@@ -40,6 +48,17 @@ function ContainerDeckValidator({ deckMain, deckSide }) {
         </li>
       </ul>
     </div>
+  )
+}
+
+// イジン会スタンダード2026.11.01
+function isDeckValidIjinkaiStandard202611(deckMain, deckSide) {
+  return (
+    isDeckValidBase(deckMain, deckSide) &&
+    hasNoMedici(deckMain, deckSide) &&
+    hasNoReunion(deckMain, deckSide) &&
+    hasNoRikyu(deckMain, deckSide) &&
+    hasNoKome(deckMain, deckSide)
   )
 }
 
@@ -129,6 +148,10 @@ function hasNoReunion(deckMain, deckSide) {
 
 function hasNoRikyu(deckMain, deckSide) {
   return hasNoCopy('1-33', deckMain) && hasNoCopy('1-33', deckSide)
+}
+
+function hasNoKome(deckMain, deckSide) {
+  return hasNoCopy('2nd1-68', deckMain) && hasNoCopy('2nd1-68', deckSide)
 }
 
 function hasNoCopy(idNoCopy, deck) {
