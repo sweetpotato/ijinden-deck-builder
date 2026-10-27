@@ -139,19 +139,23 @@ function hasCopiesLe4(deckMain, deckSide = new Map()) {
 }
 
 function hasNoMedici(deckMain, deckSide) {
-  return hasNoCopy('4-36', deckMain) && hasNoCopy('4-36', deckSide)
+  return hasNoCopyEach('4-36', deckMain, deckSide)
 }
 
 function hasNoReunion(deckMain, deckSide) {
-  return hasNoCopy('4-59', deckMain) && hasNoCopy('4-59', deckSide)
+  return hasNoCopyEach('4-59', deckMain, deckSide)
 }
 
 function hasNoRikyu(deckMain, deckSide) {
-  return hasNoCopy('1-33', deckMain) && hasNoCopy('1-33', deckSide)
+  return hasNoCopyEach('1-33', deckMain, deckSide)
 }
 
 function hasNoKome(deckMain, deckSide) {
-  return hasNoCopy('2nd1-68', deckMain) && hasNoCopy('2nd1-68', deckSide)
+  return hasNoCopyEach('2nd1-68', deckMain, deckSide)
+}
+
+function hasNoCopyEach(id, deckMain, deckSide) {
+  return hasNoCopy(id, deckMain) && hasNoCopy(id, deckSide)
 }
 
 function hasNoCopy(idNoCopy, deck) {
