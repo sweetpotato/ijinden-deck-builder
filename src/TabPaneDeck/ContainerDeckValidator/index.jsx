@@ -6,7 +6,6 @@ import { sum } from '../../commons/utils'
 function ContainerDeckValidator({ deckMain, deckSide }) {
   const idSDK2026 = useId()
   const id002 = useId()
-  const idRecommended = useId()
   const idUnrestricted = useId()
   const idAverageLevel = useId()
 
@@ -25,13 +24,6 @@ function ContainerDeckValidator({ deckMain, deckSide }) {
             {isDeckValidCommunity002(deckMain, deckSide) ? '✅' : '❌'}
           </span>
           <span id={id002}>いわゆる002</span> (メディチ0・リユニオン0)
-        </li>
-        <li>
-          <span role="status" aria-labelledby={idRecommended}>
-            {isDeckValidRecommended(deckMain, deckSide) ? '✅' : '❌'}
-          </span>
-          <span id={idRecommended}>推奨レギュレーション</span>{' '}
-          (メディチ2・リユニオン2)
         </li>
         <li>
           <span role="status" aria-labelledby={idUnrestricted}>
@@ -55,8 +47,8 @@ function ContainerDeckValidator({ deckMain, deckSide }) {
 function isDeckValidSDK2026(deckMain, deckSide) {
   return (
     isDeckValidBase(deckMain, deckSide) &&
-    hasMediciLe(0, deckMain, deckSide) &&
-    hasReunionLe(0, deckMain, deckSide) &&
+    hasNoMedici(deckMain, deckSide) &&
+    hasNoReunion(deckMain, deckSide) &&
     hasNoRikyu(deckMain, deckSide)
   )
 }
@@ -65,17 +57,8 @@ function isDeckValidSDK2026(deckMain, deckSide) {
 function isDeckValidCommunity002(deckMain, deckSide) {
   return (
     isDeckValidBase(deckMain, deckSide) &&
-    hasMediciLe(0, deckMain, deckSide) &&
-    hasReunionLe(0, deckMain, deckSide)
-  )
-}
-
-// 推奨レギュレーション
-function isDeckValidRecommended(deckMain, deckSide) {
-  return (
-    isDeckValidBase(deckMain, deckSide) &&
-    hasMediciLe(2, deckMain, deckSide) &&
-    hasReunionLe(2, deckMain, deckSide)
+    hasNoMedici(deckMain, deckSide) &&
+    hasNoReunion(deckMain, deckSide)
   )
 }
 
@@ -136,32 +119,21 @@ function hasCopiesLe4(deckMain, deckSide = new Map()) {
   return [...merged.values()].every((numCopies) => numCopies <= 4)
 }
 
-function hasMediciLe(numCopies, deckMain, deckSide) {
-  return hasNumCopiesNameOfIdLe('4-36', numCopies, deckMain, deckSide)
+function hasNoMedici(deckMain, deckSide) {
+  return hasNoCopy('4-36', deckMain) && hasNoCopy('4-36', deckSide)
 }
 
-function hasReunionLe(numCopies, deckMain, deckSide) {
-  return hasNumCopiesNameOfIdLe('4-59', numCopies, deckMain, deckSide)
+function hasNoReunion(deckMain, deckSide) {
+  return hasNoCopy('4-59', deckMain) && hasNoCopy('4-59', deckSide)
 }
 
 function hasNoRikyu(deckMain, deckSide) {
-  return hasNumCopiesNameOfIdLe('1-33', 0, deckMain, deckSide)
+  return hasNoCopy('1-33', deckMain) && hasNoCopy('1-33', deckSide)
 }
 
-function hasNumCopiesNameOfIdLe(id, numCopies, deckMain, deckSide) {
-  const numCopiesMain = numCopiesNameOfId(id, deckMain)
-  const numCopiesSide = numCopiesNameOfId(id, deckSide)
-  return numCopiesMain + numCopiesSide <= numCopies
-}
-
-function numCopiesNameOfId(id, deck) {
-  // ID を元に引いたカード名で判断する
-  const nameOfId = dataCardsMap.get(id).name
-  return [...deck.entries()]
-    .map(([id, numCopies]) => [dataCardsMap.get(id).name, numCopies])
-    .filter(([name]) => name === nameOfId)
-    .map(([, numCopies]) => numCopies)
-    .reduce((a, b) => a + b, 0)
+function hasNoCopy(idNoCopy, deck) {
+  // 封印カードは名前ではなくIDで判断する
+  return !deck.keys().some((id) => id === idNoCopy)
 }
 
 function getAverageLevel(deck) {
