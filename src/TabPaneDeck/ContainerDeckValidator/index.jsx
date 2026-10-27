@@ -1,4 +1,5 @@
 import { useId } from 'react'
+import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 
 import { dataCardsMap } from '../../commons/dataCards'
 import { sum } from '../../commons/utils'
@@ -17,27 +18,46 @@ function ContainerDeckValidator({ deckMain, deckSide }) {
           <span role="status" aria-labelledby={idIjinkaiStandard202611}>
             {isDeckValidIjinkaiStandard202611(deckMain, deckSide) ? '✅' : '❌'}
           </span>
-          <span id={idIjinkaiStandard202611}>イジン会スタンダード202611</span>{' '}
-          (メディチ0・リユニオン0・千利休0・米百俵0)
+          <span id={idIjinkaiStandard202611}>イジン会スタンダード202611</span>
+          <OverlayTrigger
+            placement="top"
+            overlay={
+              <Tooltip>メディチ0・リユニオン0・千利休0・米百俵0</Tooltip>
+            }
+          >
+            {/* 生のテキストはNGで、要素が必要。以下同様。 */}
+            <span>ℹ️</span>
+          </OverlayTrigger>
         </li>
         <li>
           <span role="status" aria-labelledby={idSDK2026}>
             {isDeckValidSDK2026(deckMain, deckSide) ? '✅' : '❌'}
           </span>
-          <span id={idSDK2026}>最強ダイバー決定戦2026</span>{' '}
-          (メディチ0・リユニオン0・千利休0)
+          <span id={idSDK2026}>最強ダイバー決定戦2026</span>
+          <OverlayTrigger
+            placement="top"
+            overlay={<Tooltip>メディチ0・リユニオン0・千利休0</Tooltip>}
+          >
+            <span>ℹ️</span>
+          </OverlayTrigger>
         </li>
         <li>
           <span role="status" aria-labelledby={id002}>
             {isDeckValidCommunity002(deckMain, deckSide) ? '✅' : '❌'}
           </span>
-          <span id={id002}>いわゆる002</span> (メディチ0・リユニオン0)
+          <span id={id002}>いわゆる002</span>
+          <OverlayTrigger
+            placement="top"
+            overlay={<Tooltip>メディチ0・リユニオン0</Tooltip>}
+          >
+            <span>ℹ️</span>
+          </OverlayTrigger>
         </li>
         <li>
           <span role="status" aria-labelledby={idUnrestricted}>
             {isDeckValidUnrestricted(deckMain, deckSide) ? '✅' : '❌'}
           </span>
-          <span id={idUnrestricted}>封印なし</span> (メディチ4・リユニオン4)
+          <span id={idUnrestricted}>封印なし</span>
         </li>
         <li>
           <span>📊</span>
