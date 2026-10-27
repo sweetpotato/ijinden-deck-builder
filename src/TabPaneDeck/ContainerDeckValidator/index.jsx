@@ -1,12 +1,13 @@
 import { useId } from 'react'
+import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 
 import { dataCardsMap } from '../../commons/dataCards'
 import { sum } from '../../commons/utils'
 
 function ContainerDeckValidator({ deckMain, deckSide }) {
+  const idIjinkaiStandard202611 = useId()
   const idSDK2026 = useId()
   const id002 = useId()
-  const idRecommended = useId()
   const idUnrestricted = useId()
   const idAverageLevel = useId()
 
@@ -14,30 +15,49 @@ function ContainerDeckValidator({ deckMain, deckSide }) {
     <div className="m-2">
       <ul style={{ padding: 0, listStyle: 'none' }}>
         <li>
+          <span role="status" aria-labelledby={idIjinkaiStandard202611}>
+            {isDeckValidIjinkaiStandard202611(deckMain, deckSide) ? '✅' : '❌'}
+          </span>
+          <span id={idIjinkaiStandard202611}>イジン会スタンダード202611</span>
+          <OverlayTrigger
+            placement="top"
+            overlay={
+              <Tooltip>メディチ0・リユニオン0・千利休0・米百俵0</Tooltip>
+            }
+          >
+            {/* 生のテキストはNGで、要素が必要。以下同様。 */}
+            <span>ℹ️</span>
+          </OverlayTrigger>
+        </li>
+        <li>
           <span role="status" aria-labelledby={idSDK2026}>
             {isDeckValidSDK2026(deckMain, deckSide) ? '✅' : '❌'}
           </span>
-          <span id={idSDK2026}>最強ダイバー決定戦2026</span>{' '}
-          (メディチ0・リユニオン0・千利休0)
+          <span id={idSDK2026}>最強ダイバー決定戦2026</span>
+          <OverlayTrigger
+            placement="top"
+            overlay={<Tooltip>メディチ0・リユニオン0・千利休0</Tooltip>}
+          >
+            <span>ℹ️</span>
+          </OverlayTrigger>
         </li>
         <li>
           <span role="status" aria-labelledby={id002}>
             {isDeckValidCommunity002(deckMain, deckSide) ? '✅' : '❌'}
           </span>
-          <span id={id002}>いわゆる002</span> (メディチ0・リユニオン0)
-        </li>
-        <li>
-          <span role="status" aria-labelledby={idRecommended}>
-            {isDeckValidRecommended(deckMain, deckSide) ? '✅' : '❌'}
-          </span>
-          <span id={idRecommended}>推奨レギュレーション</span>{' '}
-          (メディチ2・リユニオン2)
+          <span id={id002}>いわゆる002</span>
+          <OverlayTrigger
+            placement="top"
+            overlay={<Tooltip>メディチ0・リユニオン0</Tooltip>}
+          >
+            <span>ℹ️</span>
+          </OverlayTrigger>
         </li>
         <li>
           <span role="status" aria-labelledby={idUnrestricted}>
             {isDeckValidUnrestricted(deckMain, deckSide) ? '✅' : '❌'}
           </span>
-          <span id={idUnrestricted}>封印なし</span> (メディチ4・リユニオン4)
+          <span id={idUnrestricted}>封印なし</span>
         </li>
         <li>
           <span>📊</span>
@@ -51,12 +71,23 @@ function ContainerDeckValidator({ deckMain, deckSide }) {
   )
 }
 
+// イジン会スタンダード2026.11.01
+function isDeckValidIjinkaiStandard202611(deckMain, deckSide) {
+  return (
+    isDeckValidBase(deckMain, deckSide) &&
+    hasNoMedici(deckMain, deckSide) &&
+    hasNoReunion(deckMain, deckSide) &&
+    hasNoRikyu(deckMain, deckSide) &&
+    hasNoKome(deckMain, deckSide)
+  )
+}
+
 // 最強ダイバー決定戦 (2026)
 function isDeckValidSDK2026(deckMain, deckSide) {
   return (
     isDeckValidBase(deckMain, deckSide) &&
-    hasMediciLe(0, deckMain, deckSide) &&
-    hasReunionLe(0, deckMain, deckSide) &&
+    hasNoMedici(deckMain, deckSide) &&
+    hasNoReunion(deckMain, deckSide) &&
     hasNoRikyu(deckMain, deckSide)
   )
 }
@@ -65,17 +96,8 @@ function isDeckValidSDK2026(deckMain, deckSide) {
 function isDeckValidCommunity002(deckMain, deckSide) {
   return (
     isDeckValidBase(deckMain, deckSide) &&
-    hasMediciLe(0, deckMain, deckSide) &&
-    hasReunionLe(0, deckMain, deckSide)
-  )
-}
-
-// 推奨レギュレーション
-function isDeckValidRecommended(deckMain, deckSide) {
-  return (
-    isDeckValidBase(deckMain, deckSide) &&
-    hasMediciLe(2, deckMain, deckSide) &&
-    hasReunionLe(2, deckMain, deckSide)
+    hasNoMedici(deckMain, deckSide) &&
+    hasNoReunion(deckMain, deckSide)
   )
 }
 
@@ -136,32 +158,29 @@ function hasCopiesLe4(deckMain, deckSide = new Map()) {
   return [...merged.values()].every((numCopies) => numCopies <= 4)
 }
 
-function hasMediciLe(numCopies, deckMain, deckSide) {
-  return hasNumCopiesNameOfIdLe('4-36', numCopies, deckMain, deckSide)
+function hasNoMedici(deckMain, deckSide) {
+  return hasNoCopyEach('4-36', deckMain, deckSide)
 }
 
-function hasReunionLe(numCopies, deckMain, deckSide) {
-  return hasNumCopiesNameOfIdLe('4-59', numCopies, deckMain, deckSide)
+function hasNoReunion(deckMain, deckSide) {
+  return hasNoCopyEach('4-59', deckMain, deckSide)
 }
 
 function hasNoRikyu(deckMain, deckSide) {
-  return hasNumCopiesNameOfIdLe('1-33', 0, deckMain, deckSide)
+  return hasNoCopyEach('1-33', deckMain, deckSide)
 }
 
-function hasNumCopiesNameOfIdLe(id, numCopies, deckMain, deckSide) {
-  const numCopiesMain = numCopiesNameOfId(id, deckMain)
-  const numCopiesSide = numCopiesNameOfId(id, deckSide)
-  return numCopiesMain + numCopiesSide <= numCopies
+function hasNoKome(deckMain, deckSide) {
+  return hasNoCopyEach('2nd1-68', deckMain, deckSide)
 }
 
-function numCopiesNameOfId(id, deck) {
-  // ID を元に引いたカード名で判断する
-  const nameOfId = dataCardsMap.get(id).name
-  return [...deck.entries()]
-    .map(([id, numCopies]) => [dataCardsMap.get(id).name, numCopies])
-    .filter(([name]) => name === nameOfId)
-    .map(([, numCopies]) => numCopies)
-    .reduce((a, b) => a + b, 0)
+function hasNoCopyEach(id, deckMain, deckSide) {
+  return hasNoCopy(id, deckMain) && hasNoCopy(id, deckSide)
+}
+
+function hasNoCopy(idNoCopy, deck) {
+  // 封印カードは名前ではなくIDで判断する
+  return !deck.keys().some((id) => id === idNoCopy)
 }
 
 function getAverageLevel(deck) {

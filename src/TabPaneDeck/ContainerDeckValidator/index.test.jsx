@@ -159,7 +159,6 @@ test.each([
 
   expect(getStatusWithName('最強ダイバー決定戦2026')).toHaveTextContent('❌')
   expect(getStatusWithName('いわゆる002')).toHaveTextContent('❌')
-  expect(getStatusWithName('推奨レギュレーション')).toHaveTextContent('❌')
   expect(getStatusWithName('封印なし')).toHaveTextContent('❌')
 })
 
@@ -196,9 +195,10 @@ test.each([
   const deckSide = new Map([])
   const { getStatusWithName } = defaultRender(deckMain, deckSide)
 
+  // prettier-ignore
+  expect(getStatusWithName('イジン会スタンダード202611')).toHaveTextContent('❌')
   expect(getStatusWithName('最強ダイバー決定戦2026')).toHaveTextContent('❌')
   expect(getStatusWithName('いわゆる002')).toHaveTextContent('❌')
-  expect(getStatusWithName('推奨レギュレーション')).toHaveTextContent('❌')
   expect(getStatusWithName('封印なし')).toHaveTextContent('❌')
 })
 
@@ -353,9 +353,10 @@ test.each([
   const deckSide = new Map(entriesSide)
   const { getStatusWithName } = defaultRender(deckMain, deckSide)
 
+  // prettier-ignore
+  expect(getStatusWithName('イジン会スタンダード202611')).toHaveTextContent('✅')
   expect(getStatusWithName('最強ダイバー決定戦2026')).toHaveTextContent('✅')
   expect(getStatusWithName('いわゆる002')).toHaveTextContent('✅')
-  expect(getStatusWithName('推奨レギュレーション')).toHaveTextContent('✅')
   expect(getStatusWithName('封印なし')).toHaveTextContent('✅')
 })
 
@@ -375,9 +376,10 @@ test('封印なしのみOK (メインにメディチ・リユニオン4枚ずつ
   const deckSide = new Map()
   const { getStatusWithName } = defaultRender(deckMain, deckSide)
 
+  // prettier-ignore
+  expect(getStatusWithName('イジン会スタンダード202611')).toHaveTextContent('❌')
   expect(getStatusWithName('最強ダイバー決定戦2026')).toHaveTextContent('❌')
   expect(getStatusWithName('いわゆる002')).toHaveTextContent('❌')
-  expect(getStatusWithName('推奨レギュレーション')).toHaveTextContent('❌')
   expect(getStatusWithName('封印なし')).toHaveTextContent('✅')
 })
 
@@ -401,32 +403,10 @@ test('封印なしのみOK (メイン・サイド合計でメディチ・リユ�
   ])
   const { getStatusWithName } = defaultRender(deckMain, deckSide)
 
+  // prettier-ignore
+  expect(getStatusWithName('イジン会スタンダード202611')).toHaveTextContent('❌')
   expect(getStatusWithName('最強ダイバー決定戦2026')).toHaveTextContent('❌')
   expect(getStatusWithName('いわゆる002')).toHaveTextContent('❌')
-  expect(getStatusWithName('推奨レギュレーション')).toHaveTextContent('❌')
-  expect(getStatusWithName('封印なし')).toHaveTextContent('✅')
-})
-
-test('推奨レギュレーション以下でのみOK (メディチ・リユニオン2枚ずつ)', () => {
-  const deckMain = new Map([
-    ['R-1', 4],
-    ['R-2', 4],
-    ['R-3', 4],
-    ['R-4', 4],
-    ['R-5', 4],
-    ['R-6', 4],
-    ['R-7', 4],
-    ['R-8', 4],
-    ['R-9', 4],
-    ['4-36', 2], // メディチ
-    ['4-59', 2], // リユニオン
-  ])
-  const deckSide = new Map()
-  const { getStatusWithName } = defaultRender(deckMain, deckSide)
-
-  expect(getStatusWithName('最強ダイバー決定戦2026')).toHaveTextContent('❌')
-  expect(getStatusWithName('いわゆる002')).toHaveTextContent('❌')
-  expect(getStatusWithName('推奨レギュレーション')).toHaveTextContent('✅')
   expect(getStatusWithName('封印なし')).toHaveTextContent('✅')
 })
 
@@ -447,9 +427,34 @@ test('002以下でOK (千利休入り)', () => {
   const deckSide = new Map()
   const { getStatusWithName } = defaultRender(deckMain, deckSide)
 
+  // prettier-ignore
+  expect(getStatusWithName('イジン会スタンダード202611')).toHaveTextContent('❌')
   expect(getStatusWithName('最強ダイバー決定戦2026')).toHaveTextContent('❌')
   expect(getStatusWithName('いわゆる002')).toHaveTextContent('✅')
-  expect(getStatusWithName('推奨レギュレーション')).toHaveTextContent('✅')
+  expect(getStatusWithName('封印なし')).toHaveTextContent('✅')
+})
+
+test('最強ダイバー決定戦2026以下でOK (米百俵入り)', () => {
+  const deckMain = new Map([
+    ['R-1', 4],
+    ['R-2', 4],
+    ['R-3', 4],
+    ['R-4', 4],
+    ['R-5', 4],
+    ['R-6', 4],
+    ['R-7', 4],
+    ['R-8', 4],
+    ['R-9', 4],
+    ['R-10', 3],
+    ['2nd1-68', 1], // 米百俵
+  ])
+  const deckSide = new Map()
+  const { getStatusWithName } = defaultRender(deckMain, deckSide)
+
+  // prettier-ignore
+  expect(getStatusWithName('イジン会スタンダード202611')).toHaveTextContent('❌')
+  expect(getStatusWithName('最強ダイバー決定戦2026')).toHaveTextContent('✅')
+  expect(getStatusWithName('いわゆる002')).toHaveTextContent('✅')
   expect(getStatusWithName('封印なし')).toHaveTextContent('✅')
 })
 
